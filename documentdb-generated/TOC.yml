@@ -1,2 +1,4 @@
-- name: DocumentDB Local
-  href: local/index.md
+## YamlMime:TOC
+items:
+  - name: DocumentDB Local
+    href: local/index.md
