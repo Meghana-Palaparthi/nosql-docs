@@ -1,2 +1,2 @@
-- name: Index
-  href: index.md
+- name: DocumentDB Local
+  href: local/index.md
