@@ -101,7 +101,8 @@
         "query/**/*.yml": "ai-assisted"
       },
       "ms.date": {
-        "query/**/*.{md,yml}": "12/30/2025"
+        "**/*.{md,yml}": "04/24/2026",
+        "query/**/*.{md,yml}": "04/24/2026"
       },
       "appliesto": {
         "**/*.md": [
