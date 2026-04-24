@@ -10,7 +10,7 @@ items:
         href: overview.md
   - name: DocumentDB
     expanded: true
-    href: ../documentdb-autogen/TOC.yml
+    href: ../documentdb-generated/TOC.yml
   - name: MongoDB Query Language (MQL)
     expanded: true
     href: query/TOC.yml
