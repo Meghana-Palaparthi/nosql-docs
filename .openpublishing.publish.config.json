@@ -38,7 +38,7 @@
     },
     {
       "docset_name": "documentdb-generated",
-      "build_source_folder": "documentdb-autogen",
+      "build_source_folder": "documentdb-generated",
       "build_output_subfolder": "documentdb-generated",
       "locale": "en-us",
       "monikers": [],

@@ -14,7 +14,7 @@
     },
     {
       "DocsetName": "documentdb-generated",
-      "BuildSourceFolder": "documentdb-autogen"
+      "BuildSourceFolder": "documentdb-generated"
     },
     {
       "DocsetName": "nosql",
