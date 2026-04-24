@@ -23,8 +23,11 @@
     "resource": [
       {
         "files": [
+          "**/*.gif",
+          "**/*.jpeg",
+          "**/*.jpg",
           "**/*.png",
-          "**/*.jpg"
+          "**/*.svg"
         ],
         "exclude": [
           "**/obj/**",
@@ -38,11 +41,83 @@
     "overwrite": [],
     "externalReference": [],
     "globalMetadata": {
-      "feedback_system": "Standard",
+      "uhfHeaderId": "MSDocsHeader-NoSQL",
+      "brand": "Azure",
+      "permissioned-type": "public",
+      "recommendations": true,
+      "recommendation_types": [
+        "Training",
+        "Certification"
+      ],
       "breadcrumb_path": "~/breadcrumb/documentdb-generated/toc.yml",
-      "permissioned-type": "public"
+      "feedback_system": "Standard",
+      "feedback_product_url": "https://learn.microsoft.com/answers/tags/187/azure-cosmos-db",
+      "feedback_help_link_url": "https://learn.microsoft.com/answers/tags/187/azure-cosmos-db",
+      "feedback_help_link_type": "get-help-at-qna"
     },
-    "fileMetadata": {},
+    "fileMetadata": {
+      "titleSuffix": {
+        "**/*.md": "DocumentDB (in Azure)",
+        "**/*.yml": "DocumentDB (in Azure)",
+        "query/**/*.md": "MongoDB Query Language (MQL) for DocumentDB (in Azure)",
+        "query/**/*.yml": "MongoDB Query Language (MQL) for DocumentDB (in Azure)"
+      },
+      "author": {
+        "**/*.md": "seesharprun",
+        "**/*.yml": "seesharprun"
+      },
+      "ms.author": {
+        "**/*.md": "sidandrews",
+        "**/*.yml": "sidandrews"
+      },
+      "ms.reviewer": {
+        "*.md": "gahllevy",
+        "*.yml": "gahllevy",
+        "query/**/*.md": "avgupt",
+        "query/**/*.yml": "avgupt"
+      },
+      "ms.service": {
+        "**/*.md": "documentdb",
+        "**/*.yml": "documentdb"
+      },
+      "ms.topic": {
+        "**/*.md": "reference",
+        "**/*.yml": "reference",
+        "query/**/*.md": "language-reference",
+        "query/**/*.yml": "language-reference"
+      },
+      "ms.devlang": {
+        "query/**/*.md": "mongdb",
+        "query/**/*.yml": "mongdb"
+      },
+      "ms.collection": {
+        "**/*.md": "documentdb-reference",
+        "**/*.yml": "documentdb-reference",
+        "query/**/*.md": "documentdb-query-reference",
+        "query/**/*.yml": "documentdb-query-reference"
+      },
+      "ai-usage": {
+        "query/**/*.md": "ai-assisted",
+        "query/**/*.yml": "ai-assisted"
+      },
+      "ms.date": {
+        "query/**/*.{md,yml}": "12/30/2025"
+      },
+      "appliesto": {
+        "**/*.md": [
+          "✅ Azure DocumentDB"
+        ],
+        "**/*.yml": [
+          "✅ Azure DocumentDB"
+        ],
+        "query/**/*.md": [
+          "✅ Azure DocumentDB"
+        ],
+        "query/**/*.yml": [
+          "✅ Azure DocumentDB"
+        ]
+      }
+    },
     "template": []
   }
 }
