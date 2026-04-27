@@ -38,9 +38,7 @@
         ],
         "exclude": [
           "**/obj/**",
-          "**/includes/**",
           "_themes/**",
-          "**/docfx.json",
           "_repo.en-us/**"
         ]
       }
@@ -64,6 +62,17 @@
       "feedback_help_link_type": "get-help-at-qna"
     },
     "fileMetadata": {
+      "adobe-target": {
+        "cosmos-db/*": true
+      },
+      "feedback_product_url": {
+        "documentdb/**/*": "https://feedback.azure.com/d365community/forum/3002b3be-0d25-ec11-b6e6-000d3a4f0858",
+        "cosmos-db/**/*.md": "https://feedback.azure.com/d365community/forum/3002b3be-0d25-ec11-b6e6-000d3a4f0858"
+      },
+      "feedback_help_link_url": {
+        "documentdb/**/*": "/answers/tags/187/azure-cosmos-db/",
+        "cosmos-db/**/*": "/answers/tags/187/azure-cosmos-db/"
+      },
       "ms.service": {
         "cosmos-db/**/*": "azure-cosmos-db",
         "documentdb/**/*": "azure-documentdb",

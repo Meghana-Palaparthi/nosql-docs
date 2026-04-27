@@ -207,10 +207,10 @@ conceptualContent:
               url: /azure/redis/overview
             - text: Quickstart - Create a cache
               itemType: quickstart
-              url: /azure/redis/quickstart-create-redis
+              url: /azure/redis/quickstart-create-managed-redis
             - text: Best practices for development
               itemType: concept
-              url: /azure/redis/cache-best-practices-development
+              url: /azure/redis/best-practices-development
           footerLink:
             url: /azure/redis/
             text: See more
