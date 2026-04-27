@@ -2,12 +2,6 @@
 items:
   - name: DocumentDB (in Azure) documentation
     href: index.yml
-  - name: Overview
-    expanded: true
-    items:
-      - name: What is DocumentDB (in Azure)?
-        displayName: introduction, welcome, intro, overview, explore
-        href: overview.md
   - name: MongoDB Query Language (MQL)
     expanded: true
     href: query/TOC.yml
