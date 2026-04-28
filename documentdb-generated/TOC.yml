@@ -1,12 +1,4 @@
 ## YamlMime:TOC
 items:
-  - name: DocumentDB (in Azure) documentation
-    href: /documentdb
-  - name: Overview
-    expanded: true
-    items:
-      - name: What is DocumentDB (in Azure)?
-        displayName: introduction, welcome, intro, overview, explore
-        href: /documentdb/overview
   - name: DocumentDB Local
     href: local/index.md
