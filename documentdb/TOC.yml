@@ -8,8 +8,6 @@ items:
       - name: What is DocumentDB (in Azure)?
         displayName: introduction, welcome, intro, overview, explore
         href: overview.md
-  - name: DocumentDB Local
-    href: /documentdb/local
   - name: MongoDB Query Language (MQL)
     expanded: true
     href: query/TOC.yml
