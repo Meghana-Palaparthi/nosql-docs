@@ -220,6 +220,7 @@ def main():
             collection,
             azure_openai_client,
             query,
+            os.getenv("EMBEDDED_FIELD"),
             os.getenv("AZURE_OPENAI_EMBEDDING_MODEL"),
             top_k=5
         )

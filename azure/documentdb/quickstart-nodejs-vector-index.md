@@ -103,6 +103,7 @@ const config = {
   indexName: "vectorIndex_ivf",
   embeddedField: process.env.EMBEDDED_FIELD!,
   embeddingDimensions: parseInt(process.env.EMBEDDING_DIMENSIONS!, 10),
+  deployment: process.env.AZURE_OPENAI_EMBEDDING_MODEL!,
 };
 
 async function main() {
@@ -168,7 +169,7 @@ async function main() {
 
     // Create embedding for the query
     const createEmbeddedForQueryResponse = await aiClient.embeddings.create({
-      model: config.embeddingModel,
+      model: config.deployment,
       input: [config.query]
     });
 
@@ -256,7 +257,7 @@ All three algorithms use the same query pattern with the `$search` aggregation s
 ```typescript
 // Generate embedding for query
 const embedding = await aiClient.embeddings.create({
-  model: config.embeddingModel,
+  model: config.deployment,
   input: ["your query text"]
 });
 

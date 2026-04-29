@@ -257,9 +257,26 @@ func main() {
 
 // Helper function to generate embeddings
 func GenerateEmbedding(ctx context.Context, client openai.Client, text, modelName string) ([]float64, error) {
-	// Implementation depends on specific OpenAI Go client version
-	// Consult the openai-go library documentation for exact API
-	return nil, nil // Placeholder
+	resp, err := client.Embeddings.New(ctx, openai.EmbeddingNewParams{
+		Input: openai.EmbeddingNewParamsInputUnion{
+			OfString: openai.String(text),
+		},
+		Model: modelName,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate embedding: %v", err)
+	}
+
+	if len(resp.Data) == 0 {
+		return nil, fmt.Errorf("no embedding data received")
+	}
+
+	embedding := make([]float64, len(resp.Data[0].Embedding))
+	for i, v := range resp.Data[0].Embedding {
+		embedding[i] = float64(v)
+	}
+
+	return embedding, nil
 }
 ```
 
