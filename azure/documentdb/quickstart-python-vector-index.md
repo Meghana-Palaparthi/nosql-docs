@@ -188,10 +188,10 @@ def main():
     
     # Create MongoDB client with OIDC authentication
     mongo_client = MongoClient(
-        f"mongodb+srv://{os.getenv('MONGO_CLUSTER_NAME')}.mongocluster.cosmos.azure.com/",
+        f"mongodb+srv://{os.getenv('MONGO_CLUSTER_NAME')}.global.mongocluster.cosmos.azure.com/",
         connectTimeoutMS=120000,
         tls=True,
-        retryWrites=False,
+        retryWrites=True,
         authMechanism="MONGODB-OIDC",
         authMechanismProperties={"OIDC_CALLBACK": AzureIdentityTokenCallback(credential)}
     )

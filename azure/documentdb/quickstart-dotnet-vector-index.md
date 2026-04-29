@@ -261,10 +261,14 @@ public class MongoDbService
         var credential = new DefaultAzureCredential();
         
         // Create MongoDB client with OIDC authentication
-        var mongoUri = $"mongodb+srv://{clusterName}.mongocluster.cosmos.azure.com/";
+        var mongoUri = $"mongodb+srv://{clusterName}.global.mongocluster.cosmos.azure.com/";
         
         var settings = MongoClientSettings.FromConnectionString(mongoUri);
-        settings.Credential = MongoCredential.CreateOidcCredential(null);
+        settings.ConnectTimeout = TimeSpan.FromSeconds(120);
+        settings.UseTls = true;
+        settings.RetryWrites = true;
+        settings.Credential = MongoCredential.CreateOidcCredential("azure", null)
+            .WithMechanismProperty("ENVIRONMENT", "azure");
         
         _mongoClient = new MongoClient(settings);
     }

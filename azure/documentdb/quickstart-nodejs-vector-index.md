@@ -181,8 +181,7 @@ async function main() {
             vector: createEmbeddedForQueryResponse.data[0].embedding,
             path: config.embeddedField,
             k: 5  // Top 5 results
-          },
-          returnStoredSource: true
+          }
         }
       },
       {

@@ -47,6 +47,7 @@ go mod init documentdb-quickstart
 3. Install required packages:
 
 ```bash
+go get github.com/Azure/azure-sdk-for-go/sdk/azcore
 go get github.com/Azure/azure-sdk-for-go/sdk/azidentity
 go get github.com/openai/openai-go/v3
 go get go.mongodb.org/mongo-driver
@@ -81,17 +82,20 @@ import (
 	"log"
 	"os"
 	"strconv"
-	"strings"
+	"time"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/azure"
+	"github.com/openai/openai-go/v3/option"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // CreateIVFVectorIndex creates an IVF (Inverted File) vector index on the specified field
-func CreateIVFVectorIndex(ctx context.Context, collection *mongo.Collection, vectorField string, dimensions int) error {
+func CreateIVFVectorIndex(ctx context.Context, collection *mongo.Collection, vectorField string, dimensions int, similarity string) error {
 	fmt.Printf("Creating IVF vector index on field '%s'...\n", vectorField)
 
 	// Use the native MongoDB command for DocumentDB vector indexes
@@ -206,19 +210,40 @@ func main() {
 	}
 
 	// Create MongoDB client with OIDC authentication
-	mongoURI := fmt.Sprintf("mongodb+srv://%s.mongocluster.cosmos.azure.com/", os.Getenv("MONGO_CLUSTER_NAME"))
-	opts := options.Client().ApplyURI(mongoURI)
+	mongoURI := fmt.Sprintf("mongodb+srv://%s.global.mongocluster.cosmos.azure.com/", os.Getenv("MONGO_CLUSTER_NAME"))
 	
-	mongoClient, err := mongo.Connect(ctx, opts)
+	oidcCallback := func(ctx context.Context, args *options.OIDCArgs) (*options.OIDCCredential, error) {
+		token, err := credential.GetToken(ctx, policy.TokenRequestOptions{
+			Scopes: []string{"https://ossrdbms-aad.database.windows.net/.default"},
+		})
+		if err != nil {
+			return nil, err
+		}
+		return &options.OIDCCredential{AccessToken: token.Token}, nil
+	}
+
+	clientOptions := options.Client().
+		ApplyURI(mongoURI).
+		SetConnectTimeout(30 * time.Second).
+		SetAuth(options.Credential{
+			AuthMechanism: "MONGODB-OIDC",
+			AuthMechanismProperties: map[string]string{
+				"TOKEN_RESOURCE": "https://ossrdbms-aad.database.windows.net",
+			},
+			OIDCMachineCallback: oidcCallback,
+		})
+
+	mongoClient, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
 		log.Fatalf("Failed to connect to MongoDB: %v", err)
 	}
 	defer mongoClient.Disconnect(ctx)
 
-	// Create Azure OpenAI client
+	// Create Azure OpenAI client with credential-based authentication
+	azureOpenAIEndpoint := os.Getenv("AZURE_OPENAI_EMBEDDING_ENDPOINT")
 	openAIClient := openai.NewClient(
-		os.Getenv("AZURE_OPENAI_EMBEDDING_KEY"),
-	)
+		option.WithBaseURL(fmt.Sprintf("%s/openai/v1", azureOpenAIEndpoint)),
+		azure.WithTokenCredential(credential))
 
 	// Access database and collection
 	database := mongoClient.Database("Hotels")
@@ -226,7 +251,7 @@ func main() {
 
 	// Create IVF vector index
 	dimensions, _ := strconv.Atoi(os.Getenv("EMBEDDING_DIMENSIONS"))
-	err = CreateIVFVectorIndex(ctx, collection, os.Getenv("EMBEDDED_FIELD"), dimensions)
+	err = CreateIVFVectorIndex(ctx, collection, os.Getenv("EMBEDDED_FIELD"), dimensions, "COS")
 	if err != nil {
 		log.Fatalf("Failed to create index: %v", err)
 	}
