@@ -1,0 +1,383 @@
+---
+title: "Quickstart - Vector Indexing with Java"
+description: "Learn how to choose and configure IVF, HNSW, and DiskANN vector indexes in Azure DocumentDB with Java."
+ms.reviewer: khelanmodi
+ms.devlang: java
+ms.topic: quickstart-sdk
+ms.date: 07/14/2025
+ai-usage: ai-assisted
+ms.custom:
+  - devx-track-java
+  - devx-track-data-ai
+# CustomerIntent: As a developer, I want to choose and configure the right vector index algorithm for my dataset size in Azure DocumentDB.
+---
+
+# Quickstart: Vector indexing in Azure DocumentDB with Java
+
+Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-java) on GitHub.
+
+Learn how to create and use vector indexes in Azure DocumentDB to enable efficient similarity search with LLM embeddings. This quickstart shows how to set up IVF, HNSW, and DiskANN indexes—each optimized for different dataset sizes and performance requirements.
+
+## Prerequisites
+
+- An Azure subscription ([create one for free](https://azure.microsoft.com/free/))
+- Azure DocumentDB vCore cluster with appropriate tier:
+  - **IVF**: M10 or higher
+  - **HNSW**: M30 or higher
+  - **DiskANN**: M30 or higher
+- [Azure OpenAI resource](https://learn.microsoft.com/azure/ai-services/openai/how-to/create-resource) with an embeddings model deployed
+- [Java 11+](https://www.oracle.com/java/technologies/downloads/)
+- [Apache Maven 3.6+](https://maven.apache.org/download.cgi)
+- Your preferred IDE (IntelliJ IDEA, Eclipse, VS Code)
+
+## Set up the project
+
+1. Create a Maven project:
+
+```bash
+mvn archetype:generate \
+  -DgroupId=com.azure.documentdb \
+  -DartifactId=vector-quickstart \
+  -DarchetypeArtifactId=maven-archetype-quickstart \
+  -DinteractiveMode=false
+
+cd vector-quickstart
+```
+
+2. Update `pom.xml` with required dependencies:
+
+```xml
+<dependencies>
+  <!-- MongoDB Driver -->
+  <dependency>
+    <groupId>org.mongodb</groupId>
+    <artifactId>mongodb-driver-sync</artifactId>
+    <version>4.11.1</version>
+  </dependency>
+
+  <!-- Azure Identity -->
+  <dependency>
+    <groupId>com.azure</groupId>
+    <artifactId>azure-identity</artifactId>
+    <version>1.11.1</version>
+  </dependency>
+
+  <!-- Azure OpenAI -->
+  <dependency>
+    <groupId>com.azure</groupId>
+    <artifactId>azure-ai-openai</artifactId>
+    <version>1.0.0</version>
+  </dependency>
+
+  <!-- JSON processing -->
+  <dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>2.16.0</version>
+  </dependency>
+
+  <!-- Logging -->
+  <dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-simple</artifactId>
+    <version>2.0.9</version>
+  </dependency>
+</dependencies>
+```
+
+3. Create a `.env` file with your credentials:
+
+```env
+MONGO_CLUSTER_NAME=your-cluster-name
+AZURE_MANAGED_IDENTITY_PRINCIPAL_ID=your-principal-id
+AZURE_OPENAI_EMBEDDING_ENDPOINT=https://your-resource.openai.azure.com/
+AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+AZURE_OPENAI_EMBEDDING_API_VERSION=2023-05-15
+EMBEDDED_FIELD=DescriptionVector
+EMBEDDING_DIMENSIONS=1536
+```
+
+## Create an IVF index
+
+IVF (Inverted File) is ideal for datasets with fewer than 10,000 documents. It partitions vectors into clusters for fast approximate search.
+
+Create `src/main/java/com/azure/documentdb/IVF.java`:
+
+```java
+package com.azure.documentdb;
+
+import com.azure.ai.openai.OpenAIClient;
+import com.azure.ai.openai.OpenAIClientBuilder;
+import com.azure.ai.openai.models.EmbeddingsOptions;
+import com.azure.identity.DefaultAzureCredentialBuilder;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoCredential;
+import com.mongodb.client.AggregateIterable;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class IVF {
+    private static final String DATABASE_NAME = "Hotels";
+    private static final String COLLECTION_NAME = "hotels_ivf";
+    private static final String VECTOR_INDEX_NAME = "vectorIndex_ivf";
+
+    public static void main(String[] args) {
+        new IVF().run();
+        System.exit(0);
+    }
+
+    public void run() {
+        try (var mongoClient = createMongoClient()) {
+            var openAIClient = createOpenAIClient();
+
+            var database = mongoClient.getDatabase(DATABASE_NAME);
+            var collection = database.getCollection(COLLECTION_NAME, Document.class);
+
+            // Create vector index
+            createVectorIndex(database, collection);
+
+            // Perform vector search
+            performVectorSearch(collection, openAIClient);
+
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private MongoClient createMongoClient() {
+        var clusterName = System.getenv("MONGO_CLUSTER_NAME");
+        var managedIdentityPrincipalId = System.getenv("AZURE_MANAGED_IDENTITY_PRINCIPAL_ID");
+        var azureCredential = new DefaultAzureCredentialBuilder().build();
+
+        // Create OIDC credential callback for Azure AD token
+        MongoCredential.OidcCallback callback = (MongoCredential.OidcCallbackContext context) -> {
+            var token = azureCredential.getToken(
+                new com.azure.core.credential.TokenRequestContext()
+                    .addScopes("https://ossrdbms-aad.database.windows.net/.default")
+            ).block();
+
+            if (token == null) {
+                throw new RuntimeException("Failed to obtain Azure AD token");
+            }
+
+            return new MongoCredential.OidcCallbackResult(token.getToken());
+        };
+
+        var credential = MongoCredential.createOidcCredential(null)
+            .withMechanismProperty("OIDC_CALLBACK", callback);
+
+        var connectionString = new ConnectionString(
+            String.format("mongodb+srv://%s@%s.mongocluster.cosmos.azure.com/?authMechanism=MONGODB-OIDC&tls=true&retrywrites=false&maxIdleTimeMS=120000",
+                managedIdentityPrincipalId, clusterName)
+        );
+
+        var settings = MongoClientSettings.builder()
+            .applyConnectionString(connectionString)
+            .credential(credential)
+            .build();
+
+        return MongoClients.create(settings);
+    }
+
+    private OpenAIClient createOpenAIClient() {
+        var endpoint = System.getenv("AZURE_OPENAI_EMBEDDING_ENDPOINT");
+        var credential = new DefaultAzureCredentialBuilder().build();
+
+        return new OpenAIClientBuilder()
+            .endpoint(endpoint)
+            .credential(credential)
+            .buildClient();
+    }
+
+    private void createVectorIndex(MongoDatabase database, MongoCollection<Document> collection) {
+        System.out.println("Creating IVF vector index...");
+
+        // Use the native MongoDB command for DocumentDB vector indexes
+        var indexCommand = new Document("createIndexes", COLLECTION_NAME)
+            .append("indexes", List.of(
+                new Document("name", VECTOR_INDEX_NAME)
+                    .append("key", new Document(System.getenv("EMBEDDED_FIELD"), "cosmosSearch"))
+                    .append("cosmosSearchOptions", new Document()
+                        .append("kind", "vector-ivf")
+                        .append("similarity", "COS")
+                        .append("dimensions", Integer.parseInt(System.getenv("EMBEDDING_DIMENSIONS")))
+                        .append("numLists", 10)  // Number of clusters
+                    )
+            ));
+
+        try {
+            var result = database.runCommand(indexCommand);
+            System.out.println("IVF vector index created successfully");
+        } catch (Exception e) {
+            System.err.println("Error creating index: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void performVectorSearch(MongoCollection<Document> collection, OpenAIClient openAIClient) {
+        System.out.println("Performing vector search...");
+
+        // Create embedding for query
+        var query = "quintessential lodging near running trails, eateries, retail";
+        var embeddingResponse = openAIClient.getEmbeddingsClient(
+            System.getenv("AZURE_OPENAI_EMBEDDING_MODEL")
+        ).generateEmbedding(new EmbeddingsOptions(List.of(query)));
+
+        var embedding = embeddingResponse.getValue().getData().get(0).getEmbedding();
+
+        // Build aggregation pipeline for vector search
+        var pipeline = List.of(
+            new Document("$search", new Document()
+                .append("cosmosSearch", new Document()
+                    .append("vector", embedding)
+                    .append("path", System.getenv("EMBEDDED_FIELD"))
+                    .append("k", 5)
+                )
+            ),
+            new Document("$project", new Document()
+                .append("score", new Document("$meta", "searchScore"))
+                .append("document", "$$ROOT")
+            )
+        );
+
+        // Execute search
+        AggregateIterable<Document> results = collection.aggregate(pipeline);
+
+        System.out.println("\nSearch Results:");
+        int count = 0;
+        for (Document result : results) {
+            count++;
+            Document doc = (Document) result.get("document");
+            double score = (double) result.get("score");
+            System.out.printf("%d. %s, Score: %.4f%n", count, 
+                doc.getString("HotelName"), score);
+        }
+    }
+}
+```
+
+## Create an HNSW index
+
+HNSW (Hierarchical Navigable Small World) is ideal for datasets between 10,000 and 50,000 documents. It builds a graph-based index for faster search with better recall.
+
+Create `src/main/java/com/azure/documentdb/HNSW.java`:
+
+Similar to IVF above, but with these index options:
+
+```java
+.append("cosmosSearchOptions", new Document()
+    .append("kind", "vector-hnsw")
+    .append("similarity", "COS")
+    .append("dimensions", Integer.parseInt(System.getenv("EMBEDDING_DIMENSIONS")))
+    .append("m", 16)  // Maximum connections per node
+    .append("efConstruction", 64)  // Candidate list size during construction
+)
+```
+
+Key differences from IVF:
+- **m parameter**: Controls graph connectivity. Higher values (e.g., 32) improve recall but increase memory.
+- **efConstruction**: Affects index build time and quality. Higher values improve accuracy at cost of build time.
+- **Cluster tier**: Requires M30 or higher due to memory overhead.
+
+## Create a DiskANN index
+
+DiskANN is optimized for very large datasets (50,000+ documents) with efficient disk-based storage.
+
+Create `src/main/java/com/azure/documentdb/DiskAnn.java`:
+
+Similar to IVF and HNSW above, but with these index options:
+
+```java
+.append("cosmosSearchOptions", new Document()
+    .append("kind", "vector-diskann")
+    .append("similarity", "COS")
+    .append("dimensions", Integer.parseInt(System.getenv("EMBEDDING_DIMENSIONS")))
+    .append("maxDegree", 20)  // Maximum edges per node
+    .append("lBuild", 10)  // Build parameter
+)
+```
+
+Key parameters:
+- **maxDegree**: Number of edges per node in the graph. Higher values improve accuracy.
+- **lBuild**: Number of candidate neighbors evaluated during construction. Affects index quality.
+- **Cluster tier**: Requires M30 or higher.
+
+## Query with vector search
+
+All three algorithms use the same query pattern with the `$search` aggregation stage:
+
+```java
+// Generate embedding for query
+var embeddingResponse = openAIClient.getEmbeddingsClient(modelName)
+    .generateEmbedding(new EmbeddingsOptions(List.of("your query text")));
+var embedding = embeddingResponse.getValue().getData().get(0).getEmbedding();
+
+// Build aggregation pipeline
+var pipeline = List.of(
+    new Document("$search", new Document()
+        .append("cosmosSearch", new Document()
+            .append("vector", embedding)
+            .append("path", vectorField)
+            .append("k", 5)  // Return top 5 results
+        )
+    ),
+    new Document("$project", new Document()
+        .append("score", new Document("$meta", "searchScore"))
+        .append("document", "$$ROOT")
+    )
+);
+
+// Execute search
+AggregateIterable<Document> results = collection.aggregate(pipeline);
+```
+
+The `$search` stage finds the k nearest neighbors to your query vector. Results are ordered by similarity score (highest first).
+
+## Choose the right algorithm
+
+| Algorithm | Dataset Size | Cluster Tier | Query Speed | Accuracy | Memory |
+|-----------|--------------|--------------|-------------|----------|--------|
+| IVF | < 10K docs | M10+ | Very fast | Good | Low |
+| HNSW | 10K-50K docs | M30+ | Fast | Excellent | Medium |
+| DiskANN | 50K+ docs | M30+ | Medium | Excellent | Low (disk-based) |
+
+**Selection guidelines:**
+- **IVF**: Start here for small datasets. Simple and resource-efficient.
+- **HNSW**: Choose for medium datasets where recall is important. Best recall rates.
+- **DiskANN**: Required for datasets exceeding 50,000 documents. Balances accuracy and resource usage.
+
+## Run the quickstart
+
+```bash
+# Compile project
+mvn compile
+
+# Run IVF example
+mvn exec:java -Dexec.mainClass="com.azure.documentdb.IVF"
+
+# Run HNSW example
+mvn exec:java -Dexec.mainClass="com.azure.documentdb.HNSW"
+
+# Run DiskANN example
+mvn exec:java -Dexec.mainClass="com.azure.documentdb.DiskAnn"
+```
+
+## Clean up resources
+
+When you're done, delete the DocumentDB cluster and OpenAI resource from the Azure Portal to avoid ongoing charges.
+
+## Next steps
+
+- [DocumentDB Vector Search Documentation](https://learn.microsoft.com/azure/cosmos-db/mongodb/vcore/vector-search)
+- [Azure OpenAI Embeddings Documentation](https://learn.microsoft.com/azure/ai-services/openai/concepts/understand-embeddings)
+- [MongoDB Java Driver Documentation](https://www.mongodb.com/docs/drivers/java-sync/)
+- Article 1: Getting Started with Vector Search
+- Article 3: Performance Tuning and Optimization

@@ -1,0 +1,425 @@
+---
+title: "Quickstart - Vector Indexing with .NET"
+description: "Learn how to choose and configure IVF, HNSW, and DiskANN vector indexes in Azure DocumentDB with .NET."
+ms.reviewer: khelanmodi
+ms.devlang: csharp
+ms.topic: quickstart-sdk
+ms.date: 07/14/2025
+ai-usage: ai-assisted
+ms.custom:
+  - devx-track-dotnet
+  - devx-track-data-ai
+# CustomerIntent: As a developer, I want to choose and configure the right vector index algorithm for my dataset size in Azure DocumentDB.
+---
+
+# Quickstart: Vector indexing in Azure DocumentDB with C#
+
+Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-dotnet) on GitHub.
+
+Learn how to create and use vector indexes in Azure DocumentDB to enable efficient similarity search with LLM embeddings. This quickstart shows how to set up IVF, HNSW, and DiskANN indexes—each optimized for different dataset sizes and performance requirements.
+
+## Prerequisites
+
+- An Azure subscription ([create one for free](https://azure.microsoft.com/free/))
+- Azure DocumentDB vCore cluster with appropriate tier:
+  - **IVF**: M10 or higher
+  - **HNSW**: M30 or higher
+  - **DiskANN**: M30 or higher
+- [Azure OpenAI resource](https://learn.microsoft.com/azure/ai-services/openai/how-to/create-resource) with an embeddings model deployed
+- [.NET 7.0+](https://dotnet.microsoft.com/download)
+- Your preferred IDE (Visual Studio, Visual Studio Code, or Rider)
+
+## Set up the project
+
+1. Create a new .NET console application:
+
+```bash
+dotnet new console -n DocumentDBVectorQuickstart
+cd DocumentDBVectorQuickstart
+```
+
+2. Add required NuGet packages:
+
+```bash
+dotnet add package MongoDB.Driver --version 2.21.0
+dotnet add package Azure.AI.OpenAI --version 1.0.0
+dotnet add package Azure.Identity --version 1.11.1
+```
+
+3. Update your `Program.cs` with basic structure:
+
+```csharp
+using Azure.AI.OpenAI;
+using Azure.Identity;
+using MongoDB.Bson;
+using MongoDB.Driver;
+
+// Configuration
+var config = new VectorSearchConfig
+{
+    ClusterName = Environment.GetEnvironmentVariable("MONGO_CLUSTER_NAME") ?? "vectorSearch",
+    DatabaseName = "Hotels",
+    EmbeddedField = Environment.GetEnvironmentVariable("EMBEDDED_FIELD") ?? "DescriptionVector",
+    Dimensions = int.Parse(Environment.GetEnvironmentVariable("EMBEDDING_DIMENSIONS") ?? "1536"),
+    OpenAIEndpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_EMBEDDING_ENDPOINT") ?? "",
+    OpenAIModel = Environment.GetEnvironmentVariable("AZURE_OPENAI_EMBEDDING_MODEL") ?? "text-embedding-3-small",
+};
+
+// Create clients and run examples
+```
+
+## Create an IVF index
+
+IVF (Inverted File) is ideal for datasets with fewer than 10,000 documents. It partitions vectors into clusters for fast approximate search.
+
+Create `VectorSearchService.cs`:
+
+```csharp
+using Azure.AI.OpenAI;
+using MongoDB.Bson;
+using MongoDB.Driver;
+
+public class VectorSearchService
+{
+    private readonly MongoDbService _mongoService;
+    private readonly AzureOpenAIClient _openAIClient;
+    private readonly VectorSearchConfig _config;
+
+    public VectorSearchService(MongoDbService mongoService, AzureOpenAIClient openAIClient, VectorSearchConfig config)
+    {
+        _mongoService = mongoService;
+        _openAIClient = openAIClient;
+        _config = config;
+    }
+
+    /// <summary>
+    /// Creates an IVF (Inverted File) vector index optimized for small datasets
+    /// </summary>
+    public async Task CreateIVFIndexAsync(string collectionName, string indexName)
+    {
+        Console.WriteLine("Creating IVF vector index...");
+
+        var searchOptions = new BsonDocument
+        {
+            ["kind"] = "vector-ivf",
+            ["similarity"] = "COS",
+            ["dimensions"] = _config.Dimensions,
+            ["numLists"] = 10  // Number of clusters to partition vectors
+        };
+
+        await _mongoService.CreateVectorIndexAsync(
+            _config.DatabaseName,
+            collectionName,
+            indexName,
+            _config.EmbeddedField,
+            searchOptions);
+
+        Console.WriteLine("IVF vector index created successfully");
+    }
+
+    /// <summary>
+    /// Creates an HNSW (Hierarchical Navigable Small World) vector index
+    /// </summary>
+    public async Task CreateHNSWIndexAsync(string collectionName, string indexName)
+    {
+        Console.WriteLine("Creating HNSW vector index...");
+
+        var searchOptions = new BsonDocument
+        {
+            ["kind"] = "vector-hnsw",
+            ["similarity"] = "COS",
+            ["dimensions"] = _config.Dimensions,
+            ["m"] = 16,  // Maximum connections per node
+            ["efConstruction"] = 64  // Candidate list size during construction
+        };
+
+        await _mongoService.CreateVectorIndexAsync(
+            _config.DatabaseName,
+            collectionName,
+            indexName,
+            _config.EmbeddedField,
+            searchOptions);
+
+        Console.WriteLine("HNSW vector index created successfully");
+    }
+
+    /// <summary>
+    /// Creates a DiskANN vector index for very large datasets
+    /// </summary>
+    public async Task CreateDiskANNIndexAsync(string collectionName, string indexName)
+    {
+        Console.WriteLine("Creating DiskANN vector index...");
+
+        var searchOptions = new BsonDocument
+        {
+            ["kind"] = "vector-diskann",
+            ["similarity"] = "COS",
+            ["dimensions"] = _config.Dimensions,
+            ["maxDegree"] = 20,  // Maximum edges per node
+            ["lBuild"] = 10  // Build parameter
+        };
+
+        await _mongoService.CreateVectorIndexAsync(
+            _config.DatabaseName,
+            collectionName,
+            indexName,
+            _config.EmbeddedField,
+            searchOptions);
+
+        Console.WriteLine("DiskANN vector index created successfully");
+    }
+
+    /// <summary>
+    /// Performs a vector similarity search using the $search aggregation
+    /// </summary>
+    public async Task<List<SearchResult>> PerformVectorSearchAsync(
+        string collectionName,
+        string queryText,
+        int topK = 5)
+    {
+        Console.WriteLine($"Performing vector search for: '{queryText}'");
+
+        // Generate embedding for query
+        var embeddingClient = _openAIClient.GetEmbeddingClient(_config.OpenAIModel);
+        var embeddingResponse = await embeddingClient.GenerateEmbeddingAsync(queryText);
+        var embedding = embeddingResponse.Value.ToFloats().ToArray();
+
+        // Get collection
+        var collection = _mongoService.GetCollection(
+            _config.DatabaseName,
+            collectionName);
+
+        // Build aggregation pipeline for vector search
+        var pipeline = new[]
+        {
+            // Vector similarity search using cosmosSearch
+            new BsonDocument("$search", new BsonDocument
+            {
+                ["cosmosSearch"] = new BsonDocument
+                {
+                    ["vector"] = new BsonArray(embedding.Select(f => new BsonDouble(f))),
+                    ["path"] = _config.EmbeddedField,  // Field containing embeddings
+                    ["k"] = topK  // Number of results to return
+                }
+            }),
+            // Project results with similarity scores
+            new BsonDocument("$project", new BsonDocument
+            {
+                ["score"] = new BsonDocument("$meta", "searchScore"),
+                ["document"] = "$$ROOT"
+            })
+        };
+
+        // Execute search
+        var results = await collection.AggregateAsync<BsonDocument>(pipeline);
+        var searchResults = new List<SearchResult>();
+
+        await results.ForEachAsync(result =>
+        {
+            var searchResult = new SearchResult
+            {
+                HotelName = result["document"]["HotelName"].AsString,
+                Score = result["score"].AsDouble
+            };
+            searchResults.Add(searchResult);
+        });
+
+        return searchResults;
+    }
+}
+
+public class VectorSearchConfig
+{
+    public string ClusterName { get; set; }
+    public string DatabaseName { get; set; }
+    public string EmbeddedField { get; set; }
+    public int Dimensions { get; set; }
+    public string OpenAIEndpoint { get; set; }
+    public string OpenAIModel { get; set; }
+}
+
+public class SearchResult
+{
+    public string HotelName { get; set; }
+    public double Score { get; set; }
+}
+```
+
+Create `MongoDbService.cs`:
+
+```csharp
+using Azure.Identity;
+using MongoDB.Bson;
+using MongoDB.Driver;
+
+public class MongoDbService
+{
+    private readonly MongoClient _mongoClient;
+
+    public MongoDbService(string clusterName)
+    {
+        var credential = new DefaultAzureCredential();
+        
+        // Create MongoDB client with OIDC authentication
+        var mongoUri = $"mongodb+srv://{clusterName}.mongocluster.cosmos.azure.com/";
+        
+        var settings = MongoClientSettings.FromConnectionString(mongoUri);
+        settings.Credential = MongoCredential.CreateOidcCredential(null);
+        
+        _mongoClient = new MongoClient(settings);
+    }
+
+    public IMongoCollection<BsonDocument> GetCollection(string databaseName, string collectionName)
+    {
+        return _mongoClient.GetDatabase(databaseName).GetCollection<BsonDocument>(collectionName);
+    }
+
+    public async Task CreateVectorIndexAsync(
+        string databaseName,
+        string collectionName,
+        string indexName,
+        string vectorField,
+        BsonDocument searchOptions)
+    {
+        var database = _mongoClient.GetDatabase(databaseName);
+        var collection = database.GetCollection<BsonDocument>(collectionName);
+
+        // Create the index using the createIndexes command
+        var indexCommand = new BsonDocument
+        {
+            ["createIndexes"] = collectionName,
+            ["indexes"] = new BsonArray
+            {
+                new BsonDocument
+                {
+                    ["name"] = indexName,
+                    ["key"] = new BsonDocument
+                    {
+                        [vectorField] = "cosmosSearch"
+                    },
+                    ["cosmosSearchOptions"] = searchOptions
+                }
+            }
+        };
+
+        try
+        {
+            var result = await database.RunCommandAsync<BsonDocument>(indexCommand);
+            Console.WriteLine($"Vector index '{indexName}' created successfully");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error creating index: {ex.Message}");
+            throw;
+        }
+    }
+}
+```
+
+## Query with vector search
+
+All three algorithms use the same query pattern with the `$search` aggregation stage:
+
+```csharp
+// Generate embedding for query
+var embeddingClient = openAIClient.GetEmbeddingClient(modelName);
+var embeddingResponse = await embeddingClient.GenerateEmbeddingAsync("your query text");
+var embedding = embeddingResponse.Value.ToFloats().ToArray();
+
+// Build aggregation pipeline
+var pipeline = new[]
+{
+    new BsonDocument("$search", new BsonDocument
+    {
+        ["cosmosSearch"] = new BsonDocument
+        {
+            ["vector"] = new BsonArray(embedding.Select(f => new BsonDouble(f))),
+            ["path"] = vectorField,
+            ["k"] = 5  // Return top 5 results
+        }
+    }),
+    new BsonDocument("$project", new BsonDocument
+    {
+        ["score"] = new BsonDocument("$meta", "searchScore"),
+        ["document"] = "$$ROOT"
+    })
+};
+
+// Execute search
+var results = await collection.AggregateAsync<BsonDocument>(pipeline);
+```
+
+The `$search` stage finds the k nearest neighbors to your query vector. Results are ordered by similarity score (highest first).
+
+## Choose the right algorithm
+
+| Algorithm | Dataset Size | Cluster Tier | Query Speed | Accuracy | Memory |
+|-----------|--------------|--------------|-------------|----------|--------|
+| IVF | < 10K docs | M10+ | Very fast | Good | Low |
+| HNSW | 10K-50K docs | M30+ | Fast | Excellent | Medium |
+| DiskANN | 50K+ docs | M30+ | Medium | Excellent | Low (disk-based) |
+
+**Selection guidelines:**
+- **IVF**: Start here for small datasets. Simple and resource-efficient.
+- **HNSW**: Choose for medium datasets where recall is important. Best recall rates.
+- **DiskANN**: Required for datasets exceeding 50,000 documents. Balances accuracy and resource usage.
+
+## Run the quickstart
+
+```bash
+# Run the application
+dotnet run
+
+# To run specific examples, modify Program.cs:
+# await vectorSearchService.CreateIVFIndexAsync("hotels_ivf", "vectorIndex_ivf");
+# await vectorSearchService.CreateHNSWIndexAsync("hotels_hnsw", "vectorIndex_hnsw");
+# await vectorSearchService.CreateDiskANNIndexAsync("hotels_diskann", "vectorIndex_diskann");
+```
+
+## Complete Program.cs example
+
+```csharp
+using Azure.AI.OpenAI;
+using Azure.Identity;
+
+var credential = new DefaultAzureCredential();
+var config = new VectorSearchConfig
+{
+    ClusterName = Environment.GetEnvironmentVariable("MONGO_CLUSTER_NAME") ?? "",
+    DatabaseName = "Hotels",
+    EmbeddedField = Environment.GetEnvironmentVariable("EMBEDDED_FIELD") ?? "DescriptionVector",
+    Dimensions = int.Parse(Environment.GetEnvironmentVariable("EMBEDDING_DIMENSIONS") ?? "1536"),
+    OpenAIEndpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_EMBEDDING_ENDPOINT") ?? "",
+    OpenAIModel = Environment.GetEnvironmentVariable("AZURE_OPENAI_EMBEDDING_MODEL") ?? "text-embedding-3-small",
+};
+
+// Create services
+var mongoService = new MongoDbService(config.ClusterName);
+var openAIClient = new AzureOpenAIClient(new Uri(config.OpenAIEndpoint), credential);
+var vectorSearchService = new VectorSearchService(mongoService, openAIClient, config);
+
+// Create IVF index and search
+await vectorSearchService.CreateIVFIndexAsync("hotels_ivf", "vectorIndex_ivf");
+var results = await vectorSearchService.PerformVectorSearchAsync(
+    "hotels_ivf",
+    "quintessential lodging near running trails, eateries, retail",
+    5);
+
+Console.WriteLine("\nSearch Results:");
+foreach (var result in results)
+{
+    Console.WriteLine($"- {result.HotelName}: {result.Score:F4}");
+}
+```
+
+## Clean up resources
+
+When you're done, delete the DocumentDB cluster and OpenAI resource from the Azure Portal to avoid ongoing charges.
+
+## Next steps
+
+- [DocumentDB Vector Search Documentation](https://learn.microsoft.com/azure/cosmos-db/mongodb/vcore/vector-search)
+- [Azure OpenAI Embeddings Documentation](https://learn.microsoft.com/azure/ai-services/openai/concepts/understand-embeddings)
+- [MongoDB .NET Driver Documentation](https://www.mongodb.com/docs/drivers/csharp/)
+- Article 1: Getting Started with Vector Search
+- Article 3: Performance Tuning and Optimization
