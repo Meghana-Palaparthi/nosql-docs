@@ -12,7 +12,7 @@ ms.custom:
 # CustomerIntent: As a developer, I want to choose and configure the right vector index algorithm for my dataset size in Azure DocumentDB.
 ---
 
-# Quickstart: Vector indexing in Azure DocumentDB with TypeScript
+# Quickstart: Vector indexing in Azure DocumentDB with Node.js
 
 Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-typescript) on GitHub.
 
@@ -25,7 +25,7 @@ Learn how to create and use vector indexes in Azure DocumentDB to enable efficie
   - **IVF**: M10 or higher
   - **HNSW**: M30 or higher
   - **DiskANN**: M30 or higher
-- [Azure OpenAI resource](https://learn.microsoft.com/azure/ai-services/openai/how-to/create-resource) with an embeddings model deployed
+- [Azure OpenAI resource](/azure/ai-services/openai/how-to/create-resource) with an embeddings model deployed
 - [Node.js 18+](https://nodejs.org/)
 - [Visual Studio Code](https://code.visualstudio.com/) or your preferred editor
 
@@ -313,12 +313,16 @@ node dist/diskann.js
 
 ## Clean up resources
 
-When you're done, delete the DocumentDB cluster and OpenAI resource from the Azure Portal to avoid ongoing charges.
+When you're done, remove the resources to avoid ongoing charges:
+
+```bash
+az group delete --name <your-resource-group> --yes --no-wait
+```
+
+Alternatively, delete the DocumentDB cluster and Azure OpenAI resource individually from the [Azure portal](https://portal.azure.com).
 
 ## Next steps
 
-- [DocumentDB Vector Search Documentation](https://learn.microsoft.com/azure/cosmos-db/mongodb/vcore/vector-search)
-- [Azure OpenAI Embeddings Documentation](https://learn.microsoft.com/azure/ai-services/openai/concepts/understand-embeddings)
+- [DocumentDB Vector Search Documentation](/azure/cosmos-db/mongodb/vcore/vector-search)
+- [Azure OpenAI Embeddings Documentation](/azure/ai-services/openai/concepts/understand-embeddings)
 - [MongoDB Aggregation Pipeline Reference](https://www.mongodb.com/docs/manual/reference/operator/aggregation/)
-- Article 1: Getting Started with Vector Search
-- Article 3: Performance Tuning and Optimization

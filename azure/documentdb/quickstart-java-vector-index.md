@@ -25,7 +25,7 @@ Learn how to create and use vector indexes in Azure DocumentDB to enable efficie
   - **IVF**: M10 or higher
   - **HNSW**: M30 or higher
   - **DiskANN**: M30 or higher
-- [Azure OpenAI resource](https://learn.microsoft.com/azure/ai-services/openai/how-to/create-resource) with an embeddings model deployed
+- [Azure OpenAI resource](/azure/ai-services/openai/how-to/create-resource) with an embeddings model deployed
 - [Java 11+](https://www.oracle.com/java/technologies/downloads/)
 - [Apache Maven 3.6+](https://maven.apache.org/download.cgi)
 - Your preferred IDE (IntelliJ IDEA, Eclipse, VS Code)
@@ -372,12 +372,16 @@ mvn exec:java -Dexec.mainClass="com.azure.documentdb.DiskAnn"
 
 ## Clean up resources
 
-When you're done, delete the DocumentDB cluster and OpenAI resource from the Azure Portal to avoid ongoing charges.
+When you're done, remove the resources to avoid ongoing charges:
+
+```bash
+az group delete --name <your-resource-group> --yes --no-wait
+```
+
+Alternatively, delete the DocumentDB cluster and Azure OpenAI resource individually from the [Azure portal](https://portal.azure.com).
 
 ## Next steps
 
-- [DocumentDB Vector Search Documentation](https://learn.microsoft.com/azure/cosmos-db/mongodb/vcore/vector-search)
-- [Azure OpenAI Embeddings Documentation](https://learn.microsoft.com/azure/ai-services/openai/concepts/understand-embeddings)
+- [DocumentDB Vector Search Documentation](/azure/cosmos-db/mongodb/vcore/vector-search)
+- [Azure OpenAI Embeddings Documentation](/azure/ai-services/openai/concepts/understand-embeddings)
 - [MongoDB Java Driver Documentation](https://www.mongodb.com/docs/drivers/java-sync/)
-- Article 1: Getting Started with Vector Search
-- Article 3: Performance Tuning and Optimization
