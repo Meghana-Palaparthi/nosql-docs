@@ -1,736 +1,909 @@
 ---
-title: "Quickstart - Vector Indexing with Python"
-description: "Learn how to choose and configure IVF, HNSW, and DiskANN vector indexes in Azure DocumentDB with Python."
+title: Choose and configure vector indexes in Azure DocumentDB using Python
+description: Compare vector index algorithms and similarity functions using the Python SDK in Azure DocumentDB to optimize search performance for your workload.
+ms.topic: quickstart
+ms.date: 2025-01-30
 author: diberry
 ms.author: diberry
-ms.reviewer: khelanmodi
-ms.devlang: python
-ms.topic: quickstart-sdk
-ms.date: 07/14/2025
-ai-usage: ai-assisted
-ms.custom:
-  - devx-track-python
-  - devx-track-python-ai
-  - devx-track-data-ai
-# CustomerIntent: As a developer, I want to choose and configure the right vector index algorithm for my dataset size in Azure DocumentDB.
+ms.service: azure-documentdb
+ms.subservice: vector-search
 ---
 
-# Quickstart: Vector indexing in Azure DocumentDB with Python
+# Quickstart: Choose and configure vector indexes in Azure DocumentDB using Python
 
-Learn how to create and use vector indexes in Azure DocumentDB to enable efficient similarity search with LLM embeddings. This quickstart shows how to set up IVF, HNSW, and DiskANN indexes—each optimized for different dataset sizes and performance requirements.
-
-This quickstart uses a sample hotel dataset in a JSON file with pre-calculated vectors from the `text-embedding-3-small` model. The dataset includes hotel names, locations, descriptions, and vector embeddings.
+In this quickstart, you compare three vector index algorithms (DiskANN, HNSW, and IVF) and three similarity functions (cosine, L2, and inner product) to find the optimal configuration for your search workload. This quickstart uses a sample hotel dataset with pre-calculated embeddings from the `text-embedding-3-small` model.
 
 Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-python) on GitHub.
 
 ## Prerequisites
 
-[!INCLUDE[Prerequisites - Vector Index Quickstart](includes/prerequisite-quickstart-vector-index.md)]
+- An Azure subscription
+  - If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn)
+- An existing Azure DocumentDB cluster
+  - If you don't have a cluster, create a [new cluster](quickstart-portal)
+  - [Role Based Access Control (RBAC) enabled](how-to-connect-role-based-access-control#enable-microsoft-entra-id-authentication)
+  - [Firewall configured to allow access to your client IP address](how-to-configure-firewall#grant-access-from-your-ip-address)
+  - Your identity must have the **dbOwner** role assigned on the target database
+- [Azure OpenAI resource](/azure/ai-foundry/openai/how-to/create-resource?view=foundry-classic&pivots=cli#create-a-resource)
+  - Custom domain configured
+  - [Role Based Access Control (RBAC) enabled](/azure/developer/ai/keyless-connections)
+  - Your identity must have the **Cognitive Services OpenAI User** role on the Azure OpenAI resource
+  - `text-embedding-3-small` model deployed
+- [Visual Studio Code](https://code.visualstudio.com/download)
+  - [DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb)
+- Use the Bash environment in [Azure Cloud Shell](/azure/cloud-shell/overview). For more information, see [Get started with Azure Cloud Shell](/azure/cloud-shell/quickstart).
 
-- [Python](https://www.python.org/downloads/) 3.9 or greater
+  [![Launch Cloud Shell](../reusable-content/azure-cli/media/hdi-launch-cloud-shell.png)](https://shell.azure.com)
+
+- If you prefer to run CLI reference commands locally, [install](/cli/azure/install-azure-cli) the Azure CLI. If you're running on Windows or macOS, consider running Azure CLI in a Docker container. For more information, see [How to run the Azure CLI in a Docker container](/cli/azure/run-azure-cli-docker).
+  - If you're using a local installation, sign in to the Azure CLI by using the [az login](/cli/azure/reference-index#az-login) command. To finish the authentication process, follow the steps displayed in your terminal. For other sign-in options, see [Authenticate to Azure using Azure CLI](/cli/azure/authenticate-azure-cli).
+  - When you're prompted, install the Azure CLI extension on first use. For more information about extensions, see [Use and manage extensions with the Azure CLI](/cli/azure/azure-cli-extensions-overview).
+  - Run [az version](/cli/azure/reference-index?#az-version) to find the version and dependent libraries that are installed. To upgrade to the latest version, run [az upgrade](/cli/azure/reference-index?#az-upgrade).
+- [Python](https://www.python.org/downloads/) 3.10 or greater
 
 ## Create data file with vectors
 
 1. Create a new data directory for the hotels data file:
 
-    ```bash
-    mkdir data
-    ```
+   ```bash
+   mkdir data
+   ```
 
-1. Copy the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory.
+2. Copy the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory.
 
-## Set up the project
+## Create a Python project
 
-1. Create and navigate to a new project directory:
+1. Create a new directory for your project and open it in Visual Studio Code:
 
-    ```bash
-    mkdir documentdb-vector-quickstart
-    cd documentdb-vector-quickstart
-    ```
+   ```bash
+   mkdir select-algorithm
+   cd select-algorithm
+   code .
+   ```
 
-1. Create a virtual environment:
+2. In the terminal, create and activate a virtual environment:
 
-    For Windows:
+   For Windows:
 
-    ```bash
-    python -m venv venv
-    venv\\Scripts\\activate
-    ```
+   ```powershell
+   python -m venv venv
+   venv\Scripts\activate
+   ```
 
-    For macOS/Linux:
+   For macOS/Linux:
 
-    ```bash
-    python -m venv venv
-    source venv/bin/activate
-    ```
+   ```bash
+   python -m venv venv
+   source venv/bin/activate
+   ```
 
-1. Install required packages:
+3. Install the required packages:
 
-    ```bash
-    pip install pymongo azure-identity openai python-dotenv
-    ```
+   ```bash
+   pip install pymongo==4.6.0 openai==1.55.3 azure-identity==1.15.0 python-dotenv==1.0.0
+   ```
 
-    - `pymongo`: MongoDB driver for Python
-    - `azure-identity`: Azure Identity library for passwordless authentication
-    - `openai`: OpenAI client library to create vectors
-    - `python-dotenv`: Environment variable management from .env files
+   - `pymongo`: MongoDB driver for Python
+   - `openai`: OpenAI client library to create vectors
+   - `azure-identity`: Azure Identity library for passwordless authentication
+   - `python-dotenv`: Environment variable management from .env files
 
-1. Create a `.env` file for environment variables:
+4. Create a `.env` file for environment variables in the project root:
 
-    ```ini
-    # Azure DocumentDB configuration
-    MONGO_CLUSTER_NAME=
+   ```bash
+   # Azure OpenAI Embedding Settings
+   AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+   AZURE_OPENAI_EMBEDDING_API_VERSION=2024-10-21
+   AZURE_OPENAI_EMBEDDING_ENDPOINT=https://<RESOURCE-NAME>.openai.azure.com
+   
+   # Data File Paths and Vector Configuration
+   DATA_FILE_WITH_VECTORS=../data/Hotels_Vector.json
+   EMBEDDED_FIELD=DescriptionVector
+   EMBEDDING_DIMENSIONS=1536
+   LOAD_SIZE_BATCH=100
+   
+   # Azure DocumentDB Connection Settings
+   MONGO_CLUSTER_NAME=<CLUSTER-NAME>
+   
+   # Azure DocumentDB Database Name
+   AZURE_DOCUMENTDB_DATABASENAME=Hotels
+   
+   # Algorithm Selection (used by select_algorithm.py)
+   # ALGORITHM: "all" | "diskann" | "hnsw" | "ivf"
+   ALGORITHM=all
+   
+   # SIMILARITY: "all" | "COS" | "L2" | "IP"
+   SIMILARITY=COS
+   ```
 
-    # Azure OpenAI configuration
-    AZURE_OPENAI_EMBEDDING_ENDPOINT=
-    AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
-    AZURE_OPENAI_EMBEDDING_API_VERSION=2023-05-15
+   For the passwordless authentication used in this article, replace the placeholder values in the `.env` file with your own information:
 
-    # Data Configuration (defaults should work)
-    EMBEDDED_FIELD=DescriptionVector
-    EMBEDDING_DIMENSIONS=1536
-    DATA_FILE_WITH_VECTORS=data/Hotels_Vector.json
-    LOAD_SIZE_BATCH=100
-    ```
+   - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
+   - `MONGO_CLUSTER_NAME`: Your Azure DocumentDB cluster name
 
-    Replace the placeholder values in the `.env` file with your own information:
-    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
-    - `MONGO_CLUSTER_NAME`: Your Azure DocumentDB resource name
+   You should always prefer passwordless authentication, but it requires additional setup. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Python apps to Azure services by using the Azure SDK for Python](/azure/developer/python/sdk/authentication/overview).
 
-## Create a vector index
+## Create code files
 
-### [IVF](#tab/tab-ivf)
+Create the following project structure:
 
-IVF (Inverted File) is ideal for datasets with fewer than 10,000 documents. It partitions vectors into clusters for fast approximate search.
+```
+├── data/
+│   └── Hotels_Vector.json       # Hotel data with vector embeddings
+└── select-algorithm/
+    ├── src/
+    │   ├── select_algorithm.py  # Main comparison script
+    │   └── utils.py             # Shared utility functions
+    └── .env                     # Environment variables
+```
 
-Create `ivf.py`:
+Create the `src` directory:
+
+```bash
+mkdir src
+```
+
+## Create the algorithm comparison code
+
+Create the `src/select_algorithm.py` file with the following code:
 
 ```python
 import os
-from typing import List, Dict, Any
-from pymongo import MongoClient
-from pymongo.auth_oidc import OIDCCallback, OIDCCallbackContext, OIDCCallbackResult
-from azure.identity import DefaultAzureCredential
-from openai import AzureOpenAI
+import time
+from pathlib import Path
+from typing import Any, Literal
+import openai
+import pymongo.errors
+from utils import get_clients_passwordless, read_file_return_json, insert_data, print_comparison_table
 from dotenv import load_dotenv
 
+# Load environment variables from .env file
 load_dotenv()
 
-class AzureIdentityTokenCallback(OIDCCallback):
-    def __init__(self, credential):
-        self.credential = credential
+# Type definitions for algorithm and similarity options
+Algorithm = Literal['diskann', 'hnsw', 'ivf']
+Similarity = Literal['COS', 'L2', 'IP']
 
-    def fetch(self, context: OIDCCallbackContext) -> OIDCCallbackResult:
-        token = self.credential.get_token(
-            "https://ossrdbms-aad.database.windows.net/.default").token
-        return OIDCCallbackResult(access_token=token)
+# Available algorithms and similarity functions
+ALGORITHMS: list[Algorithm] = ['diskann', 'hnsw', 'ivf']
+SIMILARITIES: list[Similarity] = ['COS', 'L2', 'IP']
 
-def create_ivf_vector_index(collection, vector_field: str, dimensions: int) -> None:
-    """Create an IVF vector index on the specified field"""
-    print(f"Creating IVF vector index on field '{vector_field}'...")
+# Algorithm display labels for output
+ALGORITHM_LABELS = {
+    'diskann': 'DiskANN',
+    'hnsw': 'HNSW',
+    'ivf': 'IVF'
+}
 
-    # Use the native MongoDB command for DocumentDB vector indexes
-    index_command = {
-        "createIndexes": collection.name,
-        "indexes": [
-            {
-                "name": f"ivf_index_{vector_field}",
-                "key": {
-                    vector_field: "cosmosSearch"  # DocumentDB vector search index type
-                },
-                "cosmosSearchOptions": {
-                    # IVF algorithm configuration
-                    "kind": "vector-ivf",
-                    
-                    # Vector dimensions must match the embedding model
-                    "dimensions": dimensions,
-                    
-                    # Cosine similarity is effective for text embeddings
-                    "similarity": "COS",
-                    
-                    # Number of clusters (centroids) to partition vectors into
-                    # More clusters = faster search but potentially lower recall
-                    "numLists": 10
-                }
-            }
-        ]
-    }
 
-    try:
-        # Execute the createIndexes command directly
-        result = collection.database.command(index_command)
-        print("IVF vector index created successfully")
-    except Exception as e:
-        print(f"Error creating IVF vector index: {e}")
-        raise
-
-def perform_ivf_vector_search(collection,
-                              azure_openai_client,
-                              query_text: str,
-                              vector_field: str,
-                              model_name: str,
-                              top_k: int = 5) -> List[Dict[str, Any]]:
-    """Perform a vector search using IVF algorithm"""
-    print(f"Performing IVF vector search for: '{query_text}'")
-
-    try:
-        # Generate embedding vector for the search query
-        embedding_response = azure_openai_client.embeddings.create(
-            input=[query_text],
-            model=model_name
-        )
-
-        query_embedding = embedding_response.data[0].embedding
-
-        # Construct aggregation pipeline for IVF vector search
-        pipeline = [
-            {
-                "$search": {
-                    # Use cosmosSearch for vector operations in DocumentDB
-                    "cosmosSearch": {
-                        # Query vector to find similar documents
-                        "vector": query_embedding,
-                        
-                        # Document field containing vectors to search against
-                        "path": vector_field,
-                        
-                        # Final number of results to return
-                        "k": top_k
-                    }
-                }
-            },
-            {
-                # Project only the fields we want in the output and add similarity score
-                "$project": {
-                    "document": "$$ROOT",
-                    # Add search score from metadata
-                    "score": {"$meta": "searchScore"}
-                }
-            }
-        ]
-
-        # Run the search aggregation pipeline
-        results = list(collection.aggregate(pipeline))
-        return results
-
-    except Exception as e:
-        print(f"Error performing IVF vector search: {e}")
-        raise
-
-def main():
-    # Create credential and clients
-    credential = DefaultAzureCredential()
+def get_index_options(
+    collection_name: str,
+    index_name: str,
+    embedded_field: str,
+    dimensions: int,
+    algorithm: Algorithm,
+    similarity: Similarity
+) -> dict[str, Any]:
+    """
+    Build the index creation command for a specific algorithm and similarity function.
     
-    # Create MongoDB client with OIDC authentication
-    mongo_client = MongoClient(
-        f"mongodb+srv://{os.getenv('MONGO_CLUSTER_NAME')}.global.mongocluster.cosmos.azure.com/",
-        connectTimeoutMS=120000,
-        tls=True,
-        retryWrites=True,
-        authMechanism="MONGODB-OIDC",
-        authMechanismProperties={"OIDC_CALLBACK": AzureIdentityTokenCallback(credential)}
-    )
-
-    # Create Azure OpenAI client
-    azure_openai_client = AzureOpenAI(
-        azure_endpoint=os.getenv("AZURE_OPENAI_EMBEDDING_ENDPOINT"),
-        azure_ad_token_provider=lambda: credential.get_token("https://cognitiveservices.azure.com/.default").token,
-        api_version=os.getenv("AZURE_OPENAI_EMBEDDING_API_VERSION")
-    )
-
-    try:
-        # Create collection and index
-        database = mongo_client["Hotels"]
-        collection = database["hotels_ivf"]
-        
-        create_ivf_vector_index(
-            collection,
-            os.getenv("EMBEDDED_FIELD"),
-            int(os.getenv("EMBEDDING_DIMENSIONS"))
-        )
-
-        # Perform search
-        query = "quintessential lodging near running trails, eateries, retail"
-        results = perform_ivf_vector_search(
-            collection,
-            azure_openai_client,
-            query,
-            os.getenv("EMBEDDED_FIELD"),
-            os.getenv("AZURE_OPENAI_EMBEDDING_MODEL"),
-            top_k=5
-        )
-
-        print(f"\nSearch Results ({len(results)} found):")
-        for i, result in enumerate(results, 1):
-            print(f"{i}. {result['document']['HotelName']}, Score: {result['score']:.4f}")
-
-    finally:
-        mongo_client.close()
-
-if __name__ == "__main__":
-    main()
-```
-
-#### [HNSW](#tab/tab-hnsw)
-
-HNSW (Hierarchical Navigable Small World) is ideal for datasets between 10,000 and 50,000 documents. It builds a graph-based index for faster search with better recall.
-
-Create `hnsw.py`:
-
-```python
-import os
-from typing import List, Dict, Any
-from pymongo import MongoClient
-from pymongo.auth_oidc import OIDCCallback, OIDCCallbackContext, OIDCCallbackResult
-from azure.identity import DefaultAzureCredential
-from openai import AzureOpenAI
-from dotenv import load_dotenv
-
-load_dotenv()
-
-class AzureIdentityTokenCallback(OIDCCallback):
-    def __init__(self, credential):
-        self.credential = credential
-
-    def fetch(self, context: OIDCCallbackContext) -> OIDCCallbackResult:
-        token = self.credential.get_token(
-            "https://ossrdbms-aad.database.windows.net/.default").token
-        return OIDCCallbackResult(access_token=token)
-
-def create_hnsw_vector_index(collection, vector_field: str, dimensions: int) -> None:
-    """Create an HNSW vector index on the specified field."""
-    print(f"Creating HNSW vector index on field '{vector_field}'...")
-
-    index_command = {
-        "createIndexes": collection.name,
+    Each algorithm has different tuning parameters:
+    - DiskANN: maxDegree (graph connectivity), lBuild (build quality)
+    - HNSW: m (graph connectivity), efConstruction (build quality)
+    - IVF: numLists (number of clusters)
+    """
+    base = {
+        "createIndexes": collection_name,
         "indexes": [
             {
-                "name": f"hnsw_index_{vector_field}",
-                "key": {
-                    vector_field: "cosmosSearch"
-                },
-                "cosmosSearchOptions": {
-                    # HNSW algorithm configuration
-                    "kind": "vector-hnsw",
-
-                    # Vector dimensions must match the embedding model
-                    "dimensions": dimensions,
-
-                    # Cosine similarity works well with text embeddings
-                    "similarity": "COS",
-
-                    # Maximum connections per node in the graph
-                    # Higher values improve recall but increase memory and build time
-                    "m": 16,
-
-                    # Size of the candidate list during index construction
-                    # Higher values improve index quality but slow down building
-                    "efConstruction": 64
-                }
+                "name": index_name,
+                "key": {embedded_field: "cosmosSearch"},
+                "cosmosSearchOptions": {}
             }
         ]
     }
 
-    try:
-        result = collection.database.command(index_command)
-        print("HNSW vector index created successfully")
-    except Exception as e:
-        print(f"Error creating HNSW vector index: {e}")
-        raise
-
-def perform_hnsw_vector_search(collection,
-                               azure_openai_client,
-                               query_text: str,
-                               vector_field: str,
-                               model_name: str,
-                               top_k: int = 5) -> List[Dict[str, Any]]:
-    """Perform a vector search using HNSW algorithm."""
-    print(f"Performing HNSW vector search for: '{query_text}'")
-
-    embedding_response = azure_openai_client.embeddings.create(
-        input=[query_text],
-        model=model_name
-    )
-    query_embedding = embedding_response.data[0].embedding
-
-    pipeline = [
-        {
-            "$search": {
-                "cosmosSearch": {
-                    "vector": query_embedding,
-                    "path": vector_field,
-                    "k": top_k
-                }
-            }
-        },
-        {
-            "$project": {
-                "document": "$$ROOT",
-                "score": {"$meta": "searchScore"}
-            }
+    # DiskANN: Disk-based approximate nearest neighbor search
+    # Best for: Large datasets, memory-constrained environments
+    if algorithm == 'diskann':
+        base["indexes"][0]["cosmosSearchOptions"] = {
+            "kind": "vector-diskann",
+            "dimensions": dimensions,
+            "similarity": similarity,
+            "maxDegree": 32,  # Number of edges per node (higher = better accuracy, more memory)
+            "lBuild": 50      # Candidates during build (higher = better quality, slower build)
         }
-    ]
+    # HNSW: Hierarchical Navigable Small World graph
+    # Best for: High-accuracy requirements, fast search speed
+    elif algorithm == 'hnsw':
+        base["indexes"][0]["cosmosSearchOptions"] = {
+            "kind": "vector-hnsw",
+            "dimensions": dimensions,
+            "similarity": similarity,
+            "m": 16,              # Number of connections per layer (higher = better recall)
+            "efConstruction": 64  # Candidates during construction (higher = better quality)
+        }
+    # IVF: Inverted File index with clustering
+    # Best for: Large datasets, acceptable recall/latency tradeoff
+    elif algorithm == 'ivf':
+        base["indexes"][0]["cosmosSearchOptions"] = {
+            "kind": "vector-ivf",
+            "dimensions": dimensions,
+            "similarity": similarity,
+            "numLists": 1  # Number of clusters (higher = faster search, lower recall)
+        }
 
-    results = list(collection.aggregate(pipeline))
-    return results
+    return base
 
-def main():
-    credential = DefaultAzureCredential()
 
-    mongo_client = MongoClient(
-        f"mongodb+srv://{os.getenv('MONGO_CLUSTER_NAME')}.global.mongocluster.cosmos.azure.com/",
-        connectTimeoutMS=120000,
-        tls=True,
-        retryWrites=True,
-        authMechanism="MONGODB-OIDC",
-        authMechanismProperties={"OIDC_CALLBACK": AzureIdentityTokenCallback(credential)}
-    )
-
-    azure_openai_client = AzureOpenAI(
-        azure_endpoint=os.getenv("AZURE_OPENAI_EMBEDDING_ENDPOINT"),
-        azure_ad_token_provider=lambda: credential.get_token("https://cognitiveservices.azure.com/.default").token,
-        api_version=os.getenv("AZURE_OPENAI_EMBEDDING_API_VERSION")
-    )
-
-    try:
-        database = mongo_client["Hotels"]
-        collection = database["hotels_hnsw"]
-
-        create_hnsw_vector_index(
-            collection,
-            os.getenv("EMBEDDED_FIELD"),
-            int(os.getenv("EMBEDDING_DIMENSIONS"))
-        )
-
-        query = "quintessential lodging near running trails, eateries, retail"
-        results = perform_hnsw_vector_search(
-            collection,
-            azure_openai_client,
-            query,
-            os.getenv("EMBEDDED_FIELD"),
-            os.getenv("AZURE_OPENAI_EMBEDDING_MODEL"),
-            top_k=5
-        )
-
-        print(f"\nSearch Results ({len(results)} found):")
-        for i, result in enumerate(results, 1):
-            print(f"{i}. {result['document']['HotelName']}, Score: {result['score']:.4f}")
-
-    finally:
-        mongo_client.close()
-
-if __name__ == "__main__":
-    main()
-```
-
-Key differences from IVF:
-- **m parameter**: Controls graph connectivity (2–100, default 16). Higher values improve recall but increase memory.
-- **efConstruction**: Candidate list size during construction (4–1000, default 64). Higher values improve accuracy at cost of build time.
-- **Cluster tier**: Requires M30 or higher due to memory overhead.
-
-#### [DiskANN](#tab/tab-diskann)
-
-DiskANN is optimized for very large datasets (50,000+ documents) with efficient disk-based storage.
-
-Create `diskann.py`:
-
-```python
-import os
-from typing import List, Dict, Any
-from pymongo import MongoClient
-from pymongo.auth_oidc import OIDCCallback, OIDCCallbackContext, OIDCCallbackResult
-from azure.identity import DefaultAzureCredential
-from openai import AzureOpenAI
-from dotenv import load_dotenv
-
-load_dotenv()
-
-class AzureIdentityTokenCallback(OIDCCallback):
-    def __init__(self, credential):
-        self.credential = credential
-
-    def fetch(self, context: OIDCCallbackContext) -> OIDCCallbackResult:
-        token = self.credential.get_token(
-            "https://ossrdbms-aad.database.windows.net/.default").token
-        return OIDCCallbackResult(access_token=token)
-
-def create_diskann_vector_index(collection, vector_field: str, dimensions: int) -> None:
-    """Create a DiskANN vector index on the specified field."""
-    print(f"Creating DiskANN vector index on field '{vector_field}'...")
-
-    index_command = {
-        "createIndexes": collection.name,
-        "indexes": [
-            {
-                "name": f"diskann_index_{vector_field}",
-                "key": {
-                    vector_field: "cosmosSearch"
-                },
-                "cosmosSearchOptions": {
-                    # DiskANN algorithm configuration
-                    "kind": "vector-diskann",
-
-                    # Vector dimensions must match the embedding model
-                    "dimensions": dimensions,
-
-                    # Cosine similarity metric
-                    "similarity": "COS",
-
-                    # Maximum degree: edges per node in the graph
-                    # Higher values improve accuracy but increase memory usage
-                    "maxDegree": 32,
-
-                    # Build parameter: candidates evaluated during construction
-                    # Higher values improve index quality but increase build time
-                    "lBuild": 50
-                }
-            }
-        ]
+def get_search_pipeline(
+    query_embedding: list[float],
+    embedded_field: str,
+    k: int,
+    algorithm: Algorithm
+) -> list[dict[str, Any]]:
+    """
+    Build the vector search aggregation pipeline with algorithm-specific search parameters.
+    
+    Search parameters control the recall/latency tradeoff at query time:
+    - DiskANN: lSearch (search list size)
+    - HNSW: efSearch (search candidates)
+    - IVF: nProbes (clusters to search)
+    """
+    cosmos_search = {
+        "vector": query_embedding,
+        "path": embedded_field,
+        "k": k  # Number of results to return
     }
 
-    try:
-        result = collection.database.command(index_command)
-        print("DiskANN vector index created successfully")
-    except Exception as e:
-        print(f"Error creating DiskANN vector index: {e}")
-        raise
+    # Add algorithm-specific search parameters
+    if algorithm == 'diskann':
+        cosmos_search["lSearch"] = 100  # Search list size (higher = better recall, slower)
+    elif algorithm == 'hnsw':
+        cosmos_search["efSearch"] = 80  # Candidates explored (higher = better recall, slower)
+    elif algorithm == 'ivf':
+        cosmos_search["nProbes"] = 1    # Clusters searched (higher = better recall, slower)
 
-def perform_diskann_vector_search(collection,
-                                  azure_openai_client,
-                                  query_text: str,
-                                  vector_field: str,
-                                  model_name: str,
-                                  top_k: int = 5) -> List[Dict[str, Any]]:
-    """Perform a vector search using DiskANN algorithm."""
-    print(f"Performing DiskANN vector search for: '{query_text}'")
-
-    embedding_response = azure_openai_client.embeddings.create(
-        input=[query_text],
-        model=model_name
-    )
-    query_embedding = embedding_response.data[0].embedding
-
-    pipeline = [
-        {
-            "$search": {
-                "cosmosSearch": {
-                    "vector": query_embedding,
-                    "path": vector_field,
-                    "k": top_k
-                }
-            }
-        },
-        {
-            "$project": {
-                "document": "$$ROOT",
-                "score": {"$meta": "searchScore"}
-            }
-        }
+    # Build aggregation pipeline with vector search and score projection
+    return [
+        {"$search": {"cosmosSearch": cosmos_search}},
+        {"$project": {"score": {"$meta": "searchScore"}, "document": "$$ROOT"}}
     ]
 
-    results = list(collection.aggregate(pipeline))
-    return results
 
-def main():
-    credential = DefaultAzureCredential()
+def get_target_collections(
+    algorithm_env: str,
+    similarity_env: str
+) -> list[dict[str, Any]]:
+    """
+    Generate list of algorithm/similarity combinations to test.
+    
+    Supports testing:
+    - All algorithms with a specific similarity function
+    - A specific algorithm with all similarity functions
+    - All combinations (9 total: 3 algorithms × 3 similarity functions)
+    """
+    algorithms = ALGORITHMS if algorithm_env == 'all' else [algorithm_env]
+    similarities = SIMILARITIES if similarity_env == 'all' else [similarity_env]
 
-    mongo_client = MongoClient(
-        f"mongodb+srv://{os.getenv('MONGO_CLUSTER_NAME')}.global.mongocluster.cosmos.azure.com/",
-        connectTimeoutMS=120000,
-        tls=True,
-        retryWrites=True,
-        authMechanism="MONGODB-OIDC",
-        authMechanismProperties={"OIDC_CALLBACK": AzureIdentityTokenCallback(credential)}
-    )
+    targets = []
 
-    azure_openai_client = AzureOpenAI(
-        azure_endpoint=os.getenv("AZURE_OPENAI_EMBEDDING_ENDPOINT"),
-        azure_ad_token_provider=lambda: credential.get_token("https://cognitiveservices.azure.com/.default").token,
-        api_version=os.getenv("AZURE_OPENAI_EMBEDDING_API_VERSION")
-    )
+    for alg in algorithms:
+        if alg not in ALGORITHMS:
+            raise ValueError(f"Invalid ALGORITHM '{alg}'. Must be one of: all, {', '.join(ALGORITHMS)}")
+
+        for sim in similarities:
+            if sim not in SIMILARITIES:
+                raise ValueError(f"Invalid SIMILARITY '{sim}'. Must be one of: all, {', '.join(SIMILARITIES)}")
+
+            targets.append({
+                'collection_name': f"hotels_{alg}_{sim.lower()}",
+                'algorithm': alg,
+                'similarity': sim
+            })
+
+    return targets
+
+
+def main() -> None:
+    """
+    Main comparison workflow:
+    1. Load configuration from environment variables
+    2. Initialize clients for DocumentDB and Azure OpenAI
+    3. Load hotel data with pre-calculated embeddings
+    4. For each algorithm/similarity combination:
+       - Create collection and insert data
+       - Create vector index with algorithm-specific parameters
+       - Execute vector search with query-time parameters
+       - Record results and latency
+    5. Display comparison table showing performance across all configurations
+    """
+    # Load configuration from environment
+    db_name = os.getenv('AZURE_DOCUMENTDB_DATABASENAME', 'Hotels')
+    embedded_field = os.getenv('EMBEDDED_FIELD', 'DescriptionVector')
+    embedding_dimensions = int(os.getenv('EMBEDDING_DIMENSIONS', '1536'))
+    data_file = os.getenv('DATA_FILE_WITH_VECTORS', '../../data/Hotels_Vector.json')
+    model_name = os.getenv('AZURE_OPENAI_EMBEDDING_MODEL', 'text-embedding-3-small')
+    batch_size = int(os.getenv('LOAD_SIZE_BATCH', '100'))
+    algorithm_env = os.getenv('ALGORITHM', 'all').strip().lower()
+    similarity_env = os.getenv('SIMILARITY', 'COS').strip().upper()
+    search_query = 'quintessential lodging near running trails, eateries, retail'
 
     try:
-        database = mongo_client["Hotels"]
-        collection = database["hotels_diskann"]
+        # Validate and expand algorithm/similarity combinations
+        targets = get_target_collections(algorithm_env, similarity_env)
 
-        create_diskann_vector_index(
-            collection,
-            os.getenv("EMBEDDED_FIELD"),
-            int(os.getenv("EMBEDDING_DIMENSIONS"))
+        print("\nVector Algorithm Comparison")
+        print(f"   Database: {db_name}")
+        print(f"   Algorithms: {algorithm_env}")
+        print(f"   Similarity: {similarity_env}")
+        print(f"   Collections to query: {', '.join([t['collection_name'] for t in targets])}")
+        print(f'   Search query: "{search_query}"\n')
+
+        # Initialize MongoDB and Azure OpenAI clients with passwordless authentication
+        print("\nInitializing MongoDB and Azure OpenAI clients...")
+        mongo_client, azure_openai_client = get_clients_passwordless()
+
+        database = mongo_client[db_name]
+
+        # Load hotel data with embeddings
+        script_dir = Path(__file__).parent
+        data_path = script_dir / '..' / data_file
+        print(f"\nLoading data from {data_path}...")
+        data = read_file_return_json(str(data_path))
+        print(f"Loaded {len(data)} documents")
+
+        # Verify embeddings are present
+        documents_with_embeddings = [doc for doc in data if embedded_field in doc]
+        if not documents_with_embeddings:
+            raise ValueError(f"No documents found with embeddings in field '{embedded_field}'")
+
+        # Generate query embedding using Azure OpenAI
+        print('Generating query embedding...')
+        embedding_response = azure_openai_client.embeddings.create(
+            model=model_name,
+            input=[search_query]
         )
+        query_embedding = embedding_response.data[0].embedding
+        print(f"Query embedding: {len(query_embedding)} dimensions\n")
 
-        query = "quintessential lodging near running trails, eateries, retail"
-        results = perform_diskann_vector_search(
-            collection,
-            azure_openai_client,
-            query,
-            os.getenv("EMBEDDED_FIELD"),
-            os.getenv("AZURE_OPENAI_EMBEDDING_MODEL"),
-            top_k=5
-        )
+        # Store results for comparison
+        comparison_results = []
 
-        print(f"\nSearch Results ({len(results)} found):")
-        for i, result in enumerate(results, 1):
-            print(f"{i}. {result['document']['HotelName']}, Score: {result['score']:.4f}")
+        # Test each algorithm/similarity combination
+        for target in targets:
+            print(f"\n--- {ALGORITHM_LABELS[target['algorithm']]} / {target['similarity']} ---")
+            print(f"Collection: {target['collection_name']}")
+
+            try:
+                # Drop existing collection to ensure clean test
+                try:
+                    database.drop_collection(target['collection_name'])
+                except Exception as e:
+                    print(f"  Note: could not drop existing collection: {e}")
+
+                # Create new collection
+                collection = database.create_collection(target['collection_name'])
+                print(f"Created collection: {target['collection_name']}")
+
+                # Insert hotel documents with embeddings
+                insert_summary = insert_data(collection, documents_with_embeddings, batch_size)
+                print(f"Inserted: {insert_summary['inserted']}/{insert_summary['total']}")
+
+                # Create vector index with algorithm-specific parameters
+                index_name = f"vectorIndex_{target['algorithm']}_{target['similarity'].lower()}"
+                index_options = get_index_options(
+                    target['collection_name'],
+                    index_name,
+                    embedded_field,
+                    embedding_dimensions,
+                    target['algorithm'],
+                    target['similarity']
+                )
+                database.command(index_options)
+                print(f"Created vector index: {index_name}")
+
+                # Execute vector search and measure latency
+                print('Executing vector search...')
+                start_time = time.time()
+
+                pipeline = get_search_pipeline(query_embedding, embedded_field, 5, target['algorithm'])
+                # aggregate() returns a cursor (iterator); list() consumes all pages
+                search_results = list(collection.aggregate(pipeline))
+
+                latency_ms = (time.time() - start_time) * 1000
+
+                # Store results for comparison table
+                comparison_results.append({
+                    'collection_name': target['collection_name'],
+                    'algorithm': ALGORITHM_LABELS[target['algorithm']],
+                    'similarity': target['similarity'],
+                    'search_results': search_results,
+                    'latency_ms': latency_ms
+                })
+
+                print(f"Success: {len(search_results)} results, {latency_ms:.0f}ms")
+
+            except (pymongo.errors.PyMongoError, openai.APIError) as error:
+                print(f"Error with {target['collection_name']}: {error}")
+
+        # Display comparison table if any results were collected
+        if comparison_results:
+            print_comparison_table(comparison_results)
+
+    except Exception as error:
+        print(f"\nApp failed: {error}")
+        raise
 
     finally:
-        mongo_client.close()
+        # Clean up database connection
+        print('\nClosing database connection...')
+        if 'mongo_client' in locals():
+            mongo_client.close()
+        print('Database connection closed')
+
 
 if __name__ == "__main__":
     main()
 ```
 
-Key parameters:
-- **maxDegree**: Number of edges per node (20–2048, default 32). Higher values improve accuracy.
-- **lBuild**: Candidate neighbors evaluated during construction (10–500, default 50). Affects index quality.
-- **Cluster tier**: Requires M30 or higher.
+This script orchestrates the algorithm comparison by:
 
-----
+- Loading configuration from environment variables
+- Initializing MongoDB and Azure OpenAI clients with passwordless authentication
+- Loading hotel data with pre-calculated embeddings
+- Testing each algorithm/similarity combination by creating a collection, inserting data, creating an index, and executing a search
+- Measuring and comparing search performance across all configurations
+- Displaying results in a comparison table
 
-> [!IMPORTANT]
-> Vectors must be stored as `number[]` (array of numbers) to be indexed. Documents with vectors stored as other types (such as `double[]`) won't be indexed. The maximum supported dimensions depend on the index type: up to 2,000 for IVF/HNSW, and up to 16,000 for DiskANN with product quantization.
+## Create utility functions
 
-## Query with vector search
-
-All three algorithms use the same query pattern with the `$search` aggregation stage:
+Create the `src/utils.py` file with the following code:
 
 ```python
-# Generate embedding for query
-embedding_response = azure_openai_client.embeddings.create(
-    input=["your query text"],
-    model=model_name
+import json
+import os
+import warnings
+from typing import Any
+
+# Suppress the PyMongo CosmosDB cluster detection warning
+warnings.filterwarnings(
+    "ignore",
+    message="You appear to be connected to a CosmosDB cluster.*",
 )
 
-# Execute vector search
-pipeline = [
-    {
-        "$search": {
-            "cosmosSearch": {
-                "vector": embedding_response.data[0].embedding,
-                "path": vector_field,
-                "k": 5  # Return top 5 similar documents
-            }
-        }
-    },
-    {
-        "$project": {
-            "score": {"$meta": "searchScore"},
-            "document": "$$ROOT"
-        }
+from pymongo import MongoClient, InsertOne
+from pymongo.collection import Collection
+from pymongo.errors import BulkWriteError
+from azure.identity import DefaultAzureCredential
+from pymongo.auth_oidc import OIDCCallback, OIDCCallbackContext, OIDCCallbackResult
+from openai import AzureOpenAI
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+
+class AzureIdentityTokenCallback(OIDCCallback):
+    """
+    Callback for MongoDB OIDC authentication using Azure Identity.
+    
+    DocumentDB requires OIDC tokens for passwordless authentication.
+    This callback fetches tokens from Azure AD using DefaultAzureCredential.
+    """
+    def __init__(self, credential):
+        self.credential = credential
+
+    def fetch(self, context: OIDCCallbackContext) -> OIDCCallbackResult:
+        # Fetch token for DocumentDB scope
+        token = self.credential.get_token(
+            "https://ossrdbms-aad.database.windows.net/.default").token
+        return OIDCCallbackResult(access_token=token)
+
+
+def get_clients_passwordless() -> tuple[MongoClient, AzureOpenAI]:
+    """
+    Initialize MongoDB and Azure OpenAI clients using passwordless authentication.
+    
+    Uses DefaultAzureCredential which automatically tries multiple authentication methods:
+    1. Environment variables (AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_CLIENT_SECRET)
+    2. Managed Identity (when running in Azure)
+    3. Azure CLI (az login)
+    4. Azure PowerShell
+    5. Visual Studio Code
+    
+    Returns:
+        Tuple of (MongoClient, AzureOpenAI) configured for passwordless access
+    """
+    cluster_name = os.getenv("MONGO_CLUSTER_NAME")
+    if not cluster_name:
+        raise ValueError(
+            "MONGO_CLUSTER_NAME environment variable is required.\n"
+            "Create a .env file based on .env.example or set it in your environment."
+        )
+
+    # Create credential provider for Azure authentication
+    credential = DefaultAzureCredential()
+
+    # Configure OIDC authentication for MongoDB
+    auth_properties = {"OIDC_CALLBACK": AzureIdentityTokenCallback(credential)}
+
+    # Create MongoDB client with passwordless authentication
+    mongo_client = MongoClient(
+        f"mongodb+srv://{cluster_name}.mongocluster.cosmos.azure.com/",
+        # 120s connect timeout accommodates cold-start latency on DocumentDB clusters
+        connectTimeoutMS=120000,
+        tls=True,
+        retryWrites=False,
+        authMechanism="MONGODB-OIDC",
+        authMechanismProperties=auth_properties
+    )
+
+    # Get Azure OpenAI configuration
+    azure_openai_endpoint = os.getenv("AZURE_OPENAI_EMBEDDING_ENDPOINT")
+    if not azure_openai_endpoint:
+        raise ValueError(
+            "AZURE_OPENAI_EMBEDDING_ENDPOINT environment variable is required.\n"
+            "Create a .env file based on .env.example or set it in your environment."
+        )
+
+    # Create Azure OpenAI client with passwordless authentication
+    azure_openai_client = AzureOpenAI(
+        azure_endpoint=azure_openai_endpoint,
+        # Token provider fetches Azure AD tokens automatically
+        azure_ad_token_provider=lambda: credential.get_token("https://cognitiveservices.azure.com/.default").token,
+        # See Azure OpenAI API version lifecycle:
+        # https://learn.microsoft.com/azure/ai-services/openai/api-version-deprecation
+        api_version=os.getenv("AZURE_OPENAI_EMBEDDING_API_VERSION", "2023-05-15"),
+        timeout=30.0,
+        max_retries=3,
+    )
+
+    return mongo_client, azure_openai_client
+
+
+def read_file_return_json(file_path: str) -> list[dict[str, Any]]:
+    """
+    Read a JSON file and return the parsed data.
+    
+    Args:
+        file_path: Path to the JSON file
+        
+    Returns:
+        List of dictionaries representing the JSON data
+        
+    Raises:
+        FileNotFoundError: If file doesn't exist
+        json.JSONDecodeError: If file contains invalid JSON
+    """
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        print(f"Error: File '{file_path}' not found")
+        raise
+    except json.JSONDecodeError as e:
+        print(f"Error: Invalid JSON in file '{file_path}': {e}")
+        raise
+
+
+def insert_data(collection: Collection, data: list[dict[str, Any]], batch_size: int = 100) -> dict[str, int]:
+    """
+    Insert documents using bulk_write in batches.
+
+    DocumentDB has a 16 MB command payload limit. Batch size of 100 stays well
+    within this limit while keeping round-trip overhead reasonable.
+    
+    Args:
+        collection: MongoDB collection to insert into
+        data: List of documents to insert
+        batch_size: Number of documents per batch (default: 100)
+        
+    Returns:
+        Dictionary with 'total', 'inserted', and 'failed' counts
+    """
+    total_documents = len(data)
+    inserted_count = 0
+    failed_count = 0
+
+    print(f"Inserting {total_documents} documents in batches of {batch_size}...")
+
+    # Process documents in batches
+    for i in range(0, total_documents, batch_size):
+        batch = data[i:i + batch_size]
+        batch_num = (i // batch_size) + 1
+
+        try:
+            # Use bulk_write with InsertOne operations for efficiency
+            operations = [InsertOne(document) for document in batch]
+            result = collection.bulk_write(operations, ordered=False)
+            inserted_count += result.inserted_count
+            print(f"Batch {batch_num} completed: {result.inserted_count} documents inserted")
+
+        except BulkWriteError as e:
+            # Handle partial batch failures
+            inserted_count += e.details.get('nInserted', 0)
+            failed_count += len(batch) - e.details.get('nInserted', 0)
+            print(f"Batch {batch_num} had errors: {e.details.get('nInserted', 0)} inserted, {failed_count} failed")
+
+        except Exception as e:
+            # Handle complete batch failure
+            failed_count += len(batch)
+            print(f"Batch {batch_num} failed completely: {e}")
+
+    return {
+        'total': total_documents,
+        'inserted': inserted_count,
+        'failed': failed_count
     }
-]
 
-results = list(collection.aggregate(pipeline))
+
+def print_comparison_table(results: list[dict[str, Any]]) -> None:
+    """
+    Display comparison results in a formatted table.
+    
+    Shows:
+    - Algorithm and similarity function used
+    - Top search result (hotel name)
+    - Search score
+    - Query latency in milliseconds
+    
+    Followed by detailed results for each configuration.
+    """
+    if not results:
+        print("No comparison results to display.")
+        return
+
+    print("\n" + "=" * 90)
+    print("                    Vector Algorithm Comparison Results")
+    print("=" * 90)
+
+    # Print table header
+    header = (
+        f"{'Algorithm':<12} "
+        f"{'Similarity':<14} "
+        f"{'Top Result':<24} "
+        f"{'Score':<12} "
+        f"{'Latency(ms)':<14}"
+    )
+    print(header)
+    print("-" * 90)
+
+    # Print summary row for each result
+    for r in results:
+        top_result = r['search_results'][0] if r['search_results'] else None
+        if top_result:
+            doc = top_result.get('document', top_result)
+            top_name = doc.get('HotelName', 'N/A')[:22]
+            top_score = f"{top_result['score']:.4f}"
+        else:
+            top_name = 'N/A'
+            top_score = 'N/A'
+
+        row = (
+            f"{r['algorithm']:<12} "
+            f"{r['similarity']:<14} "
+            f"{top_name:<24} "
+            f"{top_score:<12} "
+            f"{r['latency_ms']:<14.0f}"
+        )
+        print(row)
+
+    print("=" * 90)
+
+    # Print detailed results for each configuration
+    for r in results:
+        print(f"\n--- {r['algorithm']} / {r['similarity']} ({r['collection_name']}) ---")
+        if not r['search_results']:
+            print("  No results.")
+            continue
+
+        for i, item in enumerate(r['search_results'], 1):
+            doc = item.get('document', item)
+            score = item['score']
+            print(f"  {i}. {doc.get('HotelName', 'N/A')}, Score: {score:.4f}")
+
+        print(f"  Latency: {r['latency_ms']:.0f}ms")
 ```
 
-The `$search` stage finds the k nearest neighbors to your query vector. Results are ordered by similarity score (highest first).
+The utilities provide essential functions for:
 
-## Choose the right algorithm
+- Passwordless authentication to DocumentDB and Azure OpenAI using DefaultAzureCredential
+- Reading JSON data files with error handling
+- Batch insertion of documents with DocumentDB's 16 MB payload limit in mind
+- Formatted display of comparison results showing algorithm performance
 
-Select the vector index algorithm based on your dataset size and performance requirements:
+## Run the code
 
-| Algorithm | Best For | Cluster Tier | Trade-offs |
-|-----------|----------|-------------|------------|
-| **IVF** | Small datasets (<10K documents) | M10+ | Fast creation, lower recall at scale |
-| **HNSW** | Medium datasets (10K–50K documents) | M30+ | Balanced recall/speed, more memory |
-| **DiskANN** | Large datasets (50K+ documents) | M40+ | Best recall at scale, disk-efficient |
-
-### Similarity metrics
-
-Each algorithm supports three similarity metrics:
-
-| Metric | Range | Interpretation | Best For |
-|--------|-------|---------------|----------|
-| **COS** (Cosine) | 0–1 | Higher = more similar | Text embeddings (normalized vectors) |
-| **L2** (Euclidean) | 0+ | Lower = more similar | Spatial data, image embeddings |
-| **IP** (Inner Product) | Varies | Higher = more similar | Recommendation systems, normalized embeddings |
-
-### Tuning parameters
-
-#### IVF parameters
-
-| Parameter | Description | Default | Guidance |
-|-----------|-------------|---------|----------|
-| `numLists` | Number of clusters for partitioning | 1 | Use 1 for <1K docs. For larger datasets, use √N. More lists = faster search but slower creation. |
-
-#### HNSW parameters
-
-| Parameter | Description | Default | Guidance |
-|-----------|-------------|---------|----------|
-| `m` | Max connections per node | 16 | Higher (up to 64) = better recall, more memory |
-| `efConstruction` | Build-time candidate list size | 64 | Higher (up to 500) = better quality, slower build |
-
-#### DiskANN parameters
-
-| Parameter | Description | Default | Guidance |
-|-----------|-------------|---------|----------|
-| `maxDegree` | Max edges per node | 32 | Higher = better recall, more disk I/O |
-| `lBuild` | Build-time search width | 50 | Higher = better quality index, slower build |
-
-### Cluster tier requirements
-
-- **M10/M20**: Sufficient for IVF indexes on small datasets
-- **M30**: Required for HNSW indexes (memory-intensive graph structure)
-- **M40+**: Required for DiskANN (disk-optimized for large-scale vector search)
-
-> [!NOTE]
-> Quantized indexes (HNSW, DiskANN) require a minimum of 1,000 vectors. Below this threshold, the system performs a full scan regardless of index configuration.
-
-### Compare algorithms
-
-Run all three algorithms against the same dataset to compare performance:
+Execute the comparison script to test all algorithms with cosine similarity:
 
 ```bash
-python compare_all.py
+python src/select_algorithm.py
 ```
 
-This executes 9 searches (3 algorithms × 3 metrics) and displays a comparison table showing latency, similarity scores, and top results for each combination. See the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-python) for the full comparison runner.
+The output shows the comparison across all three algorithms:
 
-## Authenticate with Azure CLI
+```
+Vector Algorithm Comparison
+   Database: Hotels
+   Algorithms: all
+   Similarity: COS
+   Collections to query: hotels_diskann_cos, hotels_hnsw_cos, hotels_ivf_cos
+   Search query: "quintessential lodging near running trails, eateries, retail"
 
-Sign in to Azure CLI before you run the application so it can access Azure resources securely.
+Initializing MongoDB and Azure OpenAI clients...
+
+Loading data from ../data/Hotels_Vector.json...
+Loaded 50 documents
+Generating query embedding...
+Query embedding: 1536 dimensions
+
+--- DiskANN / COS ---
+Collection: hotels_diskann_cos
+Created collection: hotels_diskann_cos
+Inserting 50 documents in batches of 100...
+Batch 1 completed: 50 documents inserted
+Inserted: 50/50
+Created vector index: vectorIndex_diskann_cos
+Executing vector search...
+Success: 5 results, 145ms
+
+--- HNSW / COS ---
+Collection: hotels_hnsw_cos
+Created collection: hotels_hnsw_cos
+Inserting 50 documents in batches of 100...
+Batch 1 completed: 50 documents inserted
+Inserted: 50/50
+Created vector index: vectorIndex_hnsw_cos
+Executing vector search...
+Success: 5 results, 132ms
+
+--- IVF / COS ---
+Collection: hotels_ivf_cos
+Created collection: hotels_ivf_cos
+Inserting 50 documents in batches of 100...
+Batch 1 completed: 50 documents inserted
+Inserted: 50/50
+Created vector index: vectorIndex_ivf_cos
+Executing vector search...
+Success: 5 results, 128ms
+
+==========================================================================================
+                    Vector Algorithm Comparison Results
+==========================================================================================
+Algorithm    Similarity     Top Result               Score        Latency(ms)   
+------------------------------------------------------------------------------------------
+DiskANN      COS            Twin Dome Motel          0.8947       145           
+HNSW         COS            Twin Dome Motel          0.8947       132           
+IVF          COS            Twin Dome Motel          0.8947       128           
+==========================================================================================
+
+--- DiskANN / COS (hotels_diskann_cos) ---
+  1. Twin Dome Motel, Score: 0.8947
+  2. Triple Landscape Hotel, Score: 0.8898
+  3. Smile Hotel, Score: 0.8855
+  4. Gastronomic Landscape Hotel, Score: 0.8797
+  5. Twin Landscape Resort, Score: 0.8772
+  Latency: 145ms
+
+--- HNSW / COS (hotels_hnsw_cos) ---
+  1. Twin Dome Motel, Score: 0.8947
+  2. Triple Landscape Hotel, Score: 0.8898
+  3. Smile Hotel, Score: 0.8855
+  4. Gastronomic Landscape Hotel, Score: 0.8797
+  5. Twin Landscape Resort, Score: 0.8772
+  Latency: 132ms
+
+--- IVF / COS (hotels_ivf_cos) ---
+  1. Twin Dome Motel, Score: 0.8947
+  2. Triple Landscape Hotel, Score: 0.8898
+  3. Smile Hotel, Score: 0.8855
+  4. Gastronomic Landscape Hotel, Score: 0.8797
+  5. Twin Landscape Resort, Score: 0.8772
+  Latency: 128ms
+
+Closing database connection...
+Database connection closed
+```
+
+### Test specific combinations
+
+Test a specific algorithm:
 
 ```bash
-az login
+# Test only DiskANN across all similarity functions
+ALGORITHM=diskann SIMILARITY=all python src/select_algorithm.py
 ```
 
-The code uses your local developer authentication to access Azure DocumentDB and Azure OpenAI. The authentication relies on [DefaultAzureCredential](/python/api/azure-identity/azure.identity.defaultazurecredential) from **azure-identity** to find your Azure credentials in the environment.
-
-## Run the quickstart
-
-### [IVF](#tab/tab-ivf)
+Test a specific similarity function:
 
 ```bash
-python ivf.py
+# Test all algorithms with L2 distance
+ALGORITHM=all SIMILARITY=L2 python src/select_algorithm.py
 ```
 
-#### [HNSW](#tab/tab-hnsw)
+Test a specific algorithm and similarity combination:
 
 ```bash
-python hnsw.py
+# Test HNSW with inner product
+ALGORITHM=hnsw SIMILARITY=IP python src/select_algorithm.py
 ```
 
-#### [DiskANN](#tab/tab-diskann)
+### Understanding the results
 
-```bash
-python diskann.py
-```
+The comparison table helps you choose the best configuration for your workload:
 
-----
+- **Latency**: Query execution time in milliseconds. Lower is better for user-facing search.
+- **Score**: Similarity score using the selected function. Higher scores indicate better matches.
+- **Top Result**: The highest-scoring hotel for the query. Consistency across algorithms indicates stable results.
 
-You see the top hotels that match the vector search query and their similarity scores.
+Algorithm selection guidelines:
 
-## View and manage data in Visual Studio Code
+- **DiskANN**: Best for large datasets where memory is limited. Stores index on disk while maintaining good performance.
+- **HNSW**: Best for high-accuracy requirements and fast search. Requires more memory but provides excellent recall.
+- **IVF**: Best for very large datasets where some recall can be traded for speed. Uses clustering for efficient search.
 
-1. Select the [DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) in Visual Studio Code to connect to your Azure DocumentDB account.
-1. View the data and indexes in the Hotels database.
+Similarity function selection:
+
+- **COS (Cosine)**: Best for text embeddings. Normalizes vectors and measures angle between them.
+- **L2 (Euclidean)**: Measures straight-line distance. Sensitive to vector magnitude.
+- **IP (Inner Product)**: Dot product similarity. Useful when vector magnitude is meaningful.
+
+Tuning parameters:
+
+DiskANN tuning:
+- `maxDegree`: Higher values improve accuracy but increase memory usage (default: 32)
+- `lBuild`: Higher values improve index quality but slow down index creation (default: 50)
+- `lSearch`: Higher values improve recall but slow down queries (default: 100)
+
+HNSW tuning:
+- `m`: Number of connections per layer. Higher improves recall (default: 16)
+- `efConstruction`: Candidates during build. Higher improves quality (default: 64)
+- `efSearch`: Candidates during search. Higher improves recall (default: 80)
+
+IVF tuning:
+- `numLists`: Number of clusters. Higher speeds up search but may reduce recall (default: 1)
+- `nProbes`: Clusters searched at query time. Higher improves recall but slows queries (default: 1)
 
 ## Clean up resources
 
-Delete the resource group, Azure DocumentDB account, and Azure OpenAI resource when you don't need them to avoid extra costs.
+If you created an Azure DocumentDB cluster specifically for this quickstart, you can delete the resource group to remove all associated resources:
 
-## Related content
+```azurecli
+az group delete --name <resource-group-name>
+```
 
-- [Vector store in Azure DocumentDB](vector-search.md)
-- [Azure OpenAI embeddings](/azure/ai-services/openai/concepts/understand-embeddings)
-- [PyMongo documentation](https://pymongo.readthedocs.io/)
+This command deletes the resource group and all resources within it, including the DocumentDB cluster.
+
+If you want to keep the cluster but remove the test data:
+
+```python
+# Add this to your script or run in a Python REPL
+from pymongo import MongoClient
+from azure.identity import DefaultAzureCredential
+from utils import AzureIdentityTokenCallback
+
+cluster_name = "<your-cluster-name>"
+credential = DefaultAzureCredential()
+auth_properties = {"OIDC_CALLBACK": AzureIdentityTokenCallback(credential)}
+
+client = MongoClient(
+    f"mongodb+srv://{cluster_name}.mongocluster.cosmos.azure.com/",
+    connectTimeoutMS=120000,
+    tls=True,
+    retryWrites=False,
+    authMechanism="MONGODB-OIDC",
+    authMechanismProperties=auth_properties
+)
+
+# Drop the test database
+client.drop_database("Hotels")
+client.close()
+```
+
+## Next steps
+
+- [Vector search concepts in Azure DocumentDB](concept-vector-search)
+- [How to use vector search in Azure DocumentDB](how-to-vector-search)
+- [Optimize vector search performance](how-to-optimize-vector-search-performance)
+- [Azure DocumentDB Python SDK reference](https://pymongo.readthedocs.io/)

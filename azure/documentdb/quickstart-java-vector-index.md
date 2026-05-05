@@ -1,179 +1,311 @@
 ---
-title: "Quickstart - Vector Indexing with Java"
-description: "Learn how to choose and configure IVF, HNSW, and DiskANN vector indexes in Azure DocumentDB with Java."
+title: Compare and choose vector index algorithms with Java
+description: Test and compare DiskANN, HNSW, and IVF vector indexes in Azure DocumentDB using Java to select the best algorithm for your vector search workload.
+ms.topic: quickstart
+ms.date: 2025-01-13
 author: diberry
 ms.author: diberry
-ms.reviewer: khelanmodi
-ms.devlang: java
-ms.topic: quickstart-sdk
-ms.date: 07/14/2025
-ai-usage: ai-assisted
-ms.custom:
-  - devx-track-java
-  - devx-track-data-ai
-  - devx-track-java-ai
-# CustomerIntent: As a developer, I want to choose and configure the right vector index algorithm for my dataset size in Azure DocumentDB.
+ms.service: azure-documentdb
+ms.subservice: vector-search
 ---
 
-# Quickstart: Vector indexing in Azure DocumentDB with Java
+# Compare and choose vector index algorithms with Java
 
-Learn how to create and use vector indexes in Azure DocumentDB to enable efficient similarity search with LLM embeddings. This quickstart shows how to set up IVF, HNSW, and DiskANN indexes—each optimized for different dataset sizes and performance requirements.
-
-This quickstart uses a sample hotel dataset in a JSON file with pre-calculated vectors from the `text-embedding-3-small` model. The dataset includes hotel names, locations, descriptions, and vector embeddings.
+This quickstart compares vector index algorithms (DiskANN, HNSW, IVF) in Azure DocumentDB using Java to help you select the best configuration for your vector search workload. The sample uses the same hotel dataset with pre-calculated vectors as the other quickstarts to demonstrate performance differences across algorithms and similarity functions.
 
 Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-java) on GitHub.
 
 ## Prerequisites
 
-[!INCLUDE[Prerequisites - Vector Index Quickstart](includes/prerequisite-quickstart-vector-index.md)]
+- An Azure subscription
+  - If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn)
 
-- [Java 21](/java/openjdk/download) or later
+- An existing Azure DocumentDB cluster
+  - If you don't have a cluster, create a [new cluster](quickstart-portal)
+  - [Role Based Access Control (RBAC) enabled](how-to-connect-role-based-access-control#enable-microsoft-entra-id-authentication)
+  - [Firewall configured to allow access to your client IP address](how-to-configure-firewall#grant-access-from-your-ip-address)
+  - Your identity must have the **dbOwner** role assigned on the target database
 
-- [Maven 3.6](https://maven.apache.org/download.cgi) or later
+- [Azure OpenAI resource](/azure/ai-foundry/openai/how-to/create-resource?view=foundry-classic&pivots=cli#create-a-resource)
+  - Custom domain configured
+  - [Role Based Access Control (RBAC) enabled](/azure/developer/ai/keyless-connections)
+  - Your identity must have the **Cognitive Services OpenAI User** role on the Azure OpenAI resource
+  - `text-embedding-3-small` model deployed
+
+- [Visual Studio Code](https://code.visualstudio.com/download)
+  - [DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb)
+
+- Use the Bash environment in [Azure Cloud Shell](/azure/cloud-shell/overview). For more information, see [Get started with Azure Cloud Shell](/azure/cloud-shell/quickstart).
+  
+  [![Launch Cloud Shell in a new window](../reusable-content/azure-cli/media/hdi-launch-cloud-shell.png)](https://shell.azure.com)
+
+- If you prefer to run CLI reference commands locally, [install](/cli/azure/install-azure-cli) the Azure CLI. If you're running on Windows or macOS, consider running Azure CLI in a Docker container. For more information, see [How to run the Azure CLI in a Docker container](/cli/azure/run-azure-cli-docker).
+
+  - If you're using a local installation, sign in to the Azure CLI by using the [az login](/cli/azure/reference-index#az-login) command. To finish the authentication process, follow the steps displayed in your terminal. For other sign-in options, see [Authenticate to Azure using Azure CLI](/cli/azure/authenticate-azure-cli).
+
+  - When you're prompted, install the Azure CLI extension on first use. For more information about extensions, see [Use and manage extensions with the Azure CLI](/cli/azure/azure-cli-extensions-overview).
+
+  - Run [az version](/cli/azure/reference-index?#az-version) to find the version and dependent libraries that are installed. To upgrade to the latest version, run [az upgrade](/cli/azure/reference-index?#az-upgrade).
+
+- [Java 21 or higher](https://learn.microsoft.com/java/openjdk/download)
+
+- [Maven 3.6 or higher](https://maven.apache.org/download.cgi)
 
 ## Create data file with vectors
 
 1. Create a new data directory for the hotels data file:
 
-    ```bash
-    mkdir data
-    ```
+   ```bash
+   mkdir data
+   ```
 
-1. Copy the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory.
+2. Copy the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory.
 
-## Set up the project
+## Create a Java project
 
-1. Create a Maven project:
+1. Create a new directory for your project and open it in Visual Studio Code:
 
-    ```bash
-    mvn archetype:generate \
-      -DgroupId=com.azure.documentdb \
-      -DartifactId=vector-quickstart \
-      -DarchetypeArtifactId=maven-archetype-quickstart \
-      -DinteractiveMode=false
+   ```bash
+   mkdir select-algorithm-quickstart
+   cd select-algorithm-quickstart
+   code .
+   ```
 
-    cd vector-quickstart
-    ```
+2. Create a standard Maven project structure:
 
-1. Update `pom.xml` with required dependencies:
+   ```bash
+   mkdir -p src/main/java/com/azure/documentdb/selectalgorithm
+   ```
 
-    ```xml
-    <dependencies>
-      <!-- MongoDB Driver -->
-      <dependency>
-        <groupId>org.mongodb</groupId>
-        <artifactId>mongodb-driver-sync</artifactId>
-        <version>4.11.1</version>
-      </dependency>
+3. Create a `pom.xml` file in the root directory with the following content:
 
-      <!-- Azure Identity -->
-      <dependency>
-        <groupId>com.azure</groupId>
-        <artifactId>azure-identity</artifactId>
-        <version>1.11.1</version>
-      </dependency>
+   ```xml
+   <project xmlns="http://maven.apache.org/POM/4.0.0"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+       <modelVersion>4.0.0</modelVersion>
 
-      <!-- Azure OpenAI -->
-      <dependency>
-        <groupId>com.azure</groupId>
-        <artifactId>azure-ai-openai</artifactId>
-        <version>1.0.0</version>
-      </dependency>
+       <groupId>com.azure.documentdb.samples</groupId>
+       <artifactId>select-algorithm-java</artifactId>
+       <version>1.0-SNAPSHOT</version>
+       <name>Azure DocumentDB Vector Algorithm Comparison</name>
 
-      <!-- JSON processing -->
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-databind</artifactId>
-        <version>2.16.0</version>
-      </dependency>
+       <properties>
+           <maven.compiler.source>21</maven.compiler.source>
+           <maven.compiler.target>21</maven.compiler.target>
+           <maven.compiler.release>21</maven.compiler.release>
+           <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+       </properties>
 
-      <!-- Logging -->
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-simple</artifactId>
-        <version>2.0.9</version>
-      </dependency>
-    </dependencies>
-    ```
+       <dependencyManagement>
+           <dependencies>
+               <dependency>
+                   <groupId>com.azure</groupId>
+                   <artifactId>azure-sdk-bom</artifactId>
+                   <version>1.2.29</version>
+                   <type>pom</type>
+                   <scope>import</scope>
+               </dependency>
+           </dependencies>
+       </dependencyManagement>
 
-1. Create a `.env` file with your configuration:
+       <dependencies>
+           <dependency>
+               <groupId>org.mongodb</groupId>
+               <artifactId>mongodb-driver-sync</artifactId>
+               <version>5.6.2</version>
+           </dependency>
+           <dependency>
+               <groupId>com.azure</groupId>
+               <artifactId>azure-identity</artifactId>
+           </dependency>
+           <dependency>
+               <groupId>com.azure</groupId>
+               <artifactId>azure-ai-openai</artifactId>
+           </dependency>
+           <dependency>
+               <groupId>com.fasterxml.jackson.core</groupId>
+               <artifactId>jackson-databind</artifactId>
+               <version>2.18.2</version>
+           </dependency>
+           <dependency>
+               <groupId>io.github.cdimascio</groupId>
+               <artifactId>dotenv-java</artifactId>
+               <version>3.0.2</version>
+           </dependency>
+           <dependency>
+               <groupId>org.slf4j</groupId>
+               <artifactId>slf4j-simple</artifactId>
+               <version>2.0.17</version>
+               <scope>runtime</scope>
+           </dependency>
+       </dependencies>
 
-    ```env
-    MONGO_CLUSTER_NAME=<your-cluster-name>
-    AZURE_OPENAI_EMBEDDING_ENDPOINT=<your-azure-openai-endpoint>
-    AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
-    AZURE_OPENAI_EMBEDDING_API_VERSION=2023-05-15
-    EMBEDDED_FIELD=DescriptionVector
-    EMBEDDING_DIMENSIONS=1536
-    ```
+       <build>
+           <plugins>
+               <plugin>
+                   <groupId>org.apache.maven.plugins</groupId>
+                   <artifactId>maven-compiler-plugin</artifactId>
+                   <version>3.13.0</version>
+                   <configuration>
+                       <release>21</release>
+                   </configuration>
+               </plugin>
+           </plugins>
+       </build>
+   </project>
+   ```
 
-    Replace the placeholder values with your own information:
-    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
-    - `MONGO_CLUSTER_NAME`: Your Azure DocumentDB resource name
+4. Create a `.env` file in the project root for environment variables:
 
-## Create a vector index
+   ```bash
+   # Azure DocumentDB cluster name for passwordless authentication
+   MONGO_CLUSTER_NAME=
 
-### [IVF](#tab/tab-ivf)
+   # Azure managed identity principal ID for authentication
+   AZURE_MANAGED_IDENTITY_PRINCIPAL_ID=
 
-IVF (Inverted File) is ideal for datasets with fewer than 10,000 documents. It partitions vectors into clusters for fast approximate search.
+   # Azure OpenAI endpoint and model configuration
+   AZURE_OPENAI_EMBEDDING_ENDPOINT=https://your-openai-resource.openai.azure.com/
+   AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
 
-Create `src/main/java/com/azure/documentdb/IVF.java`:
+   # Data file path (relative to project root)
+   DATA_FILE_WITH_VECTORS=../data/Hotels_Vector.json
+
+   # Vector configuration
+   EMBEDDED_FIELD=DescriptionVector
+   EMBEDDING_DIMENSIONS=1536
+   LOAD_SIZE_BATCH=100
+
+   # Algorithm selection: all, diskann, hnsw, ivf
+   ALGORITHM=all
+
+   # Similarity function: COS, L2, IP, all
+   SIMILARITY=COS
+   ```
+
+   Replace the placeholder values with your Azure resource information:
+
+   - `MONGO_CLUSTER_NAME`: Your Azure DocumentDB cluster name
+   - `AZURE_MANAGED_IDENTITY_PRINCIPAL_ID`: Your managed identity principal ID
+   - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
+
+   This sample uses passwordless authentication with `DefaultAzureCredential`, which requires your identity to have proper RBAC roles assigned. For more information on authentication options, see [Authenticate Java apps to Azure services by using the Azure SDK for Java](/azure/developer/java/sdk/authentication/overview).
+
+## Create code files for vector search
+
+When you are done, the project structure should look like this:
+
+```text
+select-algorithm-quickstart/
+├── data/
+│   └── Hotels_Vector.json           # Hotel data with vector embeddings
+├── src/
+│   └── main/
+│       └── java/
+│           └── com/
+│               └── azure/
+│                   └── documentdb/
+│                       └── selectalgorithm/
+│                           ├── SelectAlgorithm.java  # Main comparison logic
+│                           └── Utils.java            # Shared utility functions
+├── pom.xml                          # Maven dependencies
+└── .env                             # Environment variables
+```
+
+## Create code for vector search algorithm comparison
+
+### Create utility functions
+
+Create `src/main/java/com/azure/documentdb/selectalgorithm/Utils.java` and paste the following code:
 
 ```java
-package com.azure.documentdb;
+package com.azure.documentdb.selectalgorithm;
 
 import com.azure.ai.openai.OpenAIClient;
 import com.azure.ai.openai.OpenAIClientBuilder;
 import com.azure.ai.openai.models.EmbeddingsOptions;
+import com.azure.core.http.policy.ExponentialBackoffOptions;
+import com.azure.core.http.policy.RetryOptions;
+import com.azure.identity.DefaultAzureCredential;
 import com.azure.identity.DefaultAzureCredentialBuilder;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoCredential;
-import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.bson.Document;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
-public class IVF {
-    private static final String DATABASE_NAME = "Hotels";
-    private static final String COLLECTION_NAME = "hotels_ivf";
-    private static final String VECTOR_INDEX_NAME = "vectorIndex_ivf";
+// Utility class for shared operations across the vector search comparison sample.
+// Uses dotenv-java for cross-platform environment variable loading with .env file fallback.
+public class Utils {
+    private static Dotenv dotenv;
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static void main(String[] args) {
-        new IVF().run();
-        System.exit(0);
+    // Cached credential instance shared by MongoClient and OpenAIClient
+    private static volatile DefaultAzureCredential cachedCredential;
+
+    // Get or create the DefaultAzureCredential instance used for passwordless authentication
+    private static DefaultAzureCredential getCredential() {
+        if (cachedCredential == null) {
+            synchronized (Utils.class) {
+                if (cachedCredential == null) {
+                    cachedCredential = new DefaultAzureCredentialBuilder().build();
+                }
+            }
+        }
+        return cachedCredential;
     }
 
-    public void run() {
-        try (var mongoClient = createMongoClient()) {
-            var openAIClient = createOpenAIClient();
-
-            var database = mongoClient.getDatabase(DATABASE_NAME);
-            var collection = database.getCollection(COLLECTION_NAME, Document.class);
-
-            // Create vector index
-            createVectorIndex(database, collection);
-
-            // Perform vector search
-            performVectorSearch(collection, openAIClient);
-
+    // Load environment variables from .env file or system environment
+    public static void loadEnv() {
+        try {
+            dotenv = Dotenv.configure()
+                .ignoreIfMissing()
+                .load();
         } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("Warning: Could not load .env file, using system environment variables");
         }
     }
 
-    private MongoClient createMongoClient() {
-        var clusterName = System.getenv("MONGO_CLUSTER_NAME");
-        var managedIdentityPrincipalId = System.getenv("AZURE_MANAGED_IDENTITY_PRINCIPAL_ID");
-        var azureCredential = new DefaultAzureCredentialBuilder().build();
+    // Get environment variable value from .env file or system environment
+    public static String getEnv(String key) {
+        if (dotenv != null) {
+            String value = dotenv.get(key);
+            if (value != null) return value;
+        }
+        return System.getenv(key);
+    }
 
-        // Create OIDC credential callback for Azure AD token
+    // Get environment variable with default value if not found
+    public static String getEnv(String key, String defaultValue) {
+        String value = getEnv(key);
+        return value != null ? value : defaultValue;
+    }
+
+    // Create MongoDB client with passwordless authentication using OIDC
+    public static MongoClient createMongoClient() {
+        var clusterName = Objects.requireNonNull(
+            getEnv("MONGO_CLUSTER_NAME"),
+            "Environment variable MONGO_CLUSTER_NAME is required");
+        var managedIdentityPrincipalId = Objects.requireNonNull(
+            getEnv("AZURE_MANAGED_IDENTITY_PRINCIPAL_ID"),
+            "Environment variable AZURE_MANAGED_IDENTITY_PRINCIPAL_ID is required");
+        var azureCredential = getCredential();
+
+        // OIDC callback that fetches Azure AD tokens for DocumentDB authentication
         MongoCredential.OidcCallback callback = (MongoCredential.OidcCallbackContext context) -> {
             var token = azureCredential.getToken(
                 new com.azure.core.credential.TokenRequestContext()
@@ -181,554 +313,561 @@ public class IVF {
             ).block();
 
             if (token == null) {
-                throw new RuntimeException("Failed to obtain Azure AD token");
+                throw new RuntimeException(
+                    "Failed to obtain Azure AD token for DocumentDB OIDC auth. "
+                    + "Verify DefaultAzureCredential is configured correctly.");
             }
 
             return new MongoCredential.OidcCallbackResult(token.getToken());
         };
 
+        // Create MongoDB credential with OIDC mechanism
         var credential = MongoCredential.createOidcCredential(null)
             .withMechanismProperty("OIDC_CALLBACK", callback);
 
+        // Build connection string for DocumentDB cluster
         var connectionString = new ConnectionString(
             String.format("mongodb+srv://%s@%s.mongocluster.cosmos.azure.com/?authMechanism=MONGODB-OIDC&tls=true&retrywrites=false&maxIdleTimeMS=120000",
                 managedIdentityPrincipalId, clusterName)
         );
 
+        // Configure MongoDB client settings with retry and credential
         var settings = MongoClientSettings.builder()
             .applyConnectionString(connectionString)
             .credential(credential)
+            .retryWrites(true)
+            .retryReads(true)
             .build();
 
         return MongoClients.create(settings);
     }
 
-    private OpenAIClient createOpenAIClient() {
-        var endpoint = System.getenv("AZURE_OPENAI_EMBEDDING_ENDPOINT");
-        var credential = new DefaultAzureCredentialBuilder().build();
+    // Create Azure OpenAI client with passwordless authentication
+    public static OpenAIClient createOpenAIClient() {
+        var endpoint = Objects.requireNonNull(
+            getEnv("AZURE_OPENAI_EMBEDDING_ENDPOINT"),
+            "Environment variable AZURE_OPENAI_EMBEDDING_ENDPOINT is required");
+        var credential = getCredential();
 
         return new OpenAIClientBuilder()
             .endpoint(endpoint)
             .credential(credential)
+            .retryOptions(new RetryOptions(
+                new ExponentialBackoffOptions()
+                    .setMaxRetries(3)
+                    .setBaseDelay(Duration.ofSeconds(1))
+                    .setMaxDelay(Duration.ofSeconds(30))
+            ))
             .buildClient();
     }
 
-    private void createVectorIndex(MongoDatabase database, MongoCollection<Document> collection) {
-        System.out.println("Creating IVF vector index...");
+    // Load hotel data from JSON file
+    public static List<Map<String, Object>> loadHotelData() throws IOException {
+        var dataFile = getEnv("DATA_FILE_WITH_VECTORS");
+        var filePath = Path.of(dataFile);
 
-        // Use the native MongoDB command for DocumentDB vector indexes
-        var indexCommand = new Document("createIndexes", COLLECTION_NAME)
-            .append("indexes", List.of(
-                new Document("name", VECTOR_INDEX_NAME)
-                    .append("key", new Document(System.getenv("EMBEDDED_FIELD"), "cosmosSearch"))
-                    .append("cosmosSearchOptions", new Document()
-                        .append("kind", "vector-ivf")
-                        .append("similarity", "COS")
-                        .append("dimensions", Integer.parseInt(System.getenv("EMBEDDING_DIMENSIONS")))
-                        .append("numLists", 10)  // Number of clusters
-                    )
-            ));
+        System.out.println("Reading JSON file from " + filePath.toAbsolutePath());
+        var jsonContent = Files.readString(filePath);
 
-        try {
-            var result = database.runCommand(indexCommand);
-            System.out.println("IVF vector index created successfully");
-        } catch (Exception e) {
-            System.err.println("Error creating index: " + e.getMessage());
-            throw new RuntimeException(e);
-        }
+        return objectMapper.readValue(jsonContent, new TypeReference<List<Map<String, Object>>>() {});
     }
 
-    private void performVectorSearch(MongoCollection<Document> collection, OpenAIClient openAIClient) {
-        System.out.println("Performing vector search...");
+    // Create embedding vector for a text query using Azure OpenAI
+    public static List<Double> createEmbedding(OpenAIClient openAIClient, String text) {
+        var model = Objects.requireNonNull(
+            getEnv("AZURE_OPENAI_EMBEDDING_MODEL"),
+            "Environment variable AZURE_OPENAI_EMBEDDING_MODEL is required");
+        var options = new EmbeddingsOptions(List.of(text));
 
-        // Create embedding for query
-        var query = "quintessential lodging near running trails, eateries, retail";
-        var embeddingResponse = openAIClient.getEmbeddingsClient(
-            System.getenv("AZURE_OPENAI_EMBEDDING_MODEL")
-        ).generateEmbedding(new EmbeddingsOptions(List.of(query)));
+        var response = openAIClient.getEmbeddings(model, options);
+        return response.getData().get(0).getEmbedding().stream()
+                .map(Float::doubleValue)
+                .toList();
+    }
 
-        var embedding = embeddingResponse.getValue().getData().get(0).getEmbedding();
+    // Create vector index configuration options for a specific algorithm and similarity function
+    public static Document createVectorIndexOptions(String algorithm, String similarity) {
+        var dimensionsStr = getEnv("EMBEDDING_DIMENSIONS");
+        var dimensions = dimensionsStr != null ? Integer.parseInt(dimensionsStr) : 1536;
 
-        // Build aggregation pipeline for vector search
-        var pipeline = List.of(
-            new Document("$search", new Document()
-                .append("cosmosSearch", new Document()
-                    .append("vector", embedding)
-                    .append("path", System.getenv("EMBEDDED_FIELD"))
-                    .append("k", 5)
-                )
-            ),
-            new Document("$project", new Document()
-                .append("score", new Document("$meta", "searchScore"))
-                .append("document", "$$ROOT")
-            )
-        );
+        var options = new Document()
+            .append("kind", getVectorKind(algorithm))
+            .append("dimensions", dimensions)
+            .append("similarity", similarity);
 
-        // Execute search
-        AggregateIterable<Document> results = collection.aggregate(pipeline);
-
-        System.out.println("\nSearch Results:");
-        int count = 0;
-        for (Document result : results) {
-            count++;
-            Document doc = (Document) result.get("document");
-            double score = (double) result.get("score");
-            System.out.printf("%d. %s, Score: %.4f%n", count, 
-                doc.getString("HotelName"), score);
+        // Add algorithm-specific tuning parameters
+        switch (algorithm.toLowerCase()) {
+            case "diskann":
+                // DiskANN parameters:
+                // maxDegree: maximum edges per node in the graph (higher = more accurate but slower)
+                // lBuild: candidates evaluated during index construction (higher = better quality)
+                options.append("maxDegree", 32)
+                       .append("lBuild", 50);
+                break;
+            case "hnsw":
+                // HNSW parameters:
+                // m: number of connections per layer (higher = more accurate but more memory)
+                // efConstruction: candidates during index construction (higher = better quality)
+                options.append("m", 16)
+                       .append("efConstruction", 64);
+                break;
+            case "ivf":
+                // IVF parameters:
+                // numLists: number of clusters for partitioning (higher = faster but less accurate)
+                options.append("numLists", 1);
+                break;
         }
+
+        return options;
+    }
+
+    // Create search-time options for a specific algorithm
+    public static Document createSearchOptions(String algorithm) {
+        var options = new Document();
+
+        // Add algorithm-specific search parameters
+        switch (algorithm.toLowerCase()) {
+            case "diskann":
+                // lSearch: search list size at query time (higher = more accurate but slower)
+                options.append("lSearch", 100);
+                break;
+            case "hnsw":
+                // efSearch: candidate list size at query time (higher = more accurate but slower)
+                options.append("efSearch", 80);
+                break;
+            case "ivf":
+                // nProbes: number of clusters to search (higher = more accurate but slower)
+                options.append("nProbes", 1);
+                break;
+        }
+
+        return options;
+    }
+
+    // Get the vector index kind string for DocumentDB
+    private static String getVectorKind(String algorithm) {
+        return "vector-" + algorithm.toLowerCase();
+    }
+
+    // Partition a list into batches of specified size
+    public static <T> List<List<T>> partitionList(List<T> list, int batchSize) {
+        var partitions = new ArrayList<List<T>>();
+        for (int i = 0; i < list.size(); i += batchSize) {
+            partitions.add(list.subList(i, Math.min(i + batchSize, list.size())));
+        }
+        return partitions;
+    }
+
+    // Print formatted comparison table of algorithm results
+    public static void printComparisonTable(List<Map<String, Object>> results) {
+        System.out.println("\n" + "=".repeat(80));
+        System.out.println("Vector Index Algorithm Comparison Results");
+        System.out.println("=".repeat(80));
+        System.out.printf("%-15s %-15s %-20s%n", "Algorithm", "Similarity", "Avg Latency (ms)");
+        System.out.println("-".repeat(80));
+
+        for (var result : results) {
+            System.out.printf("%-15s %-15s %-20.2f%n",
+                result.get("algorithm"),
+                result.get("similarity"),
+                result.get("latency"));
+        }
+
+        System.out.println("=".repeat(80));
     }
 }
 ```
 
-#### [HNSW](#tab/tab-hnsw)
+This utility class provides:
 
-HNSW (Hierarchical Navigable Small World) is ideal for datasets between 10,000 and 50,000 documents. It builds a graph-based index for faster search with better recall.
+- **Environment variable management**: Loads configuration from `.env` file or system environment
+- **Passwordless authentication**: Uses `DefaultAzureCredential` for both MongoDB and Azure OpenAI
+- **MongoDB client creation**: Configures OIDC authentication for DocumentDB
+- **Azure OpenAI client creation**: Sets up the OpenAI client for embedding generation
+- **Data loading**: Reads hotel data from JSON file
+- **Embedding generation**: Creates vector embeddings for text queries
+- **Index configuration**: Generates algorithm-specific vector index options
+- **Search configuration**: Generates algorithm-specific search parameters
+- **Results formatting**: Prints comparison table of algorithm performance
 
-Create `src/main/java/com/azure/documentdb/HNSW.java`:
+### Create main comparison logic
+
+Create `src/main/java/com/azure/documentdb/selectalgorithm/SelectAlgorithm.java` and paste the following code:
 
 ```java
-package com.azure.documentdb;
+package com.azure.documentdb.selectalgorithm;
 
 import com.azure.ai.openai.OpenAIClient;
-import com.azure.ai.openai.models.EmbeddingsOptions;
-import com.azure.identity.DefaultAzureCredentialBuilder;
-import com.mongodb.MongoCredential;
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Indexes;
 import org.bson.Document;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class HNSW {
+// Main class that compares vector search algorithms across similarity functions.
+// Tests DiskANN, HNSW, and IVF with COS, L2, and IP similarity to help select optimal configuration.
+public class SelectAlgorithm {
+    private static final String SAMPLE_QUERY = "quintessential lodging near running trails, eateries, retail";
     private static final String DATABASE_NAME = "Hotels";
-    private static final String COLLECTION_NAME = "hotels_hnsw";
-    private static final String VECTOR_INDEX_NAME = "vectorIndex_hnsw";
+    private static final int NUM_QUERIES = 5;
 
     public static void main(String[] args) {
-        new HNSW().run();
+        Utils.loadEnv();
+        new SelectAlgorithm().run();
         System.exit(0);
     }
 
+    // Main execution flow: test all algorithm/similarity combinations and display results
     public void run() {
-        try (var mongoClient = createMongoClient()) {
-            var openAIClient = createOpenAIClient();
+        try (var mongoClient = Utils.createMongoClient()) {
+            var openAIClient = Utils.createOpenAIClient();
+
+            // Parse algorithm and similarity parameters from environment
+            var algorithmParam = Utils.getEnv("ALGORITHM", "all").toLowerCase();
+            var similarityParam = Utils.getEnv("SIMILARITY", "COS").toUpperCase();
+
+            var algorithms = getAlgorithms(algorithmParam);
+            var similarities = getSimilarities(similarityParam);
+
+            System.out.println("Testing algorithms: " + algorithms);
+            System.out.println("Testing similarity functions: " + similarities);
+            System.out.println();
+
+            var results = new ArrayList<Map<String, Object>>();
             var database = mongoClient.getDatabase(DATABASE_NAME);
-            var collection = database.getCollection(COLLECTION_NAME, Document.class);
 
-            createVectorIndex(database, collection);
-            performVectorSearch(collection, openAIClient);
+            // Test each algorithm/similarity combination
+            for (var algorithm : algorithms) {
+                for (var similarity : similarities) {
+                    var result = testConfiguration(database, openAIClient, algorithm, similarity);
+                    results.add(result);
+                }
+            }
 
+            // Display comparison table
+            Utils.printComparisonTable(results);
+
+        } catch (com.azure.core.exception.HttpResponseException e) {
+            System.err.println("Azure service error: " + e.getMessage());
+            e.printStackTrace();
+        } catch (com.mongodb.MongoException e) {
+            System.err.println("MongoDB error: " + e.getMessage());
+            e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
+            System.err.println("Unexpected error: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    private MongoClient createMongoClient() {
-        var clusterName = System.getenv("MONGO_CLUSTER_NAME");
-        var managedIdentityPrincipalId = System.getenv("AZURE_MANAGED_IDENTITY_PRINCIPAL_ID");
-        var azureCredential = new DefaultAzureCredentialBuilder().build();
-
-        MongoCredential.OidcCallback callback = (MongoCredential.OidcCallbackContext context) -> {
-            var token = azureCredential.getToken(
-                new com.azure.core.credential.TokenRequestContext()
-                    .addScopes("https://ossrdbms-aad.database.windows.net/.default")
-            ).block();
-            if (token == null) throw new RuntimeException("Failed to obtain Azure AD token");
-            return new MongoCredential.OidcCallbackResult(token.getToken());
-        };
-
-        var credential = MongoCredential.createOidcCredential(null)
-            .withMechanismProperty("OIDC_CALLBACK", callback);
-
-        var connectionString = new ConnectionString(
-            String.format("mongodb+srv://%s@%s.mongocluster.cosmos.azure.com/?authMechanism=MONGODB-OIDC&tls=true&retrywrites=false&maxIdleTimeMS=120000",
-                managedIdentityPrincipalId, clusterName));
-
-        var settings = MongoClientSettings.builder()
-            .applyConnectionString(connectionString)
-            .credential(credential)
-            .build();
-
-        return MongoClients.create(settings);
+    // Parse algorithm parameter into list of algorithms to test
+    private List<String> getAlgorithms(String param) {
+        if ("all".equals(param)) {
+            return List.of("diskann", "hnsw", "ivf");
+        }
+        return List.of(param);
     }
 
-    private OpenAIClient createOpenAIClient() {
-        var endpoint = System.getenv("AZURE_OPENAI_EMBEDDING_ENDPOINT");
-        var credential = new DefaultAzureCredentialBuilder().build();
-        return new com.azure.ai.openai.OpenAIClientBuilder()
-            .endpoint(endpoint).credential(credential).buildClient();
+    // Parse similarity parameter into list of similarity functions to test
+    private List<String> getSimilarities(String param) {
+        if ("all".equalsIgnoreCase(param)) {
+            return List.of("COS", "L2", "IP");
+        }
+        return List.of(param);
     }
 
-    private void createVectorIndex(MongoDatabase database, MongoCollection<Document> collection) {
-        System.out.println("Creating HNSW vector index...");
+    // Test a specific algorithm/similarity combination and measure performance
+    private Map<String, Object> testConfiguration(MongoDatabase database, OpenAIClient openAIClient,
+                                                   String algorithm, String similarity) {
+        System.out.println("Testing " + algorithm.toUpperCase() + " with " + similarity + " similarity...");
 
-        var indexCommand = new Document("createIndexes", COLLECTION_NAME)
-            .append("indexes", List.of(
-                new Document("name", VECTOR_INDEX_NAME)
-                    .append("key", new Document(System.getenv("EMBEDDED_FIELD"), "cosmosSearch"))
-                    .append("cosmosSearchOptions", new Document()
-                        .append("kind", "vector-hnsw")
-                        .append("similarity", "COS")
-                        .append("dimensions", Integer.parseInt(System.getenv("EMBEDDING_DIMENSIONS")))
-                        // Maximum connections per node (2-100, default 16)
-                        .append("m", 16)
-                        // Candidate list size during construction (4-1000, default 64)
-                        .append("efConstruction", 64)
-                    )
-            ));
+        var collectionName = "hotels_" + algorithm.toLowerCase() + "_" + similarity.toLowerCase();
+        var vectorIndexName = "vectorIndex_" + algorithm.toLowerCase() + "_" + similarity.toLowerCase();
 
         try {
-            database.runCommand(indexCommand);
-            System.out.println("HNSW vector index created successfully");
+            // Create fresh collection for this algorithm/similarity combination
+            var collection = database.getCollection(collectionName, Document.class);
+            collection.drop();
+            database.createCollection(collectionName);
+            System.out.println("  Created collection: " + collectionName);
+
+            // Load and insert hotel data
+            var hotelData = Utils.loadHotelData();
+            insertDataInBatches(collection, hotelData);
+
+            // Create standard indexes for common query fields
+            createStandardIndexes(collection);
+
+            // Create vector index with algorithm-specific configuration
+            createVectorIndex(database, collectionName, vectorIndexName, algorithm, similarity);
+
+            // Generate embedding for sample query
+            var queryEmbedding = Utils.createEmbedding(openAIClient, SAMPLE_QUERY);
+
+            // Measure average query latency
+            var avgLatency = measureSearchLatency(collection, queryEmbedding, algorithm);
+
+            System.out.println("  Average latency: " + String.format("%.2f", avgLatency) + " ms");
+            System.out.println();
+
+            // Return results for comparison table
+            var result = new HashMap<String, Object>();
+            result.put("algorithm", algorithm.toUpperCase());
+            result.put("similarity", similarity);
+            result.put("latency", avgLatency);
+            return result;
+
         } catch (Exception e) {
-            System.err.println("Error creating index: " + e.getMessage());
-            throw new RuntimeException(e);
+            System.err.println("  Error testing " + algorithm + " with " + similarity + ": " + e.getMessage());
+            var result = new HashMap<String, Object>();
+            result.put("algorithm", algorithm.toUpperCase());
+            result.put("similarity", similarity);
+            result.put("latency", -1.0);
+            return result;
         }
     }
 
-    private void performVectorSearch(MongoCollection<Document> collection, OpenAIClient openAIClient) {
-        System.out.println("Performing HNSW vector search...");
+    // Insert hotel data in batches for efficient loading
+    private void insertDataInBatches(MongoCollection<Document> collection, List<Map<String, Object>> hotelData) {
+        var batchSizeStr = Utils.getEnv("LOAD_SIZE_BATCH");
+        var batchSize = batchSizeStr != null ? Integer.parseInt(batchSizeStr) : 100;
+        var batches = Utils.partitionList(hotelData, batchSize);
 
-        var query = "quintessential lodging near running trails, eateries, retail";
-        var embeddingResponse = openAIClient.getEmbeddingsClient(
-            System.getenv("AZURE_OPENAI_EMBEDDING_MODEL")
-        ).generateEmbedding(new EmbeddingsOptions(List.of(query)));
-        var embedding = embeddingResponse.getValue().getData().get(0).getEmbedding();
+        System.out.println("  Loading data in batches of " + batchSize + "...");
 
-        var pipeline = List.of(
-            new Document("$search", new Document()
-                .append("cosmosSearch", new Document()
-                    .append("vector", embedding)
-                    .append("path", System.getenv("EMBEDDED_FIELD"))
-                    .append("k", 5))),
-            new Document("$project", new Document()
-                .append("score", new Document("$meta", "searchScore"))
-                .append("document", "$$ROOT"))
-        );
+        for (int i = 0; i < batches.size(); i++) {
+            var batch = batches.get(i);
+            var documents = batch.stream()
+                .map(Document::new)
+                .toList();
 
-        AggregateIterable<Document> results = collection.aggregate(pipeline);
-
-        System.out.println("\nHNSW Search Results:");
-        int count = 0;
-        for (Document result : results) {
-            count++;
-            Document doc = (Document) result.get("document");
-            double score = (double) result.get("score");
-            System.out.printf("%d. %s, Score: %.4f%n", count,
-                doc.getString("HotelName"), score);
+            collection.insertMany(documents);
+            if ((i + 1) % 10 == 0 || (i + 1) == batches.size()) {
+                System.out.println("    Loaded " + ((i + 1) * batchSize) + " documents");
+            }
         }
+    }
+
+    // Create standard indexes on common query fields
+    private void createStandardIndexes(MongoCollection<Document> collection) {
+        collection.createIndex(Indexes.ascending("HotelId"));
+        collection.createIndex(Indexes.ascending("Category"));
+        collection.createIndex(Indexes.ascending("Description"));
+        collection.createIndex(Indexes.ascending("Description_fr"));
+    }
+
+    // Create vector index with algorithm-specific configuration
+    private void createVectorIndex(MongoDatabase database, String collectionName, String indexName,
+                                   String algorithm, String similarity) {
+        var embeddedField = Utils.getEnv("EMBEDDED_FIELD");
+        var cosmosSearchOptions = Utils.createVectorIndexOptions(algorithm, similarity);
+
+        // Build DocumentDB vector index command
+        var indexDefinition = new Document()
+            .append("createIndexes", collectionName)
+            .append("indexes", List.of(
+                new Document()
+                    .append("name", indexName)
+                    .append("key", new Document(embeddedField, "cosmosSearch"))
+                    .append("cosmosSearchOptions", cosmosSearchOptions)
+            ));
+
+        database.runCommand(indexDefinition);
+        System.out.println("  Created vector index: " + indexName);
+    }
+
+    // Measure average query latency across multiple runs
+    private double measureSearchLatency(MongoCollection<Document> collection, List<Double> queryEmbedding,
+                                        String algorithm) {
+        var embeddedField = Utils.getEnv("EMBEDDED_FIELD");
+        var searchOptions = Utils.createSearchOptions(algorithm);
+
+        var totalLatency = 0.0;
+
+        // Run query multiple times to get average latency
+        for (int i = 0; i < NUM_QUERIES; i++) {
+            var cosmosSearch = new Document()
+                .append("vector", queryEmbedding)
+                .append("path", embeddedField)
+                .append("k", 5);
+
+            // Add algorithm-specific search options
+            if (!searchOptions.isEmpty()) {
+                cosmosSearch.putAll(searchOptions);
+            }
+
+            // Build aggregation pipeline for vector search
+            var searchStage = new Document("$search", new Document()
+                .append("cosmosSearch", cosmosSearch)
+            );
+
+            var projectStage = new Document("$project", new Document()
+                .append("score", new Document("$meta", "searchScore"))
+                .append("HotelName", 1)
+            );
+
+            var pipeline = List.of(searchStage, projectStage);
+
+            // Measure query execution time
+            var startTime = System.nanoTime();
+            var results = collection.aggregate(pipeline);
+            results.first();  // Execute query
+            var endTime = System.nanoTime();
+
+            totalLatency += (endTime - startTime) / 1_000_000.0;
+        }
+
+        return totalLatency / NUM_QUERIES;
     }
 }
 ```
 
-Key differences from IVF:
-- **m parameter**: Controls graph connectivity (2–100, default 16). Higher values improve recall but increase memory.
-- **efConstruction**: Candidate list size during construction (4–1000, default 64). Higher values improve accuracy at cost of build time.
-- **Cluster tier**: Requires M30 or higher due to memory overhead.
+This main class provides:
 
-#### [DiskANN](#tab/tab-diskann)
+- **Algorithm comparison logic**: Tests all combinations of algorithms and similarity functions
+- **Collection management**: Creates separate collections for each configuration
+- **Data loading**: Inserts hotel data in batches
+- **Index creation**: Creates both standard and vector indexes
+- **Performance measurement**: Measures average query latency
+- **Results display**: Outputs comparison table
 
-DiskANN is optimized for very large datasets (50,000+ documents) with efficient disk-based storage.
+## Run the code
 
-Create `src/main/java/com/azure/documentdb/DiskAnn.java`:
+1. Compile the project:
 
-```java
-package com.azure.documentdb;
+   ```bash
+   mvn clean compile
+   ```
 
-import com.azure.ai.openai.OpenAIClient;
-import com.azure.ai.openai.models.EmbeddingsOptions;
-import com.azure.identity.DefaultAzureCredentialBuilder;
-import com.mongodb.MongoCredential;
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.client.AggregateIterable;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import org.bson.Document;
+2. Run the comparison for all algorithms with cosine similarity (default):
 
-import java.util.List;
+   ```bash
+   mvn exec:java -Dexec.mainClass="com.azure.documentdb.selectalgorithm.SelectAlgorithm"
+   ```
 
-public class DiskAnn {
-    private static final String DATABASE_NAME = "Hotels";
-    private static final String COLLECTION_NAME = "hotels_diskann";
-    private static final String VECTOR_INDEX_NAME = "vectorIndex_diskann";
+3. Run the comparison for a specific algorithm:
 
-    public static void main(String[] args) {
-        new DiskAnn().run();
-        System.exit(0);
-    }
+   ```bash
+   # Test only DiskANN
+   ALGORITHM=diskann mvn exec:java -Dexec.mainClass="com.azure.documentdb.selectalgorithm.SelectAlgorithm"
 
-    public void run() {
-        try (var mongoClient = createMongoClient()) {
-            var openAIClient = createOpenAIClient();
-            var database = mongoClient.getDatabase(DATABASE_NAME);
-            var collection = database.getCollection(COLLECTION_NAME, Document.class);
+   # Test only HNSW
+   ALGORITHM=hnsw mvn exec:java -Dexec.mainClass="com.azure.documentdb.selectalgorithm.SelectAlgorithm"
 
-            createVectorIndex(database, collection);
-            performVectorSearch(collection, openAIClient);
+   # Test only IVF
+   ALGORITHM=ivf mvn exec:java -Dexec.mainClass="com.azure.documentdb.selectalgorithm.SelectAlgorithm"
+   ```
 
-        } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
+4. Run the comparison for all similarity functions:
 
-    private MongoClient createMongoClient() {
-        var clusterName = System.getenv("MONGO_CLUSTER_NAME");
-        var managedIdentityPrincipalId = System.getenv("AZURE_MANAGED_IDENTITY_PRINCIPAL_ID");
-        var azureCredential = new DefaultAzureCredentialBuilder().build();
+   ```bash
+   # Test all algorithms with all similarity functions
+   ALGORITHM=all SIMILARITY=all mvn exec:java -Dexec.mainClass="com.azure.documentdb.selectalgorithm.SelectAlgorithm"
 
-        MongoCredential.OidcCallback callback = (MongoCredential.OidcCallbackContext context) -> {
-            var token = azureCredential.getToken(
-                new com.azure.core.credential.TokenRequestContext()
-                    .addScopes("https://ossrdbms-aad.database.windows.net/.default")
-            ).block();
-            if (token == null) throw new RuntimeException("Failed to obtain Azure AD token");
-            return new MongoCredential.OidcCallbackResult(token.getToken());
-        };
+   # Test DiskANN with all similarity functions
+   ALGORITHM=diskann SIMILARITY=all mvn exec:java -Dexec.mainClass="com.azure.documentdb.selectalgorithm.SelectAlgorithm"
+   ```
 
-        var credential = MongoCredential.createOidcCredential(null)
-            .withMechanismProperty("OIDC_CALLBACK", callback);
+5. Run the comparison for a specific similarity function:
 
-        var connectionString = new ConnectionString(
-            String.format("mongodb+srv://%s@%s.mongocluster.cosmos.azure.com/?authMechanism=MONGODB-OIDC&tls=true&retrywrites=false&maxIdleTimeMS=120000",
-                managedIdentityPrincipalId, clusterName));
+   ```bash
+   # Test all algorithms with L2 (Euclidean) distance
+   SIMILARITY=L2 mvn exec:java -Dexec.mainClass="com.azure.documentdb.selectalgorithm.SelectAlgorithm"
 
-        var settings = MongoClientSettings.builder()
-            .applyConnectionString(connectionString)
-            .credential(credential)
-            .build();
+   # Test all algorithms with IP (inner product)
+   SIMILARITY=IP mvn exec:java -Dexec.mainClass="com.azure.documentdb.selectalgorithm.SelectAlgorithm"
+   ```
 
-        return MongoClients.create(settings);
-    }
+The program displays a comparison table showing average latency for each algorithm and similarity function combination:
 
-    private OpenAIClient createOpenAIClient() {
-        var endpoint = System.getenv("AZURE_OPENAI_EMBEDDING_ENDPOINT");
-        var credential = new DefaultAzureCredentialBuilder().build();
-        return new com.azure.ai.openai.OpenAIClientBuilder()
-            .endpoint(endpoint).credential(credential).buildClient();
-    }
-
-    private void createVectorIndex(MongoDatabase database, MongoCollection<Document> collection) {
-        System.out.println("Creating DiskANN vector index...");
-
-        var indexCommand = new Document("createIndexes", COLLECTION_NAME)
-            .append("indexes", List.of(
-                new Document("name", VECTOR_INDEX_NAME)
-                    .append("key", new Document(System.getenv("EMBEDDED_FIELD"), "cosmosSearch"))
-                    .append("cosmosSearchOptions", new Document()
-                        .append("kind", "vector-diskann")
-                        .append("similarity", "COS")
-                        .append("dimensions", Integer.parseInt(System.getenv("EMBEDDING_DIMENSIONS")))
-                        // Maximum edges per node (20-2048, default 32)
-                        .append("maxDegree", 32)
-                        // Candidates evaluated during construction (10-500, default 50)
-                        .append("lBuild", 50)
-                    )
-            ));
-
-        try {
-            database.runCommand(indexCommand);
-            System.out.println("DiskANN vector index created successfully");
-        } catch (Exception e) {
-            System.err.println("Error creating index: " + e.getMessage());
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void performVectorSearch(MongoCollection<Document> collection, OpenAIClient openAIClient) {
-        System.out.println("Performing DiskANN vector search...");
-
-        var query = "quintessential lodging near running trails, eateries, retail";
-        var embeddingResponse = openAIClient.getEmbeddingsClient(
-            System.getenv("AZURE_OPENAI_EMBEDDING_MODEL")
-        ).generateEmbedding(new EmbeddingsOptions(List.of(query)));
-        var embedding = embeddingResponse.getValue().getData().get(0).getEmbedding();
-
-        var pipeline = List.of(
-            new Document("$search", new Document()
-                .append("cosmosSearch", new Document()
-                    .append("vector", embedding)
-                    .append("path", System.getenv("EMBEDDED_FIELD"))
-                    .append("k", 5))),
-            new Document("$project", new Document()
-                .append("score", new Document("$meta", "searchScore"))
-                .append("document", "$$ROOT"))
-        );
-
-        AggregateIterable<Document> results = collection.aggregate(pipeline);
-
-        System.out.println("\nDiskANN Search Results:");
-        int count = 0;
-        for (Document result : results) {
-            count++;
-            Document doc = (Document) result.get("document");
-            double score = (double) result.get("score");
-            System.out.printf("%d. %s, Score: %.4f%n", count,
-                doc.getString("HotelName"), score);
-        }
-    }
-}
+```text
+================================================================================
+Vector Index Algorithm Comparison Results
+================================================================================
+Algorithm       Similarity      Avg Latency (ms)    
+--------------------------------------------------------------------------------
+DISKANN         COS             42.30               
+DISKANN         IP              38.70               
+DISKANN         L2              45.10               
+HNSW            COS             31.50               
+HNSW            IP              29.80               
+HNSW            L2              34.20               
+IVF             COS             55.60               
+IVF             IP              52.10               
+IVF             L2              58.90               
+================================================================================
 ```
-
-Key parameters:
-- **maxDegree**: Number of edges per node (20–2048, default 32). Higher values improve accuracy.
-- **lBuild**: Candidate neighbors evaluated during construction (10–500, default 50). Affects index quality.
-- **Cluster tier**: Requires M30 or higher.
-
-----
-
-## Query with vector search
-
-All three algorithms use the same query pattern with the `$search` aggregation stage:
-
-```java
-// Generate embedding for query
-var embeddingResponse = openAIClient.getEmbeddingsClient(modelName)
-    .generateEmbedding(new EmbeddingsOptions(List.of("your query text")));
-var embedding = embeddingResponse.getValue().getData().get(0).getEmbedding();
-
-// Build aggregation pipeline
-var pipeline = List.of(
-    new Document("$search", new Document()
-        .append("cosmosSearch", new Document()
-            .append("vector", embedding)
-            .append("path", vectorField)
-            .append("k", 5)  // Return top 5 results
-        )
-    ),
-    new Document("$project", new Document()
-        .append("score", new Document("$meta", "searchScore"))
-        .append("document", "$$ROOT")
-    )
-);
-
-// Execute search
-AggregateIterable<Document> results = collection.aggregate(pipeline);
-```
-
-The `$search` stage finds the k nearest neighbors to your query vector. Results are ordered by similarity score (highest first).
-
-> [!IMPORTANT]
-> Vectors must be stored as `number[]` (array of numbers) to be indexed. Documents with vectors stored as other types (such as `double[]`) won't be indexed. The maximum supported dimensions depend on the index type: up to 2,000 for IVF/HNSW, and up to 16,000 for DiskANN with product quantization.
-
-## Choose the right algorithm
-
-Select the vector index algorithm based on your dataset size and performance requirements:
-
-| Algorithm | Best For | Cluster Tier | Trade-offs |
-|-----------|----------|-------------|------------|
-| **IVF** | Small datasets (<10K documents) | M10+ | Fast creation, lower recall at scale |
-| **HNSW** | Medium datasets (10K–50K documents) | M30+ | Balanced recall/speed, more memory |
-| **DiskANN** | Large datasets (50K+ documents) | M40+ | Best recall at scale, disk-efficient |
-
-### Similarity metrics
-
-Each algorithm supports three similarity metrics:
-
-| Metric | Range | Interpretation | Best For |
-|--------|-------|---------------|----------|
-| **COS** (Cosine) | 0–1 | Higher = more similar | Text embeddings (normalized vectors) |
-| **L2** (Euclidean) | 0+ | Lower = more similar | Spatial data, image embeddings |
-| **IP** (Inner Product) | Varies | Higher = more similar | Recommendation systems, normalized embeddings |
-
-### Tuning parameters
-
-#### IVF parameters
-
-| Parameter | Description | Default | Guidance |
-|-----------|-------------|---------|----------|
-| `numLists` | Number of clusters for partitioning | 1 | Use 1 for <1K docs. For larger datasets, use √N. More lists = faster search but slower creation. |
-
-#### HNSW parameters
-
-| Parameter | Description | Default | Guidance |
-|-----------|-------------|---------|----------|
-| `m` | Max connections per node | 16 | Higher (up to 64) = better recall, more memory |
-| `efConstruction` | Build-time candidate list size | 64 | Higher (up to 500) = better quality, slower build |
-
-#### DiskANN parameters
-
-| Parameter | Description | Default | Guidance |
-|-----------|-------------|---------|----------|
-| `maxDegree` | Max edges per node | 32 | Higher = better recall, more disk I/O |
-| `lBuild` | Build-time search width | 50 | Higher = better quality index, slower build |
-
-### Cluster tier requirements
-
-- **M10/M20**: Sufficient for IVF indexes on small datasets
-- **M30**: Required for HNSW indexes (memory-intensive graph structure)
-- **M40+**: Required for DiskANN (disk-optimized for large-scale vector search)
 
 > [!NOTE]
-> Quantized indexes (HNSW, DiskANN) require a minimum of 1,000 vectors. Below this threshold, the system performs a full scan regardless of index configuration.
+> The latency values shown above are illustrative. Actual results depend on your DocumentDB cluster configuration, region, network latency, and dataset size.
 
-### Compare algorithms
+## Understanding the results
 
-Run all three algorithms against the same dataset to compare performance:
+### Algorithm characteristics
 
-```bash
-mvn compile && mvn exec:java -Dexec.mainClass="com.azure.documentdb.selectalgorithm.CompareAll"
-```
+**DiskANN** - Disk-based approximate nearest neighbor search
+- Good balance of speed and accuracy
+- Suitable for large datasets that don't fit in memory
+- Parameters: `maxDegree=32` (graph connectivity), `lBuild=50` (build quality), `lSearch=100` (query accuracy)
 
-This executes 9 searches (3 algorithms × 3 metrics) and displays a comparison table showing latency, similarity scores, and top results for each combination. See the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-java) for the full comparison runner.
+**HNSW** - Hierarchical Navigable Small World
+- Memory-based hierarchical graph
+- Excellent for real-time applications requiring low latency
+- Parameters: `m=16` (connections per layer), `efConstruction=64` (build quality), `efSearch=80` (query accuracy)
 
-## Authenticate with Azure CLI
+**IVF** - Inverted File Index
+- Cluster-based partitioning approach
+- Fast search via centroid comparison
+- Parameters: `numLists=1` (number of clusters), `nProbes=1` (clusters to search)
 
-Sign in to Azure CLI before you run the application so it can access Azure resources securely.
+### Similarity functions
 
-```bash
-az login
-```
+**COS (Cosine)** - Measures angle between vectors
+- Best for text embeddings (like those from OpenAI models)
+- Scale-invariant (ignores vector magnitude)
+- Range: -1 to 1 (1 = identical direction)
 
-The code uses your local developer authentication to access Azure DocumentDB and Azure OpenAI. The authentication relies on [DefaultAzureCredential](/java/api/com.azure.identity.defaultazurecredential) from **azure-identity** to find your Azure credentials in the environment.
+**L2 (Euclidean)** - Measures straight-line distance
+- Sensitive to vector magnitude
+- Good for embeddings where scale matters
+- Range: 0 to infinity (0 = identical)
 
-## Run the quickstart
+**IP (Inner Product)** - Dot product of vectors
+- Fast to compute
+- Can be used with normalized vectors
+- Range: -infinity to infinity
 
-### [IVF](#tab/tab-ivf)
+### Choosing the right configuration
 
-```bash
-mvn compile
-mvn exec:java -Dexec.mainClass="com.azure.documentdb.IVF"
-```
+Use the comparison results to guide your selection:
 
-#### [HNSW](#tab/tab-hnsw)
-
-```bash
-mvn compile
-mvn exec:java -Dexec.mainClass="com.azure.documentdb.HNSW"
-```
-
-#### [DiskANN](#tab/tab-diskann)
-
-```bash
-mvn compile
-mvn exec:java -Dexec.mainClass="com.azure.documentdb.DiskAnn"
-```
-
-----
-
-You see the top hotels that match the vector search query and their similarity scores.
-
-## View and manage data in Visual Studio Code
-
-1. Select the [DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) in Visual Studio Code to connect to your Azure DocumentDB account.
-1. View the data and indexes in the Hotels database.
+1. **For real-time applications**: Choose HNSW if latency is critical
+2. **For large datasets**: Choose DiskANN if your data exceeds available memory
+3. **For fast batch processing**: Choose IVF if you can tolerate slightly lower accuracy
+4. **For text embeddings**: Use COS similarity function (most common with OpenAI embeddings)
 
 ## Clean up resources
 
-Delete the resource group, Azure DocumentDB account, and Azure OpenAI resource when you don't need them to avoid extra costs.
+To avoid Azure charges, you should clean up unneeded resources. After you are done with this quickstart, you can delete the test collections:
 
-## Related content
+```bash
+# Connect to your cluster using MongoDB shell or code
+# Then drop the test collections
+```
 
-- [Vector store in Azure DocumentDB](vector-search.md)
-- [Azure OpenAI embeddings](/azure/ai-services/openai/concepts/understand-embeddings)
-- [MongoDB Java driver documentation](https://www.mongodb.com/docs/drivers/java/sync/current/)
+Or delete the entire DocumentDB cluster if you no longer need it:
+
+```bash
+az documentdb delete --name <your-cluster-name> --resource-group <your-resource-group>
+```
+
+## Next steps
+
+- [Vector search in Azure DocumentDB](vector-search)
+- [Optimize vector index performance](how-to-optimize-vector-indexes)
+- [Query vector data with filters](how-to-query-vector-data)
+- [Monitor DocumentDB performance](how-to-monitor-performance)

@@ -17,11 +17,15 @@ ms.date: 05/05/2026
   
   - [Firewall configured to allow access to your client IP address](../how-to-configure-firewall.md#grant-access-from-your-ip-address)
 
+  - Your identity must have the **dbOwner** role assigned on the target database
+
 - [Azure OpenAI resource](/azure/ai-foundry/openai/how-to/create-resource?view=foundry-classic&pivots=cli#create-a-resource&preserve-view=true)
 
     - Custom domain configured
 
     - [Role Based Access Control (RBAC) enabled](/azure/developer/ai/keyless-connections)
+
+    - Your identity must have the **Cognitive Services OpenAI User** role on the Azure OpenAI resource
   
     - `text-embedding-3-small` model deployed
 
