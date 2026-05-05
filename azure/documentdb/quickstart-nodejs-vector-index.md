@@ -539,6 +539,6 @@ Alternatively, delete the DocumentDB cluster and Azure OpenAI resource individua
 
 ## Next steps
 
-- [DocumentDB Vector Search Documentation](/azure/cosmos-db/mongodb/vcore/vector-search)
+- [DocumentDB Vector Search Documentation](/azure/documentdb/vector-search)
 - [Azure OpenAI Embeddings Documentation](/azure/ai-services/openai/concepts/understand-embeddings)
 - [MongoDB Aggregation Pipeline Reference](https://www.mongodb.com/docs/manual/reference/operator/aggregation/)
