@@ -642,19 +642,28 @@ The code uses your local developer authentication to access Azure DocumentDB and
 
 ## Run the quickstart
 
+### [IVF](#tab/tab-ivf)
+
 ```bash
-# Compile project
 mvn compile
-
-# Run IVF example
 mvn exec:java -Dexec.mainClass="com.azure.documentdb.IVF"
+```
 
-# Run HNSW example
+#### [HNSW](#tab/tab-hnsw)
+
+```bash
+mvn compile
 mvn exec:java -Dexec.mainClass="com.azure.documentdb.HNSW"
+```
 
-# Run DiskANN example
+#### [DiskANN](#tab/tab-diskann)
+
+```bash
+mvn compile
 mvn exec:java -Dexec.mainClass="com.azure.documentdb.DiskAnn"
 ```
+
+----
 
 You see the top hotels that match the vector search query and their similarity scores.
 

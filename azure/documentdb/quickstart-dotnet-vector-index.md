@@ -450,15 +450,25 @@ The code uses your local developer authentication to access Azure DocumentDB and
 
 ## Run the quickstart
 
-```bash
-# Run the application
-dotnet run
+### [IVF](#tab/tab-ivf)
 
-# To run specific examples, modify Program.cs:
-# await vectorSearchService.CreateIVFIndexAsync("hotels_ivf", "vectorIndex_ivf");
-# await vectorSearchService.CreateHNSWIndexAsync("hotels_hnsw", "vectorIndex_hnsw");
-# await vectorSearchService.CreateDiskANNIndexAsync("hotels_diskann", "vectorIndex_diskann");
+```bash
+dotnet run -- ivf
 ```
+
+#### [HNSW](#tab/tab-hnsw)
+
+```bash
+dotnet run -- hnsw
+```
+
+#### [DiskANN](#tab/tab-diskann)
+
+```bash
+dotnet run -- diskann
+```
+
+----
 
 You see the top hotels that match the vector search query and their similarity scores.
 

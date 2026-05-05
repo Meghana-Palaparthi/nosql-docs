@@ -647,16 +647,25 @@ The code uses your local developer authentication to access Azure DocumentDB and
 
 ## Run the quickstart
 
+### [IVF](#tab/tab-ivf)
+
 ```bash
-# Run IVF example
 python ivf.py
+```
 
-# Run HNSW example
+#### [HNSW](#tab/tab-hnsw)
+
+```bash
 python hnsw.py
+```
 
-# Run DiskANN example
+#### [DiskANN](#tab/tab-diskann)
+
+```bash
 python diskann.py
 ```
+
+----
 
 You see the top hotels that match the vector search query and their similarity scores.
 

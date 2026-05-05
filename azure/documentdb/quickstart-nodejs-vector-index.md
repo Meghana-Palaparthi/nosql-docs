@@ -547,19 +547,28 @@ The code uses your local developer authentication to access Azure DocumentDB and
 
 ## Run the quickstart
 
+### [IVF](#tab/tab-ivf)
+
 ```bash
-# Compile TypeScript
 npx tsc
-
-# Run IVF example
 node dist/ivf.js
+```
 
-# Run HNSW example
+#### [HNSW](#tab/tab-hnsw)
+
+```bash
+npx tsc
 node dist/hnsw.js
+```
 
-# Run DiskANN example
+#### [DiskANN](#tab/tab-diskann)
+
+```bash
+npx tsc
 node dist/diskann.js
 ```
+
+----
 
 You see the top hotels that match the vector search query and their similarity scores.
 
