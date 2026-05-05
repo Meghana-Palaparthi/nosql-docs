@@ -26,7 +26,7 @@ Learn how to create and use vector indexes in Azure DocumentDB to enable efficie
   - **HNSW**: M30 or higher
   - **DiskANN**: M30 or higher
 - [Azure OpenAI resource](/azure/ai-services/openai/how-to/create-resource) with an embeddings model deployed
-- [Java 11+](https://www.oracle.com/java/technologies/downloads/)
+- [JDK](/java/openjdk/download)
 - [Apache Maven 3.6+](https://maven.apache.org/download.cgi)
 - Your preferred IDE (IntelliJ IDEA, Eclipse, VS Code)
 

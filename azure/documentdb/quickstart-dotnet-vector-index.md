@@ -26,7 +26,7 @@ Learn how to create and use vector indexes in Azure DocumentDB to enable efficie
   - **HNSW**: M30 or higher
   - **DiskANN**: M30 or higher
 - [Azure OpenAI resource](/azure/ai-services/openai/how-to/create-resource) with an embeddings model deployed
-- [.NET 7.0+](https://dotnet.microsoft.com/download)
+- [.NET SDK](https://dotnet.microsoft.com/download)
 - Your preferred IDE (Visual Studio, Visual Studio Code, or Rider)
 
 ## Set up the project

@@ -26,7 +26,7 @@ Learn how to create and use vector indexes in Azure DocumentDB to enable efficie
   - **HNSW**: M30 or higher
   - **DiskANN**: M30 or higher
 - [Azure OpenAI resource](/azure/ai-services/openai/how-to/create-resource) with an embeddings model deployed
-- [Go 1.21+](https://golang.org/dl/)
+- [Go](https://go.dev/dl/)
 - Your preferred code editor
 
 ## Set up the project
