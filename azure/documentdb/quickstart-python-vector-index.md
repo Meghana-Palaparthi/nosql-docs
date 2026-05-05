@@ -97,7 +97,9 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
     - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
     - `MONGO_CLUSTER_NAME`: Your Azure DocumentDB resource name
 
-## Create an IVF index
+## Create a vector index
+
+### [IVF](#tab/tab-ivf)
 
 IVF (Inverted File) is ideal for datasets with fewer than 10,000 documents. It partitions vectors into clusters for fast approximate search.
 
@@ -269,7 +271,7 @@ if __name__ == "__main__":
     main()
 ```
 
-## Create an HNSW index
+#### [HNSW](#tab/tab-hnsw)
 
 HNSW (Hierarchical Navigable Small World) is ideal for datasets between 10,000 and 50,000 documents. It builds a graph-based index for faster search with better recall.
 
@@ -426,7 +428,7 @@ Key differences from IVF:
 - **efConstruction**: Candidate list size during construction (4–1000, default 64). Higher values improve accuracy at cost of build time.
 - **Cluster tier**: Requires M30 or higher due to memory overhead.
 
-## Create a DiskANN index
+#### [DiskANN](#tab/tab-diskann)
 
 DiskANN is optimized for very large datasets (50,000+ documents) with efficient disk-based storage.
 
@@ -582,6 +584,8 @@ Key parameters:
 - **maxDegree**: Number of edges per node (20–2048, default 32). Higher values improve accuracy.
 - **lBuild**: Candidate neighbors evaluated during construction (10–500, default 50). Affects index quality.
 - **Cluster tier**: Requires M30 or higher.
+
+----
 
 ## Query with vector search
 

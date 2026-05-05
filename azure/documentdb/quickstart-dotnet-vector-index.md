@@ -84,7 +84,9 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
     // Create clients and run examples
     ```
 
-## Create an IVF index
+## Create a vector index
+
+### [IVF](#tab/tab-ivf)
 
 IVF (Inverted File) is ideal for datasets with fewer than 10,000 documents. It partitions vectors into clusters for fast approximate search.
 
@@ -336,7 +338,7 @@ public class MongoDbService
 }
 ```
 
-## Create an HNSW index
+#### [HNSW](#tab/tab-hnsw)
 
 HNSW (Hierarchical Navigable Small World) is ideal for datasets between 10,000 and 50,000 documents. It builds a graph-based index for faster search with better recall.
 
@@ -361,7 +363,7 @@ var hnswResults = await vectorSearchService.PerformVectorSearchAsync(
     5);
 ```
 
-## Create a DiskANN index
+#### [DiskANN](#tab/tab-diskann)
 
 DiskANN is optimized for very large datasets (50,000+ documents) with efficient disk-based storage.
 
@@ -385,6 +387,8 @@ var diskannResults = await vectorSearchService.PerformVectorSearchAsync(
     "quintessential lodging near running trails, eateries, retail",
     5);
 ```
+
+---
 
 ## Query with vector search
 
