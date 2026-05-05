@@ -29,6 +29,16 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 - [Go](https://go.dev/dl/)
 
+## Create data file with vectors
+
+1. Create a new data directory for the hotels data file:
+
+    ```bash
+    mkdir data
+    ```
+
+1. Copy the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory.
+
 ## Set up the project
 
 1. Create and navigate to a new project directory:
