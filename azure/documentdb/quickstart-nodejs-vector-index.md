@@ -489,6 +489,9 @@ Key parameters:
 
 ----
 
+> [!IMPORTANT]
+> Vectors must be stored as `number[]` (array of numbers) to be indexed. Documents with vectors stored as other types (such as `double[]`) won't be indexed. The maximum supported dimensions depend on the index type: up to 2,000 for IVF/HNSW, and up to 16,000 for DiskANN with product quantization.
+
 ## Query with vector search
 
 All three algorithms use the same query pattern with the `$search` aggregation stage:
@@ -524,16 +527,64 @@ The `$search` stage finds the k nearest neighbors to your query vector. Results 
 
 ## Choose the right algorithm
 
-| Algorithm | Dataset Size | Cluster Tier | Query Speed | Accuracy | Memory |
-|-----------|--------------|--------------|-------------|----------|--------|
-| IVF | < 10K docs | M10+ | Very fast | Good | Low |
-| HNSW | 10K-50K docs | M30+ | Fast | Excellent | Medium |
-| DiskANN | 50K+ docs | M30+ | Medium | Excellent | Low (disk-based) |
+Select the vector index algorithm based on your dataset size and performance requirements:
 
-**Selection guidelines:**
-- **IVF**: Start here for small datasets. Simple and resource-efficient.
-- **HNSW**: Choose for medium datasets where recall is important. Best recall rates.
-- **DiskANN**: Required for datasets exceeding 50,000 documents. Balances accuracy and resource usage.
+| Algorithm | Best For | Cluster Tier | Trade-offs |
+|-----------|----------|-------------|------------|
+| **IVF** | Small datasets (<10K documents) | M10+ | Fast creation, lower recall at scale |
+| **HNSW** | Medium datasets (10K–50K documents) | M30+ | Balanced recall/speed, more memory |
+| **DiskANN** | Large datasets (50K+ documents) | M40+ | Best recall at scale, disk-efficient |
+
+### Similarity metrics
+
+Each algorithm supports three similarity metrics:
+
+| Metric | Range | Interpretation | Best For |
+|--------|-------|---------------|----------|
+| **COS** (Cosine) | 0–1 | Higher = more similar | Text embeddings (normalized vectors) |
+| **L2** (Euclidean) | 0+ | Lower = more similar | Spatial data, image embeddings |
+| **IP** (Inner Product) | Varies | Higher = more similar | Recommendation systems, normalized embeddings |
+
+### Tuning parameters
+
+#### IVF parameters
+
+| Parameter | Description | Default | Guidance |
+|-----------|-------------|---------|----------|
+| `numLists` | Number of clusters for partitioning | 1 | Use 1 for <1K docs. For larger datasets, use √N. More lists = faster search but slower creation. |
+
+#### HNSW parameters
+
+| Parameter | Description | Default | Guidance |
+|-----------|-------------|---------|----------|
+| `m` | Max connections per node | 16 | Higher (up to 64) = better recall, more memory |
+| `efConstruction` | Build-time candidate list size | 64 | Higher (up to 500) = better quality, slower build |
+
+#### DiskANN parameters
+
+| Parameter | Description | Default | Guidance |
+|-----------|-------------|---------|----------|
+| `maxDegree` | Max edges per node | 32 | Higher = better recall, more disk I/O |
+| `lBuild` | Build-time search width | 50 | Higher = better quality index, slower build |
+
+### Cluster tier requirements
+
+- **M10/M20**: Sufficient for IVF indexes on small datasets
+- **M30**: Required for HNSW indexes (memory-intensive graph structure)
+- **M40+**: Required for DiskANN (disk-optimized for large-scale vector search)
+
+> [!NOTE]
+> Quantized indexes (HNSW, DiskANN) require a minimum of 1,000 vectors. Below this threshold, the system performs a full scan regardless of index configuration.
+
+### Compare algorithms
+
+Run all three algorithms against the same dataset to compare performance:
+
+```bash
+npx tsc && node dist/compare-all.js
+```
+
+This executes 9 searches (3 algorithms × 3 metrics) and displays a comparison table showing latency, similarity scores, and top results for each combination. See the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-typescript) for the full comparison runner.
 
 ## Authenticate with Azure CLI
 
