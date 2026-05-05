@@ -1,6 +1,8 @@
 ---
 title: "Quickstart - Vector Indexing with Go"
 description: "Learn how to choose and configure IVF, HNSW, and DiskANN vector indexes in Azure DocumentDB with Go."
+author: diberry
+ms.author: diberry
 ms.reviewer: khelanmodi
 ms.devlang: golang
 ms.topic: quickstart-sdk
@@ -9,63 +11,65 @@ ai-usage: ai-assisted
 ms.custom:
   - devx-track-go
   - devx-track-data-ai
+  - devx-track-go-ai
 # CustomerIntent: As a developer, I want to choose and configure the right vector index algorithm for my dataset size in Azure DocumentDB.
 ---
 
 # Quickstart: Vector indexing in Azure DocumentDB with Go
 
-Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-go) on GitHub.
-
 Learn how to create and use vector indexes in Azure DocumentDB to enable efficient similarity search with LLM embeddings. This quickstart shows how to set up IVF, HNSW, and DiskANN indexes—each optimized for different dataset sizes and performance requirements.
+
+This quickstart uses a sample hotel dataset in a JSON file with pre-calculated vectors from the `text-embedding-3-small` model. The dataset includes hotel names, locations, descriptions, and vector embeddings.
+
+Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-go) on GitHub.
 
 ## Prerequisites
 
-- An Azure subscription ([create one for free](https://azure.microsoft.com/free/))
-- Azure DocumentDB vCore cluster with appropriate tier:
-  - **IVF**: M10 or higher
-  - **HNSW**: M30 or higher
-  - **DiskANN**: M30 or higher
-- [Azure OpenAI resource](/azure/ai-services/openai/how-to/create-resource) with an embeddings model deployed
+[!INCLUDE[Prerequisites - Vector Index Quickstart](includes/prerequisite-quickstart-vector-index.md)]
+
 - [Go](https://go.dev/dl/)
-- Your preferred code editor
 
 ## Set up the project
 
 1. Create and navigate to a new project directory:
 
-```bash
-mkdir documentdb-vector-quickstart
-cd documentdb-vector-quickstart
-```
+    ```bash
+    mkdir documentdb-vector-quickstart
+    cd documentdb-vector-quickstart
+    ```
 
-2. Initialize a Go module:
+1. Initialize a Go module:
 
-```bash
-go mod init documentdb-quickstart
-```
+    ```bash
+    go mod init documentdb-quickstart
+    ```
 
-3. Install required packages:
+1. Install required packages:
 
-```bash
-go get github.com/Azure/azure-sdk-for-go/sdk/azcore
-go get github.com/Azure/azure-sdk-for-go/sdk/azidentity
-go get github.com/openai/openai-go/v3
-go get go.mongodb.org/mongo-driver
-go get github.com/joho/godotenv
-```
+    ```bash
+    go get github.com/Azure/azure-sdk-for-go/sdk/azcore
+    go get github.com/Azure/azure-sdk-for-go/sdk/azidentity
+    go get github.com/openai/openai-go/v3
+    go get go.mongodb.org/mongo-driver
+    go get github.com/joho/godotenv
+    ```
 
-4. Create a `.env` file with your credentials:
+1. Create a `.env` file with your credentials:
 
-```env
-MONGO_CLUSTER_NAME=your-cluster-name
-AZURE_OPENAI_EMBEDDING_ENDPOINT=https://your-resource.openai.azure.com/
-AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
-AZURE_OPENAI_EMBEDDING_API_VERSION=2023-05-15
-EMBEDDED_FIELD=DescriptionVector
-EMBEDDING_DIMENSIONS=1536
-DATA_FILE_WITH_VECTORS=data/Hotels_Vector.json
-LOAD_SIZE_BATCH=100
-```
+    ```env
+    MONGO_CLUSTER_NAME=
+    AZURE_OPENAI_EMBEDDING_ENDPOINT=
+    AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+    AZURE_OPENAI_EMBEDDING_API_VERSION=2023-05-15
+    EMBEDDED_FIELD=DescriptionVector
+    EMBEDDING_DIMENSIONS=1536
+    DATA_FILE_WITH_VECTORS=data/Hotels_Vector.json
+    LOAD_SIZE_BATCH=100
+    ```
+
+    Replace the placeholder values in the `.env` file with your own information:
+    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
+    - `MONGO_CLUSTER_NAME`: Your Azure DocumentDB resource name
 
 ## Create an IVF index
 
@@ -651,6 +655,16 @@ The `$search` stage finds the k nearest neighbors to your query vector. Results 
 - **HNSW**: Choose for medium datasets where recall is important. Best recall rates.
 - **DiskANN**: Required for datasets exceeding 50,000 documents. Balances accuracy and resource usage.
 
+## Authenticate with Azure CLI
+
+Sign in to Azure CLI before you run the application so it can access Azure resources securely.
+
+```bash
+az login
+```
+
+The code uses your local developer authentication to access Azure DocumentDB and Azure OpenAI. The authentication relies on [DefaultAzureCredential](https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/azidentity#DefaultAzureCredential) from **azidentity** to find your Azure credentials in the environment.
+
 ## Run the quickstart
 
 ```bash
@@ -664,18 +678,19 @@ go run hnsw.go
 go run diskann.go
 ```
 
+You see the top hotels that match the vector search query and their similarity scores.
+
+## View and manage data in Visual Studio Code
+
+1. Select the [DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) in Visual Studio Code to connect to your Azure DocumentDB account.
+1. View the data and indexes in the Hotels database.
+
 ## Clean up resources
 
-When you're done, remove the resources to avoid ongoing charges:
+Delete the resource group, Azure DocumentDB account, and Azure OpenAI resource when you don't need them to avoid extra costs.
 
-```bash
-az group delete --name <your-resource-group> --yes --no-wait
-```
+## Related content
 
-Alternatively, delete the DocumentDB cluster and Azure OpenAI resource individually from the [Azure portal](https://portal.azure.com).
-
-## Next steps
-
-- [DocumentDB Vector Search Documentation](/azure/documentdb/vector-search)
-- [Azure OpenAI Embeddings Documentation](/azure/ai-services/openai/concepts/understand-embeddings)
-- [MongoDB Go Driver Documentation](https://www.mongodb.com/docs/drivers/go/)
+- [Vector store in Azure DocumentDB](vector-search.md)
+- [Azure OpenAI embeddings](/azure/ai-services/openai/concepts/understand-embeddings)
+- [MongoDB Go driver documentation](https://www.mongodb.com/docs/drivers/go/)

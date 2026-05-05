@@ -1,6 +1,8 @@
 ---
 title: "Quickstart - Vector Indexing with Node.js"
 description: "Learn how to choose and configure IVF, HNSW, and DiskANN vector indexes in Azure DocumentDB with Node.js."
+author: diberry
+ms.author: diberry
 ms.reviewer: khelanmodi
 ms.devlang: javascript
 ms.topic: quickstart-sdk
@@ -8,77 +10,85 @@ ms.date: 07/14/2025
 ai-usage: ai-assisted
 ms.custom:
   - devx-track-js
+  - devx-track-js-ai
   - devx-track-data-ai
 # CustomerIntent: As a developer, I want to choose and configure the right vector index algorithm for my dataset size in Azure DocumentDB.
 ---
 
 # Quickstart: Vector indexing in Azure DocumentDB with Node.js
 
-Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-typescript) on GitHub.
-
 Learn how to create and use vector indexes in Azure DocumentDB to enable efficient similarity search with LLM embeddings. This quickstart shows how to set up IVF, HNSW, and DiskANN indexes—each optimized for different dataset sizes and performance requirements.
+
+This quickstart uses a sample hotel dataset in a JSON file with pre-calculated vectors from the `text-embedding-3-small` model. The dataset includes hotel names, locations, descriptions, and vector embeddings.
+
+Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-typescript) on GitHub.
 
 ## Prerequisites
 
-- An Azure subscription ([create one for free](https://azure.microsoft.com/free/))
-- Azure DocumentDB vCore cluster with appropriate tier:
-  - **IVF**: M10 or higher
-  - **HNSW**: M30 or higher
-  - **DiskANN**: M30 or higher
-- [Azure OpenAI resource](/azure/ai-services/openai/how-to/create-resource) with an embeddings model deployed
-- [Node.js LTS](https://nodejs.org/)
-- [Visual Studio Code](https://code.visualstudio.com/) or your preferred editor
+[!INCLUDE[Prerequisites - Vector Index Quickstart](includes/prerequisite-quickstart-vector-index.md)]
+
+- [Node.js LTS](https://nodejs.org/download/)
+
+- [TypeScript](https://www.typescriptlang.org/download): Install TypeScript globally:
+
+    ```bash
+    npm install -g typescript
+    ```
 
 ## Set up the project
 
 1. Create and navigate to a new project directory:
 
-```bash
-mkdir documentdb-vector-quickstart
-cd documentdb-vector-quickstart
-```
+    ```bash
+    mkdir documentdb-vector-quickstart
+    cd documentdb-vector-quickstart
+    ```
 
-2. Initialize a TypeScript Node.js project:
+1. Initialize a TypeScript Node.js project:
 
-```bash
-npm init -y
-npm install --save typescript ts-node @types/node
-npm install --save mongodb openai dotenv @azure/identity
-```
+    ```bash
+    npm init -y
+    npm install --save typescript ts-node @types/node
+    npm install --save mongodb openai dotenv @azure/identity
+    ```
 
-3. Create a `tsconfig.json`:
+1. Create a `tsconfig.json`:
 
-```json
-{
-  "compilerOptions": {
-    "target": "ES2020",
-    "module": "ES2020",
-    "lib": ["ES2020"],
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "strict": true,
-    "outDir": "./dist"
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
-}
-```
+    ```json
+    {
+      "compilerOptions": {
+        "target": "ES2020",
+        "module": "ES2020",
+        "lib": ["ES2020"],
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "strict": true,
+        "outDir": "./dist"
+      },
+      "include": ["src/**/*"],
+      "exclude": ["node_modules"]
+    }
+    ```
 
-4. Create a `.env` file with your credentials:
+1. Create a `.env` file with your credentials:
 
-```env
-MONGO_CLUSTER_NAME=your-cluster-name
-AZURE_OPENAI_EMBEDDING_ENDPOINT=https://your-resource.openai.azure.com/
-AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
-AZURE_OPENAI_EMBEDDING_API_VERSION=2023-05-15
-EMBEDDED_FIELD=DescriptionVector
-EMBEDDING_DIMENSIONS=1536
-DATA_FILE_WITH_VECTORS=../data/Hotels_Vector.json
-LOAD_SIZE_BATCH=100
-```
+    ```env
+    MONGO_CLUSTER_NAME=
+    AZURE_OPENAI_EMBEDDING_ENDPOINT=
+    AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+    AZURE_OPENAI_EMBEDDING_API_VERSION=2023-05-15
+    EMBEDDED_FIELD=DescriptionVector
+    EMBEDDING_DIMENSIONS=1536
+    DATA_FILE_WITH_VECTORS=../data/Hotels_Vector.json
+    LOAD_SIZE_BATCH=100
+    ```
+
+    Replace the placeholder values in the `.env` file with your own information:
+    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
+    - `MONGO_CLUSTER_NAME`: Your Azure DocumentDB resource name
 
 ## Create an IVF index
 
@@ -511,6 +521,16 @@ The `$search` stage finds the k nearest neighbors to your query vector. Results 
 - **HNSW**: Choose for medium datasets where recall is important. Best recall rates.
 - **DiskANN**: Required for datasets exceeding 50,000 documents. Balances accuracy and resource usage.
 
+## Authenticate with Azure CLI
+
+Sign in to Azure CLI before you run the application so it can access Azure resources securely.
+
+```bash
+az login
+```
+
+The code uses your local developer authentication to access Azure DocumentDB and Azure OpenAI. The authentication relies on [DefaultAzureCredential](/javascript/api/@azure/identity/defaultazurecredential) from **@azure/identity** to find your Azure credentials in the environment.
+
 ## Run the quickstart
 
 ```bash
@@ -527,18 +547,19 @@ node dist/hnsw.js
 node dist/diskann.js
 ```
 
+You see the top hotels that match the vector search query and their similarity scores.
+
+## View and manage data in Visual Studio Code
+
+1. Select the [DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) in Visual Studio Code to connect to your Azure DocumentDB account.
+1. View the data and indexes in the Hotels database.
+
 ## Clean up resources
 
-When you're done, remove the resources to avoid ongoing charges:
+Delete the resource group, Azure DocumentDB account, and Azure OpenAI resource when you don't need them to avoid extra costs.
 
-```bash
-az group delete --name <your-resource-group> --yes --no-wait
-```
+## Related content
 
-Alternatively, delete the DocumentDB cluster and Azure OpenAI resource individually from the [Azure portal](https://portal.azure.com).
-
-## Next steps
-
-- [DocumentDB Vector Search Documentation](/azure/documentdb/vector-search)
-- [Azure OpenAI Embeddings Documentation](/azure/ai-services/openai/concepts/understand-embeddings)
-- [MongoDB Aggregation Pipeline Reference](https://www.mongodb.com/docs/manual/reference/operator/aggregation/)
+- [Vector store in Azure DocumentDB](vector-search.md)
+- [Azure OpenAI embeddings](/azure/ai-services/openai/concepts/understand-embeddings)
+- [MongoDB aggregation pipeline reference](https://www.mongodb.com/docs/manual/reference/operator/aggregation/)

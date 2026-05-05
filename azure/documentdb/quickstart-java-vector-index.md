@@ -1,6 +1,8 @@
 ---
 title: "Quickstart - Vector Indexing with Java"
 description: "Learn how to choose and configure IVF, HNSW, and DiskANN vector indexes in Azure DocumentDB with Java."
+author: diberry
+ms.author: diberry
 ms.reviewer: khelanmodi
 ms.devlang: java
 ms.topic: quickstart-sdk
@@ -9,93 +11,95 @@ ai-usage: ai-assisted
 ms.custom:
   - devx-track-java
   - devx-track-data-ai
+  - devx-track-java-ai
 # CustomerIntent: As a developer, I want to choose and configure the right vector index algorithm for my dataset size in Azure DocumentDB.
 ---
 
 # Quickstart: Vector indexing in Azure DocumentDB with Java
 
-Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-java) on GitHub.
-
 Learn how to create and use vector indexes in Azure DocumentDB to enable efficient similarity search with LLM embeddings. This quickstart shows how to set up IVF, HNSW, and DiskANN indexes—each optimized for different dataset sizes and performance requirements.
+
+This quickstart uses a sample hotel dataset in a JSON file with pre-calculated vectors from the `text-embedding-3-small` model. The dataset includes hotel names, locations, descriptions, and vector embeddings.
+
+Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-java) on GitHub.
 
 ## Prerequisites
 
-- An Azure subscription ([create one for free](https://azure.microsoft.com/free/))
-- Azure DocumentDB vCore cluster with appropriate tier:
-  - **IVF**: M10 or higher
-  - **HNSW**: M30 or higher
-  - **DiskANN**: M30 or higher
-- [Azure OpenAI resource](/azure/ai-services/openai/how-to/create-resource) with an embeddings model deployed
-- [JDK](/java/openjdk/download)
-- [Apache Maven 3.6+](https://maven.apache.org/download.cgi)
-- Your preferred IDE (IntelliJ IDEA, Eclipse, VS Code)
+[!INCLUDE[Prerequisites - Vector Index Quickstart](includes/prerequisite-quickstart-vector-index.md)]
+
+- [Java 21](/java/openjdk/download) or later
+
+- [Maven 3.6](https://maven.apache.org/download.cgi) or later
 
 ## Set up the project
 
 1. Create a Maven project:
 
-```bash
-mvn archetype:generate \
-  -DgroupId=com.azure.documentdb \
-  -DartifactId=vector-quickstart \
-  -DarchetypeArtifactId=maven-archetype-quickstart \
-  -DinteractiveMode=false
+    ```bash
+    mvn archetype:generate \
+      -DgroupId=com.azure.documentdb \
+      -DartifactId=vector-quickstart \
+      -DarchetypeArtifactId=maven-archetype-quickstart \
+      -DinteractiveMode=false
 
-cd vector-quickstart
-```
+    cd vector-quickstart
+    ```
 
-2. Update `pom.xml` with required dependencies:
+1. Update `pom.xml` with required dependencies:
 
-```xml
-<dependencies>
-  <!-- MongoDB Driver -->
-  <dependency>
-    <groupId>org.mongodb</groupId>
-    <artifactId>mongodb-driver-sync</artifactId>
-    <version>4.11.1</version>
-  </dependency>
+    ```xml
+    <dependencies>
+      <!-- MongoDB Driver -->
+      <dependency>
+        <groupId>org.mongodb</groupId>
+        <artifactId>mongodb-driver-sync</artifactId>
+        <version>4.11.1</version>
+      </dependency>
 
-  <!-- Azure Identity -->
-  <dependency>
-    <groupId>com.azure</groupId>
-    <artifactId>azure-identity</artifactId>
-    <version>1.11.1</version>
-  </dependency>
+      <!-- Azure Identity -->
+      <dependency>
+        <groupId>com.azure</groupId>
+        <artifactId>azure-identity</artifactId>
+        <version>1.11.1</version>
+      </dependency>
 
-  <!-- Azure OpenAI -->
-  <dependency>
-    <groupId>com.azure</groupId>
-    <artifactId>azure-ai-openai</artifactId>
-    <version>1.0.0</version>
-  </dependency>
+      <!-- Azure OpenAI -->
+      <dependency>
+        <groupId>com.azure</groupId>
+        <artifactId>azure-ai-openai</artifactId>
+        <version>1.0.0</version>
+      </dependency>
 
-  <!-- JSON processing -->
-  <dependency>
-    <groupId>com.fasterxml.jackson.core</groupId>
-    <artifactId>jackson-databind</artifactId>
-    <version>2.16.0</version>
-  </dependency>
+      <!-- JSON processing -->
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>2.16.0</version>
+      </dependency>
 
-  <!-- Logging -->
-  <dependency>
-    <groupId>org.slf4j</groupId>
-    <artifactId>slf4j-simple</artifactId>
-    <version>2.0.9</version>
-  </dependency>
-</dependencies>
-```
+      <!-- Logging -->
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>2.0.9</version>
+      </dependency>
+    </dependencies>
+    ```
 
-3. Create a `.env` file with your credentials:
+1. Create a `.env` file with your configuration:
 
-```env
-MONGO_CLUSTER_NAME=your-cluster-name
-AZURE_MANAGED_IDENTITY_PRINCIPAL_ID=your-principal-id
-AZURE_OPENAI_EMBEDDING_ENDPOINT=https://your-resource.openai.azure.com/
-AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
-AZURE_OPENAI_EMBEDDING_API_VERSION=2023-05-15
-EMBEDDED_FIELD=DescriptionVector
-EMBEDDING_DIMENSIONS=1536
-```
+    ```env
+    MONGO_CLUSTER_NAME=<your-cluster-name>
+    AZURE_OPENAI_EMBEDDING_ENDPOINT=<your-azure-openai-endpoint>
+    AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+    AZURE_OPENAI_EMBEDDING_API_VERSION=2023-05-15
+    EMBEDDED_FIELD=DescriptionVector
+    EMBEDDING_DIMENSIONS=1536
+    ```
+
+    Replace the placeholder values with your own information:
+    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
+    - `MONGO_CLUSTER_NAME`: Your Azure DocumentDB resource name
 
 ## Create an IVF index
 
@@ -612,6 +616,16 @@ The `$search` stage finds the k nearest neighbors to your query vector. Results 
 - **HNSW**: Choose for medium datasets where recall is important. Best recall rates.
 - **DiskANN**: Required for datasets exceeding 50,000 documents. Balances accuracy and resource usage.
 
+## Authenticate with Azure CLI
+
+Sign in to Azure CLI before you run the application so it can access Azure resources securely.
+
+```bash
+az login
+```
+
+The code uses your local developer authentication to access Azure DocumentDB and Azure OpenAI. The authentication relies on [DefaultAzureCredential](/java/api/com.azure.identity.defaultazurecredential) from **azure-identity** to find your Azure credentials in the environment.
+
 ## Run the quickstart
 
 ```bash
@@ -628,18 +642,19 @@ mvn exec:java -Dexec.mainClass="com.azure.documentdb.HNSW"
 mvn exec:java -Dexec.mainClass="com.azure.documentdb.DiskAnn"
 ```
 
+You see the top hotels that match the vector search query and their similarity scores.
+
+## View and manage data in Visual Studio Code
+
+1. Select the [DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) in Visual Studio Code to connect to your Azure DocumentDB account.
+1. View the data and indexes in the Hotels database.
+
 ## Clean up resources
 
-When you're done, remove the resources to avoid ongoing charges:
+Delete the resource group, Azure DocumentDB account, and Azure OpenAI resource when you don't need them to avoid extra costs.
 
-```bash
-az group delete --name <your-resource-group> --yes --no-wait
-```
+## Related content
 
-Alternatively, delete the DocumentDB cluster and Azure OpenAI resource individually from the [Azure portal](https://portal.azure.com).
-
-## Next steps
-
-- [DocumentDB Vector Search Documentation](/azure/documentdb/vector-search)
-- [Azure OpenAI Embeddings Documentation](/azure/ai-services/openai/concepts/understand-embeddings)
-- [MongoDB Java Driver Documentation](https://www.mongodb.com/docs/drivers/java/sync/current/)
+- [Vector store in Azure DocumentDB](vector-search.md)
+- [Azure OpenAI embeddings](/azure/ai-services/openai/concepts/understand-embeddings)
+- [MongoDB Java driver documentation](https://www.mongodb.com/docs/drivers/java/sync/current/)

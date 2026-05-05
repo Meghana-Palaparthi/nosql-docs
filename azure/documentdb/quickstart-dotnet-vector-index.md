@@ -1,6 +1,8 @@
 ---
 title: "Quickstart - Vector Indexing with .NET"
 description: "Learn how to choose and configure IVF, HNSW, and DiskANN vector indexes in Azure DocumentDB with .NET."
+author: diberry
+ms.author: diberry
 ms.reviewer: khelanmodi
 ms.devlang: csharp
 ms.topic: quickstart-sdk
@@ -9,64 +11,68 @@ ai-usage: ai-assisted
 ms.custom:
   - devx-track-dotnet
   - devx-track-data-ai
+  - devx-track-dotnet-ai
 # CustomerIntent: As a developer, I want to choose and configure the right vector index algorithm for my dataset size in Azure DocumentDB.
 ---
 
 # Quickstart: Vector indexing in Azure DocumentDB with C#
 
-Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-dotnet) on GitHub.
-
 Learn how to create and use vector indexes in Azure DocumentDB to enable efficient similarity search with LLM embeddings. This quickstart shows how to set up IVF, HNSW, and DiskANN indexes—each optimized for different dataset sizes and performance requirements.
+
+This quickstart uses a sample hotel dataset in a JSON file with pre-calculated vectors from the `text-embedding-3-small` model. The dataset includes hotel names, locations, descriptions, and vector embeddings.
+
+Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-dotnet) on GitHub.
 
 ## Prerequisites
 
-- An Azure subscription ([create one for free](https://azure.microsoft.com/free/))
-- Azure DocumentDB vCore cluster with appropriate tier:
-  - **IVF**: M10 or higher
-  - **HNSW**: M30 or higher
-  - **DiskANN**: M30 or higher
-- [Azure OpenAI resource](/azure/ai-services/openai/how-to/create-resource) with an embeddings model deployed
-- [.NET SDK](https://dotnet.microsoft.com/download)
-- Your preferred IDE (Visual Studio, Visual Studio Code, or Rider)
+[!INCLUDE[Prerequisites - Vector Index Quickstart](includes/prerequisite-quickstart-vector-index.md)]
+
+- [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) or later
+
+    - [C# extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
 
 ## Set up the project
 
 1. Create a new .NET console application:
 
-```bash
-dotnet new console -n DocumentDBVectorQuickstart
-cd DocumentDBVectorQuickstart
-```
+    ```bash
+    dotnet new console -n DocumentDBVectorQuickstart
+    cd DocumentDBVectorQuickstart
+    ```
 
-2. Add required NuGet packages:
+1. Add required NuGet packages:
 
-```bash
-dotnet add package MongoDB.Driver --version 2.21.0
-dotnet add package Azure.AI.OpenAI --version 1.0.0
-dotnet add package Azure.Identity --version 1.11.1
-```
+    ```bash
+    dotnet add package MongoDB.Driver --version 2.21.0
+    dotnet add package Azure.AI.OpenAI --version 1.0.0
+    dotnet add package Azure.Identity --version 1.11.1
+    ```
 
-3. Update your `Program.cs` with basic structure:
+    - `MongoDB.Driver`: MongoDB driver for .NET
+    - `Azure.AI.OpenAI`: Azure OpenAI client library
+    - `Azure.Identity`: Azure Identity library for passwordless authentication
 
-```csharp
-using Azure.AI.OpenAI;
-using Azure.Identity;
-using MongoDB.Bson;
-using MongoDB.Driver;
+1. Update your `Program.cs` with basic structure:
 
-// Configuration
-var config = new VectorSearchConfig
-{
-    ClusterName = Environment.GetEnvironmentVariable("MONGO_CLUSTER_NAME") ?? "vectorSearch",
-    DatabaseName = "Hotels",
-    EmbeddedField = Environment.GetEnvironmentVariable("EMBEDDED_FIELD") ?? "DescriptionVector",
-    Dimensions = int.Parse(Environment.GetEnvironmentVariable("EMBEDDING_DIMENSIONS") ?? "1536"),
-    OpenAIEndpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_EMBEDDING_ENDPOINT") ?? "",
-    OpenAIModel = Environment.GetEnvironmentVariable("AZURE_OPENAI_EMBEDDING_MODEL") ?? "text-embedding-3-small",
-};
+    ```csharp
+    using Azure.AI.OpenAI;
+    using Azure.Identity;
+    using MongoDB.Bson;
+    using MongoDB.Driver;
 
-// Create clients and run examples
-```
+    // Configuration
+    var config = new VectorSearchConfig
+    {
+        ClusterName = Environment.GetEnvironmentVariable("MONGO_CLUSTER_NAME") ?? "vectorSearch",
+        DatabaseName = "Hotels",
+        EmbeddedField = Environment.GetEnvironmentVariable("EMBEDDED_FIELD") ?? "DescriptionVector",
+        Dimensions = int.Parse(Environment.GetEnvironmentVariable("EMBEDDING_DIMENSIONS") ?? "1536"),
+        OpenAIEndpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_EMBEDDING_ENDPOINT") ?? "",
+        OpenAIModel = Environment.GetEnvironmentVariable("AZURE_OPENAI_EMBEDDING_MODEL") ?? "text-embedding-3-small",
+    };
+
+    // Create clients and run examples
+    ```
 
 ## Create an IVF index
 
@@ -418,6 +424,16 @@ The `$search` stage finds the k nearest neighbors to your query vector. Results 
 - **HNSW**: Choose for medium datasets where recall is important. Best recall rates.
 - **DiskANN**: Required for datasets exceeding 50,000 documents. Balances accuracy and resource usage.
 
+## Authenticate with Azure CLI
+
+Sign in to Azure CLI before you run the application so it can access Azure resources securely.
+
+```bash
+az login
+```
+
+The code uses your local developer authentication to access Azure DocumentDB and Azure OpenAI. The authentication relies on [DefaultAzureCredential](/dotnet/api/azure.identity.defaultazurecredential) from **Azure.Identity** to find your Azure credentials in the environment.
+
 ## Run the quickstart
 
 ```bash
@@ -430,80 +446,19 @@ dotnet run
 # await vectorSearchService.CreateDiskANNIndexAsync("hotels_diskann", "vectorIndex_diskann");
 ```
 
-## Complete Program.cs example
+You see the top hotels that match the vector search query and their similarity scores.
 
-```csharp
-using Azure.AI.OpenAI;
-using Azure.Identity;
+## View and manage data in Visual Studio Code
 
-var credential = new DefaultAzureCredential();
-var config = new VectorSearchConfig
-{
-    ClusterName = Environment.GetEnvironmentVariable("MONGO_CLUSTER_NAME") ?? "",
-    DatabaseName = "Hotels",
-    EmbeddedField = Environment.GetEnvironmentVariable("EMBEDDED_FIELD") ?? "DescriptionVector",
-    Dimensions = int.Parse(Environment.GetEnvironmentVariable("EMBEDDING_DIMENSIONS") ?? "1536"),
-    OpenAIEndpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_EMBEDDING_ENDPOINT") ?? "",
-    OpenAIModel = Environment.GetEnvironmentVariable("AZURE_OPENAI_EMBEDDING_MODEL") ?? "text-embedding-3-small",
-};
-
-// Create services
-var mongoService = new MongoDbService(config.ClusterName);
-var openAIClient = new AzureOpenAIClient(new Uri(config.OpenAIEndpoint), credential);
-var vectorSearchService = new VectorSearchService(mongoService, openAIClient, config);
-
-// Create IVF index and search
-await vectorSearchService.CreateIVFIndexAsync("hotels_ivf", "vectorIndex_ivf");
-var ivfResults = await vectorSearchService.PerformVectorSearchAsync(
-    "hotels_ivf",
-    "quintessential lodging near running trails, eateries, retail",
-    5);
-
-Console.WriteLine("\nIVF Search Results:");
-foreach (var result in ivfResults)
-{
-    Console.WriteLine($"- {result.HotelName}: {result.Score:F4}");
-}
-
-// Create HNSW index and search
-await vectorSearchService.CreateHNSWIndexAsync("hotels_hnsw", "vectorIndex_hnsw");
-var hnswResults = await vectorSearchService.PerformVectorSearchAsync(
-    "hotels_hnsw",
-    "quintessential lodging near running trails, eateries, retail",
-    5);
-
-Console.WriteLine("\nHNSW Search Results:");
-foreach (var result in hnswResults)
-{
-    Console.WriteLine($"- {result.HotelName}: {result.Score:F4}");
-}
-
-// Create DiskANN index and search
-await vectorSearchService.CreateDiskANNIndexAsync("hotels_diskann", "vectorIndex_diskann");
-var diskannResults = await vectorSearchService.PerformVectorSearchAsync(
-    "hotels_diskann",
-    "quintessential lodging near running trails, eateries, retail",
-    5);
-
-Console.WriteLine("\nDiskANN Search Results:");
-foreach (var result in diskannResults)
-{
-    Console.WriteLine($"- {result.HotelName}: {result.Score:F4}");
-}
-```
+1. Select the [DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) in Visual Studio Code to connect to your Azure DocumentDB account.
+1. View the data and indexes in the Hotels database.
 
 ## Clean up resources
 
-When you're done, remove the resources to avoid ongoing charges:
+Delete the resource group, Azure DocumentDB account, and Azure OpenAI resource when you don't need them to avoid extra costs.
 
-```bash
-az group delete --name <your-resource-group> --yes --no-wait
-```
+## Related content
 
-Alternatively, delete the DocumentDB cluster and Azure OpenAI resource individually from the [Azure portal](https://portal.azure.com).
-
-## Next steps
-
-- [DocumentDB Vector Search Documentation](/azure/documentdb/vector-search)
-- [Azure OpenAI Embeddings Documentation](/azure/ai-services/openai/concepts/understand-embeddings)
-- [MongoDB .NET Driver Documentation](https://www.mongodb.com/docs/drivers/csharp/)
+- [Vector store in Azure DocumentDB](vector-search.md)
+- [Azure OpenAI embeddings](/azure/ai-services/openai/concepts/understand-embeddings)
+- [MongoDB .NET driver documentation](https://www.mongodb.com/docs/drivers/csharp/)

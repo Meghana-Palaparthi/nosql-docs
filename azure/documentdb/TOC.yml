@@ -30,18 +30,18 @@
         href: quickstart-agent-nodejs.md
       - name: Create AI agent with vector search in Go
         href: quickstart-agent-go.md
-      - name: Vector index algorithms
-        items:
-        - name: Python
-          href: quickstart-python-vector-index.md
-        - name: TypeScript (Node.js)
-          href: quickstart-nodejs-vector-index.md
-        - name: .NET
-          href: quickstart-dotnet-vector-index.md
-        - name: Go
-          href: quickstart-go-vector-index.md
-        - name: Java
-          href: quickstart-java-vector-index.md
+    - name: AI vector index algorithms
+      items:
+      - name: Create AI vector index with Python
+        href: quickstart-python-vector-index.md
+      - name: Create AI vector index with TypeScript
+        href: quickstart-nodejs-vector-index.md
+      - name: Create AI vector index with .NET
+        href: quickstart-dotnet-vector-index.md
+      - name: Create AI vector index with Go
+        href: quickstart-go-vector-index.md
+      - name: Create AI vector index with Java
+        href: quickstart-java-vector-index.md
     - name: Develop a Python console application
       href: quickstart-python.md
     - name: Develop a TypeScript console application
