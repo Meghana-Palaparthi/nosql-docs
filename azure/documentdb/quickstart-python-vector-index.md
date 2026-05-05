@@ -243,30 +243,154 @@ HNSW (Hierarchical Navigable Small World) is ideal for datasets between 10,000 a
 Create `hnsw.py`:
 
 ```python
-# Similar to ivf.py above, but with these index options:
-"cosmosSearchOptions": {
-    # HNSW algorithm configuration
-    "kind": "vector-hnsw",
-    
-    # Vector dimensions must match the embedding model
-    "dimensions": dimensions,
-    
-    # Cosine similarity works well with text embeddings
-    "similarity": "COS",
-    
-    # Maximum connections per node in the graph (parameter 'm')
-    # Higher values improve recall but increase memory usage and build time
-    "m": 16,
-    
-    # Size of the candidate list during construction
-    # Higher values improve index quality but slow down building
-    "efConstruction": 64
-}
+import os
+from typing import List, Dict, Any
+from pymongo import MongoClient
+from pymongo.auth_oidc import OIDCCallback, OIDCCallbackContext, OIDCCallbackResult
+from azure.identity import DefaultAzureCredential
+from openai import AzureOpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
+
+class AzureIdentityTokenCallback(OIDCCallback):
+    def __init__(self, credential):
+        self.credential = credential
+
+    def fetch(self, context: OIDCCallbackContext) -> OIDCCallbackResult:
+        token = self.credential.get_token(
+            "https://ossrdbms-aad.database.windows.net/.default").token
+        return OIDCCallbackResult(access_token=token)
+
+def create_hnsw_vector_index(collection, vector_field: str, dimensions: int) -> None:
+    """Create an HNSW vector index on the specified field."""
+    print(f"Creating HNSW vector index on field '{vector_field}'...")
+
+    index_command = {
+        "createIndexes": collection.name,
+        "indexes": [
+            {
+                "name": f"hnsw_index_{vector_field}",
+                "key": {
+                    vector_field: "cosmosSearch"
+                },
+                "cosmosSearchOptions": {
+                    # HNSW algorithm configuration
+                    "kind": "vector-hnsw",
+
+                    # Vector dimensions must match the embedding model
+                    "dimensions": dimensions,
+
+                    # Cosine similarity works well with text embeddings
+                    "similarity": "COS",
+
+                    # Maximum connections per node in the graph
+                    # Higher values improve recall but increase memory and build time
+                    "m": 16,
+
+                    # Size of the candidate list during index construction
+                    # Higher values improve index quality but slow down building
+                    "efConstruction": 64
+                }
+            }
+        ]
+    }
+
+    try:
+        result = collection.database.command(index_command)
+        print("HNSW vector index created successfully")
+    except Exception as e:
+        print(f"Error creating HNSW vector index: {e}")
+        raise
+
+def perform_hnsw_vector_search(collection,
+                               azure_openai_client,
+                               query_text: str,
+                               vector_field: str,
+                               model_name: str,
+                               top_k: int = 5) -> List[Dict[str, Any]]:
+    """Perform a vector search using HNSW algorithm."""
+    print(f"Performing HNSW vector search for: '{query_text}'")
+
+    embedding_response = azure_openai_client.embeddings.create(
+        input=[query_text],
+        model=model_name
+    )
+    query_embedding = embedding_response.data[0].embedding
+
+    pipeline = [
+        {
+            "$search": {
+                "cosmosSearch": {
+                    "vector": query_embedding,
+                    "path": vector_field,
+                    "k": top_k
+                }
+            }
+        },
+        {
+            "$project": {
+                "document": "$$ROOT",
+                "score": {"$meta": "searchScore"}
+            }
+        }
+    ]
+
+    results = list(collection.aggregate(pipeline))
+    return results
+
+def main():
+    credential = DefaultAzureCredential()
+
+    mongo_client = MongoClient(
+        f"mongodb+srv://{os.getenv('MONGO_CLUSTER_NAME')}.global.mongocluster.cosmos.azure.com/",
+        connectTimeoutMS=120000,
+        tls=True,
+        retryWrites=True,
+        authMechanism="MONGODB-OIDC",
+        authMechanismProperties={"OIDC_CALLBACK": AzureIdentityTokenCallback(credential)}
+    )
+
+    azure_openai_client = AzureOpenAI(
+        azure_endpoint=os.getenv("AZURE_OPENAI_EMBEDDING_ENDPOINT"),
+        azure_ad_token_provider=lambda: credential.get_token("https://cognitiveservices.azure.com/.default").token,
+        api_version=os.getenv("AZURE_OPENAI_EMBEDDING_API_VERSION")
+    )
+
+    try:
+        database = mongo_client["Hotels"]
+        collection = database["hotels_hnsw"]
+
+        create_hnsw_vector_index(
+            collection,
+            os.getenv("EMBEDDED_FIELD"),
+            int(os.getenv("EMBEDDING_DIMENSIONS"))
+        )
+
+        query = "quintessential lodging near running trails, eateries, retail"
+        results = perform_hnsw_vector_search(
+            collection,
+            azure_openai_client,
+            query,
+            os.getenv("EMBEDDED_FIELD"),
+            os.getenv("AZURE_OPENAI_EMBEDDING_MODEL"),
+            top_k=5
+        )
+
+        print(f"\nSearch Results ({len(results)} found):")
+        for i, result in enumerate(results, 1):
+            print(f"{i}. {result['document']['HotelName']}, Score: {result['score']:.4f}")
+
+    finally:
+        mongo_client.close()
+
+if __name__ == "__main__":
+    main()
 ```
 
 Key differences from IVF:
-- **m parameter**: Controls graph connectivity. Higher values (e.g., 32) improve recall but increase memory.
-- **efConstruction**: Affects index build time and quality. Higher values improve accuracy at cost of build time.
+- **m parameter**: Controls graph connectivity (2–100, default 16). Higher values improve recall but increase memory.
+- **efConstruction**: Candidate list size during construction (4–1000, default 64). Higher values improve accuracy at cost of build time.
 - **Cluster tier**: Requires M30 or higher due to memory overhead.
 
 ## Create a DiskANN index
@@ -276,30 +400,154 @@ DiskANN is optimized for very large datasets (50,000+ documents) with efficient 
 Create `diskann.py`:
 
 ```python
-# Similar to ivf.py and hnsw.py above, but with these index options:
-"cosmosSearchOptions": {
-    # DiskANN algorithm configuration
-    "kind": "vector-diskann",
-    
-    # Vector dimensions must match the embedding model
-    "dimensions": dimensions,
-    
-    # Vector similarity metric - cosine is good for text embeddings
-    "similarity": "COS",
-    
-    # Maximum degree: number of edges per node in the graph
-    # Higher values improve accuracy but increase memory usage
-    "maxDegree": 20,
-    
-    # Build parameter: candidates evaluated during index construction
-    # Higher values improve index quality but increase build time
-    "lBuild": 10
-}
+import os
+from typing import List, Dict, Any
+from pymongo import MongoClient
+from pymongo.auth_oidc import OIDCCallback, OIDCCallbackContext, OIDCCallbackResult
+from azure.identity import DefaultAzureCredential
+from openai import AzureOpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
+
+class AzureIdentityTokenCallback(OIDCCallback):
+    def __init__(self, credential):
+        self.credential = credential
+
+    def fetch(self, context: OIDCCallbackContext) -> OIDCCallbackResult:
+        token = self.credential.get_token(
+            "https://ossrdbms-aad.database.windows.net/.default").token
+        return OIDCCallbackResult(access_token=token)
+
+def create_diskann_vector_index(collection, vector_field: str, dimensions: int) -> None:
+    """Create a DiskANN vector index on the specified field."""
+    print(f"Creating DiskANN vector index on field '{vector_field}'...")
+
+    index_command = {
+        "createIndexes": collection.name,
+        "indexes": [
+            {
+                "name": f"diskann_index_{vector_field}",
+                "key": {
+                    vector_field: "cosmosSearch"
+                },
+                "cosmosSearchOptions": {
+                    # DiskANN algorithm configuration
+                    "kind": "vector-diskann",
+
+                    # Vector dimensions must match the embedding model
+                    "dimensions": dimensions,
+
+                    # Cosine similarity metric
+                    "similarity": "COS",
+
+                    # Maximum degree: edges per node in the graph
+                    # Higher values improve accuracy but increase memory usage
+                    "maxDegree": 32,
+
+                    # Build parameter: candidates evaluated during construction
+                    # Higher values improve index quality but increase build time
+                    "lBuild": 50
+                }
+            }
+        ]
+    }
+
+    try:
+        result = collection.database.command(index_command)
+        print("DiskANN vector index created successfully")
+    except Exception as e:
+        print(f"Error creating DiskANN vector index: {e}")
+        raise
+
+def perform_diskann_vector_search(collection,
+                                  azure_openai_client,
+                                  query_text: str,
+                                  vector_field: str,
+                                  model_name: str,
+                                  top_k: int = 5) -> List[Dict[str, Any]]:
+    """Perform a vector search using DiskANN algorithm."""
+    print(f"Performing DiskANN vector search for: '{query_text}'")
+
+    embedding_response = azure_openai_client.embeddings.create(
+        input=[query_text],
+        model=model_name
+    )
+    query_embedding = embedding_response.data[0].embedding
+
+    pipeline = [
+        {
+            "$search": {
+                "cosmosSearch": {
+                    "vector": query_embedding,
+                    "path": vector_field,
+                    "k": top_k
+                }
+            }
+        },
+        {
+            "$project": {
+                "document": "$$ROOT",
+                "score": {"$meta": "searchScore"}
+            }
+        }
+    ]
+
+    results = list(collection.aggregate(pipeline))
+    return results
+
+def main():
+    credential = DefaultAzureCredential()
+
+    mongo_client = MongoClient(
+        f"mongodb+srv://{os.getenv('MONGO_CLUSTER_NAME')}.global.mongocluster.cosmos.azure.com/",
+        connectTimeoutMS=120000,
+        tls=True,
+        retryWrites=True,
+        authMechanism="MONGODB-OIDC",
+        authMechanismProperties={"OIDC_CALLBACK": AzureIdentityTokenCallback(credential)}
+    )
+
+    azure_openai_client = AzureOpenAI(
+        azure_endpoint=os.getenv("AZURE_OPENAI_EMBEDDING_ENDPOINT"),
+        azure_ad_token_provider=lambda: credential.get_token("https://cognitiveservices.azure.com/.default").token,
+        api_version=os.getenv("AZURE_OPENAI_EMBEDDING_API_VERSION")
+    )
+
+    try:
+        database = mongo_client["Hotels"]
+        collection = database["hotels_diskann"]
+
+        create_diskann_vector_index(
+            collection,
+            os.getenv("EMBEDDED_FIELD"),
+            int(os.getenv("EMBEDDING_DIMENSIONS"))
+        )
+
+        query = "quintessential lodging near running trails, eateries, retail"
+        results = perform_diskann_vector_search(
+            collection,
+            azure_openai_client,
+            query,
+            os.getenv("EMBEDDED_FIELD"),
+            os.getenv("AZURE_OPENAI_EMBEDDING_MODEL"),
+            top_k=5
+        )
+
+        print(f"\nSearch Results ({len(results)} found):")
+        for i, result in enumerate(results, 1):
+            print(f"{i}. {result['document']['HotelName']}, Score: {result['score']:.4f}")
+
+    finally:
+        mongo_client.close()
+
+if __name__ == "__main__":
+    main()
 ```
 
 Key parameters:
-- **maxDegree**: Number of edges per node in the graph. Higher values improve accuracy.
-- **lBuild**: Number of candidate neighbors evaluated during construction. Affects index quality.
+- **maxDegree**: Number of edges per node (20–2048, default 32). Higher values improve accuracy.
+- **lBuild**: Candidate neighbors evaluated during construction (10–500, default 50). Affects index quality.
 - **Cluster tier**: Requires M30 or higher.
 
 ## Query with vector search

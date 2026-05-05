@@ -270,21 +270,150 @@ HNSW (Hierarchical Navigable Small World) is ideal for datasets between 10,000 a
 
 Create `src/main/java/com/azure/documentdb/HNSW.java`:
 
-Similar to IVF above, but with these index options:
-
 ```java
-.append("cosmosSearchOptions", new Document()
-    .append("kind", "vector-hnsw")
-    .append("similarity", "COS")
-    .append("dimensions", Integer.parseInt(System.getenv("EMBEDDING_DIMENSIONS")))
-    .append("m", 16)  // Maximum connections per node
-    .append("efConstruction", 64)  // Candidate list size during construction
-)
+package com.azure.documentdb;
+
+import com.azure.ai.openai.OpenAIClient;
+import com.azure.ai.openai.models.EmbeddingsOptions;
+import com.azure.identity.DefaultAzureCredentialBuilder;
+import com.mongodb.MongoCredential;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.AggregateIterable;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
+
+import java.util.List;
+
+public class HNSW {
+    private static final String DATABASE_NAME = "Hotels";
+    private static final String COLLECTION_NAME = "hotels_hnsw";
+    private static final String VECTOR_INDEX_NAME = "vectorIndex_hnsw";
+
+    public static void main(String[] args) {
+        new HNSW().run();
+        System.exit(0);
+    }
+
+    public void run() {
+        try (var mongoClient = createMongoClient()) {
+            var openAIClient = createOpenAIClient();
+            var database = mongoClient.getDatabase(DATABASE_NAME);
+            var collection = database.getCollection(COLLECTION_NAME, Document.class);
+
+            createVectorIndex(database, collection);
+            performVectorSearch(collection, openAIClient);
+
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private MongoClient createMongoClient() {
+        var clusterName = System.getenv("MONGO_CLUSTER_NAME");
+        var managedIdentityPrincipalId = System.getenv("AZURE_MANAGED_IDENTITY_PRINCIPAL_ID");
+        var azureCredential = new DefaultAzureCredentialBuilder().build();
+
+        MongoCredential.OidcCallback callback = (MongoCredential.OidcCallbackContext context) -> {
+            var token = azureCredential.getToken(
+                new com.azure.core.credential.TokenRequestContext()
+                    .addScopes("https://ossrdbms-aad.database.windows.net/.default")
+            ).block();
+            if (token == null) throw new RuntimeException("Failed to obtain Azure AD token");
+            return new MongoCredential.OidcCallbackResult(token.getToken());
+        };
+
+        var credential = MongoCredential.createOidcCredential(null)
+            .withMechanismProperty("OIDC_CALLBACK", callback);
+
+        var connectionString = new ConnectionString(
+            String.format("mongodb+srv://%s@%s.mongocluster.cosmos.azure.com/?authMechanism=MONGODB-OIDC&tls=true&retrywrites=false&maxIdleTimeMS=120000",
+                managedIdentityPrincipalId, clusterName));
+
+        var settings = MongoClientSettings.builder()
+            .applyConnectionString(connectionString)
+            .credential(credential)
+            .build();
+
+        return MongoClients.create(settings);
+    }
+
+    private OpenAIClient createOpenAIClient() {
+        var endpoint = System.getenv("AZURE_OPENAI_EMBEDDING_ENDPOINT");
+        var credential = new DefaultAzureCredentialBuilder().build();
+        return new com.azure.ai.openai.OpenAIClientBuilder()
+            .endpoint(endpoint).credential(credential).buildClient();
+    }
+
+    private void createVectorIndex(MongoDatabase database, MongoCollection<Document> collection) {
+        System.out.println("Creating HNSW vector index...");
+
+        var indexCommand = new Document("createIndexes", COLLECTION_NAME)
+            .append("indexes", List.of(
+                new Document("name", VECTOR_INDEX_NAME)
+                    .append("key", new Document(System.getenv("EMBEDDED_FIELD"), "cosmosSearch"))
+                    .append("cosmosSearchOptions", new Document()
+                        .append("kind", "vector-hnsw")
+                        .append("similarity", "COS")
+                        .append("dimensions", Integer.parseInt(System.getenv("EMBEDDING_DIMENSIONS")))
+                        // Maximum connections per node (2-100, default 16)
+                        .append("m", 16)
+                        // Candidate list size during construction (4-1000, default 64)
+                        .append("efConstruction", 64)
+                    )
+            ));
+
+        try {
+            database.runCommand(indexCommand);
+            System.out.println("HNSW vector index created successfully");
+        } catch (Exception e) {
+            System.err.println("Error creating index: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void performVectorSearch(MongoCollection<Document> collection, OpenAIClient openAIClient) {
+        System.out.println("Performing HNSW vector search...");
+
+        var query = "quintessential lodging near running trails, eateries, retail";
+        var embeddingResponse = openAIClient.getEmbeddingsClient(
+            System.getenv("AZURE_OPENAI_EMBEDDING_MODEL")
+        ).generateEmbedding(new EmbeddingsOptions(List.of(query)));
+        var embedding = embeddingResponse.getValue().getData().get(0).getEmbedding();
+
+        var pipeline = List.of(
+            new Document("$search", new Document()
+                .append("cosmosSearch", new Document()
+                    .append("vector", embedding)
+                    .append("path", System.getenv("EMBEDDED_FIELD"))
+                    .append("k", 5))),
+            new Document("$project", new Document()
+                .append("score", new Document("$meta", "searchScore"))
+                .append("document", "$$ROOT"))
+        );
+
+        AggregateIterable<Document> results = collection.aggregate(pipeline);
+
+        System.out.println("\nHNSW Search Results:");
+        int count = 0;
+        for (Document result : results) {
+            count++;
+            Document doc = (Document) result.get("document");
+            double score = (double) result.get("score");
+            System.out.printf("%d. %s, Score: %.4f%n", count,
+                doc.getString("HotelName"), score);
+        }
+    }
+}
 ```
 
 Key differences from IVF:
-- **m parameter**: Controls graph connectivity. Higher values (e.g., 32) improve recall but increase memory.
-- **efConstruction**: Affects index build time and quality. Higher values improve accuracy at cost of build time.
+- **m parameter**: Controls graph connectivity (2–100, default 16). Higher values improve recall but increase memory.
+- **efConstruction**: Candidate list size during construction (4–1000, default 64). Higher values improve accuracy at cost of build time.
 - **Cluster tier**: Requires M30 or higher due to memory overhead.
 
 ## Create a DiskANN index
@@ -293,21 +422,150 @@ DiskANN is optimized for very large datasets (50,000+ documents) with efficient 
 
 Create `src/main/java/com/azure/documentdb/DiskAnn.java`:
 
-Similar to IVF and HNSW above, but with these index options:
-
 ```java
-.append("cosmosSearchOptions", new Document()
-    .append("kind", "vector-diskann")
-    .append("similarity", "COS")
-    .append("dimensions", Integer.parseInt(System.getenv("EMBEDDING_DIMENSIONS")))
-    .append("maxDegree", 20)  // Maximum edges per node
-    .append("lBuild", 10)  // Build parameter
-)
+package com.azure.documentdb;
+
+import com.azure.ai.openai.OpenAIClient;
+import com.azure.ai.openai.models.EmbeddingsOptions;
+import com.azure.identity.DefaultAzureCredentialBuilder;
+import com.mongodb.MongoCredential;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.AggregateIterable;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
+
+import java.util.List;
+
+public class DiskAnn {
+    private static final String DATABASE_NAME = "Hotels";
+    private static final String COLLECTION_NAME = "hotels_diskann";
+    private static final String VECTOR_INDEX_NAME = "vectorIndex_diskann";
+
+    public static void main(String[] args) {
+        new DiskAnn().run();
+        System.exit(0);
+    }
+
+    public void run() {
+        try (var mongoClient = createMongoClient()) {
+            var openAIClient = createOpenAIClient();
+            var database = mongoClient.getDatabase(DATABASE_NAME);
+            var collection = database.getCollection(COLLECTION_NAME, Document.class);
+
+            createVectorIndex(database, collection);
+            performVectorSearch(collection, openAIClient);
+
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private MongoClient createMongoClient() {
+        var clusterName = System.getenv("MONGO_CLUSTER_NAME");
+        var managedIdentityPrincipalId = System.getenv("AZURE_MANAGED_IDENTITY_PRINCIPAL_ID");
+        var azureCredential = new DefaultAzureCredentialBuilder().build();
+
+        MongoCredential.OidcCallback callback = (MongoCredential.OidcCallbackContext context) -> {
+            var token = azureCredential.getToken(
+                new com.azure.core.credential.TokenRequestContext()
+                    .addScopes("https://ossrdbms-aad.database.windows.net/.default")
+            ).block();
+            if (token == null) throw new RuntimeException("Failed to obtain Azure AD token");
+            return new MongoCredential.OidcCallbackResult(token.getToken());
+        };
+
+        var credential = MongoCredential.createOidcCredential(null)
+            .withMechanismProperty("OIDC_CALLBACK", callback);
+
+        var connectionString = new ConnectionString(
+            String.format("mongodb+srv://%s@%s.mongocluster.cosmos.azure.com/?authMechanism=MONGODB-OIDC&tls=true&retrywrites=false&maxIdleTimeMS=120000",
+                managedIdentityPrincipalId, clusterName));
+
+        var settings = MongoClientSettings.builder()
+            .applyConnectionString(connectionString)
+            .credential(credential)
+            .build();
+
+        return MongoClients.create(settings);
+    }
+
+    private OpenAIClient createOpenAIClient() {
+        var endpoint = System.getenv("AZURE_OPENAI_EMBEDDING_ENDPOINT");
+        var credential = new DefaultAzureCredentialBuilder().build();
+        return new com.azure.ai.openai.OpenAIClientBuilder()
+            .endpoint(endpoint).credential(credential).buildClient();
+    }
+
+    private void createVectorIndex(MongoDatabase database, MongoCollection<Document> collection) {
+        System.out.println("Creating DiskANN vector index...");
+
+        var indexCommand = new Document("createIndexes", COLLECTION_NAME)
+            .append("indexes", List.of(
+                new Document("name", VECTOR_INDEX_NAME)
+                    .append("key", new Document(System.getenv("EMBEDDED_FIELD"), "cosmosSearch"))
+                    .append("cosmosSearchOptions", new Document()
+                        .append("kind", "vector-diskann")
+                        .append("similarity", "COS")
+                        .append("dimensions", Integer.parseInt(System.getenv("EMBEDDING_DIMENSIONS")))
+                        // Maximum edges per node (20-2048, default 32)
+                        .append("maxDegree", 32)
+                        // Candidates evaluated during construction (10-500, default 50)
+                        .append("lBuild", 50)
+                    )
+            ));
+
+        try {
+            database.runCommand(indexCommand);
+            System.out.println("DiskANN vector index created successfully");
+        } catch (Exception e) {
+            System.err.println("Error creating index: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void performVectorSearch(MongoCollection<Document> collection, OpenAIClient openAIClient) {
+        System.out.println("Performing DiskANN vector search...");
+
+        var query = "quintessential lodging near running trails, eateries, retail";
+        var embeddingResponse = openAIClient.getEmbeddingsClient(
+            System.getenv("AZURE_OPENAI_EMBEDDING_MODEL")
+        ).generateEmbedding(new EmbeddingsOptions(List.of(query)));
+        var embedding = embeddingResponse.getValue().getData().get(0).getEmbedding();
+
+        var pipeline = List.of(
+            new Document("$search", new Document()
+                .append("cosmosSearch", new Document()
+                    .append("vector", embedding)
+                    .append("path", System.getenv("EMBEDDED_FIELD"))
+                    .append("k", 5))),
+            new Document("$project", new Document()
+                .append("score", new Document("$meta", "searchScore"))
+                .append("document", "$$ROOT"))
+        );
+
+        AggregateIterable<Document> results = collection.aggregate(pipeline);
+
+        System.out.println("\nDiskANN Search Results:");
+        int count = 0;
+        for (Document result : results) {
+            count++;
+            Document doc = (Document) result.get("document");
+            double score = (double) result.get("score");
+            System.out.printf("%d. %s, Score: %.4f%n", count,
+                doc.getString("HotelName"), score);
+        }
+    }
+}
 ```
 
 Key parameters:
-- **maxDegree**: Number of edges per node in the graph. Higher values improve accuracy.
-- **lBuild**: Number of candidate neighbors evaluated during construction. Affects index quality.
+- **maxDegree**: Number of edges per node (20–2048, default 32). Higher values improve accuracy.
+- **lBuild**: Candidate neighbors evaluated during construction (10–500, default 50). Affects index quality.
 - **Cluster tier**: Requires M30 or higher.
 
 ## Query with vector search

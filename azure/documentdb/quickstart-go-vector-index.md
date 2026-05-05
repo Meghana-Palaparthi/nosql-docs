@@ -313,30 +313,145 @@ HNSW (Hierarchical Navigable Small World) is ideal for datasets between 10,000 a
 Create `hnsw.go`:
 
 ```go
-// Similar to ivf.go above, but with these index options:
-"cosmosSearchOptions", bson.D{
-	// HNSW algorithm configuration
-	{"kind", "vector-hnsw"},
+package main
 
-	// Vector dimensions must match the embedding model
-	{"dimensions", dimensions},
+import (
+	"context"
+	"fmt"
+	"log"
+	"os"
+	"strconv"
+	"strings"
+	"time"
 
-	// Cosine similarity works well with text embeddings
-	{"similarity", "COS"},
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
+	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/azure"
+	"github.com/openai/openai-go/v3/option"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+)
 
-	// Maximum connections per node in the graph (parameter 'm')
-	// Higher values improve recall but increase memory usage and build time
-	{"m", 16},
+// CreateHNSWVectorIndex creates an HNSW vector index on the specified field
+func CreateHNSWVectorIndex(ctx context.Context, collection *mongo.Collection, vectorField string, dimensions int, similarity string) error {
+	fmt.Printf("Creating HNSW vector index on field '%s'...\n", vectorField)
 
-	// Size of the candidate list during construction
-	// Higher values improve index quality but slow down building
-	{"efConstruction", 64},
+	indexCommand := bson.D{
+		{"createIndexes", collection.Name()},
+		{"indexes", []bson.D{
+			{
+				{"name", fmt.Sprintf("hnsw_index_%s", vectorField)},
+				{"key", bson.D{
+					{vectorField, "cosmosSearch"},
+				}},
+				{"cosmosSearchOptions", bson.D{
+					// HNSW algorithm configuration
+					{"kind", "vector-hnsw"},
+
+					// Vector dimensions must match the embedding model
+					{"dimensions", dimensions},
+
+					// Cosine similarity works well with text embeddings
+					{"similarity", "COS"},
+
+					// Maximum connections per node (2-100, default 16)
+					{"m", 16},
+
+					// Candidate list size during construction (4-1000, default 64)
+					{"efConstruction", 64},
+				}},
+			},
+		}},
+	}
+
+	var result bson.M
+	err := collection.Database().RunCommand(ctx, indexCommand).Decode(&result)
+	if err != nil {
+		if strings.Contains(err.Error(), "not enabled for this cluster tier") {
+			fmt.Println("\nHNSW indexes require M30 or higher cluster tier.")
+		}
+		return fmt.Errorf("error creating HNSW vector index: %v", err)
+	}
+
+	fmt.Println("HNSW vector index created successfully")
+	return nil
+}
+
+func main() {
+	ctx := context.Background()
+
+	credential, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("Failed to create credential: %v", err)
+	}
+
+	mongoURI := fmt.Sprintf("mongodb+srv://%s.global.mongocluster.cosmos.azure.com/", os.Getenv("MONGO_CLUSTER_NAME"))
+
+	oidcCallback := func(ctx context.Context, args *options.OIDCArgs) (*options.OIDCCredential, error) {
+		token, err := credential.GetToken(ctx, policy.TokenRequestOptions{
+			Scopes: []string{"https://ossrdbms-aad.database.windows.net/.default"},
+		})
+		if err != nil {
+			return nil, err
+		}
+		return &options.OIDCCredential{AccessToken: token.Token}, nil
+	}
+
+	clientOptions := options.Client().
+		ApplyURI(mongoURI).
+		SetConnectTimeout(30 * time.Second).
+		SetAuth(options.Credential{
+			AuthMechanism: "MONGODB-OIDC",
+			AuthMechanismProperties: map[string]string{
+				"TOKEN_RESOURCE": "https://ossrdbms-aad.database.windows.net",
+			},
+			OIDCMachineCallback: oidcCallback,
+		})
+
+	mongoClient, err := mongo.Connect(ctx, clientOptions)
+	if err != nil {
+		log.Fatalf("Failed to connect to MongoDB: %v", err)
+	}
+	defer mongoClient.Disconnect(ctx)
+
+	azureOpenAIEndpoint := os.Getenv("AZURE_OPENAI_EMBEDDING_ENDPOINT")
+	openAIClient := openai.NewClient(
+		option.WithBaseURL(fmt.Sprintf("%s/openai/v1", azureOpenAIEndpoint)),
+		azure.WithTokenCredential(credential))
+
+	database := mongoClient.Database("Hotels")
+	collection := database.Collection("hotels_hnsw")
+
+	dimensions, _ := strconv.Atoi(os.Getenv("EMBEDDING_DIMENSIONS"))
+	err = CreateHNSWVectorIndex(ctx, collection, os.Getenv("EMBEDDED_FIELD"), dimensions, "COS")
+	if err != nil {
+		log.Fatalf("Failed to create index: %v", err)
+	}
+
+	query := "quintessential lodging near running trails, eateries, retail"
+	results, err := PerformIVFVectorSearch(
+		ctx, collection, openAIClient, query,
+		os.Getenv("EMBEDDED_FIELD"),
+		os.Getenv("AZURE_OPENAI_EMBEDDING_MODEL"), 5,
+	)
+	if err != nil {
+		log.Fatalf("Search failed: %v", err)
+	}
+
+	fmt.Printf("\nSearch Results (%d found):\n", len(results))
+	for i, result := range results {
+		doc := result.Document.(bson.M)
+		hotelName := doc["HotelName"].(string)
+		fmt.Printf("%d. %s, Score: %.4f\n", i+1, hotelName, result.Score)
+	}
 }
 ```
 
 Key differences from IVF:
-- **m parameter**: Controls graph connectivity. Higher values (e.g., 32) improve recall but increase memory.
-- **efConstruction**: Affects index build time and quality. Higher values improve accuracy at cost of build time.
+- **m parameter**: Controls graph connectivity (2–100, default 16). Higher values improve recall but increase memory.
+- **efConstruction**: Candidate list size during construction (4–1000, default 64). Higher values improve accuracy at cost of build time.
 - **Cluster tier**: Requires M30 or higher due to memory overhead.
 
 ## Create a DiskANN index
@@ -346,30 +461,145 @@ DiskANN is optimized for very large datasets (50,000+ documents) with efficient 
 Create `diskann.go`:
 
 ```go
-// Similar to ivf.go and hnsw.go above, but with these index options:
-"cosmosSearchOptions", bson.D{
-	// DiskANN algorithm configuration
-	{"kind", "vector-diskann"},
+package main
 
-	// Vector dimensions must match the embedding model
-	{"dimensions", dimensions},
+import (
+	"context"
+	"fmt"
+	"log"
+	"os"
+	"strconv"
+	"strings"
+	"time"
 
-	// Vector similarity metric - cosine is good for text embeddings
-	{"similarity", "COS"},
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
+	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/azure"
+	"github.com/openai/openai-go/v3/option"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+)
 
-	// Maximum degree: number of edges per node in the graph
-	// Higher values improve accuracy but increase memory usage
-	{"maxDegree", 20},
+// CreateDiskANNVectorIndex creates a DiskANN vector index on the specified field
+func CreateDiskANNVectorIndex(ctx context.Context, collection *mongo.Collection, vectorField string, dimensions int, similarity string) error {
+	fmt.Printf("Creating DiskANN vector index on field '%s'...\n", vectorField)
 
-	// Build parameter: candidates evaluated during index construction
-	// Higher values improve index quality but increase build time
-	{"lBuild", 10},
+	indexCommand := bson.D{
+		{"createIndexes", collection.Name()},
+		{"indexes", []bson.D{
+			{
+				{"name", fmt.Sprintf("diskann_index_%s", vectorField)},
+				{"key", bson.D{
+					{vectorField, "cosmosSearch"},
+				}},
+				{"cosmosSearchOptions", bson.D{
+					// DiskANN algorithm configuration
+					{"kind", "vector-diskann"},
+
+					// Vector dimensions must match the embedding model
+					{"dimensions", dimensions},
+
+					// Cosine similarity metric
+					{"similarity", "COS"},
+
+					// Maximum degree: edges per node (20-2048, default 32)
+					{"maxDegree", 32},
+
+					// Candidates evaluated during construction (10-500, default 50)
+					{"lBuild", 50},
+				}},
+			},
+		}},
+	}
+
+	var result bson.M
+	err := collection.Database().RunCommand(ctx, indexCommand).Decode(&result)
+	if err != nil {
+		if strings.Contains(err.Error(), "not enabled for this cluster tier") {
+			fmt.Println("\nDiskANN indexes require M30 or higher cluster tier.")
+		}
+		return fmt.Errorf("error creating DiskANN vector index: %v", err)
+	}
+
+	fmt.Println("DiskANN vector index created successfully")
+	return nil
+}
+
+func main() {
+	ctx := context.Background()
+
+	credential, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Fatalf("Failed to create credential: %v", err)
+	}
+
+	mongoURI := fmt.Sprintf("mongodb+srv://%s.global.mongocluster.cosmos.azure.com/", os.Getenv("MONGO_CLUSTER_NAME"))
+
+	oidcCallback := func(ctx context.Context, args *options.OIDCArgs) (*options.OIDCCredential, error) {
+		token, err := credential.GetToken(ctx, policy.TokenRequestOptions{
+			Scopes: []string{"https://ossrdbms-aad.database.windows.net/.default"},
+		})
+		if err != nil {
+			return nil, err
+		}
+		return &options.OIDCCredential{AccessToken: token.Token}, nil
+	}
+
+	clientOptions := options.Client().
+		ApplyURI(mongoURI).
+		SetConnectTimeout(30 * time.Second).
+		SetAuth(options.Credential{
+			AuthMechanism: "MONGODB-OIDC",
+			AuthMechanismProperties: map[string]string{
+				"TOKEN_RESOURCE": "https://ossrdbms-aad.database.windows.net",
+			},
+			OIDCMachineCallback: oidcCallback,
+		})
+
+	mongoClient, err := mongo.Connect(ctx, clientOptions)
+	if err != nil {
+		log.Fatalf("Failed to connect to MongoDB: %v", err)
+	}
+	defer mongoClient.Disconnect(ctx)
+
+	azureOpenAIEndpoint := os.Getenv("AZURE_OPENAI_EMBEDDING_ENDPOINT")
+	openAIClient := openai.NewClient(
+		option.WithBaseURL(fmt.Sprintf("%s/openai/v1", azureOpenAIEndpoint)),
+		azure.WithTokenCredential(credential))
+
+	database := mongoClient.Database("Hotels")
+	collection := database.Collection("hotels_diskann")
+
+	dimensions, _ := strconv.Atoi(os.Getenv("EMBEDDING_DIMENSIONS"))
+	err = CreateDiskANNVectorIndex(ctx, collection, os.Getenv("EMBEDDED_FIELD"), dimensions, "COS")
+	if err != nil {
+		log.Fatalf("Failed to create index: %v", err)
+	}
+
+	query := "quintessential lodging near running trails, eateries, retail"
+	results, err := PerformIVFVectorSearch(
+		ctx, collection, openAIClient, query,
+		os.Getenv("EMBEDDED_FIELD"),
+		os.Getenv("AZURE_OPENAI_EMBEDDING_MODEL"), 5,
+	)
+	if err != nil {
+		log.Fatalf("Search failed: %v", err)
+	}
+
+	fmt.Printf("\nSearch Results (%d found):\n", len(results))
+	for i, result := range results {
+		doc := result.Document.(bson.M)
+		hotelName := doc["HotelName"].(string)
+		fmt.Printf("%d. %s, Score: %.4f\n", i+1, hotelName, result.Score)
+	}
 }
 ```
 
 Key parameters:
-- **maxDegree**: Number of edges per node in the graph. Higher values improve accuracy.
-- **lBuild**: Number of candidate neighbors evaluated during construction. Affects index quality.
+- **maxDegree**: Number of edges per node (20–2048, default 32). Higher values improve accuracy.
+- **lBuild**: Candidate neighbors evaluated during construction (10–500, default 50). Affects index quality.
 - **Cluster tier**: Requires M30 or higher.
 
 ## Query with vector search

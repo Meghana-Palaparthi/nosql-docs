@@ -212,19 +212,127 @@ HNSW (Hierarchical Navigable Small World) is ideal for datasets between 10,000 a
 Create `src/hnsw.ts`:
 
 ```typescript
-// Similar to IVF above, but with these index options:
-cosmosSearchOptions: {
-  kind: 'vector-hnsw',
-  m: 16,  // Maximum connections per node (2-100, default 16)
-  efConstruction: 64,  // Candidate list size during construction (4-1000, default 64)
-  similarity: 'COS',
-  dimensions: config.embeddingDimensions
+import { MongoClient } from 'mongodb';
+import { AzureOpenAI } from 'openai/index.js';
+import { DefaultAzureCredential, getBearerTokenProvider } from '@azure/identity';
+
+const config = {
+  query: "quintessential lodging near running trails, eateries, retail",
+  dbName: "Hotels",
+  collectionName: "hotels_hnsw",
+  indexName: "vectorIndex_hnsw",
+  embeddedField: process.env.EMBEDDED_FIELD!,
+  embeddingDimensions: parseInt(process.env.EMBEDDING_DIMENSIONS!, 10),
+  deployment: process.env.AZURE_OPENAI_EMBEDDING_MODEL!,
+};
+
+async function main() {
+  const credential = new DefaultAzureCredential();
+
+  const dbClient = new MongoClient(
+    `mongodb+srv://${process.env.MONGO_CLUSTER_NAME}.mongocluster.cosmos.azure.com/`,
+    {
+      connectTimeoutMS: 120000,
+      tls: true,
+      retryWrites: false,
+      authMechanism: 'MONGODB-OIDC',
+      authMechanismProperties: {
+        OIDC_CALLBACK: async (params) => {
+          const token = await credential.getToken('https://ossrdbms-aad.database.windows.net/.default');
+          return {
+            accessToken: token?.token || '',
+            expiresInSeconds: (token?.expiresOnTimestamp || 0) - Math.floor(Date.now() / 1000)
+          };
+        },
+        ALLOWED_HOSTS: ['*.azure.com']
+      }
+    }
+  );
+
+  const scope = "https://cognitiveservices.azure.com/.default";
+  const azureADTokenProvider = getBearerTokenProvider(credential, scope);
+  const aiClient = new AzureOpenAI({
+    apiVersion: process.env.AZURE_OPENAI_EMBEDDING_API_VERSION!,
+    endpoint: process.env.AZURE_OPENAI_EMBEDDING_ENDPOINT!,
+    deployment: process.env.AZURE_OPENAI_EMBEDDING_MODEL!,
+    azureADTokenProvider
+  });
+
+  try {
+    await dbClient.connect();
+    const db = dbClient.db(config.dbName);
+    const collection = await db.createCollection(config.collectionName);
+
+    // Create the HNSW vector index
+    const indexOptions = {
+      createIndexes: config.collectionName,
+      indexes: [
+        {
+          name: config.indexName,
+          key: {
+            [config.embeddedField]: 'cosmosSearch'
+          },
+          cosmosSearchOptions: {
+            kind: 'vector-hnsw',
+
+            // Maximum connections per node in the graph (2-100, default 16)
+            m: 16,
+
+            // Candidate list size during index construction (4-1000, default 64)
+            efConstruction: 64,
+
+            // Cosine similarity for text embeddings
+            similarity: 'COS',
+            dimensions: config.embeddingDimensions
+          }
+        }
+      ]
+    };
+
+    await db.command(indexOptions);
+    console.log('HNSW vector index created successfully');
+
+    // Generate embedding for the query
+    const embeddingResponse = await aiClient.embeddings.create({
+      model: config.deployment,
+      input: [config.query]
+    });
+
+    // Perform vector search
+    const searchResults = await collection.aggregate([
+      {
+        $search: {
+          cosmosSearch: {
+            vector: embeddingResponse.data[0].embedding,
+            path: config.embeddedField,
+            k: 5
+          }
+        }
+      },
+      {
+        $project: {
+          score: { $meta: "searchScore" },
+          document: "$$ROOT"
+        }
+      }
+    ]).toArray();
+
+    console.log(`\nSearch Results (${searchResults.length} found):`);
+    searchResults.forEach((result, index) => {
+      console.log(`${index + 1}. ${result.document.HotelName}, Score: ${result.score.toFixed(4)}`);
+    });
+
+  } finally {
+    await dbClient.close();
+  }
 }
+
+main().catch(console.error);
 ```
 
 Key differences from IVF:
-- **m parameter**: Controls graph connectivity. Higher values (e.g., 32) improve recall but increase memory.
-- **efConstruction**: Affects index build time and quality. Higher values improve accuracy at cost of build time.
+- **m parameter**: Controls graph connectivity (2–100, default 16). Higher values improve recall but increase memory.
+- **efConstruction**: Candidate list size during construction (4–1000, default 64). Higher values improve accuracy at cost of build time.
 - **Cluster tier**: Requires M30 or higher due to memory overhead.
 
 ## Create a DiskANN index
@@ -234,19 +342,127 @@ DiskANN is optimized for very large datasets (50,000+ documents) with efficient 
 Create `src/diskann.ts`:
 
 ```typescript
-// Similar to IVF and HNSW above, but with these index options:
-cosmosSearchOptions: {
-  kind: 'vector-diskann',
-  maxDegree: 20,  // Maximum edges per node (20-2048)
-  lBuild: 10,  // Candidate neighbors evaluated (10-500)
-  similarity: 'COS',
-  dimensions: config.embeddingDimensions
+import { MongoClient } from 'mongodb';
+import { AzureOpenAI } from 'openai/index.js';
+import { DefaultAzureCredential, getBearerTokenProvider } from '@azure/identity';
+
+const config = {
+  query: "quintessential lodging near running trails, eateries, retail",
+  dbName: "Hotels",
+  collectionName: "hotels_diskann",
+  indexName: "vectorIndex_diskann",
+  embeddedField: process.env.EMBEDDED_FIELD!,
+  embeddingDimensions: parseInt(process.env.EMBEDDING_DIMENSIONS!, 10),
+  deployment: process.env.AZURE_OPENAI_EMBEDDING_MODEL!,
+};
+
+async function main() {
+  const credential = new DefaultAzureCredential();
+
+  const dbClient = new MongoClient(
+    `mongodb+srv://${process.env.MONGO_CLUSTER_NAME}.mongocluster.cosmos.azure.com/`,
+    {
+      connectTimeoutMS: 120000,
+      tls: true,
+      retryWrites: false,
+      authMechanism: 'MONGODB-OIDC',
+      authMechanismProperties: {
+        OIDC_CALLBACK: async (params) => {
+          const token = await credential.getToken('https://ossrdbms-aad.database.windows.net/.default');
+          return {
+            accessToken: token?.token || '',
+            expiresInSeconds: (token?.expiresOnTimestamp || 0) - Math.floor(Date.now() / 1000)
+          };
+        },
+        ALLOWED_HOSTS: ['*.azure.com']
+      }
+    }
+  );
+
+  const scope = "https://cognitiveservices.azure.com/.default";
+  const azureADTokenProvider = getBearerTokenProvider(credential, scope);
+  const aiClient = new AzureOpenAI({
+    apiVersion: process.env.AZURE_OPENAI_EMBEDDING_API_VERSION!,
+    endpoint: process.env.AZURE_OPENAI_EMBEDDING_ENDPOINT!,
+    deployment: process.env.AZURE_OPENAI_EMBEDDING_MODEL!,
+    azureADTokenProvider
+  });
+
+  try {
+    await dbClient.connect();
+    const db = dbClient.db(config.dbName);
+    const collection = await db.createCollection(config.collectionName);
+
+    // Create the DiskANN vector index
+    const indexOptions = {
+      createIndexes: config.collectionName,
+      indexes: [
+        {
+          name: config.indexName,
+          key: {
+            [config.embeddedField]: 'cosmosSearch'
+          },
+          cosmosSearchOptions: {
+            kind: 'vector-diskann',
+
+            // Maximum edges per node in the graph (20-2048, default 32)
+            maxDegree: 32,
+
+            // Candidates evaluated during construction (10-500, default 50)
+            lBuild: 50,
+
+            // Cosine similarity for text embeddings
+            similarity: 'COS',
+            dimensions: config.embeddingDimensions
+          }
+        }
+      ]
+    };
+
+    await db.command(indexOptions);
+    console.log('DiskANN vector index created successfully');
+
+    // Generate embedding for the query
+    const embeddingResponse = await aiClient.embeddings.create({
+      model: config.deployment,
+      input: [config.query]
+    });
+
+    // Perform vector search
+    const searchResults = await collection.aggregate([
+      {
+        $search: {
+          cosmosSearch: {
+            vector: embeddingResponse.data[0].embedding,
+            path: config.embeddedField,
+            k: 5
+          }
+        }
+      },
+      {
+        $project: {
+          score: { $meta: "searchScore" },
+          document: "$$ROOT"
+        }
+      }
+    ]).toArray();
+
+    console.log(`\nSearch Results (${searchResults.length} found):`);
+    searchResults.forEach((result, index) => {
+      console.log(`${index + 1}. ${result.document.HotelName}, Score: ${result.score.toFixed(4)}`);
+    });
+
+  } finally {
+    await dbClient.close();
+  }
 }
+
+main().catch(console.error);
 ```
 
 Key parameters:
-- **maxDegree**: Number of edges per node in the graph. Higher values improve accuracy.
-- **lBuild**: Number of candidate neighbors evaluated during construction. Affects index quality.
+- **maxDegree**: Number of edges per node (20–2048, default 32). Higher values improve accuracy.
+- **lBuild**: Candidate neighbors evaluated during construction (10–500, default 50). Affects index quality.
 - **Cluster tier**: Requires M30 or higher.
 
 ## Query with vector search

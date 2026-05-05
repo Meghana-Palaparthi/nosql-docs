@@ -129,8 +129,8 @@ public class VectorSearchService
             ["kind"] = "vector-hnsw",
             ["similarity"] = "COS",
             ["dimensions"] = _config.Dimensions,
-            ["m"] = 16,  // Maximum connections per node
-            ["efConstruction"] = 64  // Candidate list size during construction
+            ["m"] = 16,  // Maximum connections per node (2-100, default 16)
+            ["efConstruction"] = 64  // Candidate list size during construction (4-1000, default 64)
         };
 
         await _mongoService.CreateVectorIndexAsync(
@@ -155,8 +155,8 @@ public class VectorSearchService
             ["kind"] = "vector-diskann",
             ["similarity"] = "COS",
             ["dimensions"] = _config.Dimensions,
-            ["maxDegree"] = 20,  // Maximum edges per node
-            ["lBuild"] = 10  // Build parameter
+            ["maxDegree"] = 32,  // Maximum edges per node (20-2048, default 32)
+            ["lBuild"] = 50  // Build parameter (10-500, default 50)
         };
 
         await _mongoService.CreateVectorIndexAsync(
@@ -320,6 +320,56 @@ public class MongoDbService
 }
 ```
 
+## Create an HNSW index
+
+HNSW (Hierarchical Navigable Small World) is ideal for datasets between 10,000 and 50,000 documents. It builds a graph-based index for faster search with better recall.
+
+The `CreateHNSWIndexAsync` method in `VectorSearchService.cs` (shown previously) creates an HNSW index with these key parameters in `cosmosSearchOptions`:
+
+| Parameter | Value | Description |
+|-----------|-------|-------------|
+| `kind` | `vector-hnsw` | HNSW algorithm |
+| `m` | `16` | Maximum connections per node (2–100). Higher values improve recall but increase memory. |
+| `efConstruction` | `64` | Candidate list size during construction (4–1000). Higher values improve accuracy at cost of build time. |
+| `similarity` | `COS` | Cosine similarity for text embeddings |
+
+**Cluster tier**: Requires M30 or higher due to memory overhead.
+
+To create an HNSW index and run a search:
+
+```csharp
+await vectorSearchService.CreateHNSWIndexAsync("hotels_hnsw", "vectorIndex_hnsw");
+var hnswResults = await vectorSearchService.PerformVectorSearchAsync(
+    "hotels_hnsw",
+    "quintessential lodging near running trails, eateries, retail",
+    5);
+```
+
+## Create a DiskANN index
+
+DiskANN is optimized for very large datasets (50,000+ documents) with efficient disk-based storage.
+
+The `CreateDiskANNIndexAsync` method in `VectorSearchService.cs` (shown previously) creates a DiskANN index with these key parameters in `cosmosSearchOptions`:
+
+| Parameter | Value | Description |
+|-----------|-------|-------------|
+| `kind` | `vector-diskann` | DiskANN algorithm |
+| `maxDegree` | `32` | Maximum edges per node (20–2048). Higher values improve accuracy but increase memory. |
+| `lBuild` | `50` | Candidates evaluated during construction (10–500). Higher values improve quality. |
+| `similarity` | `COS` | Cosine similarity for text embeddings |
+
+**Cluster tier**: Requires M30 or higher.
+
+To create a DiskANN index and run a search:
+
+```csharp
+await vectorSearchService.CreateDiskANNIndexAsync("hotels_diskann", "vectorIndex_diskann");
+var diskannResults = await vectorSearchService.PerformVectorSearchAsync(
+    "hotels_diskann",
+    "quintessential lodging near running trails, eateries, retail",
+    5);
+```
+
 ## Query with vector search
 
 All three algorithms use the same query pattern with the `$search` aggregation stage:
@@ -404,13 +454,39 @@ var vectorSearchService = new VectorSearchService(mongoService, openAIClient, co
 
 // Create IVF index and search
 await vectorSearchService.CreateIVFIndexAsync("hotels_ivf", "vectorIndex_ivf");
-var results = await vectorSearchService.PerformVectorSearchAsync(
+var ivfResults = await vectorSearchService.PerformVectorSearchAsync(
     "hotels_ivf",
     "quintessential lodging near running trails, eateries, retail",
     5);
 
-Console.WriteLine("\nSearch Results:");
-foreach (var result in results)
+Console.WriteLine("\nIVF Search Results:");
+foreach (var result in ivfResults)
+{
+    Console.WriteLine($"- {result.HotelName}: {result.Score:F4}");
+}
+
+// Create HNSW index and search
+await vectorSearchService.CreateHNSWIndexAsync("hotels_hnsw", "vectorIndex_hnsw");
+var hnswResults = await vectorSearchService.PerformVectorSearchAsync(
+    "hotels_hnsw",
+    "quintessential lodging near running trails, eateries, retail",
+    5);
+
+Console.WriteLine("\nHNSW Search Results:");
+foreach (var result in hnswResults)
+{
+    Console.WriteLine($"- {result.HotelName}: {result.Score:F4}");
+}
+
+// Create DiskANN index and search
+await vectorSearchService.CreateDiskANNIndexAsync("hotels_diskann", "vectorIndex_diskann");
+var diskannResults = await vectorSearchService.PerformVectorSearchAsync(
+    "hotels_diskann",
+    "quintessential lodging near running trails, eateries, retail",
+    5);
+
+Console.WriteLine("\nDiskANN Search Results:");
+foreach (var result in diskannResults)
 {
     Console.WriteLine($"- {result.HotelName}: {result.Score:F4}");
 }
