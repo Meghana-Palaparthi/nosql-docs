@@ -701,152 +701,113 @@ The utilities provide essential functions for:
 
 ## Run the code
 
-Execute the comparison script to test all algorithms with cosine similarity:
+Execute the comparison script to test all 9 algorithm × similarity combinations:
 
 ```bash
 npm run build
-node --env-file .env dist/select-algorithm.js
+npm start
 ```
 
-The output shows the comparison across all three algorithms:
+The output shows the comparison across all algorithms and similarity metrics:
 
 ```
-Vector Algorithm Comparison
-   Database: Hotels
-   Algorithms: all
-   Similarity: COS
-   Collections to query: hotels_diskann_cos, hotels_hnsw_cos, hotels_ivf_cos
-   Search query: "quintessential lodging near running trails, eateries, retail"
+======================================================================
+  COMPARE ALL: 3 Algorithms × 3 Similarity Metrics (9 combinations)
+======================================================================
 
-Generating query embedding...
-Query embedding: 1536 dimensions
+Query: "luxury hotel near the beach"
+Embedding generated (1536 dimensions)
 
---- DiskANN / COS ---
-Collection: hotels_diskann_cos
-Created collection: hotels_diskann_cos
-Processing in batches of 100...
-Batch 1 complete: 50 inserted
-Inserted: 50/50
-Created vector index: vectorIndex_diskann_cos
-Executing vector search...
-Success: 5 results, 145ms
+Running searches (top 3 results)...
+  ✓ vector_ivf_cos (created)
+    ✗ vector_ivf_cos (dropped)
+  ✓ vector_ivf_l2 (created)
+    ✗ vector_ivf_l2 (dropped)
+  ...
 
---- HNSW / COS ---
-Collection: hotels_hnsw_cos
-Created collection: hotels_hnsw_cos
-Processing in batches of 100...
-Batch 1 complete: 50 inserted
-Inserted: 50/50
-Created vector index: vectorIndex_hnsw_cos
-Executing vector search...
-Success: 5 results, 132ms
+====================================================================================================
+  COMPARISON RESULTS
+====================================================================================================
+Algorithm   Similarity  #1 Result               #1 Score    #2 Result               #2 Score    Diff
+----------------------------------------------------------------------------------------------------
+IVF         COS         Ocean Water Resort &..  0.6184      Windy Ocean Motel       0.5056      0.1128
+IVF         L2          Ocean Water Resort &..  0.8736      Windy Ocean Motel       0.9943      -0.1208
+IVF         IP          Ocean Water Resort &..  0.6184      Windy Ocean Motel       0.5056      0.1128
+HNSW        COS         Ocean Water Resort &..  0.6184      Windy Ocean Motel       0.5056      0.1128
+HNSW        L2          Ocean Water Resort &..  0.8736      Windy Ocean Motel       0.9943      -0.1208
+HNSW        IP          Ocean Water Resort &..  0.6184      Windy Ocean Motel       0.5056      0.1128
+DiskANN     COS         Ocean Water Resort &..  0.6184      Windy Ocean Motel       0.5056      0.1128
+DiskANN     L2          Ocean Water Resort &..  0.8736      Windy Ocean Motel       0.9943      -0.1208
+DiskANN     IP          Ocean Water Resort &..  0.6184      Windy Ocean Motel       0.5056      0.1128
+----------------------------------------------------------------------------------------------------
 
---- IVF / COS ---
-Collection: hotels_ivf_cos
-Created collection: hotels_ivf_cos
-Processing in batches of 100...
-Batch 1 complete: 50 inserted
-Inserted: 50/50
-Created vector index: vectorIndex_ivf_cos
-Executing vector search...
-Success: 5 results, 128ms
+====================================================================================================
+  KEY INSIGHTS
+====================================================================================================
+  🎯 Highest #1 score:   IVF/COS (0.6184)
+  📊 Biggest separation: IVF/COS (diff: 0.1128)
+  🔑 All algorithms return the same top results — algorithm choice
+     affects performance at scale, not accuracy on small datasets.
+  📐 COS and IP produce identical scores (normalized embeddings).
+  📏 L2 scores are distances (lower = closer), not similarities.
+====================================================================================================
 
-==========================================================================================
-                    Vector Algorithm Comparison Results
-==========================================================================================
-Algorithm    Similarity     Top Result               Score        Latency(ms)
-------------------------------------------------------------------------------------------
-DiskANN      COS            Twin Dome Motel          0.8947       145
-HNSW         COS            Twin Dome Motel          0.8947       132
-IVF          COS            Twin Dome Motel          0.8947       128
-==========================================================================================
-
---- DiskANN / COS (hotels_diskann_cos) ---
-  1. Twin Dome Motel, Score: 0.8947
-  2. Triple Landscape Hotel, Score: 0.8898
-  3. Smile Hotel, Score: 0.8855
-  4. Gastronomic Landscape Hotel, Score: 0.8797
-  5. Twin Landscape Resort, Score: 0.8772
-  Latency: 145ms
-
---- HNSW / COS (hotels_hnsw_cos) ---
-  1. Twin Dome Motel, Score: 0.8947
-  2. Triple Landscape Hotel, Score: 0.8898
-  3. Smile Hotel, Score: 0.8855
-  4. Gastronomic Landscape Hotel, Score: 0.8797
-  5. Twin Landscape Resort, Score: 0.8772
-  Latency: 132ms
-
---- IVF / COS (hotels_ivf_cos) ---
-  1. Twin Dome Motel, Score: 0.8947
-  2. Triple Landscape Hotel, Score: 0.8898
-  3. Smile Hotel, Score: 0.8855
-  4. Gastronomic Landscape Hotel, Score: 0.8797
-  5. Twin Landscape Resort, Score: 0.8772
-  Latency: 128ms
-
-Closing database connection...
+Cleanup: dropped collection "hotels"
 Database connection closed
 ```
 
-### Test specific combinations
+### Test individual algorithms
 
-Test a specific algorithm:
-
-```bash
-# Test only DiskANN across all similarity functions
-ALGORITHM=diskann SIMILARITY=all node --env-file .env dist/select-algorithm.js
-```
-
-Test a specific similarity function:
+Test a specific algorithm with cosine similarity:
 
 ```bash
-# Test all algorithms with L2 distance
-ALGORITHM=all SIMILARITY=L2 node --env-file .env dist/select-algorithm.js
-```
+# IVF (Inverted File Index)
+npm run start:ivf
 
-Test a specific algorithm and similarity combination:
+# HNSW (Hierarchical Navigable Small World)
+npm run start:hnsw
 
-```bash
-# Test HNSW with inner product
-ALGORITHM=hnsw SIMILARITY=IP node --env-file .env dist/select-algorithm.js
+# DiskANN
+npm run start:diskann
 ```
 
 ### Understanding the results
 
-The comparison table helps you choose the best configuration for your workload:
+The comparison table demonstrates key behaviors of vector search in DocumentDB:
 
-- **Latency**: Query execution time in milliseconds. Lower is better for user-facing search.
-- **Score**: Similarity score using the selected function. Higher scores indicate better matches.
-- **Top Result**: The highest-scoring hotel for the query. Consistency across algorithms indicates stable results.
+- **All algorithms return identical results on small datasets.** With 50 documents, every algorithm finds the same matches because the dataset fits entirely in memory regardless of index structure. Algorithm selection becomes important at scale (millions of documents) where tradeoffs in latency, memory, and recall diverge.
 
-Algorithm selection guidelines:
+- **COS and IP produce identical scores** (0.6184 / 0.5056) because the `text-embedding-3-small` model outputs normalized (unit-length) vectors. For normalized vectors, cosine similarity equals inner product mathematically.
 
-- **DiskANN**: Best for large datasets where memory is limited. Stores index on disk while maintaining good performance.
-- **HNSW**: Best for high-accuracy requirements and fast search. Requires more memory but provides excellent recall.
-- **IVF**: Best for very large datasets where some recall can be traded for speed. Uses clustering for efficient search.
+- **L2 (Euclidean distance) scores are inverted.** Higher L2 scores mean *more* distance — the #1 result has the *lowest* score (0.8736 = closest to query). This explains the negative Diff value (-0.1208).
+
+- **Score separation (Diff column)** shows confidence. A larger positive diff means the search clearly distinguishes the best match from the second-best. This metric helps evaluate result quality regardless of the absolute score values.
+
+Algorithm selection guidelines for production:
+
+| Algorithm | Best for | Tradeoff |
+|-----------|----------|----------|
+| **DiskANN** | Large datasets (millions+) | Stores index on disk, lower memory |
+| **HNSW** | High-accuracy requirements | More memory, excellent recall |
+| **IVF** | Very large datasets with limited memory | Faster build, possible recall reduction |
 
 Similarity function selection:
 
-- **COS (Cosine)**: Best for text embeddings. Normalizes vectors and measures angle between them.
-- **L2 (Euclidean)**: Measures straight-line distance. Sensitive to vector magnitude.
-- **IP (Inner Product)**: Dot product similarity. Useful when vector magnitude is meaningful.
+| Function | Score meaning | Best for |
+|----------|-------------|----------|
+| **COS (Cosine)** | Higher = more similar (0–1) | Text embeddings (normalized vectors) |
+| **L2 (Euclidean)** | Lower = more similar (distance) | When magnitude matters |
+| **IP (Inner Product)** | Higher = more similar | Equivalent to COS for normalized vectors |
 
-Tuning parameters:
+Tuning parameters affect the recall/latency tradeoff at both index build and query time:
 
-DiskANN tuning:
-- `maxDegree`: Higher values improve accuracy but increase memory usage (default: 32)
-- `lBuild`: Higher values improve index quality but slow down index creation (default: 50)
-- `lSearch`: Higher values improve recall but slow down queries (default: 100)
+| Algorithm | Build parameters | Search parameters |
+|-----------|-----------------|-------------------|
+| **DiskANN** | `maxDegree` (32), `lBuild` (50) | `lSearch` (100) |
+| **HNSW** | `m` (16), `efConstruction` (64) | `efSearch` (80) |
+| **IVF** | `numLists` (1) | `nProbes` (1) |
 
-HNSW tuning:
-- `m`: Number of connections per layer. Higher improves recall (default: 16)
-- `efConstruction`: Candidates during build. Higher improves quality (default: 64)
-- `efSearch`: Candidates during search. Higher improves recall (default: 80)
-
-IVF tuning:
-- `numLists`: Number of clusters. Higher speeds up search but may reduce recall (default: 1)
-- `nProbes`: Clusters searched at query time. Higher improves recall but slows queries (default: 1)
+Higher build values improve index quality but slow creation. Higher search values improve recall but increase latency.
 
 ## Clean up resources
 
