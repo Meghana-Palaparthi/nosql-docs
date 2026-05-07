@@ -308,6 +308,18 @@ ENABLE_MANAGEMENT_TOOLS=false
 CONNECTION_PROFILES={"prod":{"authMode":"entra","endpoint":"...","tokenScope":"...","allowedHosts":["*.documents.azure.com"]}}
 ```
 
+## Example test scenarios
+
+After the toolkit is configured, use these scenarios to confirm that each tool category responds end to end. Each row lists the inputs to provide and the tool to invoke from your MCP client.
+
+| Scenario | Inputs | Tool |
+| --- | --- | --- |
+| List databases | None | Select `list_databases`, then select **Invoke Tool** |
+| Explore containers | Database name | Select `list_collections` |
+| Recent documents | Database name and container name | Select `get_recent_documents` |
+| Search content | Search parameters (query, fields, limit) | Select `text_search` |
+| Vector search | Search text and vector property | Select `vector_search` |
+
 ## Observability
 
 ### Audit log
