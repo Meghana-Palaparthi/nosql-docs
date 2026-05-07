@@ -16,7 +16,12 @@ ms.custom: devx-track-azurecli, devx-track-arm-template, devx-track-azurepowersh
 
 [!INCLUDE[Note - Recommended services](includes/note-recommended-services.md)]
 
-This article explains how to provision throughput in Azure Cosmos DB for Apache Cassandra. You can provision standard(manual) or autoscale throughput on a container, or a database and share it among the containers within the database. You can provision throughput using Azure portal, Azure CLI, or Azure Cosmos DB SDKs.
+This article explains how to provision throughput in Azure Cosmos DB for Apache Cassandra. You can provision standard(manual) or autoscale throughput on a table, or a keyspace and share it among the tables within the keyspace. You can provision throughput using Azure portal, Azure CLI, or Azure Cosmos DB SDKs.
+
+> [!NOTE]
+> Shared keyspace throughput is not recommended for most workloads. While it can simplify provisioning in some scenarios, sharing throughput across multiple tables can lead to unpredictable and undesirable performance and scale behaviors. Because tables in the same keyspace share partitions, scaling keyspace throughput to support a large or growing table may trigger repartitioning of smaller, co‑located tables, spreading them overly thin across too many partitions. We recommend configuring throughput at the table level. Customers with advanced scenarios who understand these tradeoffs can still create and manage shared keyspace throughput programmatically using the Azure Cosmos DB SDKs.
+
+If you are using a different API, see [API for NoSQL](../how-to-provision-container-throughput.md), [API for MongoDB](../mongodb/how-to-provision-throughput.md), [API for Gremlin](../gremlin/how-to-provision-throughput.md) articles to provision the throughput.
 
 ## <a id="portal-cassandra"></a> Azure portal
 
@@ -26,13 +31,16 @@ This article explains how to provision throughput in Azure Cosmos DB for Apache 
 
 1. Open the **Data Explorer** pane, and select **New Table**. Next, provide the following details:
 
-   * Indicate whether you are creating a new keyspace or using an existing one. Select the **Provision database throughput** option if you want to provision throughput at the keyspace level.
+   * Indicate whether you are creating a new keyspace or using an existing one.
    * Enter the table ID within the CQL command.
    * Enter a primary key value (for example, `/userrID`).
    * Enter a throughput that you want to provision (for example, 1000 RUs).
    * Select **OK**.
 
-    :::image type="content" source="./media/how-to-provision-throughput/provision-table-throughput-portal-cassandra-api.png" alt-text="Screenshot of Data Explorer, when creating a new collection with database level throughput":::
+    :::image type="content" source="./media/how-to-provision-throughput/provision-table-throughput-portal-cassandra-api.png" alt-text="Screenshot of Data Explorer, when creating a new table with throughput":::
+
+> [!NOTE]
+> For most workloads, we recommend provisioning throughput at the table level rather than the keyspace level. If you have an advanced scenario that requires shared keyspace throughput, you can create it programmatically using the Azure Cosmos DB SDKs.
 
 > [!Note]
 > If you are provisioning throughput on a container in an Azure Cosmos DB account configured with API for Cassandra, use `/myPrimaryKey` for the partition key path.

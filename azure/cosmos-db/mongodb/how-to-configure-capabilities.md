@@ -12,7 +12,7 @@ ms.custom: build-2023
 
 # Configure your Azure Cosmos DB for MongoDB account capabilities
 
-[!INCLUDE[MongoDB](~/../reusable-content/ce-skilling/azure/includes/cosmos-db/includes/appliesto-mongodb.md)]
+[!INCLUDE[MongoDB](~/reusable-content/ce-skilling/azure/includes/cosmos-db/includes/appliesto-mongodb.md)]
 
 [!INCLUDE[Note - Recommended services](includes/note-recommended-services.md)]
 

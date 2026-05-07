@@ -11,7 +11,7 @@ ms.author: avijitgupta
 ---
 
 # Prevent rate-limiting errors for Azure Cosmos DB for MongoDB operations
-[!INCLUDE[MongoDB](~/../reusable-content/ce-skilling/azure/includes/cosmos-db/includes/appliesto-mongodb.md)]
+[!INCLUDE[MongoDB](~/reusable-content/ce-skilling/azure/includes/cosmos-db/includes/appliesto-mongodb.md)]
 
 [!INCLUDE[Note - Recommended services](includes/note-recommended-services.md)]
 

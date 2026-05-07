@@ -45,7 +45,7 @@ With Premium SSD v2 disks, the cluster will be auto configured with the upper bo
 
 ::: zone pivot="rest-api,azure-resource-manager-bicep"
 
-[!INCLUDE[External - Azure CLI prerequisites](~/../reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
+[!INCLUDE[External - Azure CLI prerequisites](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
 ::: zone-end
 

@@ -10,7 +10,7 @@ ms.author: gahllevy
 ms.custom: sfi-image-nochange, sfi-ropc-blocked
 ---
 # Use Robo 3T with Azure Cosmos DB's API for MongoDB
-[!INCLUDE[MongoDB](~/../reusable-content/ce-skilling/azure/includes/cosmos-db/includes/appliesto-mongodb.md)]
+[!INCLUDE[MongoDB](~/reusable-content/ce-skilling/azure/includes/cosmos-db/includes/appliesto-mongodb.md)]
 
 [!INCLUDE[Note - Recommended services](includes/note-recommended-services.md)]
 

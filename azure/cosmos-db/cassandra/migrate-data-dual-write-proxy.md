@@ -24,7 +24,7 @@ Azure Cosmos DB doesn't support the native Apache Cassandra gossip protocol for 
 
 The following image illustrates the pattern. The dual-write proxy is used to capture live changes. Historical data is copied in bulk using Apache Spark. The proxy can accept connections from your application code with few or no configuration changes. It routes all requests to your source database and asynchronously route writes to API for Cassandra while bulk copy is happening.
 
-:::image type="content" source="~/../reusable-content/ce-skilling/azure/media/managed-instance-apache-cassandra/live-migration.gif" alt-text="Animation that shows the live migration of data to Azure Managed Instance for Apache Cassandra." border="false":::
+:::image type="content" source="~/reusable-content/ce-skilling/azure/media/managed-instance-apache-cassandra/live-migration.gif" alt-text="Animation that shows the live migration of data to Azure Managed Instance for Apache Cassandra." border="false":::
 
 ## Prerequisites
 
@@ -64,7 +64,7 @@ We recommend that you use Azure Databricks. Use a runtime which supports Spark 3
 > [!IMPORTANT]
 > You need to ensure that your Azure Databricks account has network connectivity with your source Apache Cassandra cluster. This setup might require virtual network injection. For more information, see [Deploy Azure Databricks in your Azure virtual network](/azure/databricks/administration-guide/cloud-configurations/azure/vnet-inject).
 
-:::image type="content" source="~/../reusable-content/ce-skilling/azure/media/cosmos-db/databricks-runtime.png" alt-text="Screenshot that shows finding the Azure Databricks runtime version.":::
+:::image type="content" source="~/reusable-content/ce-skilling/azure/media/cosmos-db/databricks-runtime.png" alt-text="Screenshot that shows finding the Azure Databricks runtime version.":::
 
 ## Add Spark dependencies
 
@@ -75,7 +75,7 @@ Add the Apache Spark Cassandra Connector library to your cluster to connect to b
 >
 > This sample is also useful if you want to perform a row comparison validation between source and target after historic data load is complete. For more information, see [Run the historical data load](migrate-data-dual-write-proxy.md#run-the-historical-data-load) and [Validate the source and target](migrate-data-dual-write-proxy.md#validate-the-source-and-target). 
 
-:::image type="content" source="~/../reusable-content/ce-skilling/azure/media/cosmos-db/databricks-search-packages.png" alt-text="Screenshot that shows searching for Maven packages in Azure Databricks.":::
+:::image type="content" source="~/reusable-content/ce-skilling/azure/media/cosmos-db/databricks-search-packages.png" alt-text="Screenshot that shows searching for Maven packages in Azure Databricks.":::
 
 Select **Install**, and then restart the cluster when installation is complete.
 

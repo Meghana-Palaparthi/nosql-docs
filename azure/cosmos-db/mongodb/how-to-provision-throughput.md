@@ -12,11 +12,16 @@ ms.custom: devx-track-azurecli, devx-track-csharp, devx-track-azurepowershell, d
 ---
 
 # Provision database, container or autoscale throughput on Azure Cosmos DB for MongoDB resources
-[!INCLUDE[MongoDB](~/../reusable-content/ce-skilling/azure/includes/cosmos-db/includes/appliesto-mongodb.md)]
+[!INCLUDE[MongoDB](~/reusable-content/ce-skilling/azure/includes/cosmos-db/includes/appliesto-mongodb.md)]
 
 [!INCLUDE[Note - Recommended services](includes/note-recommended-services.md)]
 
-This article explains how to provision throughput in Azure Cosmos DB for MongoDB. You can provision standard(manual) or autoscale throughput on a container, or a database and share it among the containers within the database. You can provision throughput using Azure portal, Azure CLI, or Azure Cosmos DB SDKs.
+This article explains how to provision throughput in Azure Cosmos DB for MongoDB. You can provision standard(manual) or autoscale throughput on a collection, or a database and share it among the collections within the database. You can provision throughput using Azure portal, Azure CLI, or Azure Cosmos DB SDKs.
+
+> [!NOTE]
+> Shared database throughput is not recommended for most workloads. While it can simplify provisioning in some scenarios, sharing throughput across multiple collections can lead to unpredictable and undesirable performance and scale behaviors. Because collections in the same database share partitions, scaling database throughput to support a large or growing collection may trigger repartitioning of smaller, co‑located collections, spreading them overly thin across too many partitions. We recommend configuring throughput at the collection level. Customers with advanced scenarios who understand these tradeoffs can still create and manage shared database throughput programmatically using the Azure Cosmos DB SDKs.
+
+If you are using a different API, see [API for NoSQL](../how-to-provision-container-throughput.md), [API for Cassandra](../cassandra/how-to-provision-throughput.md), [API for Gremlin](../gremlin/how-to-provision-throughput.md) articles to provision the throughput.
 
 ## <a id="portal-mongodb"></a> Azure portal
 
@@ -26,13 +31,16 @@ This article explains how to provision throughput in Azure Cosmos DB for MongoDB
 
 1. Open the **Data Explorer** pane, and select **New Collection**. Next, provide the following details:
 
-   * Indicate whether you are creating a new database or using an existing one. Select the **Provision database throughput** option if you want to provision throughput at the database level.
+   * Indicate whether you are creating a new database or using an existing one.
    * Enter a collection ID.
    * Enter a partition key value (for example, `ItemID`).
    * Enter a throughput that you want to provision (for example, 1000 RUs).
    * Select **OK**.
 
     :::image type="content" source="media/how-to-provision-throughput/provision-database-throughput-portal-mongodb-api.png" alt-text="Screenshot of Data Explorer, when creating a new collection with database level throughput":::
+
+> [!NOTE]
+> For most workloads, we recommend provisioning throughput at the collection level rather than the database level. If you have an advanced scenario that requires shared database throughput, you can create it programmatically using the Azure Cosmos DB SDKs.
 
 > [!Note]
 > If you are provisioning throughput on a container in an Azure Cosmos DB account configured with the Azure Cosmos DB for MongoDB, use `myShardKey` for the partition key path.

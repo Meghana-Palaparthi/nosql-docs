@@ -1,8 +1,8 @@
 ---
 title: Serverless Database Computing With Azure Functions
 description: Learn how Azure Cosmos DB and Azure Functions can be used together to create event-driven serverless computing apps.
-author: ealsur
-ms.author: maquaran
+author: seesharprun
+ms.author: sidandrews
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: how-to

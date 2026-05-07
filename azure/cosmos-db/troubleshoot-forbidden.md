@@ -1,8 +1,8 @@
 ---
 title: Troubleshoot forbidden exceptions
 description: Diagnose and fix various causes for forbidden exceptions that can occur when working with Azure Cosmos DB for NoSQL.
-author: ealsur
-ms.author: maquaran
+author: seesharprun
+ms.author: sidandrews
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: troubleshooting

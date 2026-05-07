@@ -14,7 +14,9 @@ appliesto:
 
 # Provision standard (manual) throughput on a database in Azure Cosmos DB - API for NoSQL
 
-This article explains how to provision standard (manual) throughput on a database in Azure Cosmos DB for NoSQL. You can provision throughput for a single [container](how-to-provision-container-throughput.md), or for a database and share the throughput among the containers within it. To learn when to use container level and database level throughput, see the [Use cases for provisioning throughput on containers and databases](set-throughput.md) article. You can provision database level throughput by using the Azure portal or Azure Cosmos DB SDKs.
+
+> [!NOTE]
+> Shared database throughput is not recommended for most workloads. While it can simplify provisioning in some scenarios, sharing throughput across multiple containers can lead to unpredictable and undesirable performance and scale behaviors. Because containers in the same database share partitions, scaling database throughput to support a large or growing container may trigger repartitioning of smaller, co‑located containers, spreading them overly thin across too many partitions. We recommend configuring throughput at the container level. Customers with advanced scenarios who understand these tradeoffs can still create and manage shared database throughput programmatically using the Azure Cosmos DB SDKs.
 
 If you are using a different API, see [API for MongoDB](mongodb/how-to-provision-throughput.md), [API for Cassandra](cassandra/how-to-provision-throughput.md), [API for Gremlin](gremlin/how-to-provision-throughput.md) articles to provision the throughput.
 
@@ -27,13 +29,15 @@ If you are using a different API, see [API for MongoDB](mongodb/how-to-provision
 1. Open the **Data Explorer** pane, and select **New Database**. Provide the following details:
 
    * Enter a database ID.
-   * Select the **Share throughput across containers** option.
-   * Select **Autoscale** or **Manual** throughput and enter the required **Database throughput** (for example, 1000 RU/s).
+   * Enter a throughput that you want to provision (for example, 1000 RU/s). RU/s (Request Units per second) represent the amount of reserved capacity for your database operations.
    * Enter a name for your container under **Container ID**
    * Enter a **Partition key**
    * Select **OK**.
 
     :::image type="content" source="media/how-to-provision-database-throughput/provision-database-throughput-portal-sql-api.png" alt-text="Screenshot of New Database dialog box":::
+
+> [!NOTE]
+> The portal previously included a **Share throughput across containers** option. For most workloads, we recommend provisioning throughput on individual containers instead. If you have an advanced scenario that requires shared throughput, you can create it programmatically using the Azure Cosmos DB SDKs.
 
 ## Provision throughput using Azure CLI or PowerShell
 

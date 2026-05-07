@@ -22,8 +22,8 @@ You can use the Azure Developer CLI to create the required Azure resources by ru
 ### Azure resources
 
 - **Azure OpenAI resource** with the following model deployments in Microsoft Foundry:
-  - `gpt-4o` deployment (Synthesizer Agent) - Recommended: **50,000 tokens per minute (TPM)** capacity
-  - `gpt-4o-mini` deployment (Planner Agent) - Recommended: **30,000 tokens per minute (TPM)** capacity
+  - `gpt-4.1` deployment (Synthesizer Agent) - Recommended: **50,000 tokens per minute (TPM)** capacity
+  - `gpt-4.1-mini` deployment (Planner Agent) - Recommended: **30,000 tokens per minute (TPM)** capacity
   - `text-embedding-3-small` deployment (Embeddings) - Recommended: **10,000 tokens per minute (TPM)** capacity
   - **Token quotas**: Configure sufficient TPM for each deployment to avoid rate limiting
     - See [Manage Azure OpenAI quotas](/azure/ai-services/openai/how-to/quota) for quota management
@@ -61,7 +61,41 @@ This sample uses a custom implementation with the OpenAI SDK directly, without r
     cd ai/vector-search-agent-go
     ```
 
+## Deploy Azure resources (optional)
+
+If you want to use Azure Developer CLI to provision all required resources:
+
+1. Provision and deploy the infrastructure:
+
+    ```bash
+    azd up
+    ```
+
+1. When prompted, select your subscription and a location (for example, `swedencentral` or `eastus2`).
+
+1. After deployment completes, generate your `.env` file from the deployed environment:
+
+    ```bash
+    azd env get-values > .env
+    ```
+
+> [!TIP]
+> Run `azd env get-values` at any time to view the current environment values.
+>
+> To export these values to a `.env` file, run:
+>
+> ```bash
+> azd env get-values > .env
+> ```
+
+> [!NOTE]
+> The infrastructure deploys Azure OpenAI with the **Standard** SKU (not GlobalStandard). You can customize the SKU and model parameters using `azd env set` before deployment. See the sample's README for available parameters.
+
+[!INCLUDE[Customize OpenAI deployment](./includes/section-quickstart-openai-configuration.md)]
+
 ## Configure environment variables
+
+If you created your Azure resources manually or want to use your own existing resources, you need to configure environment variables for the application to connect to Azure OpenAI and Azure DocumentDB. If you used `azd up`, you can skip this step, as the necessary environment variables are automatically set in the `azd` environment and can be accessed with `azd env get-values`.
 
 Create a `.env` file in your project root to configure environment variables. You can create a copy of the `.env.sample` file from the repository.
 
@@ -69,8 +103,8 @@ Edit the `.env` file and replace these placeholder values:
 
 This quickstart uses a two-agent architecture (planner + synthesizer) with three model deployments (two chat models + embeddings). The environment variables are configured for each model deployment. 
 
-- `AZURE_OPENAI_PLANNER_DEPLOYMENT`: Your gpt-4o-mini deployment name
-- `AZURE_OPENAI_SYNTH_DEPLOYMENT`: Your gpt-4o deployment name
+- `AZURE_OPENAI_PLANNER_DEPLOYMENT`: Your gpt-4.1-mini deployment name
+- `AZURE_OPENAI_SYNTH_DEPLOYMENT`: Your gpt-4.1 deployment name
 - `AZURE_OPENAI_EMBEDDING_DEPLOYMENT`: Your text-embedding-3-small deployment name
 
 You can choose between two authentication methods: passwordless authentication using Azure Identity (recommended) or traditional connection string and API key.
@@ -119,6 +153,9 @@ AZURE_DOCUMENTDB_DATABASENAME=Hotels
 AZURE_DOCUMENTDB_COLLECTION=hotel_data
 AZURE_DOCUMENTDB_INDEX_NAME=vectorIndex
 ```
+
+> [!TIP]
+> Unlike some databases, DocumentDB allows you to create and drop vector indexes at any time after container creation. You don't need to define the vector indexing policy at container creation time.
 
 ## Project structure
 

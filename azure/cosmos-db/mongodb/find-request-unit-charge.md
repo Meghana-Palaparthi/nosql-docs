@@ -13,7 +13,7 @@ ms.custom: devx-track-csharp, devx-track-java, devx-track-dotnet, devx-track-ext
 ---
 
 # Find the request unit charge for operations executed in Azure Cosmos DB for MongoDB
-[!INCLUDE[MongoDB](~/../reusable-content/ce-skilling/azure/includes/cosmos-db/includes/appliesto-mongodb.md)]
+[!INCLUDE[MongoDB](~/reusable-content/ce-skilling/azure/includes/cosmos-db/includes/appliesto-mongodb.md)]
 
 [!INCLUDE[Note - Recommended services](includes/note-recommended-services.md)]
 

@@ -91,6 +91,9 @@ For any value of `Tmax`, the database or container stores a total of `0.1 * Tmax
 
 For example, if you start with a maximum RU/s of 50,000 RU/s (scales between 5000 and 50,000 RU/s), you can store up to 5,000 GB of data. If storage exceeds 5,000 GB, such as reaching 6,000 GB, the new maximum RU/s becomes 60,000 RU/s (scales between 6000 and 60,000 RU/s).
 
+> [!NOTE]
+> Shared database throughput, including with autoscale, is not recommended for most workloads. When containers share a scaling range, one container's burst can consume capacity that other containers need, resulting in throttling (HTTP 429 errors) and less consistent response times. We recommend [configuring autoscale throughput at the container level](nosql/how-to-provision-autoscale-throughput.md).
+
 When you use database level throughput with autoscale, you can have the first 25 containers share an autoscale maximum RU/s of 1000 (scales between 100 - 1000 RU/s), as long as you don't exceed 100 GB of storage. For more information, see this [documentation](autoscale-faq.yml#can-i-change-the-maximum-ru-s-on-a-database-or-container--).
 
 ## Enabling dynamic scaling

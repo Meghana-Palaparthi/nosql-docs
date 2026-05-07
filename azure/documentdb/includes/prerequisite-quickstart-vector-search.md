@@ -19,5 +19,5 @@ ms.date: 10/13/2025
 
   - [DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb)
 
-[!INCLUDE[External - Azure CLI prerequisites](~/../reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
+[!INCLUDE[External - Azure CLI prerequisites](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 

@@ -15,7 +15,7 @@ In this article, you learn how to configure [customer-managed key (CMK)](./datab
 
 [!INCLUDE[Prerequisite - Azure subscription](includes/prerequisite-azure-subscription.md)]
 
-[!INCLUDE[External - Azure CLI prerequisites](~/../reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
+[!INCLUDE[External - Azure CLI prerequisites](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
 ## Prepare user-assigned managed identity and Azure Key Vault
 

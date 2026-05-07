@@ -1,0 +1,31 @@
+id:
+name: GitOps.PullRequestIssueManagement
+description: GitOps.PullRequestIssueManagement primitive
+owner:
+resource: repository
+disabled: false
+where:
+configuration:
+  resourceManagementConfiguration:
+    eventResponderTasks:
+      - description: Close PRs that modify the "documentdb-generated" folder.
+        if:
+          - payloadType: Pull_Request
+          - isAction:
+              action: Opened
+          - filesMatchPattern:
+              matchAny: true
+              pattern: documentdb-generated/*
+          - not:
+              or:
+                - isActivitySender:
+                    user: seesharprun
+                - isActivitySender:
+                    user: learn-build-service-prod[bot]
+                - isActivitySender:
+                    user: documentdb-docs-sync-agent[bot]
+        then:
+          - addReply:
+              reply: >-
+                The `documentdb-generated` folder contains auto-generated content and does not accept pull requests. Any changes should be made in the source repository [documentdb/docs](https://github.com/documentdb/docs). This pull request will be closed automatically.
+          - closePullRequest

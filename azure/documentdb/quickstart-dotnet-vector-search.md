@@ -2,8 +2,8 @@
 
 title: Quickstart - Vector Search with .NET
 description: Learn how to use vector search in Azure DocumentDB with .NET. Store and query vector data efficiently in your applications. 
-author: alexwolfmsft
-ms.author: alexwolf
+author: seesharprun
+ms.author: sidandrews
 ms.reviewer: khelanmodi
 ms.devlang: csharp
 ms.topic: quickstart-sdk
@@ -28,6 +28,8 @@ The app uses a sample hotel dataset in a JSON file with pre-calculated vectors f
 
 [!INCLUDE[Prerequisites - Vector Search Quickstart](includes/prerequisite-quickstart-vector-search-model.md)]
 
+> [!TIP]
+> To customize Azure OpenAI model parameters before deployment, see [Customize Azure OpenAI deployment](#customize-azure-openai-deployment-optional) below.
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) or later
 
     - [C# extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
@@ -272,6 +274,8 @@ In the preceding code, the `MongoDbService` performs the following tasks:
 1. View the data and indexes in the Hotels database.
 
     :::image type="content" source="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" lightbox="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" alt-text="Screenshot of DocumentDB extension showing the DocumentDB collection.":::
+
+[!INCLUDE[Customize OpenAI deployment](./includes/section-quickstart-openai-configuration-vector-search.md)]
 
 ## Clean up resources
 

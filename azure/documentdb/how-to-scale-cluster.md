@@ -18,7 +18,7 @@ Azure DocumentDB provides seamless [scalability](./scalability-overview.md) and 
 
 [!INCLUDE[Prerequisite - Existing cluster](includes/prerequisite-existing-cluster.md)]
 
-[!INCLUDE[External - Azure CLI prerequisites](~/../reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
+[!INCLUDE[External - Azure CLI prerequisites](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
 ## Scale cluster compute
 

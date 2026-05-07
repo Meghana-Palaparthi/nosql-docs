@@ -82,6 +82,8 @@
           href: vector-search.md
         - name: Sharded DiskANN for focused search
           href: gen-ai/sharded-diskann.md
+        - name: Tips for vector search performance
+          href: gen-ai/vector-search-performance-tips.md
     - name: Full text indexing and search
       items:
         - name: Full text search overview
@@ -727,10 +729,12 @@
 
 - name: High availability
   items:
-    - name: High availability and reliability
-      href: /azure/reliability/reliability-cosmos-db-nosql?context=/azure/cosmos-db/context/context
-    - name: Disaster Recovery guidance
+    - name: Reliability in Azure Cosmos DB
+      href: /azure/reliability/reliability-cosmos-db?context=/azure/cosmos-db/context/context
+    - name: Disaster recovery guidance
       href: disaster-recovery-guidance.md
+    - name: Enable zone redundancy on an existing account
+      href: enable-zone-redundancy.md
     - name: Global distribution
       items:
         - name: Global distribution overview
@@ -924,6 +928,27 @@
       href: optimize-costs.yml?context=/azure/cosmos-db/context/context
     - name: Network bandwidth
       href: network-bandwidth.md?context=/azure/cosmos-db/context/context
+- name: Tools & Extensions
+  items:
+    - name: Azure Cosmos DB Shell
+      displayName: CLI, Command-line, Shell, Tools, Extensions, MCP
+      items:
+        - name: Overview
+          href: shell/overview.md?context=/azure/cosmos-db/context/context
+        - name: Installation guide
+          href: shell/install.md?context=/azure/cosmos-db/context/context
+        - name: Get started
+          href: shell/get-started.md?context=/azure/cosmos-db/context/context
+        - name: Command reference
+          href: shell/command-reference.md?context=/azure/cosmos-db/context/context
+        - name: VS Code extension
+          href: shell/visual-studio-code.md?context=/azure/cosmos-db/context/context
+        - name: MCP server setup
+          href: shell/model-context-protocol-setup.md?context=/azure/cosmos-db/context/context
+        - name: Security best practices
+          href: shell/security.md?context=/azure/cosmos-db/context/context
+        - name: Troubleshooting guide
+          href: shell/troubleshooting.md?context=/azure/cosmos-db/context/context
 - name: Analytics with Microsoft Fabric
   items:
     - name: Overview

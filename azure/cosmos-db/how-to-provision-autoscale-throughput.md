@@ -16,6 +16,9 @@ appliesto:
 
 This article explains how to enable autoscale throughput on a database or container (collection, graph, or table) in Azure Cosmos DB for NoSQL. You can enable autoscale on a single container, or provision autoscale throughput on a database and share it among all the containers in the database.
 
+> [!NOTE]
+> Shared database throughput is not recommended for most workloads. While it can simplify provisioning in some scenarios, sharing throughput across multiple containers can lead to unpredictable and undesirable performance and scale behaviors. Because containers in the same database share partitions, scaling database throughput to support a large or growing container may trigger repartitioning of smaller, co‑located containers, spreading them overly thin across too many partitions. We recommend configuring throughput at the container level. Customers with advanced scenarios who understand these tradeoffs can still create and manage shared database throughput programmatically using the Azure Cosmos DB SDKs.
+
 If you're using a different API, see [API for MongoDB](mongodb/how-to-provision-throughput.md), [API for Cassandra](cassandra/how-to-provision-throughput.md), or [API for Gremlin](gremlin/how-to-provision-throughput.md).
 
 ## Azure portal
@@ -34,10 +37,10 @@ If you're using a different API, see [API for MongoDB](mongodb/how-to-provision-
 
 1. Select **OK**.
 
-To provision autoscale on shared throughput database, select the **Provision database throughput** option when creating a new database.
+To provision autoscale on a shared throughput database, select the **Provision database throughput** option when creating a new database. This is an advanced scenario; for most workloads, we recommend configuring autoscale at the container level.
 
 > [!NOTE]
-> Setting throughput at the database level is only recommended for development/test or when workload across all containers in the shared throughput database is uniform. For best performance for large production workloads, it is recommended to set dedicated throughput (autoscale or manual) at the container level and not at the database level.
+> Shared database throughput, including with autoscale, is not recommended for most workloads. When containers share a scaling range, one container's burst can consume capacity that other containers need, resulting in throttling (HTTP 429 errors) and less consistent response times. For best performance for large production workloads, set dedicated throughput (autoscale or manual) at the container level.
 
 ### Enable autoscale on existing database or container
 
@@ -61,7 +64,7 @@ Use the following SDKs to manage autoscale resources:
 ### Create database with shared throughput
 
 > [!NOTE]
-> Setting throughput at the database level is only recommended for development/test or when workload across all containers in the shared throughput database is uniform. For best performance for large production workloads, it is recommended to set dedicated throughput (autoscale or manual) at the container level and not at the database level.
+> Shared database throughput, including with autoscale, is not recommended for most workloads. When containers share a scaling range, one container's burst can consume capacity that other containers need, resulting in throttling (HTTP 429 errors) and less consistent response times. For best performance for large production workloads, set dedicated throughput (autoscale or manual) at the container level.
 
 # [.NET](#tab/dotnet)
 

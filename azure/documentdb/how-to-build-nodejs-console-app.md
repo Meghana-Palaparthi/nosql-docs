@@ -24,7 +24,7 @@ This guide helps you build a Node.js console application to connect to an Azure 
 
 [!INCLUDE[Prerequisite - Existing cluster](includes/prerequisite-existing-cluster.md)]
 
-[!INCLUDE[External - Azure CLI prerequisites](~/../reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
+[!INCLUDE[External - Azure CLI prerequisites](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
 - Microsoft Entra authentication configured for the cluster with your identity granted `root` role.
 

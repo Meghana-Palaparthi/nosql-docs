@@ -80,12 +80,16 @@ To identify hot partitions in Azure Cosmos DB using Azure Monitor metrics, exami
 
 ## Identify hot partitions using diagnostic logs
 
-Learn which logical partition keys and physical partitions consume the most RU/s at a second-level granularity using the information from **`CDBPartitionKeyRUConsumption`** in the account's diagnostic logs. To use this feature, ensure **Diagnostic Logs** are enabled for `PartitionKeyRUConsumption`.
+Learn which logical partition keys and physical partitions consume the most RU/s at a second-level granularity using the information from **`CDBPartitionKeyRUConsumption`** in the account's diagnostic logs and/or workbook. To use this feature, ensure **Diagnostic Logs** are enabled for `PartitionKeyRUConsumption`.
 
-1. Navigate to the **Diagnostic Logs** section for the Azure Cosmos DB account.
+1. Navigate to the **Diagnostic Logs** section for the Azure Cosmos DB account or **Workbooks | PartitionInfo** tab and select database and container.
 
 1. Find the physical partition (`PartitionKeyRangeId`) that consumes the most RU/s over time using this query.
 
+    :::image type="complex" source="media/how-to-redistribute-throughput-across-partitions/line-diagram.png" alt-text="Chart of consumed RU/s by physical partition per hour showing partition 2 as a hot partition.":::
+    Line chart titled "Consumed RUs by Physical Partition Per Hour" with the Y-axis ranging from 0K to 240K RU/s and the X-axis spanning approximately 9 AM to 1 PM. Five physical partitions are plotted as colored lines. Partition 2 (blue) starts near 30K at 9 AM, rises steeply to approximately 220K at 12 PM, then dips slightly to around 200K at 1 PM, with a maximum of 230K. Partition 4 (magenta) begins near 50K, peaks at approximately 95K around 10 AM, then declines steadily to near 0 by 1 PM, with a maximum of 100K. Partitions 0 (teal), 3 (purple), and 1 (green) remain relatively flat and low throughout, with maximums of 24.7K, 26.2K, and 24.1K respectively. The chart clearly identifies partition 2 as the hot partition consuming disproportionately high RU/s compared to all other partitions.
+    :::image-end:::
+   
     ```kusto
     let databaseName = "MyDB" // Replace with database name
     let collectionName = "MyCollection" // Replace with collection name
@@ -96,8 +100,14 @@ Learn which logical partition keys and physical partitions consume the most RU/s
     | summarize sum(RequestCharge) by bin(TimeGenerated, 1s), PartitionKeyRangeId
     | render timechart
     ```
-
+    
 1. For a physical partition, find the top logical partition keys that consume the most RU/s each hour using this query.
+
+    :::image type="complex" source="media/how-to-redistribute-throughput-across-partitions/bar-diagram.png" alt-text="Chart and table of consumed RU percentage by logical partition key for PartitionKeyRangeId 2.":::
+    Workbook visualization filtered to PartitionKeyRangeId 2, containing a stacked bar chart and a data table. The stacked bar chart is titled "Consumed RU % by Logical Partition Key" and shows hourly percentage breakdowns for four logical partition keys: ["Contoso"] (blue), ["Wingtip Toys"] (magenta), ["Coho Winery"] (teal), and Others (purple). At 9 AM, RU consumption is roughly evenly split among Contoso (32.86%), Wingtip Toys (34.18%), and Coho Winery (32.96%). At 10 AM, the distribution is similar with Wingtip Toys at 33.92%, Coho Winery at 33.88%, and Contoso at 32.2%. Starting at 11 AM, Contoso dominates at 93.27% with Others at 6.73%. At 12 PM and 1 PM, Contoso consumes 100% of the RU/s.
+    
+    Below the chart is a data table with columns Hour, PartitionKey, RU_Usage, RU_Percentage, and TotalRU_PerHour. Notable entries include: at 9 AM, Wingtip Toys used 13,566 RU/s (34.18%), Coho Winery used 13,080 RU/s (32.96%), and Contoso used 13,040 RU/s (32.86%) out of a total of 39,686 RU/s. At 10 AM, each key consumed roughly 25,000 RU/s out of 75,186 total. At 11 AM, Contoso used 176,300 RU/s (93.27%) out of 189,026 RU/s. At 12 PM, Contoso used 230,286 RU/s (100%) and at 1 PM, Contoso used 98,020 RU/s (100%). This data confirms that the Contoso logical partition key is the single hot key driving the high consumption on physical partition 2.
+    :::image-end:::
 
     ```kusto
     let databaseName = "MyDB"; // Replace with database name
@@ -110,23 +120,22 @@ Learn which logical partition keys and physical partitions consume the most RU/s
     | where PartitionKeyRangeId == partitionKeyRangeId
     | summarize RU_Usage = sum(RequestCharge) by bin(TimeGenerated, 1h), PartitionKey
     | join kind=inner (
-        CDBPartitionKeyRUConsumption
-        | where TimeGenerated >= ago(24hour)
-        | where DatabaseName == databaseName and CollectionName == collectionName
-        | where isnotempty(PartitionKey) and isnotempty(PartitionKeyRangeId)
-        | where PartitionKeyRangeId == partitionKeyRangeId
-        | summarize TotalRU_PerHour = sum(RequestCharge) by bin(TimeGenerated, 1h)
+    CDBPartitionKeyRUConsumption
+    | where TimeGenerated >= ago(24hour)
+    | where DatabaseName == databaseName and CollectionName == collectionName
+    | where isnotempty(PartitionKey) and isnotempty(PartitionKeyRangeId)
+    | where PartitionKeyRangeId == partitionKeyRangeId
+    | summarize TotalRU_PerHour = sum(RequestCharge) by bin(TimeGenerated, 1h)
     ) on TimeGenerated
     | extend RU_Percentage = round(RU_Usage * 100.00 / TotalRU_PerHour, 2)
     | project Hour = TimeGenerated, PartitionKey, RU_Usage, TotalRU_PerHour, RU_Percentage
     | order by Hour asc, RU_Percentage desc
     ```
     
-    :::image type="content" source="media/how-to-redistribute-throughput-across-partitions/request-unit-usage-table.png" lightbox="media/how-to-redistribute-throughput-across-partitions/request-unit-usage-table.png" alt-text="Screenshot of data rows of partition keys with most RU/s per hour.":::
-    
-    :::image type="content" source="media/how-to-redistribute-throughput-across-partitions/request-unit-percentage-chart.png" lightbox="media/how-to-redistribute-throughput-across-partitions/request-unit-percentage-chart.png" alt-text="Screenshot of chart of partition keys with most RU/s per hour.":::
-
 > These sample queries use 24 hours for illustration, but it's best to use at least seven days of history to see usage patterns.
+
+> [!NOTE]
+> If the hot physical partition is due to a single hot logical partition key (as shown with 'Contoso'), it is not recommended to split the physical partition. This is because splitting the physical partition will still result in that single hot logical partition key in a children partition and will still throttle.
 
 ## Determine current throughput for each physical partition
 
@@ -555,3 +564,4 @@ To use this preview feature, your Azure Cosmos DB account must meet all the foll
 - [Review request units](request-units.md)
 - [Monitor request units](monitor-normalized-request-units.md#how-to-monitor-for-hot-partitions)
 - [Explore best practices for scaling provisioned throughput](scaling-provisioned-throughput-best-practices.md)
+

@@ -16,7 +16,7 @@ appliesto:
 
 [!INCLUDE [Note - Recommended services](includes/note-recommended-services.md)]
 
-[!INCLUDE [Introduction to `pgvector`](~/../reusable-content/ce-skilling/azure/includes/cosmos-db/postgresql/includes/pgvector-introduction.md)]
+[!INCLUDE [Introduction to `pgvector`](~/reusable-content/ce-skilling/azure/includes/cosmos-db/postgresql/includes/pgvector-introduction.md)]
 
 ## Enable extension
 
@@ -29,7 +29,7 @@ SELECT CREATE_EXTENSION('vector');
 > [!Note]
 > To disable an extension use `drop_extension()`
 
-[!INCLUDE [Getting Started](~/../reusable-content/ce-skilling/azure/includes/cosmos-db/postgresql/includes/pgvector-basics.md)]
+[!INCLUDE [Getting Started](~/reusable-content/ce-skilling/azure/includes/cosmos-db/postgresql/includes/pgvector-basics.md)]
 
 ## Next Steps
 

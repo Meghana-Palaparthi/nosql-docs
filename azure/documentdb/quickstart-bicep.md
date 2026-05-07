@@ -18,7 +18,7 @@ In this quickstart, you deploy a new Azure DocumentDB cluster using Bicep. This 
 
 [!INCLUDE[Prerequisites - Azure subscription](includes/prerequisite-azure-subscription.md)]
 
-[!INCLUDE[External - Azure CLI prerequisites](~/../reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
+[!INCLUDE[External - Azure CLI prerequisites](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
 ## Configure environment
 

@@ -11,7 +11,7 @@ ms.author: gahllevy
 ms.custom: devx-track-js
 ---
 # Create an Angular app with Azure Cosmos DB's API for MongoDB - Build the UI with Angular
-[!INCLUDE[MongoDB](~/../reusable-content/ce-skilling/azure/includes/cosmos-db/includes/appliesto-mongodb.md)]
+[!INCLUDE[MongoDB](~/reusable-content/ce-skilling/azure/includes/cosmos-db/includes/appliesto-mongodb.md)]
 
 [!INCLUDE[Note - Recommended services](includes/note-recommended-services.md)]
 

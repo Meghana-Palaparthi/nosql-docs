@@ -16,6 +16,9 @@ appliesto:
 
 This article explains how to provision standard (manual) throughput on a container in Azure Cosmos DB for NoSQL. You can provision throughput on a single container, or [provision throughput on a database](how-to-provision-database-throughput.md) and share it among the containers within the database. You can provision throughput on a container using Azure portal, Azure CLI, or Azure Cosmos DB SDKs.
 
+> [!TIP]
+> Configuring throughput at the container level is the recommended approach for most workloads. Each container gets its own dedicated capacity, so one container's workload won't affect another's performance, and scaling is predictable.
+
 If you are using a different API, see [API for MongoDB](mongodb/how-to-provision-throughput.md), [API for Cassandra](cassandra/how-to-provision-throughput.md), [API for Gremlin](gremlin/how-to-provision-throughput.md) articles to provision the throughput.
 
 ## Azure portal

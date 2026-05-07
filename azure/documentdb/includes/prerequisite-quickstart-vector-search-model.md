@@ -13,7 +13,7 @@ ms.date: 10/13/2025
   
   - [Firewall configured to allow access to your client IP address](../how-to-configure-firewall.md#grant-access-from-your-ip-address)
 
-- [Azure OpenAI resource](/azure/ai-foundry/openai/how-to/create-resource?view=foundry-classic&pivots=cli#create-a-resource)
+- [Azure OpenAI resource](/azure/ai-foundry/openai/how-to/create-resource?view=foundry-classic&pivots=cli#create-a-resource&preserve-view=true)
 
     - Custom domain configured
 
@@ -26,5 +26,5 @@ ms.date: 10/13/2025
 
     - [DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb)
     
-[!INCLUDE[External - Azure CLI prerequisites](~/../reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
+[!INCLUDE[External - Azure CLI prerequisites](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 

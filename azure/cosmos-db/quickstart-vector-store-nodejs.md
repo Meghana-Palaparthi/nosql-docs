@@ -2,8 +2,8 @@
 
 title: Quickstart - Vector Search with Node.js
 description: Use this quickstart to implement vector search in Azure Cosmos DB with Node.js. Store and query hotel data with embeddings using the text-embedding-3-small model.
-author: diberry
-ms.author: diberry
+author: seesharprun
+ms.author: sidandrews
 ms.reviewer: jcodella
 ms.devlang: typescript
 ms.service: azure-cosmos-db

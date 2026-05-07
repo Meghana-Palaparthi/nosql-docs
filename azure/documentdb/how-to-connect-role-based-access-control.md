@@ -62,7 +62,7 @@ Review the following considerations before you use this feature:
 >
 > The lifetime of an access token issued by Microsoft Entra ID represents the maximum potential attack window if the token is compromised. If a malicious actor obtains a valid access token and establishes a connection, the system may continue to accept requests using that token until it expires, even if the associated refresh token is revoked or the user account is disabled.
 >
-> We recommend following the guidelines as described [Revoke access token within Entra](https://learn.microsoft.com/entra/identity/users/users-revoke-access#on-premises-active-directory-environment)
+> We recommend following the guidelines as described [Revoke access token within Entra](/entra/identity/users/users-revoke-access#on-premises-active-directory-environment)
 >
 
 ## Prerequisites
@@ -73,7 +73,7 @@ Review the following considerations before you use this feature:
 
 ::: zone pivot="rest-api,azure-resource-manager-bicep,azure-terraform"
 
-[!INCLUDE[External - Azure CLI prerequisites](~/../reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
+[!INCLUDE[External - Azure CLI prerequisites](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
 ::: zone-end
 

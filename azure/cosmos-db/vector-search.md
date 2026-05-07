@@ -220,6 +220,46 @@ Here are examples of valid vector index policies:
 > [!IMPORTANT]
 > Wild card characters (`*`, `[]`) and vector paths nested inside arrays aren't currently supported in the vector policy or vector index.
 
+
+You can also optionally configure a `quantizerType` within each vectorIndexes entry. This controls how vectors are quantized prior to indexing.
+  - **product** (default)
+Uses standard product quantization. Provides balanced performance and accuracy for most workloads.
+  - **spherical** (public preview)
+This quantization method can improve quatnizatino time leading slightly faster indexing times and performance. This can also provide higher and more stable recall over time with very high dimensional embeddings. Currently available in public preview. 
+
+An example of how to define the `quantizerType` is shown below:
+```json
+{
+    "indexingMode": "consistent",
+    "automatic": true,
+    "includedPaths": [
+        {
+            "path": "/*"
+        }
+    ],
+    "excludedPaths": [
+        {
+            "path": "/_etag/?"
+        }
+    ],
+    "vectorIndexes": [
+        {
+            "path": "/vector1",
+            "type": "quantizedFlat",
+            "quantizerType": "spherical"
+        },
+        {
+            "path": "/vector2",
+            "type": "diskANN",
+            "quantizerType": "product"
+        }
+    ]
+}
+```
+
+
+If not specified, product is used by default.
+
 ## Perform vector search with queries using VectorDistance
 
 Once you created a container with the desired vector policy, and inserted vector data into the container, you can conduct a vector search using the [VectorDistance](/cosmos-db/query/vectordistance) system function in a query. The following example shows a NoSQL query that projects the similarity score as the alias `SimilarityScore`, and sorts in order of most-similar to least-similar:

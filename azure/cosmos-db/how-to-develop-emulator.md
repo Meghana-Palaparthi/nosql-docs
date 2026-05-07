@@ -22,7 +22,7 @@ A common use case for the emulator is to serve as a development database while y
 - [.NET 6 or later](https://dotnet.microsoft.com/download), [Node.js v20 or later](https://nodejs.org/en/download/), or [Python 3.7 or later](https://www.python.org/downloads/)
   - Ensure that all required executables are available in your `PATH`.
 - **Windows emulator**
-  - 64-bit Windows Server 2016, 2019, Windows 10, or Windows 11.
+  - 64-bit Windows Server 2019, Windows 10, or Windows 11.
   - Minimum hardware requirements:
     - 2-GB RAM
     - 10-GB available hard disk space

@@ -8,7 +8,7 @@ ms.reviewer: skhera
 ms.service: azure-cosmos-db
 ms.subservice: table
 ms.topic: reference
-ms.date: 09/10/2025
+ms.date: 04/29/2026
 ---
 
 # Azure Cosmos DB for Table data plane security reference

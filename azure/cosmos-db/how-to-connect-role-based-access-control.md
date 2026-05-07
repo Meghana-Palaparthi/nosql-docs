@@ -43,7 +43,7 @@ For more information, see [role-based access control](/azure/role-based-access-c
 
 ::: zone pivot="azure-cli,azure-resource-manager-bicep"
 
-[!INCLUDE [Azure CLI prerequisites](~/../reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
+[!INCLUDE [Azure CLI prerequisites](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
 ::: zone-end
 
@@ -53,7 +53,7 @@ For more information, see [role-based access control](/azure/role-based-access-c
 
 ::: zone pivot="azure-powershell"
 
-[!INCLUDE [Azure PowerShell prerequisites](~/../reusable-content/azure-powershell/azure-powershell-requirements-no-header.md)]
+[!INCLUDE [Azure PowerShell prerequisites](~/reusable-content/azure-powershell/azure-powershell-requirements-no-header.md)]
 
 ::: zone-end
 

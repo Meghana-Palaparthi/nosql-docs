@@ -11,7 +11,7 @@ show_latex: true
 ---
 
 # Estimate RU/s using the Azure Cosmos DB capacity planner - Azure Cosmos DB for MongoDB
-[!INCLUDE[MongoDB](~/../reusable-content/ce-skilling/azure/includes/cosmos-db/includes/appliesto-mongodb.md)]
+[!INCLUDE[MongoDB](~/reusable-content/ce-skilling/azure/includes/cosmos-db/includes/appliesto-mongodb.md)]
 
 [!INCLUDE[Note - Recommended services](includes/note-recommended-services.md)]
 

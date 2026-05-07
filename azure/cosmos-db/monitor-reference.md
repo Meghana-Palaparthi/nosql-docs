@@ -13,27 +13,27 @@ appliesto:
 
 # Azure Cosmos DB monitoring data reference
 
-[!INCLUDE [horz-monitor-ref-intro](~/../reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-intro.md)]
+[!INCLUDE [horz-monitor-ref-intro](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-intro.md)]
 
 See [Monitor Azure Cosmos DB](monitor.md) for details on the data you can collect for Azure Cosmos DB and how to use it.
 
-[!INCLUDE [horz-monitor-ref-metrics-intro](~/../reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-metrics-intro.md)]
+[!INCLUDE [horz-monitor-ref-metrics-intro](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-metrics-intro.md)]
 For a list of all Azure Monitor supported metrics, including Azure Cosmos DB, see [Azure Monitor supported metrics](/azure/azure-monitor/essentials/metrics-supported).
 
 ### Supported metrics for Microsoft.DocumentDB/DatabaseAccounts
 The following table lists the metrics available for the Microsoft.DocumentDB/DatabaseAccounts resource type.
-[!INCLUDE [horz-monitor-ref-metrics-tableheader](~/../reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-metrics-tableheader.md)]
-[!INCLUDE [microsoft-documentdb-databaseaccounts-metrics-include](~/../reusable-content/ce-skilling/azure/includes/azure-monitor/reference/metrics/microsoft-documentdb-databaseaccounts-metrics-include.md)]
+[!INCLUDE [horz-monitor-ref-metrics-tableheader](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-metrics-tableheader.md)]
+[!INCLUDE [microsoft-documentdb-databaseaccounts-metrics-include](~/reusable-content/ce-skilling/azure/includes/azure-monitor/reference/metrics/microsoft-documentdb-databaseaccounts-metrics-include.md)]
 
 ### Supported metrics for Microsoft.DocumentDB/cassandraClusters
 The following table lists the metrics available for the Microsoft.DocumentDB/cassandraClusters resource type.
-[!INCLUDE [horz-monitor-ref-metrics-tableheader](~/../reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-metrics-tableheader.md)]
-[!INCLUDE [microsoft-documentdb-cassandraclusters-metrics-include](~/../reusable-content/ce-skilling/azure/includes/azure-monitor/reference/metrics/microsoft-documentdb-cassandraclusters-metrics-include.md)]
+[!INCLUDE [horz-monitor-ref-metrics-tableheader](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-metrics-tableheader.md)]
+[!INCLUDE [microsoft-documentdb-cassandraclusters-metrics-include](~/reusable-content/ce-skilling/azure/includes/azure-monitor/reference/metrics/microsoft-documentdb-cassandraclusters-metrics-include.md)]
 
 ### Supported metrics for Microsoft.DocumentDB/mongoClusters
 The following table lists the metrics available for the Microsoft.DocumentDB/mongoClusters resource type.
-[!INCLUDE [horz-monitor-ref-metrics-tableheader](~/../reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-metrics-tableheader.md)]
-[!INCLUDE [microsoft-documentdb-mongoclusters-metrics-include](~/../reusable-content/ce-skilling/azure/includes/azure-monitor/reference/metrics/microsoft-documentdb-mongoclusters-metrics-include.md)]
+[!INCLUDE [horz-monitor-ref-metrics-tableheader](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-metrics-tableheader.md)]
+[!INCLUDE [microsoft-documentdb-mongoclusters-metrics-include](~/reusable-content/ce-skilling/azure/includes/azure-monitor/reference/metrics/microsoft-documentdb-mongoclusters-metrics-include.md)]
 
 ### Metrics by category
 
@@ -105,8 +105,8 @@ The following table lists error codes for your API for Cassandra account. For sa
 | 	| 256 | This might be because of invalid connection credentials. Please check your connection credentials. |
 | 	| 10 | A client message triggered protocol violation. An example is query message sent before a startup one has been sent. |
 
-[!INCLUDE [horz-monitor-ref-metrics-dimensions-intro](~/../reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-metrics-dimensions-intro.md)]
-[!INCLUDE [horz-monitor-ref-metrics-dimensions](~/../reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-metrics-dimensions.md)]
+[!INCLUDE [horz-monitor-ref-metrics-dimensions-intro](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-metrics-dimensions-intro.md)]
+[!INCLUDE [horz-monitor-ref-metrics-dimensions](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-metrics-dimensions.md)]
 
 ### Microsoft.DocumentDB/DatabaseAccounts
 
@@ -155,18 +155,18 @@ The following table lists error codes for your API for Cassandra account. For sa
 
 - ServerName
 
-[!INCLUDE [horz-monitor-ref-resource-logs](~/../reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-resource-logs.md)]
+[!INCLUDE [horz-monitor-ref-resource-logs](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-resource-logs.md)]
 
 ### Supported resource logs for Microsoft.DocumentDB/DatabaseAccounts
-[!INCLUDE [microsoft-documentdb-databaseaccounts-logs-include](~/../reusable-content/ce-skilling/azure/includes/azure-monitor/reference/logs/microsoft-documentdb-databaseaccounts-logs-include.md)]
+[!INCLUDE [microsoft-documentdb-databaseaccounts-logs-include](~/reusable-content/ce-skilling/azure/includes/azure-monitor/reference/logs/microsoft-documentdb-databaseaccounts-logs-include.md)]
 
 ### Supported resource logs for Microsoft.DocumentDB/cassandraClusters
-[!INCLUDE [microsoft-documentdb-cassandraclusters-logs-include](~/../reusable-content/ce-skilling/azure/includes/azure-monitor/reference/logs/microsoft-documentdb-cassandraclusters-logs-include.md)]
+[!INCLUDE [microsoft-documentdb-cassandraclusters-logs-include](~/reusable-content/ce-skilling/azure/includes/azure-monitor/reference/logs/microsoft-documentdb-cassandraclusters-logs-include.md)]
 
 ### Supported resource logs for Microsoft.DocumentDB/mongoClusters
-[!INCLUDE [microsoft-documentdb-mongoclusters-logs-include](~/../reusable-content/ce-skilling/azure/includes/azure-monitor/reference/logs/microsoft-documentdb-mongoclusters-logs-include.md)]
+[!INCLUDE [microsoft-documentdb-mongoclusters-logs-include](~/reusable-content/ce-skilling/azure/includes/azure-monitor/reference/logs/microsoft-documentdb-mongoclusters-logs-include.md)]
 
-[!INCLUDE [horz-monitor-ref-logs-tables](~/../reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-logs-tables.md)]
+[!INCLUDE [horz-monitor-ref-logs-tables](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-logs-tables.md)]
 
 ### Azure Cosmos DB
 Microsoft.DocumentDb/databaseAccounts
@@ -217,7 +217,7 @@ The following table lists properties of resource logs in Azure Cosmos DB. The re
 | **resourceTokenUserRid** | **resourceTokenUserRid_s** | The value points to the resource ID of the user for alternate authentication methods. |
 | **responseLength** | **responseLength_s** | The length of the response, in bytes.|
 
-[!INCLUDE [horz-monitor-ref-activity-log](~/../reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-activity-log.md)]
+[!INCLUDE [horz-monitor-ref-activity-log](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-activity-log.md)]
 - [Microsoft.DocumentDB resource provider operations](/azure/role-based-access-control/resource-provider-operations#microsoftdocumentdb)
 
 ## Related content

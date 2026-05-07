@@ -12,7 +12,7 @@ ms.custom: devx-track-python, sfi-ropc-blocked
 ---
 
 # Get started with Azure Cosmos DB for MongoDB and Python
-[!INCLUDE[MongoDB](~/../reusable-content/ce-skilling/azure/includes/cosmos-db/includes/appliesto-mongodb.md)]
+[!INCLUDE[MongoDB](~/reusable-content/ce-skilling/azure/includes/cosmos-db/includes/appliesto-mongodb.md)]
 
 [!INCLUDE[Note - Recommended services](includes/note-recommended-services.md)]
 

@@ -1,12 +1,12 @@
 ---
 title: Get SQL query performance & execution metrics
 description: Learn how to retrieve SQL query execution metrics and profile SQL query performance of Azure Cosmos DB requests.
-author: ginamr
+author: seesharprun
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: how-to
 ms.date: 1/5/2023
-ms.author: girobins
+ms.author: sidandrews
 ms.custom: devx-track-csharp, devx-track-dotnet
 appliesto:
   - ✅ NoSQL

@@ -1,12 +1,12 @@
 ---
 title: Migrate From the Bulk Executor Library to the Bulk Support in .NET V3 SDK
 description: Learn how to migrate your application from using the bulk executor library to the bulk support in Azure Cosmos DB SDK V3
-author: ealsur
+author: seesharprun
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: how-to
 ms.date: 08/26/2021
-ms.author: maquaran
+ms.author: sidandrews
 ms.devlang: csharp
 ms.custom: devx-track-dotnet
 appliesto:

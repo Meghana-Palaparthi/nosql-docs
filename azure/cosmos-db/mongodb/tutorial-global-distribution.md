@@ -11,7 +11,7 @@ ms.devlang: csharp
 ms.custom: devx-track-csharp
 ---
 # Set up global distributed database using Azure Cosmos DB's API for MongoDB
-[!INCLUDE[MongoDB](~/../reusable-content/ce-skilling/azure/includes/cosmos-db/includes/appliesto-mongodb.md)]
+[!INCLUDE[MongoDB](~/reusable-content/ce-skilling/azure/includes/cosmos-db/includes/appliesto-mongodb.md)]
 
 [!INCLUDE[Note - Recommended services](includes/note-recommended-services.md)]
 

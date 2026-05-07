@@ -22,7 +22,7 @@ This article explores the limitations and tradeoffs of [`pgvector`](https://gith
 
 For more on the extension itself, see [basics of `pgvector`](howto-use-pgvector.md). You may also want to refer to the official [README](https://github.com/pgvector/pgvector/blob/master/README.md) of the project.
 
-[!INCLUDE [Performance](~/../reusable-content/ce-skilling/azure/includes/cosmos-db/postgresql/includes/pgvector-performance.md)]
+[!INCLUDE [Performance](~/reusable-content/ce-skilling/azure/includes/cosmos-db/postgresql/includes/pgvector-performance.md)]
 
 ## Conclusion
 

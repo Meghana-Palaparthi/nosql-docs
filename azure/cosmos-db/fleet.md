@@ -2,11 +2,11 @@
 title: Fleets Overview
 description: Fleets, in Azure Cosmos DB, provide a solution for independent software vendor (ISV) customers to manage multitenant applications effectively, balancing cost, performance, and security.
 author: deborahc
-ms.author: dech
+ms.author: sesmyrno
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: concept-article
-ms.date: 05/07/2025
+ms.date: 05/03/2026
 ai-usage: ai-assisted
 appliesto:
   - ✅ NoSQL
@@ -49,7 +49,7 @@ There are a few key concepts to understand:
 
 | | Limit |
 | --- | --- |
-| **Maximum number of database accounts per fleetspace** | `1000`¹ |
+| **Maximum number of database accounts per fleetspace** | `3000`¹ |
 | **Maximum pool request units per second (RU/s)** | `1,000,000 RU/s`¹ |
 | **Maximum pool request units a partition can consume (RU/s)** | `5,000 RU/s`¹ |
 

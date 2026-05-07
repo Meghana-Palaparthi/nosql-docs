@@ -11,7 +11,7 @@ metadata:
   ms.date: 08/20/2025
 title: Frequently asked questions on Azure Cosmos DB for MongoDB in RU architecture
 summary: |
-  [!INCLUDE[MongoDB](~/../reusable-content/ce-skilling/azure/includes/cosmos-db/includes/appliesto-mongodb.md)]
+  [!INCLUDE[MongoDB](~/reusable-content/ce-skilling/azure/includes/cosmos-db/includes/appliesto-mongodb.md)]
   [!INCLUDE[Note - Recommended services](includes/note-recommended-services.md)]
 sections:
   - name: General FAQ

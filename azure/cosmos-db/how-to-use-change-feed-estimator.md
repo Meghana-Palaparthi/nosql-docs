@@ -1,12 +1,12 @@
 ---
 title: Use the Change Feed Estimator
 description: Learn how to use the change feed estimator to analyze the progress of your change feed processor
-author: ealsur
+author: seesharprun
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: how-to
 ms.date: 07/25/2024
-ms.author: maquaran
+ms.author: sidandrews
 ms.devlang: csharp
 ms.custom: devx-track-csharp
 appliesto:

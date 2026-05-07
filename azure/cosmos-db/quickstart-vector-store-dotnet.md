@@ -2,8 +2,8 @@
 
 title: Quickstart - Azure Cosmos DB vector search with .NET
 description: Learn how to use vector search in Azure Cosmos DB with .NET. Store and query vector data efficiently in your applications. 
-author: alexwolfmsft
-ms.author: alexwolf
+author: seesharprun
+ms.author: sidandrews
 ms.reviewer: khelanmodi
 ms.devlang: csharp
 ms.topic: quickstart-sdk

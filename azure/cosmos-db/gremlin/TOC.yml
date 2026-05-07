@@ -9,8 +9,6 @@
       href: support.md
     - name: FAQ
       href: faq.yml
-    - name: Security
-      href: security.md
     - name: Limits
       href: limits.md
 - name: Connect from applications
@@ -27,6 +25,27 @@
   items:
     - name: Write queries
       href: how-to-write-queries.md
+- name: Create secure solutions
+  items:
+    - name: Security
+      href: security.md
+    - name: Use role-based access control
+      displayName: rbac, key, ropc, connection string
+      href: how-to-connect-role-based-access-control.md
+    - name: Reference
+      items:
+        - name: Control plane actions
+          displayName: example, permissions, rbac, role, definition
+          href: /azure/role-based-access-control/permissions/databases?context=/azure/cosmos-db/context/context#microsoftdocumentdb
+        - name: Control plane built-in roles
+          displayName: example, permissions, rbac, role, definition
+          href: /azure/role-based-access-control/built-in-roles?context=/azure/cosmos-db/context/context#databases
+        - name: Data plane actions
+          displayName: example, permissions, rbac, role, definition, dataActions
+          href: reference-data-plane-security.md#built-in-actions
+        - name: Data plane built-in roles
+          displayName: example, permissions, rbac, role, definition, dataActions
+          href: reference-data-plane-security.md#built-in-roles
 - name: Explore samples and automation
   items:
     - name: Supply chain traceability solution

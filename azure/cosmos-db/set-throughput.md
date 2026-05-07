@@ -29,7 +29,7 @@ With Azure Cosmos DB, you can provision throughput at two granularities:
 
 The throughput provisioned on an Azure Cosmos DB container is exclusively reserved for that container. The container receives the provisioned throughput all the time. The provisioned throughput on a container is financially backed by service-level agreements (SLAs). To learn how to configure standard (manual) throughput on a container, see [Provision standard (manual) throughput on a container](how-to-provision-container-throughput.md). To learn how to configure autoscale throughput on a container, see [Provision autoscale throughput on database or container](how-to-provision-autoscale-throughput.md).
 
-Setting provisioned throughput on a container is the most frequently used option. You can elastically scale throughput for a container by provisioning any amount of throughput by using [request units (RUs)](request-units.md).
+Setting provisioned throughput on a container is the most frequently used option and the recommended approach for most workloads. You can elastically scale throughput for a container by provisioning any amount of throughput by using [request units (RUs)](request-units.md). Each container gets its own dedicated capacity, so one container's workload won't affect another's performance.
 
 The throughput provisioned for a container is evenly distributed among its physical partitions, and assuming a good partition key that distributes the logical partitions evenly among the physical partitions, the throughput is also distributed evenly across all the logical partitions of the container. You can't selectively specify the throughput for logical partitions. Because one or more logical partitions of a container are hosted by a physical partition, the physical partitions belong exclusively to the container and support the throughput provisioned on the container. 
 
@@ -45,6 +45,9 @@ The following image shows how a physical partition hosts one or more logical par
 
 ## Set throughput on a database
 
+> [!NOTE]
+> Shared database throughput is not recommended for most workloads. While it can simplify provisioning in some scenarios, sharing throughput across multiple containers can lead to unpredictable and undesirable performance and scale behaviors. Because containers in the same database share partitions, scaling database throughput to support a large or growing container may trigger repartitioning of smaller, co‑located containers, spreading them overly thin across too many partitions. We recommend configuring throughput at the container level. Customers with advanced scenarios who understand these tradeoffs can still create and manage shared database throughput programmatically using the Azure Cosmos DB SDKs.
+
 When you provision throughput on an Azure Cosmos DB database, the throughput is shared across all the containers (called shared database containers) in the database. An exception is if you specify a provisioned throughput on specific containers in the database. Sharing the database-level provisioned throughput among its containers is analogous to hosting a database on a cluster of machines. Because all containers within a database share the resources available on a machine, you naturally don't get predictable performance on any specific container. To learn how to configure provisioned throughput on a database, see [Provision standard (manual) throughput on a database](how-to-provision-database-throughput.md). To learn how to configure autoscale throughput on a database, see [Provision autoscale throughput on database or container](how-to-provision-autoscale-throughput.md).
 
 Because all containers within the database share the provisioned throughput, Azure Cosmos DB doesn't provide any predictable throughput guarantees for a particular container in that database. The portion of the throughput that a specific container can receive is dependent on:
@@ -53,13 +56,13 @@ Because all containers within the database share the provisioned throughput, Azu
 * The choice of partition keys for various containers
 * The distribution of the workload across various logical partitions of the containers
 
-We recommend that you configure throughput on a database when you want to share the throughput across multiple containers, but don't want to dedicate the throughput to any particular container. 
+If you have an advanced scenario where you want to share throughput across multiple containers and don't need dedicated performance for any particular container, database-level throughput is an option. Review the tradeoffs in this section before choosing this approach.
 
-The following examples demonstrate where it's preferred to provision throughput at the database level:
+The following examples demonstrate where database-level throughput may be useful:
 
-* Sharing a database's provisioned throughput across a set of containers is useful for a multitenant application. Each user can be represented by a distinct Azure Cosmos DB container.
+* Sharing a database's provisioned throughput across a set of containers is useful for a multitenant application where each user is represented by a distinct Azure Cosmos DB container. Be aware that no individual container has a guaranteed share of throughput in this model, so a busy tenant can affect others.
 
-* Sharing a database's provisioned throughput across a set of containers is useful when you migrate a NoSQL database, such as MongoDB or Cassandra, hosted on a cluster of VMs or from on-premises physical servers to Azure Cosmos DB. Think of the provisioned throughput configured on your Azure Cosmos DB database as a logical equivalent, but more cost-effective and elastic, to that of the compute capacity of your MongoDB or Cassandra cluster.  
+* Sharing a database's provisioned throughput across a set of containers can simplify migration from a NoSQL database, such as MongoDB or Cassandra, hosted on a cluster of VMs or from on-premises physical servers to Azure Cosmos DB. As your workload stabilizes after migration, consider moving to container-level throughput for more predictable performance.
 
 All containers created inside a database with provisioned throughput must be created with a [partition key](partitioning.md). At any given point in time, the throughput configured on a database is shared by all the containers within that database. When you have containers that share provisioned throughput configured on a database, you can't selectively apply the throughput to a specific container or a logical partition. 
 
@@ -68,12 +71,16 @@ If the workload on one or more logical partitions collectively exceeds the alloc
 Containers in a shared throughput database share the throughput (RU/s) allocated to that database. With standard (manual) provisioned throughput, you can have up to 25 containers with a minimum of 400 RU/s on the database. With autoscale provisioned throughput, you can have up to 25 containers in a database with autoscale minimum 1000 RU/s (scales between 100 - 1000 RU/s).
 
 > [!NOTE]
-> In February 2020, we introduced a change that allows you to have a maximum of 25 containers in a shared throughput database, which better enables throughput sharing across the containers. After the first 25 containers, you can add more containers to the database only if they're [provisioned with dedicated throughput](#set-throughput-on-a-database-and-a-container), which is separate from the shared throughput of the database.<br>
+> Shared-throughput databases are limited to 25 containers. After the first 25 containers, you can add more containers to the database only if they're [provisioned with dedicated throughput](#set-throughput-on-a-database-and-a-container), which is separate from the shared throughput of the database.<br>
 If your Azure Cosmos DB account already contains a shared throughput database with >=25 containers, the account and all other accounts in the same Azure subscription are exempt from this change. If you have feedback or questions, contact [product support](https://portal.azure.com/?#blade/Microsoft_Azure_Support/HelpAndSupportBlade).
 
 If your workloads involve deleting and recreating all the collections in a database, it's recommended that you drop the empty database and recreate a new database before collection creation. The following image shows how a physical partition can host one or more logical partitions that belong to different containers within a database:
 
 :::image type="content" source="./media/set-throughput/resource-partition2.png" alt-text="Diagram of a physical partition that hosts one or more logical partitions that belong to different containers." lightbox="./media/set-throughput/resource-partition2.png":::
+
+### When to use container-level throughput instead
+
+For workloads where individual containers have distinct or growing throughput needs, configure throughput at the container level. With shared database throughput, scaling to support a large or growing container may trigger repartitioning of smaller, co-located containers, spreading them overly thin across too many partitions. In practice, this means those smaller containers may experience throttling (HTTP 429 errors) and less consistent response times. Container-level throughput avoids these side effects because each container scales independently. This is the recommended starting point for most new workloads. See [Provision throughput on a container](how-to-provision-container-throughput.md).
 
 ## Set throughput on a database and a container
 
@@ -135,9 +142,9 @@ You can use [Azure Monitor metrics](monitor.md#view-operation-level-metrics-for-
 
 ## Comparison of models
 
-This table shows a comparison between provisioning standard (manual) throughput on a database versus on a container.
+This table shows a comparison between provisioning standard (manual) throughput on a database versus on a container. For most workloads, container-level throughput (columns 2 and 4) is recommended.
 
-|**Parameter**  |**Standard (manual) throughput on a database**  |**Standard (manual) throughput on a container**|**Autoscale throughput on a database** | **Autoscale throughput on a container**|
+|**Parameter**  |**Standard (manual) throughput on a database**  |**Standard (manual) throughput on a container ✅ Recommended**|**Autoscale throughput on a database** | **Autoscale throughput on a container ✅ Recommended**|
 |---------|---------|---------|---------|---------|
 |Entry point (minimum RU/s) |400 RU/s. Can have up to 25 containers with no RU/s minimum per container.</li> |400| Autoscale between 100 - 1000 RU/s. Can have up to 25 containers with no RU/s minimum per container.</li> | Autoscale between 100 - 1000 RU/s.|
 |Minimum RU/s per container|--|400|--|Autoscale between 100 - 1000 RU/s|

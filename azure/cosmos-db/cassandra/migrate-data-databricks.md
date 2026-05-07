@@ -45,7 +45,7 @@ You can follow instructions to [provision an Azure Databricks workspace](/azure/
 
 You need to add the Apache Spark Cassandra Connector library to your compute to connect to both native and Azure Cosmos DB Cassandra endpoints. In your compute, select **Libraries** > **Install New** > **Maven**, and then add `com.datastax.spark:spark-cassandra-connector-assembly_2.12:3.0.0` in Maven coordinates.
 
-:::image type="content" source="~/../reusable-content/ce-skilling/azure/media/cosmos-db/databricks-search-packages.png" alt-text="Screenshot that shows searching for Maven packages in Databricks.":::
+:::image type="content" source="~/reusable-content/ce-skilling/azure/media/cosmos-db/databricks-search-packages.png" alt-text="Screenshot that shows searching for Maven packages in Databricks.":::
 
 Select **Install**, and then restart the compute when installation is complete.
 

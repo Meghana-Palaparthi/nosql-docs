@@ -1,8 +1,8 @@
 ---
 title: Quickstart - Vector Search with Go
 description: Learn how to use vector search in Azure DocumentDB with Go. Store and query vector data efficiently in your applications. 
-author: PatAltimore
-ms.author: patricka
+author: seesharprun
+ms.author: sidandrews
 ms.reviewer: khelanmodi
 ms.devlang: golang
 ms.topic: quickstart-sdk
@@ -23,6 +23,8 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 [!INCLUDE[Prerequisites - Vector Search Quickstart](includes/prerequisite-quickstart-vector-search-model.md)]
 
+> [!TIP]
+> To customize Azure OpenAI model parameters before deployment, see [Customize Azure OpenAI deployment](#customize-azure-openai-deployment-optional) below.
 - [Go](https://golang.org/dl/) version 1.24 or later
 
 ## Create data file with vectors
@@ -170,6 +172,9 @@ vector-search-quickstart
 ```
 
 ----
+
+> [!TIP]
+> Unlike some databases, DocumentDB allows you to create and drop vector indexes at any time after container creation. You don't need to define the vector indexing policy at container creation time.
 
 ## Create code for vector search
 
@@ -386,6 +391,8 @@ HNSW demonstration completed successfully!
 1. View the data and indexes in the Hotels database.
 
     :::image type="content" source="./media/quickstart-go-vector-search/visual-studio-code-documentdb.png" lightbox="./media/quickstart-go-vector-search/visual-studio-code-documentdb.png" alt-text="Screenshot of DocumentDB extension showing the Azure DocumentDB collection.":::
+
+[!INCLUDE[Customize OpenAI deployment](./includes/section-quickstart-openai-configuration-vector-search.md)]
 
 ## Clean up resources
 

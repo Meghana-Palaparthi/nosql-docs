@@ -59,6 +59,14 @@ Within the Spark configuration of a specific application, you can then specify p
     "spark.cosmos.throughputControl.globalControl.container" -> "ThroughputControl"
 ```
 
+> [!IMPORTANT]
+> **Microsoft Entra ID authentication and throughput control:** If you use Microsoft Entra ID (formerly Azure Active Directory) authentication with the Spark connector, extra role-based access control (RBAC) configuration might be required depending on which throughput control parameter you use:
+>
+> - **`targetThroughputThreshold`**: You must assign a custom role that includes the `Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/throughputSettings/read` data action to your Microsoft Entra identity. The connector needs to read the container's provisioned throughput to calculate the target RU based on the threshold percentage.
+> - **`targetThroughput`**: If you use Spark connector version earlier than 4.47.0, you must also assign a role with the `Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/throughputSettings/read` data action. Starting from version 4.47.0, this permission is no longer required when you use `targetThroughput`.
+>
+> For more information on configuring custom roles with specific data actions, see [Configure role-based access control for Azure Cosmos DB](how-to-connect-role-based-access-control.md?pivots=azure-cli).
+
 In the preceding example, the `targetThroughputThreshold` parameter is defined as **0.95**. Rate limiting occurs (and requests are retried) when clients consume more than 95 percent (+/- 5-10 percent) of the throughput allocated to the container. This configuration is stored as a document in the throughput container, which looks like this example:
 
 ```json

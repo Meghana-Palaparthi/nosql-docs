@@ -44,6 +44,46 @@
       "source_path_from_root": "/azure/cosmos-db/postgresql/concepts-distributed-data.md",
       "redirect_url": "/azure/cosmos-db/postgresql/concepts-nodes",
       "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/azure/cosmos-db/cosmosdb-shell.md",
+      "redirect_url": "/azure/cosmos-db/shell/overview",
+      "redirect_document_id": true
+    },
+    {
+      "source_path_from_root": "/azure/cosmos-db/cosmosdb-shell-install.md",
+      "redirect_url": "/azure/cosmos-db/shell/install",
+      "redirect_document_id": true
+    },
+    {
+      "source_path_from_root": "/azure/cosmos-db/cosmosdb-shell-quickstart.md",
+      "redirect_url": "/azure/cosmos-db/shell/get-started",
+      "redirect_document_id": true
+    },
+    {
+      "source_path_from_root": "/azure/cosmos-db/cosmosdb-shell-commands.md",
+      "redirect_url": "/azure/cosmos-db/shell/command-reference",
+      "redirect_document_id": true
+    },
+    {
+      "source_path_from_root": "/azure/cosmos-db/cosmosdb-shell-vscode.md",
+      "redirect_url": "/azure/cosmos-db/shell/visual-studio-code",
+      "redirect_document_id": true
+    },
+    {
+      "source_path_from_root": "/azure/cosmos-db/cosmosdb-shell-mcp-setup.md",
+      "redirect_url": "/azure/cosmos-db/shell/model-context-protocol-setup",
+      "redirect_document_id": true
+    },
+    {
+      "source_path_from_root": "/azure/cosmos-db/cosmosdb-shell-security.md",
+      "redirect_url": "/azure/cosmos-db/shell/security",
+      "redirect_document_id": true
+    },
+    {
+      "source_path_from_root": "/azure/cosmos-db/cosmosdb-shell-troubleshooting.md",
+      "redirect_url": "/azure/cosmos-db/shell/troubleshooting",
+      "redirect_document_id": true
     }
   ]
 }

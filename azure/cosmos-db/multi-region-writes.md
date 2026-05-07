@@ -38,6 +38,37 @@ A multi-region-write account uses two server timestamp values for each entity. T
 | `_ts` | The server epoch time at which the entity was written | Always exposed by all read and query APIs. |
 | `crts` | The epoch time when a multi-write conflict is fixed, or the absence of a conflict is confirmed. For multi-write region configuration, this timestamp sets the order of changes for Change Feed: Finds the start time for Change Feed requests, Sets the sort order in Change Feed responses. | Shown in Change Feed responses only when the request enables "New Wire Model." This behavior is the default for ["all versions and deletes"](change-feed.md#all-versions-and-deletes-mode-preview) Change Feed mode. |
 
+## Best practices for multi-region writes
+
+Here are some best practices to consider when you're writing to multiple regions.
+
+> [!div class="checklist"]
+> - **Keep local traffic local.** When you use multiple-region writes, the application should issue read and write traffic that originates in the local region strictly to the local Cosmos DB region. For optimal performance, avoid cross-region calls.
+>  
+>   It's important for the application to minimize conflicts by avoiding the following antipatterns:
+>   - Sending the same write operation to all regions to increase the odds of getting a fast response time
+>   - Randomly determining the target region for a read or write operation on a per-request basis
+>   - Using a round-robin policy to determine the target region for a read or write operation on a per-request basis.
+>
+> - **Avoid dependency on replication lag.** You can't configure multi-region write accounts for strong consistency. The region that's being written to responds immediately after Azure Cosmos DB replicates the data locally, while asynchronously replicating the data globally.
+>
+>   Replication lag can occur because of a rare blip in network traffic or higher-than-usual rates of conflict resolution.
+>
+>   For instance, an architecture in which the application writes to Region A but reads from Region B introduces a dependency on replication lag between the two regions. However, if the application reads and writes to the same region, performance remains constant even in the presence of replication lag.
+>
+> - **Evaluate session consistency usage for write operations.** In session consistency, you use the session token for both read and write operations.
+> 
+>   For read operations, Azure Cosmos DB sends the cached session token to the server with a guarantee of receiving data that corresponds to the specified (or a more recent) session token.
+>
+>   For write operations, Azure Cosmos DB uses the session token to ensure it only persists data after the target region has caught up to that token. In single‑region write accounts, this condition is always met because all writes go to the same region. In multiple‑region write accounts, however, the region that receives a write might lag behind another region. If a client sends a write to Region A using a session token that reflects writes from Region B, Region A must first catch up to Region B before it can persist the write.
+> 
+>   Use session tokens only for read operations and not for write operations when you're passing session tokens between client instances.
+>
+>
+> - **Minimize rapid updates to the same document.** When your application repeatedly updates the same document, server-side conflict resolution can overlap with those writes. This overlap increases latency during conflict resolution.
+>
+>   Short bursts of repeated updates are normal, but if you need to update the same document frequently over time, consider an architecture that creates new documents instead.
+
 ## Related content
 
 - [Conflict types and resolution policies when using multiple write regions](conflict-resolution-policies.md)

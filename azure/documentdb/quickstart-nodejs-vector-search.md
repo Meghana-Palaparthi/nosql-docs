@@ -2,8 +2,8 @@
 
 title: Quickstart - Vector Search with Node.js
 description: Learn how to use vector search in Azure DocumentDB with Node.js. Store and query vector data efficiently in your applications. 
-author: diberry
-ms.author: diberry
+author: seesharprun
+ms.author: sidandrews
 ms.reviewer: khelanmodi
 ms.devlang: typescript
 ms.topic: quickstart-sdk
@@ -28,6 +28,8 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 [!INCLUDE[Prerequisites - Vector Search Quickstart](includes/prerequisite-quickstart-vector-search-model.md)]
 
+> [!TIP]
+> To customize Azure OpenAI model parameters before deployment, see [Customize Azure OpenAI deployment](#customize-azure-openai-deployment-optional) below.
 - [Node.js LTS](https://nodejs.org/download/)
 
 - [TypeScript](https://www.typescriptlang.org/download): Install TypeScript globally:
@@ -180,6 +182,9 @@ touch src/utils.ts
 
 ----
 
+> [!TIP]
+> Unlike some databases, DocumentDB allows you to create and drop vector indexes at any time after container creation. You don't need to define the vector indexing policy at container creation time.
+
 ## Create code for vector search
 
 ### [DiskANN](#tab/tab-diskann)
@@ -291,6 +296,8 @@ The app logging and output show:
 1. View the data and indexes in the Hotels database.
 
     :::image type="content" source="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" lightbox="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" alt-text="Screenshot of DocumentDB extension showing the DocumentDB collection.":::
+
+[!INCLUDE[Customize OpenAI deployment](./includes/section-quickstart-openai-configuration-vector-search.md)]
 
 ## Clean up resources
 

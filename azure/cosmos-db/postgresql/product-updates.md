@@ -7,7 +7,7 @@ ms.custom: mvc, references_regions
 ms.service: azure-cosmos-db
 ms.subservice: postgresql
 ms.topic: concept-article
-ms.date: 11/21/2024
+ms.date: 04/29/2026
 appliesto:
   - ✅ PostgreSQL
 ---
@@ -17,8 +17,6 @@ appliesto:
 [!INCLUDE [Note - Recommended services](includes/note-recommended-services.md)]
 
 ## Release notes
-
-Azure Cosmos DB for PostgreSQL gets updated regularly.
 
 Updates that don’t directly affect the internals of a cluster are rolled out gradually to [all supported regions](resources-regions.md). Once such an update is rolled out to a region, it's available immediately on all new and existing Azure Cosmos DB for PostgreSQL clusters in that region.
 

@@ -13,7 +13,7 @@ ms.custom: devx-track-js, devguide-js, cosmos-db-dev-journey, sfi-ropc-blocked
 
 # Get started with Azure Cosmos DB for MongoDB using JavaScript
 
-[!INCLUDE[MongoDB](~/../reusable-content/ce-skilling/azure/includes/cosmos-db/includes/appliesto-mongodb.md)]
+[!INCLUDE[MongoDB](~/reusable-content/ce-skilling/azure/includes/cosmos-db/includes/appliesto-mongodb.md)]
 
 [!INCLUDE[Note - Recommended services](includes/note-recommended-services.md)]
 

@@ -1,10 +1,10 @@
 ---
 title: Diagnose and Troubleshoot the Availability of Sdks in Multiregional Environments
 description: Learn all about the Azure Cosmos DB SDK availability behavior when operating in multi regional environments.
-author: ealsur
+author: seesharprun
 ms.service: azure-cosmos-db
 ms.date: 03/10/2023
-ms.author: maquaran
+ms.author: sidandrews
 ms.subservice: nosql
 ms.topic: troubleshooting
 appliesto:

@@ -1,12 +1,12 @@
 ---
 title: Get Query Performance and Execution Metrics Using Python SDK
 description: Learn how to retrieve NoSQL query execution metrics and profile NoSQL query performance of Azure Cosmos DB requests.
-author: abhinavtrips
+author: seesharprun
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: how-to
 ms.date: 05/15/2023
-ms.author: abtripathi
+ms.author: sidandrews
 ms.custom: devx-track-python, devx-track-python-sdk
 appliesto:
   - ✅ NoSQL

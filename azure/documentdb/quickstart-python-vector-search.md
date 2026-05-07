@@ -2,8 +2,8 @@
 title: Quickstart - Vector Search with Python
 description: Learn how to use vector search in Azure DocumentDB
  with Python. Store and query vector data efficiently in your applications. 
-author: rotabor
-ms.author: rotabor
+author: seesharprun
+ms.author: sidandrews
 ms.reviewer: khelanmodi
 ms.devlang: python
 ms.topic: quickstart-sdk
@@ -29,6 +29,8 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 [!INCLUDE[Prerequisites - Vector Search Quickstart](includes/prerequisite-quickstart-vector-search-model.md)]
 
+> [!TIP]
+> To customize Azure OpenAI model parameters before deployment, see [Customize Azure OpenAI deployment](#customize-azure-openai-deployment-optional) below.
 - [Python](https://www.python.org/downloads/) 3.9 or greater
 
 ## Create data file with vectors
@@ -156,6 +158,9 @@ touch src/utils.py
 
 ----
 
+> [!TIP]
+> Unlike some databases, DocumentDB allows you to create and drop vector indexes at any time after container creation. You don't need to define the vector indexing policy at container creation time.
+
 ## Create code for vector search
 
 
@@ -250,6 +255,8 @@ You see the top five hotels that match the vector search query and their similar
 1. View the data and indexes in the Hotels database.
 
     :::image type="content" source="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" lightbox="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" alt-text="Screenshot of DocumentDB extension showing the Azure DocumentDB collection.":::
+
+[!INCLUDE[Customize OpenAI deployment](./includes/section-quickstart-openai-configuration-vector-search.md)]
 
 ## Clean up resources
 

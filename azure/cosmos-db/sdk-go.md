@@ -1,13 +1,13 @@
 ---
 title: SQL Go, SDK and Resources
 description: Learn all about the API for NoSQL and Go SDK including release dates, retirement dates, and changes made between each version of the Azure Cosmos DB Go SDK.
-author: ealsur
+author: seesharprun
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.devlang: csharp
 ms.topic: reference
 ms.date: 04/24/2024
-ms.author: maquaran
+ms.author: sidandrews
 ms.custom: devx-track-go
 appliesto:
   - ✅ NoSQL
