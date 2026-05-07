@@ -314,9 +314,7 @@ ENABLE_MANAGEMENT_TOOLS=false
 CONNECTION_PROFILES={"prod":{"authMode":"entra","endpoint":"...","tokenScope":"...","allowedHosts":["*.documents.azure.com"]}}
 ```
 
-## Observability
-
-### Audit log
+## Audit log
 
 Every allow or deny decision is written to **stderr** as a single JSON line prefixed with `[MCP-AUDIT]`:
 
@@ -334,10 +332,6 @@ Every allow or deny decision is written to **stderr** as a single JSON line pref
   "principal": { "oid": "...", "sub": "...", "tid": "...", "upn": "...", "name": "..." }
 }
 ```
-
-### Operational logs
-
-Diagnostic logs (startup, transport, errors) also go to stderr. There's no built-in sink integration; ship stderr to your central log platform such as Azure Monitor, Splunk, ELK, or Loki.
 
 ## Limitations
 
