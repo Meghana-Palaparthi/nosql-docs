@@ -17,7 +17,7 @@ This quickstart compares vector index algorithms (DiskANN, HNSW, IVF) in Azure D
 
 [!INCLUDE[Prerequisites](includes/prerequisite-quickstart-vector-index.md)]
 
-- [Java 21 or higher](https://learn.microsoft.com/java/openjdk/download)
+- [Java 21 or higher](/java/openjdk/download)
 
 - [Maven 3.6 or higher](https://maven.apache.org/download.cgi)
 
