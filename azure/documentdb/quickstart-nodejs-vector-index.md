@@ -1,6 +1,6 @@
 ---
-title: Choose and configure vector indexes in Azure DocumentDB using Node.js
-description: Compare vector index algorithms and similarity functions using TypeScript and Node.js in Azure DocumentDB to optimize search performance for your workload.
+title: Quickstart: Choose and configure vector indexes in Azure DocumentDB with TypeScript
+description: Compare vector index algorithms and similarity functions using TypeScript in Azure DocumentDB to optimize search performance for your workload.
 ms.topic: quickstart
 ms.date: 2025-01-30
 author: diberry
@@ -9,7 +9,7 @@ ms.service: azure-documentdb
 ms.subservice: vector-search
 ---
 
-# Quickstart: Choose and configure vector indexes in Azure DocumentDB using Node.js
+# Quickstart: Choose and configure vector indexes in Azure DocumentDB with TypeScript
 
 In this quickstart, you compare three vector index algorithms (DiskANN, HNSW, and IVF) and three similarity functions (cosine, L2, and inner product) to find the optimal configuration for your search workload. This quickstart uses a sample hotel dataset with pre-calculated embeddings from the `text-embedding-3-small` model.
 
@@ -17,28 +17,8 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 ## Prerequisites
 
-- An Azure subscription
-  - If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn)
-- An existing Azure DocumentDB cluster
-  - If you don't have a cluster, create a [new cluster](quickstart-portal)
-  - [Role Based Access Control (RBAC) enabled](how-to-connect-role-based-access-control#enable-microsoft-entra-id-authentication)
-  - [Firewall configured to allow access to your client IP address](how-to-configure-firewall#grant-access-from-your-ip-address)
-  - Your identity must have the **dbOwner** role assigned on the target database
-- [Azure OpenAI resource](/azure/ai-foundry/openai/how-to/create-resource?view=foundry-classic&pivots=cli#create-a-resource)
-  - Custom domain configured
-  - [Role Based Access Control (RBAC) enabled](/azure/developer/ai/keyless-connections)
-  - Your identity must have the **Cognitive Services OpenAI User** role on the Azure OpenAI resource
-  - `text-embedding-3-small` model deployed
-- [Visual Studio Code](https://code.visualstudio.com/download)
-  - [DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb)
-- Use the Bash environment in [Azure Cloud Shell](/azure/cloud-shell/overview). For more information, see [Get started with Azure Cloud Shell](/azure/cloud-shell/quickstart).
+[!INCLUDE[Prerequisites](includes/prerequisite-quickstart-vector-index.md)]
 
-  [![Launch Cloud Shell](../reusable-content/azure-cli/media/hdi-launch-cloud-shell.png)](https://shell.azure.com)
-
-- If you prefer to run CLI reference commands locally, [install](/cli/azure/install-azure-cli) the Azure CLI. If you're running on Windows or macOS, consider running Azure CLI in a Docker container. For more information, see [How to run the Azure CLI in a Docker container](/cli/azure/run-azure-cli-docker).
-  - If you're using a local installation, sign in to the Azure CLI by using the [az login](/cli/azure/reference-index#az-login) command. To finish the authentication process, follow the steps displayed in your terminal. For other sign-in options, see [Authenticate to Azure using Azure CLI](/cli/azure/authenticate-azure-cli).
-  - When you're prompted, install the Azure CLI extension on first use. For more information about extensions, see [Use and manage extensions with the Azure CLI](/cli/azure/azure-cli-extensions-overview).
-  - Run [az version](/cli/azure/reference-index?#az-version) to find the version and dependent libraries that are installed. To upgrade to the latest version, run [az upgrade](/cli/azure/reference-index?#az-upgrade).
 - [Node.js LTS](https://nodejs.org/download/)
 - [TypeScript](https://www.typescriptlang.org/download) 5.x or greater
 

@@ -1,5 +1,5 @@
 ---
-title: Compare and choose vector index algorithms with Java
+title: Quickstart: Choose and configure vector indexes in Azure DocumentDB with Java
 description: Test and compare DiskANN, HNSW, and IVF vector indexes in Azure DocumentDB using Java to select the best algorithm for your vector search workload.
 ms.topic: quickstart
 ms.date: 2025-01-13
@@ -9,7 +9,7 @@ ms.service: azure-documentdb
 ms.subservice: vector-search
 ---
 
-# Compare and choose vector index algorithms with Java
+# Quickstart: Choose and configure vector indexes in Azure DocumentDB with Java
 
 This quickstart compares vector index algorithms (DiskANN, HNSW, IVF) in Azure DocumentDB using Java to help you select the best configuration for your vector search workload. The sample uses the same hotel dataset with pre-calculated vectors as the other quickstarts to demonstrate performance differences across algorithms and similarity functions.
 
@@ -17,35 +17,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 ## Prerequisites
 
-- An Azure subscription
-  - If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn)
-
-- An existing Azure DocumentDB cluster
-  - If you don't have a cluster, create a [new cluster](quickstart-portal)
-  - [Role Based Access Control (RBAC) enabled](how-to-connect-role-based-access-control#enable-microsoft-entra-id-authentication)
-  - [Firewall configured to allow access to your client IP address](how-to-configure-firewall#grant-access-from-your-ip-address)
-  - Your identity must have the **dbOwner** role assigned on the target database
-
-- [Azure OpenAI resource](/azure/ai-foundry/openai/how-to/create-resource?view=foundry-classic&pivots=cli#create-a-resource)
-  - Custom domain configured
-  - [Role Based Access Control (RBAC) enabled](/azure/developer/ai/keyless-connections)
-  - Your identity must have the **Cognitive Services OpenAI User** role on the Azure OpenAI resource
-  - `text-embedding-3-small` model deployed
-
-- [Visual Studio Code](https://code.visualstudio.com/download)
-  - [DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb)
-
-- Use the Bash environment in [Azure Cloud Shell](/azure/cloud-shell/overview). For more information, see [Get started with Azure Cloud Shell](/azure/cloud-shell/quickstart).
-  
-  [![Launch Cloud Shell in a new window](../reusable-content/azure-cli/media/hdi-launch-cloud-shell.png)](https://shell.azure.com)
-
-- If you prefer to run CLI reference commands locally, [install](/cli/azure/install-azure-cli) the Azure CLI. If you're running on Windows or macOS, consider running Azure CLI in a Docker container. For more information, see [How to run the Azure CLI in a Docker container](/cli/azure/run-azure-cli-docker).
-
-  - If you're using a local installation, sign in to the Azure CLI by using the [az login](/cli/azure/reference-index#az-login) command. To finish the authentication process, follow the steps displayed in your terminal. For other sign-in options, see [Authenticate to Azure using Azure CLI](/cli/azure/authenticate-azure-cli).
-
-  - When you're prompted, install the Azure CLI extension on first use. For more information about extensions, see [Use and manage extensions with the Azure CLI](/cli/azure/azure-cli-extensions-overview).
-
-  - Run [az version](/cli/azure/reference-index?#az-version) to find the version and dependent libraries that are installed. To upgrade to the latest version, run [az upgrade](/cli/azure/reference-index?#az-upgrade).
+[!INCLUDE[Prerequisites](includes/prerequisite-quickstart-vector-index.md)]
 
 - [Java 21 or higher](https://learn.microsoft.com/java/openjdk/download)
 
