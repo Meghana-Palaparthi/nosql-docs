@@ -28,6 +28,49 @@ The Model Context Protocol is an open JSON-RPC protocol that standardizes how a 
 
 A typical deployment has one **MCP host** (the application running the LLM, such as GitHub Copilot CLI, Claude Desktop, VS Code, or a Microsoft Foundry agent) connected to one or more **MCP servers** that expose tools, resources, and prompts. Communication runs over **stdio**, **streamable HTTP**, or **SSE**.
 
+## Key features
+
+### Enterprise-grade security
+
+- **Microsoft Entra ID authentication** — Token-based access with role-based authorization on every tool call.
+- **Managed identity support** — No connection strings or shared secrets in production; the server exchanges its workload identity for a DocumentDB access token.
+- **Role-based access** — Each tool is gated on a `read`, `write`, or `management` role; capability flags let operators disable entire tool classes.
+- **Secure communication** — TLS-only transport to the DocumentDB cluster; HTTPS endpoints with bearer-token auth between MCP clients and the server.
+- **Safety guardrails** — Retype-to-confirm on destructive tools (`drop_database`, `drop_collection`, `drop_index`, `rename_collection`) and a write-stage guard that blocks `$out` / `$merge` in `aggregate` unless explicitly allowed.
+
+### Production-ready deployment
+
+- **Azure Container Apps hosting** — Scalable, managed container deployment with autoscale and revisions.
+- **One-click deployment** — Bicep templates provision the server, Container Apps environment, and identity bindings in a single step.
+- **Health monitoring** — Built-in liveness and readiness probes; structured logs and an `[MCP-AUDIT]` JSON stream for every allow or deny decision.
+- **Web testing interface** — Browser-based tool inspector for validating connection profiles, role gating, and tool responses end to end.
+
+### Capabilities
+
+This toolkit provides:
+
+- **Secure MCP server** — Microsoft Entra–authenticated endpoint for AI agents and MCP-aware clients.
+- **Azure DocumentDB integration** — Full CRUD, aggregation, vector search via `cosmosSearch`, full-text search via `createSearchIndexes`, and schema discovery through document sampling.
+- **Foundry-ready** — Streamable HTTP transport with managed identity for direct integration with Microsoft Foundry agents.
+- **Enterprise security** — Microsoft Entra ID, managed identity, role hierarchy, and per-tool capability flags.
+- **Production-ready** — Azure Container Apps hosting with Bicep-based provisioning.
+- **Local development** — Docker Compose and Node.js workflows for local stdio-based use with Copilot CLI, Claude Desktop, and VS Code.
+
+## Prerequisites
+
+Before you deploy the Azure DocumentDB MCP Toolkit:
+
+- **Azure subscription** with Contributor or Owner access. [Create a free account](https://azure.microsoft.com/free/).
+- **Azure CLI** installed and signed in. [Install Azure CLI](/cli/azure/install-azure-cli).
+- **PowerShell 7+** for the deployment scripts. [Install PowerShell](/powershell/scripting/install/installing-powershell).
+- **Existing Azure DocumentDB cluster** with data — the toolkit connects to your existing cluster and doesn't provision one.
+- **Microsoft Entra ID permissions** to register an application and assign roles on the DocumentDB cluster.
+- **Azure Container Apps quota** in your target region.
+- **Azure OpenAI service** if you plan to enable vector search capabilities (for embedding generation).
+- *Optional:* **Docker Desktop** for local container development. [Install Docker Desktop](https://www.docker.com/products/docker-desktop/).
+- *Optional:* **Node.js 20+** for running the server locally outside containers. [Install Node.js](https://nodejs.org/).
+- *Optional:* **Microsoft Foundry project** if you want to surface the toolkit to Foundry agents.
+
 ## Use cases
 
 | Use case | Example |
