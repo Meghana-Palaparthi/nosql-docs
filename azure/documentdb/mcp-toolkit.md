@@ -130,10 +130,6 @@ Each profile's `allowedHosts` allowlist enforces that the resolved endpoint matc
 
 ### Role hierarchy
 
-```
-management ⊃ write ⊃ read
-```
-
 A `management` caller can invoke `write` and `read` tools; a `write` caller can invoke `read` tools.
 
 Roles are derived from JWT claims (`roles`, `groups`, or `scp`) and mapped through these variables:
