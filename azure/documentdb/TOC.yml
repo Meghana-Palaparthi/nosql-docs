@@ -84,6 +84,8 @@
       items:
         - name: AI Frameworks
           href: ai-frameworks.md
+        - name: MCP Toolkit
+          href: mcp-toolkit.md
     - name: Connect using Spark connector from Azure Databricks
       href: how-to-connect-from-databricks.md
 - name: Architect secure solutions
