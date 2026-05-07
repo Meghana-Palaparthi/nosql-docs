@@ -38,12 +38,11 @@ A typical deployment has one **MCP host** (the application running the LLM, such
 - **Secure communication** — TLS-only transport to the DocumentDB cluster; HTTPS endpoints with bearer-token auth between MCP clients and the server.
 - **Safety guardrails** — Retype-to-confirm on destructive tools (`drop_database`, `drop_collection`, `drop_index`, `rename_collection`) and a write-stage guard that blocks `$out` / `$merge` in `aggregate` unless explicitly allowed.
 
-### Production-ready deployment
+### Flexible deployment
 
-- **Azure Container Apps hosting** — Scalable, managed container deployment with autoscale and revisions.
-- **One-click deployment** — Bicep templates provision the server, Container Apps environment, and identity bindings in a single step.
-- **Health monitoring** — Built-in liveness and readiness probes; structured logs and an `[MCP-AUDIT]` JSON stream for every allow or deny decision.
-- **Web testing interface** — Browser-based tool inspector for validating connection profiles, role gating, and tool responses end to end.
+- **Multiple transports** — Run over `stdio` for local agents (Copilot CLI, Claude Desktop, VS Code) or `streamable-http` / `sse` for shared and production deployments.
+- **Run anywhere** — Self-host on Azure Container Apps, AKS, a VM, or any container runtime; the server is a standard Node.js 20+ container with no Azure-specific runtime dependencies.
+- **Auditable operations** — Structured logs and an `[MCP-AUDIT]` JSON stream record every allow or deny decision for ingestion into Log Analytics, Application Insights, or any log aggregator.
 
 ### Capabilities
 
@@ -52,21 +51,18 @@ This toolkit provides:
 - **Secure MCP server** — Microsoft Entra–authenticated endpoint for AI agents and MCP-aware clients.
 - **Azure DocumentDB integration** — Full CRUD, aggregation, vector search via `cosmosSearch`, full-text search via `createSearchIndexes`, and schema discovery through document sampling.
 - **Enterprise security** — Microsoft Entra ID, managed identity, role hierarchy, and per-tool capability flags.
-- **Production-ready** — Azure Container Apps hosting with Bicep-based provisioning.
-- **Local development** — Docker Compose and Node.js workflows for local stdio-based use with Copilot CLI, Claude Desktop, and VS Code.
+- **Local development** — Docker and Node.js workflows for local stdio-based use with Copilot CLI, Claude Desktop, and VS Code.
 
 ## Prerequisites
 
 Before you deploy the Azure DocumentDB MCP Toolkit:
 
-- **Azure subscription** with Contributor or Owner access. [Create a free account](https://azure.microsoft.com/free/).
+- **Azure subscription** with access to your Azure DocumentDB cluster. [Create a free account](https://azure.microsoft.com/free/).
 - **Azure CLI** installed and signed in. [Install Azure CLI](/cli/azure/install-azure-cli).
-- **PowerShell 7+** for the deployment scripts. [Install PowerShell](/powershell/scripting/install/installing-powershell).
 - **Existing Azure DocumentDB cluster** with data — the toolkit connects to your existing cluster and doesn't provision one.
-- **Microsoft Entra ID permissions** to register an application and assign roles on the DocumentDB cluster.
-- **Azure Container Apps quota** in your target region.
-- **Azure OpenAI service** if you plan to enable vector search capabilities (for embedding generation).
-- *Optional:* **Docker Desktop** for local container development. [Install Docker Desktop](https://www.docker.com/products/docker-desktop/).
+- **Microsoft Entra ID permissions** to register an application and assign roles on the DocumentDB cluster (required for `streamable-http` / `sse` deployments).
+- *Optional:* **Azure OpenAI service** if you plan to use vector search through the toolkit (for embedding generation in your agent).
+- *Optional:* **Docker** for local container development. [Install Docker Desktop](https://www.docker.com/products/docker-desktop/).
 - *Optional:* **Node.js 20+** for running the server locally outside containers. [Install Node.js](https://nodejs.org/).
 
 
