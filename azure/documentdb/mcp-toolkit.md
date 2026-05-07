@@ -26,7 +26,7 @@ The Model Context Protocol is an open JSON-RPC protocol that standardizes how a 
 - **Resources** – addressable read-only data the host can attach to context.
 - **Prompts** – reusable templates.
 
-A typical deployment has one **MCP host** (the application running the LLM, such as GitHub Copilot CLI, Claude Desktop, or VS Code) connected to one or more **MCP servers** that expose tools, resources, and prompts. Communication runs over **stdio**, **streamable HTTP**, or **SSE**.
+A typical deployment has one **MCP host** (the application running the LLM, such as GitHub Copilot CLI, Claude Code, or VS Code) connected to one or more **MCP servers** that expose tools, resources, and prompts. Communication runs over **stdio**, **streamable HTTP**, or **SSE**.
 
 ## Use cases
 
@@ -37,7 +37,7 @@ A typical deployment has one **MCP host** (the application running the LLM, such
 | Schema discovery for agent grounding | Sample-based shape inference for prompt construction |
 | Read-only analytics through agents | Aggregations, filtered counts, sample projections |
 | Controlled write operations | Inserts, updates, deletes guarded by RBAC, capability flags, and confirmation |
-| Data-aware copilots | Local stdio MCP integration with Copilot CLI, Claude Desktop, or VS Code |
+| Data-aware copilots | Local stdio MCP integration with Copilot CLI, Claude Code, or VS Code |
 
 ## Key features
 
@@ -51,13 +51,13 @@ A typical deployment has one **MCP host** (the application running the LLM, such
 
 ### Flexible deployment
 
-- **Multiple transports** — Run over `stdio` for local agents (Copilot CLI, Claude Desktop, VS Code) or `streamable-http` / `sse` for shared and production deployments.
+- **Multiple transports** — Run over `stdio` for local agents (Copilot CLI, Claude Code, VS Code) or `streamable-http` / `sse` for shared and production deployments.
 - **Run anywhere** — Self-host on Azure Container Apps, AKS, a VM, or any container runtime; the server is a standard Node.js 20+ container with no Azure-specific runtime dependencies.
 - **Auditable operations** — Structured logs and an `[MCP-AUDIT]` JSON stream record every allow or deny decision for ingestion into Log Analytics, Application Insights, or any log aggregator.
 
 ## Architecture
 
-:::image type="content" source="media/mcp-toolkit/architecture.png" alt-text="Architecture diagram showing MCP clients (Copilot CLI, Claude Desktop, VS Code) communicating over JSON-RPC with the DocumentDB MCP server, which applies flexible transports, a pre-auth security gate, and the dbGuard security chokepoint before connecting to an Azure DocumentDB cluster over the MongoDB wire protocol with TLS." lightbox="media/mcp-toolkit/architecture.png" border="false":::
+:::image type="content" source="media/mcp-toolkit/architecture.png" alt-text="Architecture diagram showing MCP clients (Copilot CLI, Claude Code, VS Code) communicating over JSON-RPC with the DocumentDB MCP server, which applies flexible transports, a pre-auth security gate, and the dbGuard security chokepoint before connecting to an Azure DocumentDB cluster over the MongoDB wire protocol with TLS." lightbox="media/mcp-toolkit/architecture.png" border="false":::
 
 ## Tool catalog
 
@@ -119,9 +119,17 @@ In `~/.copilot/mcp-config.json`:
 }
 ```
 
-### Claude Desktop
+### Claude Code
 
-Use the same JSON shape under `mcpServers` in `%APPDATA%\Claude\claude_desktop_config.json` (Windows) or `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS).
+Either add the server to `.mcp.json` at your project root using the same JSON shape as the GitHub Copilot CLI configuration, or register it from the command line:
+
+```bash
+claude mcp add DocumentDB \
+  -e TRANSPORT=stdio \
+  -e ALLOW_UNAUTHENTICATED_STDIO=true \
+  -e 'CONNECTION_PROFILES={"local":{"authMode":"connectionString","uri":"mongodb://localhost:27017"}}' \
+  -- npx -y github:microsoft/documentdb-mcp
+```
 
 ### Visual Studio Code
 
@@ -231,7 +239,7 @@ Define profiles either inline in `CONNECTION_PROFILES` or in a JSON file referen
 
 | Topology | Transport | MCP auth | Backend auth | Use case |
 | --- | --- | --- | --- | --- |
-| Local development with Copilot CLI, Claude, or VS Code | `stdio` | Unauthenticated (trusted machine) | `connectionString` to local DocumentDB | Single developer. |
+| Local development with Copilot CLI, Claude Code, or VS Code | `stdio` | Unauthenticated (trusted machine) | `connectionString` to local DocumentDB | Single developer. |
 | Self-hosted shared agent | `streamable-http` | Microsoft Entra | Microsoft Entra (managed identity) | Team-shared MCP endpoint behind a reverse proxy. |
 | Azure Container Apps or AKS | `streamable-http` | Microsoft Entra | Microsoft Entra (workload identity) | Production multi-tenant deployment. |
 
