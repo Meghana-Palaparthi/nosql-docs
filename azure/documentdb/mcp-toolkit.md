@@ -44,15 +44,6 @@ A typical deployment has one **MCP host** (the application running the LLM, such
 - **Run anywhere** — Self-host on Azure Container Apps, AKS, a VM, or any container runtime; the server is a standard Node.js 20+ container with no Azure-specific runtime dependencies.
 - **Auditable operations** — Structured logs and an `[MCP-AUDIT]` JSON stream record every allow or deny decision for ingestion into Log Analytics, Application Insights, or any log aggregator.
 
-### Capabilities
-
-This toolkit provides:
-
-- **Secure MCP server** — Microsoft Entra–authenticated endpoint for AI agents and MCP-aware clients.
-- **Azure DocumentDB integration** — Full CRUD, aggregation, indexing, and schema discovery through document sampling. Vector and full-text searches are issued through the `aggregate` tool against indexes you've created on the cluster (no first-class vector-search or text-search tool).
-- **Enterprise security** — Microsoft Entra ID, managed identity, role hierarchy, and per-tool capability flags.
-- **Local development** — Docker and Node.js workflows for local stdio-based use with Copilot CLI, Claude Desktop, and VS Code.
-
 ## Prerequisites
 
 Before you deploy the Azure DocumentDB MCP Toolkit:
@@ -111,20 +102,20 @@ The server registers 18 tools. Every tool requires a `connection_profile` argume
 ### MCP-side authentication (HTTP and SSE)
 
 - Microsoft Entra ID JWT bearer tokens.
-- Issuer is fixed to `https://login.microsoftonline.com/<ENTRA_TENANT_ID>/v2.0`.
-- The audience must match `ENTRA_AUDIENCE` (Application ID URI or client ID).
-- Signatures are validated via JWKS.
-- Authentication is required by default (`AUTH_REQUIRED=true`). On `stdio`, authentication is skipped only when `ALLOW_UNAUTHENTICATED_STDIO=true`, intended for trusted local development.
+- The server validates the JWT issuer, audience, and signature (via JWKS) against the tenant and audience that the operator configures.
+- Authentication is required by default. On `stdio`, authentication can be skipped only behind an explicit opt-in, intended for trusted local development.
 - Authentication failures return JSON-RPC error code `-32001` and HTTP 401.
+
+For the exact environment variables, see [Configuration reference](#configuration-reference).
 
 ### Backend authentication
 
 Each connection profile uses one of two modes:
 
-- **`entra`** – the server uses `DefaultAzureCredential` (Azure CLI, managed identity, workload identity, Visual Studio, and so on) to acquire an OAuth 2.0 token for the configured `tokenScope` and presents it to the cluster. **No database password on disk.**
-- **`connectionString`** – the server reads the URI inline (`uri`) or from a named environment variable (`uriEnv`). Suitable for local development.
+- **`entra`** – the server uses `DefaultAzureCredential` (Azure CLI, managed identity, workload identity, Visual Studio, and so on) to acquire an OAuth 2.0 token for the configured token scope and presents it to the cluster. **No database password on disk.**
+- **`connectionString`** – the server reads the URI from configuration. Suitable for local development.
 
-Each profile's `allowedHosts` allowlist enforces that the resolved endpoint matches an expected host pattern, mitigating misconfigured profiles.
+Each profile's `allowedHosts` allowlist enforces that the resolved endpoint matches an expected host pattern, mitigating misconfigured profiles. Profile structure and configuration variables are in [Configuration reference](#configuration-reference).
 
 ## Authorization
 
@@ -336,25 +327,6 @@ Diagnostic logs (startup, transport, errors) also go to stderr. There's no built
 ### Metrics
 
 There's no first-party metrics endpoint. Instrument at the reverse-proxy or sidecar layer if needed.
-
-## Security properties
-
-| Property | Status |
-| --- | --- |
-| Connection strings excluded from MCP arguments | Yes — architectural invariant. |
-| Default-deny for write and management capabilities | Yes — capability flags off by default. |
-| Pre-auth rate limiting on HTTP and SSE | Yes — 120 requests per IP per 60 seconds by default. |
-| JWT issuer, audience, and signature validation | Yes — via JWKS. |
-| Hierarchical role model (read ⊂ write ⊂ management) | Yes. |
-| Retype-to-confirm on irreversible destructive operations | Yes — `drop_database`, `drop_collection`, `drop_index`. |
-| `$out` and `$merge` blocked by default in `aggregate` | Yes. |
-| Allowed-host allowlist per profile | Yes. |
-| Stdio unauthenticated only behind explicit flag | Yes. |
-| Audit log of every allow or deny | Yes — to stderr. |
-| Backend Microsoft Entra (no database password on disk) | Yes — recommended path. |
-| Data masking | Not supported. |
-| Field-level RBAC inside the server | Not supported. |
-| Per-identity quotas | Not supported (per-IP only). |
 
 ## Limitations
 
