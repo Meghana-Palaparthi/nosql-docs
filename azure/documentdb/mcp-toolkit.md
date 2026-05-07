@@ -97,16 +97,6 @@ Before you deploy the Azure DocumentDB MCP Toolkit:
 - *Optional:* **Node.js 20+** for running the server locally outside containers. [Install Node.js](https://nodejs.org/).
 
 
-## Deployment topologies
-
-| Topology | Transport | MCP auth | Backend auth | Use case |
-| --- | --- | --- | --- | --- |
-| Local development with Copilot CLI, Claude, or VS Code | `stdio` | Unauthenticated (trusted machine) | `connectionString` to local DocumentDB | Single developer. |
-| Self-hosted shared agent | `streamable-http` | Microsoft Entra | Microsoft Entra (managed identity) | Team-shared MCP endpoint behind a reverse proxy. |
-| Azure Container Apps or AKS | `streamable-http` | Microsoft Entra | Microsoft Entra (workload identity) | Production multi-tenant deployment. |
-
-In Azure, prefer the `entra` profile mode with a managed identity granted backend access through the cluster's RBAC. This avoids storing database credentials at rest.
-
 ## Quickstart configurations
 
 ### GitHub Copilot CLI
@@ -236,6 +226,16 @@ Define profiles either inline in `CONNECTION_PROFILES` or in a JSON file referen
   }
 }
 ```
+
+## Deployment topologies
+
+| Topology | Transport | MCP auth | Backend auth | Use case |
+| --- | --- | --- | --- | --- |
+| Local development with Copilot CLI, Claude, or VS Code | `stdio` | Unauthenticated (trusted machine) | `connectionString` to local DocumentDB | Single developer. |
+| Self-hosted shared agent | `streamable-http` | Microsoft Entra | Microsoft Entra (managed identity) | Team-shared MCP endpoint behind a reverse proxy. |
+| Azure Container Apps or AKS | `streamable-http` | Microsoft Entra | Microsoft Entra (workload identity) | Production multi-tenant deployment. |
+
+In Azure, prefer the `entra` profile mode with a managed identity granted backend access through the cluster's RBAC. This avoids storing database credentials at rest.
 
 ## Authentication
 
