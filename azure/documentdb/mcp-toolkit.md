@@ -18,7 +18,7 @@ The toolkit is a **tools-only** server: database connection details (endpoints, 
 > [!NOTE]
 > The MCP Toolkit is in public preview. Interfaces, configuration, and tool behavior may change.
 
-## What the Model Context Protocol is
+## What is MCP?
 
 The Model Context Protocol is an open JSON-RPC protocol that standardizes how a large language model (LLM) client discovers and invokes:
 
