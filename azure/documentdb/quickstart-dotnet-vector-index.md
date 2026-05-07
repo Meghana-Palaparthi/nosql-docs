@@ -19,17 +19,43 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 [!INCLUDE[Prerequisites](includes/prerequisite-quickstart-vector-index.md)]
 
-- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) or later
+- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) or later. .NET 9.0 is a Standard Term Support (STS) release. Use the latest available .NET SDK for long-term production workloads.
 
 ## Create data file with vectors
 
 1. Create a new data directory for the hotels data file:
 
+   **Bash:**
+
    ```bash
    mkdir data
    ```
 
-2. Copy the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory.
+   **PowerShell:**
+
+   ```powershell
+   New-Item -ItemType Directory -Name data
+   ```
+
+2. Download the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory:
+
+   **Bash:**
+
+   ```bash
+   curl -o data/Hotels_Vector.json https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json
+   ```
+
+   **PowerShell:**
+
+   ```powershell
+   Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json" -OutFile "data/Hotels_Vector.json"
+   ```
+
+   Verify the file downloaded successfully:
+
+   ```bash
+   ls data/Hotels_Vector.json
+   ```
 
 ## Create a .NET project
 
@@ -39,6 +65,12 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    mkdir select-algorithm-dotnet
    cd select-algorithm-dotnet
    dotnet new console --framework net9.0
+   ```
+
+   Verify the project was created:
+
+   ```bash
+   ls *.csproj
    ```
 
 2. Install the required NuGet packages:
@@ -61,6 +93,12 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    - `Azure.Identity`: Azure Identity library for passwordless authentication with DefaultAzureCredential
    - `MongoDB.Driver`: MongoDB driver for .NET to interact with DocumentDB
    - `Microsoft.Extensions.*`: Configuration, dependency injection, and logging infrastructure
+
+   Verify installed packages:
+
+   ```bash
+   dotnet list package
+   ```
 
 3. Create environment variables for authentication. The sample uses DefaultAzureCredential for passwordless authentication:
 
@@ -978,31 +1016,38 @@ Each algorithm has tuning parameters that control the accuracy/performance trade
 - `numLists`: More lists improve speed but may reduce accuracy
 - `nProbes`: Higher values (1-10) improve accuracy but slow queries
 
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| `TimeoutException` during connection | Verify your connection string and environment variables. Ensure your IP is in the DocumentDB firewall rules. |
+| `AuthenticationException` | Check that `DefaultAzureCredential` can acquire a token. Run `az login` to refresh your credentials. |
+| Build errors with .NET version | Ensure you have .NET 9.0 or later installed. Run `dotnet --version` to check. |
+| `BsonSerializationException` | Ensure your model classes match the document structure in the collection. |
+| Empty search results | The vector index might not be ready yet. The sample includes retry logic, but if you still see empty results, wait a few seconds and retry. |
+| `IndexOptionsConflict` (code 85) | DocumentDB doesn't allow multiple vector indexes of the same kind on the same field. Drop the existing index before creating a new one. |
+
 ## Clean up resources
 
-This sample creates collections that persist in your DocumentDB database. To remove them:
+When you're done, you can remove the database using mongosh or the Azure portal.
 
-1. Use the Azure portal to delete collections starting with `hotels_`.
-2. Or use the MongoDB shell:
+### [mongosh](#tab/mongosh)
 
-   ```javascript
-   use Hotels
-   db.hotels_diskann_cos.drop()
-   db.hotels_diskann_l2.drop()
-   db.hotels_diskann_ip.drop()
-   db.hotels_hnsw_cos.drop()
-   db.hotels_hnsw_l2.drop()
-   db.hotels_hnsw_ip.drop()
-   db.hotels_ivf_cos.drop()
-   db.hotels_ivf_l2.drop()
-   db.hotels_ivf_ip.drop()
-   ```
+Connect to your DocumentDB cluster and drop the database:
 
-3. To delete the entire database:
+```bash
+mongosh "<your-connection-string>"
+use Hotels
+db.dropDatabase()
+```
 
-   ```bash
-   az documentdb database delete --resource-group <resource-group> --name <cluster-name> --database-name Hotels
-   ```
+### [Azure portal](#tab/portal)
+
+1. Navigate to your DocumentDB resource in the Azure portal.
+2. Select **Data Explorer**.
+3. Right-click the **Hotels** database and select **Delete Database**.
+
+---
 
 ## Next steps
 
