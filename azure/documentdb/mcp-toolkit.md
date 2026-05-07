@@ -28,7 +28,7 @@ The Model Context Protocol is an open JSON-RPC protocol that standardizes how a 
 
 A typical deployment has one **MCP host** (the application running the LLM, such as GitHub Copilot CLI, Claude Desktop, VS Code, or a Microsoft Foundry agent) connected to one or more **MCP servers** that expose tools, resources, and prompts. Communication runs over **stdio**, **streamable HTTP**, or **SSE**.
 
-## What the toolkit is for
+## Use cases
 
 | Use case | Example |
 | --- | --- |
