@@ -26,15 +26,43 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 1. Create a new data directory for the hotels data file:
 
+   ### [Bash](#tab/bash)
+
    ```bash
    mkdir data
    ```
 
-2. Copy the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory.
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   New-Item -ItemType Directory -Name data
+   ```
+
+   ---
+
+2. Download the `Hotels_Vector.json` data file with vectors to your `data` directory:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   curl -o data/Hotels_Vector.json https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json" -OutFile "data/Hotels_Vector.json"
+   ```
+
+   ---
+
+   Verify: `ls data/Hotels_Vector.json` (Bash) or `Get-ChildItem data\Hotels_Vector.json` (PowerShell).
 
 ## Create a Node.js project
 
 1. Create a new directory for your project and open it in Visual Studio Code:
+
+   ### [Bash](#tab/bash)
 
    ```bash
    mkdir select-algorithm-typescript
@@ -42,11 +70,23 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    code .
    ```
 
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   New-Item -ItemType Directory -Name select-algorithm-typescript
+   Set-Location select-algorithm-typescript
+   code .
+   ```
+
+   ---
+
 2. Initialize a TypeScript Node.js project:
 
    ```bash
    npm init -y
    ```
+
+   Verify: `ls package.json` (Bash) or `Get-ChildItem package.json` (PowerShell).
 
 3. Install the required packages:
 
@@ -60,19 +100,22 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    - `@azure/identity`: Azure Identity library for passwordless authentication
    - `typescript`: TypeScript compiler
 
+   Verify: `npm list` shows all installed packages without errors.
+
 4. Create a `tsconfig.json` file in the project root:
 
    ```json
    {
      "compilerOptions": {
        "target": "ES2022",
-       "module": "ES2022",
-       "moduleResolution": "node",
+       "module": "Node16",
+       "moduleResolution": "Node16",
        "esModuleInterop": true,
        "skipLibCheck": true,
        "forceConsistentCasingInFileNames": true,
        "resolveJsonModule": true,
        "strict": true,
+       "rootDir": "./src",
        "outDir": "./dist"
      },
      "include": ["src/**/*"],
@@ -116,8 +159,10 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    ALGORITHM=all
 
    # SIMILARITY: "all" | "COS" | "L2" | "IP"
-   SIMILARITY=COS
+   SIMILARITY=all
    ```
+
+   Verify: `cat .env` (Bash) or `Get-Content .env` (PowerShell) to confirm all values are set.
 
    For the passwordless authentication used in this article, replace the placeholder values in the `.env` file with your own information:
 
@@ -144,9 +189,19 @@ Create the following project structure:
 
 Create the `src` directory:
 
+### [Bash](#tab/bash)
+
 ```bash
 mkdir src
 ```
+
+### [PowerShell](#tab/powershell)
+
+```powershell
+New-Item -ItemType Directory -Name src
+```
+
+---
 
 ## Create the algorithm comparison code
 
@@ -691,64 +746,69 @@ npm start
 The output shows the comparison across all algorithms and similarity metrics:
 
 ```
-======================================================================
-  COMPARE ALL: 3 Algorithms × 3 Similarity Metrics (9 combinations)
-======================================================================
+Vector Algorithm Comparison
+   Database: Hotels
+   Algorithms: all
+   Similarity: all
+   Collections to query: hotels_diskann_cos, hotels_diskann_l2, hotels_diskann_ip, hotels_hnsw_cos, ...
+   Search query: "quintessential lodging near running trails, eateries, retail"
 
-Query: "luxury hotel near the beach"
-Embedding generated (1536 dimensions)
+Generating query embedding...
+Query embedding: 1536 dimensions
 
-Running searches (top 3 results)...
-  ✓ vector_ivf_cos (created)
-    ✗ vector_ivf_cos (dropped)
-  ✓ vector_ivf_l2 (created)
-    ✗ vector_ivf_l2 (dropped)
-  ...
+--- DiskANN / COS ---
+Collection: hotels_diskann_cos
+Created collection: hotels_diskann_cos
+Inserted: 50/50
+Created vector index: vectorIndex_diskann_cos
+Executing vector search...
+Success: 5 results, 142ms
 
-====================================================================================================
-  COMPARISON RESULTS
-====================================================================================================
-Algorithm   Similarity  #1 Result               #1 Score    #2 Result               #2 Score    Diff
-----------------------------------------------------------------------------------------------------
-IVF         COS         Ocean Water Resort &..  0.6184      Windy Ocean Motel       0.5056      0.1128
-IVF         L2          Ocean Water Resort &..  0.8736      Windy Ocean Motel       0.9943      -0.1208
-IVF         IP          Ocean Water Resort &..  0.6184      Windy Ocean Motel       0.5056      0.1128
-HNSW        COS         Ocean Water Resort &..  0.6184      Windy Ocean Motel       0.5056      0.1128
-HNSW        L2          Ocean Water Resort &..  0.8736      Windy Ocean Motel       0.9943      -0.1208
-HNSW        IP          Ocean Water Resort &..  0.6184      Windy Ocean Motel       0.5056      0.1128
-DiskANN     COS         Ocean Water Resort &..  0.6184      Windy Ocean Motel       0.5056      0.1128
-DiskANN     L2          Ocean Water Resort &..  0.8736      Windy Ocean Motel       0.9943      -0.1208
-DiskANN     IP          Ocean Water Resort &..  0.6184      Windy Ocean Motel       0.5056      0.1128
-----------------------------------------------------------------------------------------------------
+...
 
-====================================================================================================
-  KEY INSIGHTS
-====================================================================================================
-  🎯 Highest #1 score:   IVF/COS (0.6184)
-  📊 Biggest separation: IVF/COS (diff: 0.1128)
-  🔑 All algorithms return the same top results — algorithm choice
-     affects performance at scale, not accuracy on small datasets.
-  📐 COS and IP produce identical scores (normalized embeddings).
-  📏 L2 scores are distances (lower = closer), not similarities.
-====================================================================================================
+==========================================================================================
+                    Vector Algorithm Comparison Results
+==========================================================================================
+Algorithm   Similarity    Top Result              Score       Latency(ms)
+------------------------------------------------------------------------------------------
+DiskANN     COS           Ocean Water Resort &    0.6184      142
+DiskANN     L2            Ocean Water Resort &    0.8736      128
+DiskANN     IP            Ocean Water Resort &    0.6184      135
+HNSW        COS           Ocean Water Resort &    0.6184      119
+HNSW        L2            Ocean Water Resort &    0.8736      115
+HNSW        IP            Ocean Water Resort &    0.6184      121
+IVF         COS           Ocean Water Resort &    0.6184      108
+IVF         L2            Ocean Water Resort &    0.8736      105
+IVF         IP            Ocean Water Resort &    0.6184      110
+==========================================================================================
 
-Cleanup: dropped collection "hotels"
+--- DiskANN / COS (hotels_diskann_cos) ---
+  1. Ocean Water Resort & Spa, Score: 0.6184
+  2. Windy Ocean Motel, Score: 0.5056
+  3. Gastronomic Landscape Hotel, Score: 0.4892
+  4. Sublime Palace Hotel, Score: 0.4753
+  5. Luxury Lion Resort, Score: 0.4612
+  Latency: 142ms
+...
+
+Closing database connection...
 Database connection closed
 ```
 
+> [!NOTE]
+> Latency values are approximate and vary by environment. Scores may differ slightly depending on your Azure OpenAI embedding deployment.
+
 ### Test individual algorithms
 
-Test a specific algorithm with cosine similarity:
+To test a specific algorithm, update the `ALGORITHM` and `SIMILARITY` values in your `.env` file:
 
 ```bash
-# IVF (Inverted File Index)
-npm run start:ivf
+# Edit .env to set specific values, for example:
+# ALGORITHM=ivf
+# SIMILARITY=COS
 
-# HNSW (Hierarchical Navigable Small World)
-npm run start:hnsw
-
-# DiskANN
-npm run start:diskann
+npm run build
+npm start
 ```
 
 ### Understanding the results
@@ -789,43 +849,43 @@ Tuning parameters affect the recall/latency tradeoff at both index build and que
 
 Higher build values improve index quality but slow creation. Higher search values improve recall but increase latency.
 
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| `MongoServerSelectionError` | Verify your connection string in `.env`. Ensure your IP is in the DocumentDB firewall rules. |
+| `MongoServerError: Authentication failed` | Check credentials in connection string. Verify you've run `az login` for passwordless auth. |
+| TypeScript compilation errors | Run `npx tsc --version` to verify TypeScript is installed. Check `tsconfig.json` settings match the values shown in this article. |
+| `Cannot find module` errors | Run `npm install` to ensure all dependencies are installed. |
+| `Embedding dimension mismatch` | Verify `AZURE_OPENAI_EMBEDDING_MODEL` in `.env` matches the model deployed in your Azure OpenAI resource. |
+| Empty search results | The vector index may not be ready yet. The code includes retry logic, but if the dataset is large, increase the wait time. |
+
 ## Clean up resources
 
-If you created an Azure DocumentDB cluster specifically for this quickstart, you can delete the resource group to remove all associated resources:
+When you're done, you can remove the database using `mongosh` or the Azure portal.
 
-```azurecli
-az group delete --name <resource-group-name>
+### [mongosh](#tab/mongosh)
+
+Connect to your DocumentDB cluster and drop the database:
+
+```bash
+mongosh "mongodb+srv://<your-cluster-name>.mongocluster.cosmos.azure.com/" --authenticationMechanism MONGODB-OIDC
 ```
 
-This command deletes the resource group and all resources within it, including the DocumentDB cluster.
-
-If you want to keep the cluster but remove the test data:
-
-```typescript
-import { MongoClient, OIDCCallbackParams } from 'mongodb';
-import { DefaultAzureCredential } from '@azure/identity';
-import { AzureIdentityTokenCallback } from './utils.js';
-
-const clusterName = "<your-cluster-name>";
-const credential = new DefaultAzureCredential();
-
-const client = new MongoClient(
-    `mongodb+srv://${clusterName}.mongocluster.cosmos.azure.com/`, {
-    connectTimeoutMS: 120000,
-    tls: true,
-    retryWrites: false,
-    authMechanism: 'MONGODB-OIDC',
-    authMechanismProperties: {
-        OIDC_CALLBACK: (params: OIDCCallbackParams) =>
-            AzureIdentityTokenCallback(params, credential),
-        ALLOWED_HOSTS: ['*.azure.com']
-    }
-});
-
-await client.connect();
-await client.db("Hotels").dropDatabase();
-await client.close();
+```javascript
+use Hotels
+db.dropDatabase()
 ```
+
+### [Azure portal](#tab/portal)
+
+1. Navigate to your DocumentDB resource in the Azure portal.
+2. Select **Data Explorer**.
+3. Right-click the **Hotels** database and select **Delete Database**.
+
+---
+
+If you created an Azure DocumentDB cluster specifically for this quickstart, you can also delete the entire resource group to remove all associated resources.
 
 ## Next steps
 
