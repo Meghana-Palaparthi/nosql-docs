@@ -84,46 +84,7 @@ The server registers 18 tools across four categories. Every tool requires a `con
 
 ## Architecture
 
-```
-                +----------------------------------------------+
-   MCP client   |  Copilot CLI | Claude Desktop | VS Code | ...|
-                +-----------------------+----------------------+
-                                        | JSON-RPC
-                                        v
-              +-------------------------------------------------+
-              |   DocumentDB MCP Server  (Node.js 20+ / TS)     |
-              |                                                 |
-              |  Transport                                      |
-              |   - stdio                                       |
-              |   - streamable-http  (default, /mcp)            |
-              |   - sse              (/sse)                     |
-              |                                                 |
-              |  Pre-auth gate (HTTP / SSE only)                |
-              |   - Per-IP rate limit                           |
-              |   - JWT verification (issuer, audience, JWKS)   |
-              |                                                 |
-              |  dbGuard chokepoint                             |
-              |   1. Capability flag check                      |
-              |   2. Role check                                 |
-              |   3. Confirmation token (destructive ops)       |
-              |   4. Profile resolution                         |
-              |   5. Audit allow / deny                         |
-              |                                                 |
-              |  Tool handlers (Zod-validated input)            |
-              |                                                 |
-              |  Connection layer                               |
-              |   - MongoClient pool                            |
-              |   - authMode: connectionString | entra          |
-              |   - allowedHosts allowlist                      |
-              +-----------------------+-------------------------+
-                                      | MongoDB wire protocol (TLS)
-                                      v
-              +-------------------------------------------------+
-              |              Azure DocumentDB cluster           |
-              +-------------------------------------------------+
-
-  Every allow / deny decision -> stderr as [MCP-AUDIT] {json}
-```
+:::image type="content" source="media/mcp-toolkit/architecture.png" alt-text="Architecture diagram showing MCP clients (Copilot CLI, Claude Desktop, VS Code) communicating over JSON-RPC with the DocumentDB MCP server, which applies flexible transports, a pre-auth security gate, and the dbGuard security chokepoint before connecting to an Azure DocumentDB cluster over the MongoDB wire protocol with TLS." lightbox="media/mcp-toolkit/architecture.png":::
 
 ### Request lifecycle
 
