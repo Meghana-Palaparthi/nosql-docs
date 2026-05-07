@@ -42,45 +42,28 @@ A typical deployment has one **MCP host** (the application running the LLM, such
 
 ## Tool catalog
 
-The server registers 18 tools across four categories. Every tool requires a `connection_profile` argument; tool inputs without a valid profile are rejected.
+The server registers 18 tools. Every tool requires a `connection_profile` argument; tool inputs without a valid profile are rejected.
 
-### Database tools
-
-| Tool | Required role | Notes |
-| --- | --- | --- |
-| `list_databases` | `read` | Lists databases on the cluster. |
-| `drop_database` | `management` | Requires `confirm_db_name` retype. |
-
-### Collection tools
-
-| Tool | Required role | Notes |
-| --- | --- | --- |
-| `sample_documents` | `read` | Random sample for schema inference. |
-| `get_statistics` | `read` | `collStats` data. |
-| `current_ops` | `management` | Server-side `currentOp`. |
-| `rename_collection` | `management` | Requires confirmation retype. |
-| `drop_collection` | `management` | Requires `confirm_collection_name` retype. |
-
-### Document tools
-
-| Tool | Required role | Notes |
-| --- | --- | --- |
-| `find_documents` | `read` | Filter, projection, sort, limit, skip. |
-| `count_documents` | `read` | |
-| `aggregate` | `read` (or `write` if pipeline contains `$out` or `$merge`) | Write stages blocked unless `ALLOW_AGGREGATE_WRITE_STAGES=true`. |
-| `explain_operation` | `read` | Query planner output. |
-| `insert_documents` | `write` | |
-| `update_documents` | `write` | |
-| `delete_documents` | `write` | |
-| `find_and_modify` | `write` | |
-
-### Index tools
-
-| Tool | Required role | Notes |
-| --- | --- | --- |
-| `list_indexes` | `read` | |
-| `create_index` | `write` | |
-| `drop_index` | `management` | Requires `confirm_index_name` retype. |
+| Tool | Category | Required role | Notes |
+| --- | --- | --- | --- |
+| `list_databases` | Database | `read` | Lists databases on the cluster. |
+| `drop_database` | Database | `management` | Requires `confirm_db_name` retype. |
+| `sample_documents` | Collection | `read` | Random sample for schema inference. |
+| `get_statistics` | Collection | `read` | `collStats` data. |
+| `current_ops` | Collection | `management` | Server-side `currentOp`. |
+| `rename_collection` | Collection | `management` | Requires confirmation retype. |
+| `drop_collection` | Collection | `management` | Requires `confirm_collection_name` retype. |
+| `find_documents` | Document | `read` | Filter, projection, sort, limit, skip. |
+| `count_documents` | Document | `read` | |
+| `aggregate` | Document | `read` (or `write` if pipeline contains `$out` or `$merge`) | Write stages blocked unless `ALLOW_AGGREGATE_WRITE_STAGES=true`. |
+| `explain_operation` | Document | `read` | Query planner output. |
+| `insert_documents` | Document | `write` | |
+| `update_documents` | Document | `write` | |
+| `delete_documents` | Document | `write` | |
+| `find_and_modify` | Document | `write` | |
+| `list_indexes` | Index | `read` | |
+| `create_index` | Index | `write` | |
+| `drop_index` | Index | `management` | Requires `confirm_index_name` retype. |
 
 ## Architecture
 
@@ -307,18 +290,6 @@ ENABLE_MANAGEMENT_TOOLS=false
 
 CONNECTION_PROFILES={"prod":{"authMode":"entra","endpoint":"...","tokenScope":"...","allowedHosts":["*.documents.azure.com"]}}
 ```
-
-## Example test scenarios
-
-After the toolkit is configured, use these scenarios to confirm that each tool category responds end to end. Each row lists the inputs to provide and the tool to invoke from your MCP client.
-
-| Scenario | Inputs | Tool |
-| --- | --- | --- |
-| List databases | None | Select `list_databases`, then select **Invoke Tool** |
-| Explore containers | Database name | Select `list_collections` |
-| Recent documents | Database name and container name | Select `get_recent_documents` |
-| Search content | Search parameters (query, fields, limit) | Select `text_search` |
-| Vector search | Search text and vector property | Select `vector_search` |
 
 ## Observability
 
