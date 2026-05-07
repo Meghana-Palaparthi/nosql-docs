@@ -49,7 +49,7 @@ A typical deployment has one **MCP host** (the application running the LLM, such
 This toolkit provides:
 
 - **Secure MCP server** — Microsoft Entra–authenticated endpoint for AI agents and MCP-aware clients.
-- **Azure DocumentDB integration** — Full CRUD, aggregation, vector search via `cosmosSearch`, full-text search via `createSearchIndexes`, and schema discovery through document sampling.
+- **Azure DocumentDB integration** — Full CRUD, aggregation, indexing, and schema discovery through document sampling. Vector and full-text searches are issued through the `aggregate` tool against indexes you've created on the cluster (no first-class vector-search or text-search tool).
 - **Enterprise security** — Microsoft Entra ID, managed identity, role hierarchy, and per-tool capability flags.
 - **Local development** — Docker and Node.js workflows for local stdio-based use with Copilot CLI, Claude Desktop, and VS Code.
 
@@ -61,7 +61,7 @@ Before you deploy the Azure DocumentDB MCP Toolkit:
 - **Azure CLI** installed and signed in. [Install Azure CLI](/cli/azure/install-azure-cli).
 - **Existing Azure DocumentDB cluster** with data — the toolkit connects to your existing cluster and doesn't provision one.
 - **Microsoft Entra ID permissions** to register an application and assign roles on the DocumentDB cluster (required for `streamable-http` / `sse` deployments).
-- *Optional:* **Azure OpenAI service** if you plan to use vector search through the toolkit (for embedding generation in your agent).
+- *Optional:* **Azure OpenAI service** if your agent generates embeddings for vector queries that it runs through the `aggregate` tool. Embedding generation happens on the agent side; the toolkit doesn't call Azure OpenAI directly.
 - *Optional:* **Docker** for local container development. [Install Docker Desktop](https://www.docker.com/products/docker-desktop/).
 - *Optional:* **Node.js 20+** for running the server locally outside containers. [Install Node.js](https://nodejs.org/).
 
