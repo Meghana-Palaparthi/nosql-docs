@@ -25,15 +25,43 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 1. Create a new data directory for the hotels data file:
 
+   ### [Bash](#tab/bash)
+
    ```bash
    mkdir data
    ```
 
-2. Copy the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory.
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   New-Item -ItemType Directory -Name data
+   ```
+
+   ---
+
+2. Download the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   curl -o data/Hotels_Vector.json https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json" -OutFile "data/Hotels_Vector.json"
+   ```
+
+   ---
+
+   Verify the download: `ls data/Hotels_Vector.json`
 
 ## Create a Go project
 
 1. Create a new directory for your project and open it in Visual Studio Code:
+
+   ### [Bash](#tab/bash)
 
    ```bash
    mkdir select-algorithm-go
@@ -41,11 +69,23 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    code .
    ```
 
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   New-Item -ItemType Directory -Name select-algorithm-go
+   Set-Location select-algorithm-go
+   code .
+   ```
+
+   ---
+
 2. Initialize a new Go module:
 
    ```bash
    go mod init documentdb-vector-samples
    ```
+
+   Verify: `cat go.mod`
 
 3. Install the required packages:
 
@@ -54,12 +94,15 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    go get github.com/Azure/azure-sdk-for-go/sdk/azidentity@v1.13.1
    go get github.com/openai/openai-go/v3@v3.12.0
    go get go.mongodb.org/mongo-driver@v1.17.6
+   go mod tidy
    ```
 
    - `azcore`: Core Azure SDK functionality for Go
    - `azidentity`: Azure Identity library for passwordless authentication with DefaultAzureCredential
    - `openai-go/v3`: OpenAI client library with Azure support to generate embeddings
    - `mongo-driver`: Official MongoDB driver for Go to work with DocumentDB
+
+   Verify: `go list -m all | grep mongo`
 
 4. Create a `.env` file for environment variables in `select-algorithm-go`:
 
@@ -94,16 +137,29 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
    - `MONGO_CLUSTER_NAME`: Your Azure DocumentDB cluster name (not the full connection string, just the name)
 
+   Verify: `cat .env`
+
    You should always prefer passwordless authentication. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Go apps to Azure services by using the Azure SDK for Go](/azure/developer/go/azure-sdk-authentication).
 
 ## Create code files for vector comparison
 
 Create a `src` directory and add the main application file:
 
+### [Bash](#tab/bash)
+
 ```bash
 mkdir src
 touch src/main.go
 ```
+
+### [PowerShell](#tab/powershell)
+
+```powershell
+New-Item -ItemType Directory -Name src
+New-Item -ItemType File -Path src/main.go
+```
+
+---
 
 When you're done, the project structure should look like this:
 
@@ -935,29 +991,37 @@ ALGORITHM=all
 SIMILARITY=COS
 ```
 
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| `server selection error` | Verify your connection string in `.env`. Ensure your IP is in the DocumentDB firewall rules. |
+| `authentication failed` | Check credentials in connection string. Ensure `DefaultAzureCredential` is configured (run `az login`). |
+| `go: module not found` | Run `go mod tidy` to resolve dependencies. |
+| Build errors | Ensure Go 1.22+ is installed. Run `go version` to check. |
+| Empty search results | The vector index may not be ready yet. The code includes retry logic, but larger datasets may need more time. |
+
 ## Clean up resources
 
-This sample creates multiple collections in your DocumentDB cluster. To remove them:
+When you're done, you can remove the database using mongosh or the Azure portal.
 
-1. Open the DocumentDB extension in Visual Studio Code
-2. Connect to your cluster
-3. Navigate to the `Hotels` database
-4. Delete collections starting with `hotels_` (e.g., `hotels_diskann_cos`, `hotels_hnsw_cos`, `hotels_ivf_cos`)
+### [mongosh](#tab/mongosh)
 
-Or use the MongoDB shell:
+Connect to your DocumentDB cluster and drop the database:
 
-```javascript
+```bash
+mongosh "<your-connection-string>"
 use Hotels
-db.hotels_diskann_cos.drop()
-db.hotels_hnsw_cos.drop()
-db.hotels_ivf_cos.drop()
-db.hotels_diskann_l2.drop()
-db.hotels_hnsw_l2.drop()
-db.hotels_ivf_l2.drop()
-db.hotels_diskann_ip.drop()
-db.hotels_hnsw_ip.drop()
-db.hotels_ivf_ip.drop()
+db.dropDatabase()
 ```
+
+### [Azure portal](#tab/portal)
+
+1. Navigate to your DocumentDB resource in the Azure portal
+2. Select **Data Explorer**
+3. Right-click the **Hotels** database and select **Delete Database**
+
+---
 
 ## Next steps
 
