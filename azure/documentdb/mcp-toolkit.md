@@ -106,21 +106,6 @@ The server registers 18 tools. Every tool requires a `connection_profile` argume
 
 :::image type="content" source="media/mcp-toolkit/architecture.png" alt-text="Architecture diagram showing MCP clients (Copilot CLI, Claude Desktop, VS Code) communicating over JSON-RPC with the DocumentDB MCP server, which applies flexible transports, a pre-auth security gate, and the dbGuard security chokepoint before connecting to an Azure DocumentDB cluster over the MongoDB wire protocol with TLS." lightbox="media/mcp-toolkit/architecture.png" border="false":::
 
-### Request lifecycle
-
-1. The client opens an MCP session over stdio, streamable HTTP, or SSE.
-1. (HTTP/SSE only) A per-IP rate limit is applied **before** authentication.
-1. (HTTP/SSE only) The `Authorization: Bearer <jwt>` header is validated, and the principal is attached to the request context.
-1. The client sends `tools/call` for one of the 18 tools.
-1. The `dbGuard` chokepoint runs in this order, failing fast on the first deny:
-   1. Capability flag check.
-   1. Role check.
-   1. Confirmation token check (destructive operations only).
-   1. Profile resolution.
-1. The tool handler executes the validated operation through a `MongoClient` for the resolved profile.
-1. An audit event is written for the allow.
-1. The result is returned to the client.
-
 ## Authentication
 
 ### MCP-side authentication (HTTP and SSE)
