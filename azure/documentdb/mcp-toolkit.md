@@ -28,6 +28,17 @@ The Model Context Protocol is an open JSON-RPC protocol that standardizes how a 
 
 A typical deployment has one **MCP host** (the application running the LLM, such as GitHub Copilot CLI, Claude Desktop, or VS Code) connected to one or more **MCP servers** that expose tools, resources, and prompts. Communication runs over **stdio**, **streamable HTTP**, or **SSE**.
 
+## Use cases
+
+| Use case | Example |
+| --- | --- |
+| Conversational data exploration | "What's the schema of the `orders` collection?" |
+| AI-assisted DBA tasks | "Create a unique index on `users.email`." |
+| Schema discovery for agent grounding | Sample-based shape inference for prompt construction |
+| Read-only analytics through agents | Aggregations, filtered counts, sample projections |
+| Controlled write operations | Inserts, updates, deletes guarded by RBAC, capability flags, and confirmation |
+| Data-aware copilots | Local stdio MCP integration with Copilot CLI, Claude Desktop, or VS Code |
+
 ## Key features
 
 ### Enterprise-grade security
@@ -44,29 +55,9 @@ A typical deployment has one **MCP host** (the application running the LLM, such
 - **Run anywhere** — Self-host on Azure Container Apps, AKS, a VM, or any container runtime; the server is a standard Node.js 20+ container with no Azure-specific runtime dependencies.
 - **Auditable operations** — Structured logs and an `[MCP-AUDIT]` JSON stream record every allow or deny decision for ingestion into Log Analytics, Application Insights, or any log aggregator.
 
-## Prerequisites
+## Architecture
 
-Before you deploy the Azure DocumentDB MCP Toolkit:
-
-- **Azure subscription** with access to your Azure DocumentDB cluster. [Create a free account](https://azure.microsoft.com/free/).
-- **Azure CLI** installed and signed in. [Install Azure CLI](/cli/azure/install-azure-cli).
-- **Existing Azure DocumentDB cluster** with data — the toolkit connects to your existing cluster and doesn't provision one.
-- **Microsoft Entra ID permissions** to register an application and assign roles on the DocumentDB cluster (required for `streamable-http` / `sse` deployments).
-- *Optional:* **Azure OpenAI service** if your agent generates embeddings for vector queries that it runs through the `aggregate` tool. Embedding generation happens on the agent side; the toolkit doesn't call Azure OpenAI directly.
-- *Optional:* **Docker** for local container development. [Install Docker Desktop](https://www.docker.com/products/docker-desktop/).
-- *Optional:* **Node.js 20+** for running the server locally outside containers. [Install Node.js](https://nodejs.org/).
-
-
-## Use cases
-
-| Use case | Example |
-| --- | --- |
-| Conversational data exploration | "What's the schema of the `orders` collection?" |
-| AI-assisted DBA tasks | "Create a unique index on `users.email`." |
-| Schema discovery for agent grounding | Sample-based shape inference for prompt construction |
-| Read-only analytics through agents | Aggregations, filtered counts, sample projections |
-| Controlled write operations | Inserts, updates, deletes guarded by RBAC, capability flags, and confirmation |
-| Data-aware copilots | Local stdio MCP integration with Copilot CLI, Claude Desktop, or VS Code |
+:::image type="content" source="media/mcp-toolkit/architecture.png" alt-text="Architecture diagram showing MCP clients (Copilot CLI, Claude Desktop, VS Code) communicating over JSON-RPC with the DocumentDB MCP server, which applies flexible transports, a pre-auth security gate, and the dbGuard security chokepoint before connecting to an Azure DocumentDB cluster over the MongoDB wire protocol with TLS." lightbox="media/mcp-toolkit/architecture.png" border="false":::
 
 ## Tool catalog
 
@@ -93,137 +84,18 @@ The server registers 18 tools. Every tool requires a `connection_profile` argume
 | `create_index` | Index | `write` | |
 | `drop_index` | Index | `management` | Requires `confirm_index_name` retype. |
 
-## Architecture
+## Prerequisites
 
-:::image type="content" source="media/mcp-toolkit/architecture.png" alt-text="Architecture diagram showing MCP clients (Copilot CLI, Claude Desktop, VS Code) communicating over JSON-RPC with the DocumentDB MCP server, which applies flexible transports, a pre-auth security gate, and the dbGuard security chokepoint before connecting to an Azure DocumentDB cluster over the MongoDB wire protocol with TLS." lightbox="media/mcp-toolkit/architecture.png" border="false":::
+Before you deploy the Azure DocumentDB MCP Toolkit:
 
-## Authentication
+- **Azure subscription** with access to your Azure DocumentDB cluster. [Create a free account](https://azure.microsoft.com/free/).
+- **Azure CLI** installed and signed in. [Install Azure CLI](/cli/azure/install-azure-cli).
+- **Existing Azure DocumentDB cluster** with data — the toolkit connects to your existing cluster and doesn't provision one.
+- **Microsoft Entra ID permissions** to register an application and assign roles on the DocumentDB cluster (required for `streamable-http` / `sse` deployments).
+- *Optional:* **Azure OpenAI service** if your agent generates embeddings for vector queries that it runs through the `aggregate` tool. Embedding generation happens on the agent side; the toolkit doesn't call Azure OpenAI directly.
+- *Optional:* **Docker** for local container development. [Install Docker Desktop](https://www.docker.com/products/docker-desktop/).
+- *Optional:* **Node.js 20+** for running the server locally outside containers. [Install Node.js](https://nodejs.org/).
 
-### MCP-side authentication (HTTP and SSE)
-
-- Microsoft Entra ID JWT bearer tokens.
-- The server validates the JWT issuer, audience, and signature (via JWKS) against the tenant and audience that the operator configures.
-- Authentication is required by default. On `stdio`, authentication can be skipped only behind an explicit opt-in, intended for trusted local development.
-- Authentication failures return JSON-RPC error code `-32001` and HTTP 401.
-
-For the exact environment variables, see [Configuration reference](#configuration-reference).
-
-### Backend authentication
-
-Each connection profile uses one of two modes:
-
-- **`entra`** – the server uses `DefaultAzureCredential` (Azure CLI, managed identity, workload identity, Visual Studio, and so on) to acquire an OAuth 2.0 token for the configured token scope and presents it to the cluster. **No database password on disk.**
-- **`connectionString`** – the server reads the URI from configuration. Suitable for local development.
-
-Each profile's `allowedHosts` allowlist enforces that the resolved endpoint matches an expected host pattern, mitigating misconfigured profiles. Profile structure and configuration variables are in [Configuration reference](#configuration-reference).
-
-## Authorization
-
-### Role hierarchy
-
-A `management` caller can invoke `write` and `read` tools; a `write` caller can invoke `read` tools.
-
-Roles are derived from JWT claims (`roles`, `groups`, or `scp`) and mapped through these variables:
-
-| Variable | Maps claim values to | Recommended default |
-| --- | --- | --- |
-| `MCP_READ_ROLE_VALUES` | `read` | `DocumentDB.MCP.Read` |
-| `MCP_WRITE_ROLE_VALUES` | `write` | `DocumentDB.MCP.Write` |
-| `MCP_MANAGEMENT_ROLE_VALUES` | `management` | `DocumentDB.MCP.Management` |
-
-### Capability flags
-
-Capability flags are independent of the caller's role. If a flag is off, the corresponding tools are denied even for callers with the matching role. They act as a deployment-wide kill switch.
-
-| Flag | Default | Effect |
-| --- | --- | --- |
-| `ENABLE_READ_TOOLS` | `true` | Permit read-tool invocation. |
-| `ENABLE_WRITE_TOOLS` | `false` | Permit write-tool invocation. |
-| `ENABLE_MANAGEMENT_TOOLS` | `false` | Permit management-tool invocation. |
-| `ALLOW_AGGREGATE_WRITE_STAGES` | `false` | Permit `$out` or `$merge` stages in `aggregate`. |
-
-## Safety guardrails
-
-For destructive and high-impact tools, the server stacks four independent layers, each of which can deny the call:
-
-| Layer | What it does |
-| --- | --- |
-| Capability flag | The relevant `ENABLE_*` flag must be `true`. |
-| Role | The caller must have the required role. |
-| Profile | A valid administrator-defined profile must be supplied. |
-| Retype-to-confirm | The caller must echo the target name in a confirmation field. |
-
-### Retype-to-confirm
-
-| Tool | Confirmation field | Must equal |
-| --- | --- | --- |
-| `drop_database` | `confirm_db_name` | `db_name` |
-| `drop_collection` | `confirm_collection_name` | `collection_name` |
-| `drop_index` | `confirm_index_name` | `index_name` |
-
-This pattern hardens against prompt injection: an attacker would have to coerce the model into both naming the target and producing the matching confirmation in the same call.
-
-### Aggregate write-stage guard
-
-The `aggregate` tool rejects `$out` and `$merge` stages unless `ALLOW_AGGREGATE_WRITE_STAGES=true`.
-
-### Other invariants
-
-- Tools never accept connection strings as MCP arguments. Connection strings are server-side process configuration only.
-- No tool exposes a raw shell or `eval`-style operation.
-- Profile names are not enumerable before authentication.
-- HTTP and SSE always require an explicit `connection_profile`. Implicit single-profile selection is gated to `stdio` only.
-
-## Configuration reference
-
-All configuration is environment-driven. The repository's `.env.example` documents every variable, and `dotenv` loads `.env` automatically.
-
-### Transport and binding
-
-| Variable | Default | Purpose |
-| --- | --- | --- |
-| `TRANSPORT` | `streamable-http` | `stdio`, `sse`, or `streamable-http`. |
-| `HOST` | `localhost` | HTTP/SSE bind address. |
-| `PORT` | `8070` | HTTP/SSE port. |
-
-### MCP authentication
-
-| Variable | Default | Purpose |
-| --- | --- | --- |
-| `AUTH_REQUIRED` | `true` | Require JWT on HTTP and SSE. |
-| `ENTRA_TENANT_ID` | — | Tenant for token issuer validation. |
-| `ENTRA_AUDIENCE` | — | Required audience claim (Application ID URI or client ID). |
-| `ALLOW_UNAUTHENTICATED_STDIO` | `false` | Permit unauthenticated stdio (development only). |
-
-### Rate limiting
-
-| Variable | Default | Purpose |
-| --- | --- | --- |
-| `RATE_LIMIT_ENABLED` | `true` | Apply pre-auth rate limit. |
-| `RATE_LIMIT_WINDOW_MS` | `60000` | Window size in milliseconds. |
-| `RATE_LIMIT_MAX_REQUESTS` | `120` | Per-IP cap per window. |
-
-### Connection profiles
-
-Define profiles either inline in `CONNECTION_PROFILES` or in a JSON file referenced by `CONNECTION_PROFILES_FILE`.
-
-```jsonc
-{
-  "prod": {
-    "authMode": "entra",
-    "endpoint": "<cluster>.documents.azure.com",
-    "tokenScope": "<oauth-resource-uri>",
-    "allowedHosts": ["*.documents.azure.com"],
-    "tls": true,
-    "retryWrites": true,
-    "appName": "documentdb-mcp"
-  },
-  "local": {
-    "authMode": "connectionString",
-    "uriEnv": "DOCUMENTDB_LOCAL_URI"
-  }
-}
-```
 
 ## Deployment topologies
 
@@ -313,6 +185,134 @@ ENABLE_MANAGEMENT_TOOLS=false
 
 CONNECTION_PROFILES={"prod":{"authMode":"entra","endpoint":"...","tokenScope":"...","allowedHosts":["*.documents.azure.com"]}}
 ```
+
+## Configuration reference
+
+All configuration is environment-driven. The repository's `.env.example` documents every variable, and `dotenv` loads `.env` automatically.
+
+### Transport and binding
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `TRANSPORT` | `streamable-http` | `stdio`, `sse`, or `streamable-http`. |
+| `HOST` | `localhost` | HTTP/SSE bind address. |
+| `PORT` | `8070` | HTTP/SSE port. |
+
+### MCP authentication
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `AUTH_REQUIRED` | `true` | Require JWT on HTTP and SSE. |
+| `ENTRA_TENANT_ID` | — | Tenant for token issuer validation. |
+| `ENTRA_AUDIENCE` | — | Required audience claim (Application ID URI or client ID). |
+| `ALLOW_UNAUTHENTICATED_STDIO` | `false` | Permit unauthenticated stdio (development only). |
+
+### Rate limiting
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `RATE_LIMIT_ENABLED` | `true` | Apply pre-auth rate limit. |
+| `RATE_LIMIT_WINDOW_MS` | `60000` | Window size in milliseconds. |
+| `RATE_LIMIT_MAX_REQUESTS` | `120` | Per-IP cap per window. |
+
+### Connection profiles
+
+Define profiles either inline in `CONNECTION_PROFILES` or in a JSON file referenced by `CONNECTION_PROFILES_FILE`.
+
+```jsonc
+{
+  "prod": {
+    "authMode": "entra",
+    "endpoint": "<cluster>.documents.azure.com",
+    "tokenScope": "<oauth-resource-uri>",
+    "allowedHosts": ["*.documents.azure.com"],
+    "tls": true,
+    "retryWrites": true,
+    "appName": "documentdb-mcp"
+  },
+  "local": {
+    "authMode": "connectionString",
+    "uriEnv": "DOCUMENTDB_LOCAL_URI"
+  }
+}
+```
+
+## Authentication
+
+### MCP-side authentication (HTTP and SSE)
+
+- Microsoft Entra ID JWT bearer tokens.
+- The server validates the JWT issuer, audience, and signature (via JWKS) against the tenant and audience that the operator configures.
+- Authentication is required by default. On `stdio`, authentication can be skipped only behind an explicit opt-in, intended for trusted local development.
+- Authentication failures return JSON-RPC error code `-32001` and HTTP 401.
+
+For the exact environment variables, see [Configuration reference](#configuration-reference).
+
+### Backend authentication
+
+Each connection profile uses one of two modes:
+
+- **`entra`** – the server uses `DefaultAzureCredential` (Azure CLI, managed identity, workload identity, Visual Studio, and so on) to acquire an OAuth 2.0 token for the configured token scope and presents it to the cluster. **No database password on disk.**
+- **`connectionString`** – the server reads the URI from configuration. Suitable for local development.
+
+Each profile's `allowedHosts` allowlist enforces that the resolved endpoint matches an expected host pattern, mitigating misconfigured profiles. Profile structure and configuration variables are in [Configuration reference](#configuration-reference).
+
+## Authorization
+
+### Role hierarchy
+
+A `management` caller can invoke `write` and `read` tools; a `write` caller can invoke `read` tools.
+
+Roles are derived from JWT claims (`roles`, `groups`, or `scp`) and mapped through these variables:
+
+| Variable | Maps claim values to | Recommended default |
+| --- | --- | --- |
+| `MCP_READ_ROLE_VALUES` | `read` | `DocumentDB.MCP.Read` |
+| `MCP_WRITE_ROLE_VALUES` | `write` | `DocumentDB.MCP.Write` |
+| `MCP_MANAGEMENT_ROLE_VALUES` | `management` | `DocumentDB.MCP.Management` |
+
+### Capability flags
+
+Capability flags are independent of the caller's role. If a flag is off, the corresponding tools are denied even for callers with the matching role. They act as a deployment-wide kill switch.
+
+| Flag | Default | Effect |
+| --- | --- | --- |
+| `ENABLE_READ_TOOLS` | `true` | Permit read-tool invocation. |
+| `ENABLE_WRITE_TOOLS` | `false` | Permit write-tool invocation. |
+| `ENABLE_MANAGEMENT_TOOLS` | `false` | Permit management-tool invocation. |
+| `ALLOW_AGGREGATE_WRITE_STAGES` | `false` | Permit `$out` or `$merge` stages in `aggregate`. |
+
+## Safety guardrails
+
+For destructive and high-impact tools, the server stacks four independent layers, each of which can deny the call:
+
+| Layer | What it does |
+| --- | --- |
+| Capability flag | The relevant `ENABLE_*` flag must be `true`. |
+| Role | The caller must have the required role. |
+| Profile | A valid administrator-defined profile must be supplied. |
+| Retype-to-confirm | The caller must echo the target name in a confirmation field. |
+
+### Retype-to-confirm
+
+| Tool | Confirmation field | Must equal |
+| --- | --- | --- |
+| `drop_database` | `confirm_db_name` | `db_name` |
+| `drop_collection` | `confirm_collection_name` | `collection_name` |
+| `drop_index` | `confirm_index_name` | `index_name` |
+
+This pattern hardens against prompt injection: an attacker would have to coerce the model into both naming the target and producing the matching confirmation in the same call.
+
+### Aggregate write-stage guard
+
+The `aggregate` tool rejects `$out` and `$merge` stages unless `ALLOW_AGGREGATE_WRITE_STAGES=true`.
+
+### Other invariants
+
+- Tools never accept connection strings as MCP arguments. Connection strings are server-side process configuration only.
+- No tool exposes a raw shell or `eval`-style operation.
+- Profile names are not enumerable before authentication.
+- HTTP and SSE always require an explicit `connection_profile`. Implicit single-profile selection is gated to `stdio` only.
 
 ## Audit log
 
