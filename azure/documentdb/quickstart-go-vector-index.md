@@ -1,17 +1,22 @@
 ---
-title: Choose and configure vector indexes with Go - Azure DocumentDB
+title: Quickstart - Vector index with Go
 description: Compare DiskANN, HNSW, and IVF vector index algorithms using Go to select and tune the optimal index for your workload
-ms.topic: quickstart
-ms.date: 2025-04-01
+ms.devlang: golang
+ms.topic: quickstart-sdk
+ms.date: 05/07/2026
+ms.custom: sfi-ropc-nochange
+ai-usage: ai-generated
 author: diberry
 ms.author: diberry
 ms.service: azure-documentdb
 ms.subservice: vector-search
 ---
 
-# Quickstart: Choose and configure vector indexes with Go
+# Quickstart: Vector index with Go in Azure DocumentDB
 
 This quickstart walks you through building a Go application that compares all three vector index algorithms (DiskANN, HNSW, and IVF) side by side with different similarity functions to help you choose the best configuration for your workload. The sample uses a hotels dataset with pre-calculated embeddings from the `text-embedding-3-small` model.
+
+[!INCLUDE[Language selector](includes/selector-quickstart-vector-index.md)]
 
 Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-go) on GitHub.
 
@@ -141,7 +146,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    You should always prefer passwordless authentication. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Go apps to Azure services by using the Azure SDK for Go](/azure/developer/go/azure-sdk-authentication).
 
-## Create code files for vector comparison
+## Create code files
 
 Create a `src` directory and add the main application file:
 
@@ -175,7 +180,7 @@ When you're done, the project structure should look like this:
     └── .env                     # Environment configuration
 ```
 
-## Create code for vector algorithm comparison
+## Create the algorithm comparison code
 
 Paste the following code into the `src/main.go` file.
 
@@ -1023,7 +1028,7 @@ db.dropDatabase()
 
 ---
 
-## Next steps
+## Related content
 
 - [Vector search concepts](concepts-vector-search)
 - [Choose a vector index algorithm](how-to-choose-vector-index)

@@ -1,17 +1,22 @@
 ---
-title: Quickstart: Choose and configure vector indexes in Azure DocumentDB with TypeScript
+title: Quickstart - Vector index with TypeScript
 description: Compare vector index algorithms and similarity functions using TypeScript in Azure DocumentDB to optimize search performance for your workload.
-ms.topic: quickstart
-ms.date: 2025-01-30
+ms.devlang: typescript
+ms.topic: quickstart-sdk
+ms.date: 05/07/2026
+ms.custom: sfi-ropc-nochange
+ai-usage: ai-generated
 author: diberry
 ms.author: diberry
 ms.service: azure-documentdb
 ms.subservice: vector-search
 ---
 
-# Quickstart: Choose and configure vector indexes in Azure DocumentDB with TypeScript
+# Quickstart: Vector index with TypeScript in Azure DocumentDB
 
 In this quickstart, you compare three vector index algorithms (DiskANN, HNSW, and IVF) and three similarity functions (cosine, L2, and inner product) to find the optimal configuration for your search workload. This quickstart uses a sample hotel dataset with pre-calculated embeddings from the `text-embedding-3-small` model.
+
+[!INCLUDE[Language selector](includes/selector-quickstart-vector-index.md)]
 
 Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-typescript) on GitHub.
 
@@ -887,7 +892,7 @@ db.dropDatabase()
 
 If you created an Azure DocumentDB cluster specifically for this quickstart, you can also delete the entire resource group to remove all associated resources.
 
-## Next steps
+## Related content
 
 - [Vector search concepts in Azure DocumentDB](concept-vector-search)
 - [How to use vector search in Azure DocumentDB](how-to-vector-search)

@@ -1,17 +1,22 @@
 ---
-title: Choose and configure vector indexes in Azure DocumentDB with .NET
+title: Quickstart - Vector index with .NET
 description: Compare DiskANN, HNSW, and IVF vector search algorithms in Azure DocumentDB using the .NET client library with passwordless authentication.
-ms.topic: quickstart
-ms.date: 2025-01-28
+ms.devlang: csharp
+ms.topic: quickstart-sdk
+ms.date: 05/07/2026
+ms.custom: sfi-ropc-nochange
+ai-usage: ai-generated
 author: diberry
 ms.author: diberry
 ms.service: azure-documentdb
 ms.subservice: vector-search
 ---
 
-# Quickstart: Choose and configure vector indexes in Azure DocumentDB with .NET
+# Quickstart: Vector index with .NET in Azure DocumentDB
 
 This article shows you how to compare all three vector search algorithms (DiskANN, HNSW, and IVF) in Azure DocumentDB using the .NET client library. The sample demonstrates how each algorithm performs with different similarity functions (COS, L2, IP) and helps you choose the right configuration for your workload. This quickstart uses a sample hotel dataset in a JSON file with pre-calculated vectors from the `text-embedding-3-small` model.
+
+[!INCLUDE[Language selector](includes/selector-quickstart-vector-index.md)]
 
 Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-dotnet) on GitHub.
 
@@ -153,7 +158,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    }
    ```
 
-## Create code files for vector comparison
+## Create code files
 
 Continue the project by creating code files for vector search comparison. When you are done, the project structure should look like this:
 
@@ -186,7 +191,7 @@ Continue the project by creating code files for vector search comparison. When y
    touch global.json
    ```
 
-## Create code for vector comparison
+## Create the algorithm comparison code
 
 ### Program.cs
 
@@ -980,7 +985,7 @@ IVF           COS           Historic Downtown Inn      0.8342        52
   Latency: 52ms
 ```
 
-## Algorithm comparison guidance
+## Understanding the results
 
 Use this guidance to choose the right vector search algorithm for your workload:
 
@@ -1049,7 +1054,7 @@ db.dropDatabase()
 
 ---
 
-## Next steps
+## Related content
 
 - [Vector search concepts in Azure DocumentDB](concepts-vector-search)
 - [How to configure vector indexes](how-to-vector-search)

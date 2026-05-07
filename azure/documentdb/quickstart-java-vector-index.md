@@ -1,17 +1,22 @@
 ---
-title: Quickstart: Choose and configure vector indexes in Azure DocumentDB with Java
+title: Quickstart - Vector index with Java
 description: Test and compare DiskANN, HNSW, and IVF vector indexes in Azure DocumentDB using Java to select the best algorithm for your vector search workload.
-ms.topic: quickstart
-ms.date: 2025-01-13
+ms.devlang: java
+ms.topic: quickstart-sdk
+ms.date: 05/07/2026
+ms.custom: sfi-ropc-nochange
+ai-usage: ai-generated
 author: diberry
 ms.author: diberry
 ms.service: azure-documentdb
 ms.subservice: vector-search
 ---
 
-# Quickstart: Choose and configure vector indexes in Azure DocumentDB with Java
+# Quickstart: Vector index with Java in Azure DocumentDB
 
 This quickstart compares vector index algorithms (DiskANN, HNSW, IVF) in Azure DocumentDB using Java to help you select the best configuration for your vector search workload. The sample uses the same hotel dataset with pre-calculated vectors as the other quickstarts to demonstrate performance differences across algorithms and similarity functions.
+
+[!INCLUDE[Language selector](includes/selector-quickstart-vector-index.md)]
 
 ## Prerequisites
 
@@ -226,7 +231,7 @@ This quickstart compares vector index algorithms (DiskANN, HNSW, IVF) in Azure D
 
    This sample uses passwordless authenticationwith `DefaultAzureCredential`, which requires your identity to have proper RBAC roles assigned. For more information on authentication options, see [Authenticate Java apps to Azure services by using the Azure SDK for Java](/azure/developer/java/sdk/authentication/overview).
 
-## Create code files for vector search
+## Create code files
 
 When you are done, the project structure should look like this:
 
@@ -247,7 +252,7 @@ select-algorithm-quickstart/
 └── .env                             # Environment variables
 ```
 
-## Create code for vector search algorithm comparison
+## Create the algorithm comparison code
 
 ### Create utility functions
 
@@ -971,7 +976,7 @@ db.dropDatabase()
 
 ---
 
-## Next steps
+## Related content
 
 - [Vector search in Azure DocumentDB](vector-search)
 - [Optimize vector index performance](how-to-optimize-vector-indexes)
