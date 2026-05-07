@@ -13,8 +13,6 @@ ms.subservice: vector-search
 
 This quickstart compares vector index algorithms (DiskANN, HNSW, IVF) in Azure DocumentDB using Java to help you select the best configuration for your vector search workload. The sample uses the same hotel dataset with pre-calculated vectors as the other quickstarts to demonstrate performance differences across algorithms and similarity functions.
 
-Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-java) on GitHub.
-
 ## Prerequisites
 
 [!INCLUDE[Prerequisites](includes/prerequisite-quickstart-vector-index.md)]
@@ -31,11 +29,43 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    mkdir data
    ```
 
-2. Copy the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory.
+2. Download the `Hotels_Vector.json` data file with vectors to your `data` directory:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   curl -o data/Hotels_Vector.json https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json" -OutFile "data/Hotels_Vector.json"
+   ```
+
+   ---
+
+   Verify: Confirm the file exists and is valid JSON:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   ls -lh data/Hotels_Vector.json
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Get-Item data\Hotels_Vector.json
+   ```
+
+   ---
 
 ## Create a Java project
 
 1. Create a new directory for your project and open it in Visual Studio Code:
+
+   ### [Bash](#tab/bash)
 
    ```bash
    mkdir select-algorithm-quickstart
@@ -43,11 +73,31 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    code .
    ```
 
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   New-Item -ItemType Directory -Name select-algorithm-quickstart
+   Set-Location select-algorithm-quickstart
+   code .
+   ```
+
+   ---
+
 2. Create a standard Maven project structure:
+
+   ### [Bash](#tab/bash)
 
    ```bash
    mkdir -p src/main/java/com/azure/documentdb/selectalgorithm
    ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   New-Item -ItemType Directory -Path "src\main\java\com\azure\documentdb\selectalgorithm" -Force
+   ```
+
+   ---
 
 3. Create a `pom.xml` file in the root directory with the following content:
 
@@ -123,12 +173,22 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
                        <release>21</release>
                    </configuration>
                </plugin>
+               <plugin>
+                   <groupId>org.codehaus.mojo</groupId>
+                   <artifactId>exec-maven-plugin</artifactId>
+                   <version>3.1.0</version>
+                   <configuration>
+                       <mainClass>com.azure.documentdb.selectalgorithm.SelectAlgorithm</mainClass>
+                   </configuration>
+               </plugin>
            </plugins>
        </build>
    </project>
    ```
 
-4. Create a `.env` file in the project root for environment variables:
+   Verify: Run `mvn dependency:resolve` to confirm all dependencies resolve without errors.
+
+4. Create a `.env` filein the project root for environment variables:
 
    ```bash
    # Azure DocumentDB cluster name for passwordless authentication
@@ -162,7 +222,9 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    - `AZURE_MANAGED_IDENTITY_PRINCIPAL_ID`: Your managed identity principal ID
    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
 
-   This sample uses passwordless authentication with `DefaultAzureCredential`, which requires your identity to have proper RBAC roles assigned. For more information on authentication options, see [Authenticate Java apps to Azure services by using the Azure SDK for Java](/azure/developer/java/sdk/authentication/overview).
+   Verify: `cat .env` (Bash) or `Get-Content .env` (PowerShell) to confirm values are set.
+
+   This sample uses passwordless authenticationwith `DefaultAzureCredential`, which requires your identity to have proper RBAC roles assigned. For more information on authentication options, see [Authenticate Java apps to Azure services by using the Azure SDK for Java](/azure/developer/java/sdk/authentication/overview).
 
 ## Create code files for vector search
 
@@ -715,6 +777,8 @@ This main class provides:
    mvn clean compile
    ```
 
+   Verify: The build output ends with `BUILD SUCCESS`.
+
 2. Run the comparison for all algorithms with cosine similarity (default):
 
    ```bash
@@ -722,6 +786,8 @@ This main class provides:
    ```
 
 3. Run the comparison for a specific algorithm:
+
+   ### [Bash](#tab/bash)
 
    ```bash
    # Test only DiskANN
@@ -734,7 +800,27 @@ This main class provides:
    ALGORITHM=ivf mvn exec:java -Dexec.mainClass="com.azure.documentdb.selectalgorithm.SelectAlgorithm"
    ```
 
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   # Test only DiskANN
+   $env:ALGORITHM="diskann"
+   mvn exec:java "-Dexec.mainClass=com.azure.documentdb.selectalgorithm.SelectAlgorithm"
+
+   # Test only HNSW
+   $env:ALGORITHM="hnsw"
+   mvn exec:java "-Dexec.mainClass=com.azure.documentdb.selectalgorithm.SelectAlgorithm"
+
+   # Test only IVF
+   $env:ALGORITHM="ivf"
+   mvn exec:java "-Dexec.mainClass=com.azure.documentdb.selectalgorithm.SelectAlgorithm"
+   ```
+
+   ---
+
 4. Run the comparison for all similarity functions:
+
+   ### [Bash](#tab/bash)
 
    ```bash
    # Test all algorithms with all similarity functions
@@ -744,7 +830,25 @@ This main class provides:
    ALGORITHM=diskann SIMILARITY=all mvn exec:java -Dexec.mainClass="com.azure.documentdb.selectalgorithm.SelectAlgorithm"
    ```
 
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   # Test all algorithms with all similarity functions
+   $env:ALGORITHM="all"
+   $env:SIMILARITY="all"
+   mvn exec:java "-Dexec.mainClass=com.azure.documentdb.selectalgorithm.SelectAlgorithm"
+
+   # Test DiskANN with all similarity functions
+   $env:ALGORITHM="diskann"
+   $env:SIMILARITY="all"
+   mvn exec:java "-Dexec.mainClass=com.azure.documentdb.selectalgorithm.SelectAlgorithm"
+   ```
+
+   ---
+
 5. Run the comparison for a specific similarity function:
+
+   ### [Bash](#tab/bash)
 
    ```bash
    # Test all algorithms with L2 (Euclidean) distance
@@ -753,6 +857,20 @@ This main class provides:
    # Test all algorithms with IP (inner product)
    SIMILARITY=IP mvn exec:java -Dexec.mainClass="com.azure.documentdb.selectalgorithm.SelectAlgorithm"
    ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   # Test all algorithms with L2 (Euclidean) distance
+   $env:SIMILARITY="L2"
+   mvn exec:java "-Dexec.mainClass=com.azure.documentdb.selectalgorithm.SelectAlgorithm"
+
+   # Test all algorithms with IP (inner product)
+   $env:SIMILARITY="IP"
+   mvn exec:java "-Dexec.mainClass=com.azure.documentdb.selectalgorithm.SelectAlgorithm"
+   ```
+
+   ---
 
 The program displays a comparison table showing average latency for each algorithm and similarity function combination:
 
@@ -822,20 +940,36 @@ Use the comparison results to guide your selection:
 3. **For fast batch processing**: Choose IVF if you can tolerate slightly lower accuracy
 4. **For text embeddings**: Use COS similarity function (most common with OpenAI embeddings)
 
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| `MongoTimeoutException` | Verify your connection string in `.env`. Ensure your IP is in the DocumentDB firewall rules. |
+| `MongoSecurityException` | Check credentials in connection string. |
+| Maven build failures | Run `mvn dependency:resolve` to check for missing dependencies. Ensure Java 17+ is installed. |
+| `No plugin found for prefix 'exec'` | Add `exec-maven-plugin` to your `pom.xml` as shown in this article. |
+
 ## Clean up resources
 
-To avoid Azure charges, you should clean up unneeded resources. After you are done with this quickstart, you can delete the test collections:
+When you're done, you can remove the database using mongosh or the Azure portal.
+
+### [mongosh](#tab/mongosh)
+
+Connect to your DocumentDB cluster and drop the database:
 
 ```bash
-# Connect to your cluster using MongoDB shell or code
-# Then drop the test collections
+mongosh "<your-connection-string>"
+use Hotels
+db.dropDatabase()
 ```
 
-Or delete the entire DocumentDB cluster if you no longer need it:
+### [Azure portal](#tab/portal)
 
-```bash
-az documentdb delete --name <your-cluster-name> --resource-group <your-resource-group>
-```
+1. Navigate to your DocumentDB resource in the Azure portal
+2. Select **Data Explorer**
+3. Right-click the **Hotels** database and select **Delete Database**
+
+---
 
 ## Next steps
 
