@@ -23,23 +23,63 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 ## Create data file with vectors
 
-1. Create a new data directory for the hotels data file:
+1. Create a new data directory and download the hotels data file with vectors:
+
+   ### [Bash](#tab/bash)
 
    ```bash
-   mkdir data
+   mkdir -p data
+   curl -o data/Hotels_Vector.json https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/main/data/Hotels_Vector.json
    ```
 
-2. Copy the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory.
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   New-Item -ItemType Directory -Force -Path data
+   Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/main/data/Hotels_Vector.json" -OutFile "data/Hotels_Vector.json"
+   ```
+
+   ---
+
+   Verify the file was downloaded:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   ls data/
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Get-ChildItem data/
+   ```
+
+   ---
+
+   You should see `Hotels_Vector.json` in the `data` directory.
 
 ## Create a Python project
 
 1. Create a new directory for your project and open it in Visual Studio Code:
 
+   ### [Bash](#tab/bash)
+
    ```bash
-   mkdir select-algorithm
+   mkdir -p select-algorithm
    cd select-algorithm
    code .
    ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   New-Item -ItemType Directory -Force -Path select-algorithm
+   Set-Location select-algorithm
+   code .
+   ```
+
+   ---
 
 2. In the terminal, create and activate a virtual environment:
 
@@ -60,13 +100,21 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 3. Install the required packages:
 
    ```bash
-   pip install pymongo==4.6.0 openai==1.55.3 azure-identity==1.15.0 python-dotenv==1.0.0
+   pip install "pymongo>=4.7" openai==1.55.3 azure-identity==1.15.0 python-dotenv==1.0.0
    ```
 
-   - `pymongo`: MongoDB driver for Python
+   - `pymongo`: MongoDB driver for Python (≥4.7 required for OIDC authentication)
    - `openai`: OpenAI client library to create vectors
    - `azure-identity`: Azure Identity library for passwordless authentication
    - `python-dotenv`: Environment variable management from .env files
+
+   Verify the packages are installed:
+
+   ```bash
+   pip list | grep pymongo
+   ```
+
+   You should see `pymongo` with a version of 4.7 or greater.
 
 4. Create a `.env` file for environment variables in the project root:
 
@@ -103,6 +151,14 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    You should always prefer passwordless authentication, but it requires additional setup. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Python apps to Azure services by using the Azure SDK for Python](/azure/developer/python/sdk/authentication/overview).
 
+   Verify the `.env` file was created:
+
+   ```bash
+   cat .env
+   ```
+
+   You should see your connection string and Azure OpenAI endpoint values.
+
 ## Create code files
 
 Create the following project structure:
@@ -119,9 +175,19 @@ Create the following project structure:
 
 Create the `src` directory:
 
+### [Bash](#tab/bash)
+
 ```bash
-mkdir src
+mkdir -p src
 ```
+
+### [PowerShell](#tab/powershell)
+
+```powershell
+New-Item -ItemType Directory -Force -Path src
+```
+
+---
 
 ## Create the algorithm comparison code
 
@@ -788,26 +854,46 @@ Database connection closed
 
 ### Test specific combinations
 
-Test a specific algorithm:
+To override environment variables at the command line:
+
+### [Bash](#tab/bash)
 
 ```bash
 # Test only DiskANN across all similarity functions
 ALGORITHM=diskann SIMILARITY=all python src/select_algorithm.py
 ```
 
-Test a specific similarity function:
-
 ```bash
 # Test all algorithms with L2 distance
 ALGORITHM=all SIMILARITY=L2 python src/select_algorithm.py
 ```
 
-Test a specific algorithm and similarity combination:
-
 ```bash
 # Test HNSW with inner product
 ALGORITHM=hnsw SIMILARITY=IP python src/select_algorithm.py
 ```
+
+### [PowerShell](#tab/powershell)
+
+```powershell
+# Test only DiskANN across all similarity functions
+$env:ALGORITHM="diskann"; $env:SIMILARITY="all"; python src/select_algorithm.py
+```
+
+```powershell
+# Test all algorithms with L2 distance
+$env:ALGORITHM="all"; $env:SIMILARITY="L2"; python src/select_algorithm.py
+```
+
+```powershell
+# Test HNSW with inner product
+$env:ALGORITHM="hnsw"; $env:SIMILARITY="IP"; python src/select_algorithm.py
+```
+
+---
+
+> [!NOTE]
+> When using `SIMILARITY=all`, the script tests all three similarity functions (COS, L2, IP) for each selected algorithm. Combined with `ALGORITHM=all`, this runs all 9 combinations (3 algorithms × 3 similarity functions). Each combination creates a separate collection, so the full run takes longer.
 
 ### Understanding the results
 
@@ -845,41 +931,42 @@ IVF tuning:
 - `numLists`: Number of clusters. Higher speeds up search but may reduce recall (default: 1)
 - `nProbes`: Clusters searched at query time. Higher improves recall but slows queries (default: 1)
 
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| `ServerSelectionTimeoutError` | Verify your connection string in `.env`. Ensure your IP is in the DocumentDB firewall rules. |
+| `AuthenticationFailed` | Check that your connection string includes the correct username and password, or that your Microsoft Entra token is valid. |
+| `pymongo.errors.OperationFailure` | Ensure the database and collection exist. Check that the vector index was created successfully. |
+| `ModuleNotFoundError: No module named 'pymongo'` | Activate your virtual environment and run `pip install "pymongo>=4.7"`. |
+| Empty search results | The vector index may not be ready yet. The script includes retry logic, but large datasets may require longer wait times. |
+
 ## Clean up resources
 
-If you created an Azure DocumentDB cluster specifically for this quickstart, you can delete the resource group to remove all associated resources:
+When you're done, you can remove the database using mongosh or the Azure portal.
 
-```azurecli
-az group delete --name <resource-group-name>
+### [mongosh](#tab/mongosh)
+
+Connect to your DocumentDB cluster and drop the database:
+
+```bash
+mongosh "mongodb+srv://<your-cluster-name>.mongocluster.cosmos.azure.com/" --tls --authenticationMechanism MONGODB-OIDC
 ```
 
-This command deletes the resource group and all resources within it, including the DocumentDB cluster.
-
-If you want to keep the cluster but remove the test data:
-
-```python
-# Add this to your script or run in a Python REPL
-from pymongo import MongoClient
-from azure.identity import DefaultAzureCredential
-from utils import AzureIdentityTokenCallback
-
-cluster_name = "<your-cluster-name>"
-credential = DefaultAzureCredential()
-auth_properties = {"OIDC_CALLBACK": AzureIdentityTokenCallback(credential)}
-
-client = MongoClient(
-    f"mongodb+srv://{cluster_name}.mongocluster.cosmos.azure.com/",
-    connectTimeoutMS=120000,
-    tls=True,
-    retryWrites=False,
-    authMechanism="MONGODB-OIDC",
-    authMechanismProperties=auth_properties
-)
-
-# Drop the test database
-client.drop_database("Hotels")
-client.close()
+```javascript
+use Hotels
+db.dropDatabase()
 ```
+
+### [Azure portal](#tab/portal)
+
+1. Navigate to your DocumentDB resource in the Azure portal.
+2. Select **Data Explorer**.
+3. Right-click the **Hotels** database and select **Delete Database**.
+
+---
+
+If you created an Azure DocumentDB cluster specifically for this quickstart, you can also delete the entire resource group in the Azure portal to remove all associated resources.
 
 ## Next steps
 
