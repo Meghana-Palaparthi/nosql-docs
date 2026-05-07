@@ -386,18 +386,6 @@ There's no first-party metrics endpoint. Instrument at the reverse-proxy or side
 - Validated against Azure DocumentDB. Other MongoDB-compatible engines might work where they implement the same wire-protocol commands but aren't validated in CI.
 - No published npm package yet. Install from source or with `npx -y github:microsoft/documentdb-mcp`.
 
-## Operational runbook
-
-| Scenario | Procedure |
-| --- | --- |
-| Disable a tool family | Set the relevant `ENABLE_*` flag to `false` and restart. |
-| Rotate connection profiles | Update `CONNECTION_PROFILES` (or the profiles file) and restart. |
-| Tighten rate limit | Lower `RATE_LIMIT_MAX_REQUESTS` and restart. |
-| Investigate a denied call | Filter stderr for `[MCP-AUDIT]` events with `decision:"deny"`; the `reason` field gives the cause. |
-| Identify the caller | Inspect `principal.oid`, `upn`, or `name` on the audit record. |
-| Enable destructive operations for a one-time migration | Set `ENABLE_MANAGEMENT_TOOLS=true`, perform the call (with retype-to-confirm), then revert. |
-| Detect token tampering or brute force | Watch for sudden spikes in deny events with `Missing bearer token` or `JWT signature` reasons, plus rate-limit 429 responses. |
-
 ## Related content
 
 - [Azure DocumentDB integrations for AI applications](ai-frameworks.md)
