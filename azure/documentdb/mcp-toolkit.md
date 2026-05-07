@@ -26,7 +26,7 @@ The Model Context Protocol is an open JSON-RPC protocol that standardizes how a 
 - **Resources** – addressable read-only data the host can attach to context.
 - **Prompts** – reusable templates.
 
-A typical deployment has one **MCP host** (the application running the LLM, such as GitHub Copilot CLI, Claude Desktop, VS Code, or a Microsoft Foundry agent) connected to one or more **MCP servers** that expose tools, resources, and prompts. Communication runs over **stdio**, **streamable HTTP**, or **SSE**.
+A typical deployment has one **MCP host** (the application running the LLM, such as GitHub Copilot CLI, Claude Desktop, or VS Code) connected to one or more **MCP servers** that expose tools, resources, and prompts. Communication runs over **stdio**, **streamable HTTP**, or **SSE**.
 
 ## Key features
 
@@ -51,7 +51,6 @@ This toolkit provides:
 
 - **Secure MCP server** — Microsoft Entra–authenticated endpoint for AI agents and MCP-aware clients.
 - **Azure DocumentDB integration** — Full CRUD, aggregation, vector search via `cosmosSearch`, full-text search via `createSearchIndexes`, and schema discovery through document sampling.
-- **Foundry-ready** — Streamable HTTP transport with managed identity for direct integration with Microsoft Foundry agents.
 - **Enterprise security** — Microsoft Entra ID, managed identity, role hierarchy, and per-tool capability flags.
 - **Production-ready** — Azure Container Apps hosting with Bicep-based provisioning.
 - **Local development** — Docker Compose and Node.js workflows for local stdio-based use with Copilot CLI, Claude Desktop, and VS Code.
@@ -69,7 +68,7 @@ Before you deploy the Azure DocumentDB MCP Toolkit:
 - **Azure OpenAI service** if you plan to enable vector search capabilities (for embedding generation).
 - *Optional:* **Docker Desktop** for local container development. [Install Docker Desktop](https://www.docker.com/products/docker-desktop/).
 - *Optional:* **Node.js 20+** for running the server locally outside containers. [Install Node.js](https://nodejs.org/).
-- *Optional:* **Microsoft Foundry project** if you want to surface the toolkit to Foundry agents.
+
 
 ## Use cases
 
@@ -81,7 +80,6 @@ Before you deploy the Azure DocumentDB MCP Toolkit:
 | Read-only analytics through agents | Aggregations, filtered counts, sample projections |
 | Controlled write operations | Inserts, updates, deletes guarded by RBAC, capability flags, and confirmation |
 | Data-aware copilots | Local stdio MCP integration with Copilot CLI, Claude Desktop, or VS Code |
-| Microsoft Foundry agent connectors | Streamable HTTP with Microsoft Entra–managed identity |
 
 ## Tool catalog
 
@@ -265,7 +263,6 @@ Define profiles either inline in `CONNECTION_PROFILES` or in a JSON file referen
 | --- | --- | --- | --- | --- |
 | Local development with Copilot CLI, Claude, or VS Code | `stdio` | Unauthenticated (trusted machine) | `connectionString` to local DocumentDB | Single developer. |
 | Self-hosted shared agent | `streamable-http` | Microsoft Entra | Microsoft Entra (managed identity) | Team-shared MCP endpoint behind a reverse proxy. |
-| Microsoft Foundry agent connector | `streamable-http` | Microsoft Entra | Microsoft Entra (workload identity) | Foundry agents calling the MCP server. |
 | Azure Container Apps or AKS | `streamable-http` | Microsoft Entra | Microsoft Entra (workload identity) | Production multi-tenant deployment. |
 
 In Azure, prefer the `entra` profile mode with a managed identity granted backend access through the cluster's RBAC. This avoids storing database credentials at rest.
