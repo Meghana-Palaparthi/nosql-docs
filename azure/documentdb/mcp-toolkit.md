@@ -217,7 +217,7 @@ All configuration is environment-driven. The repository's `.env.example` documen
 
 Define profiles either inline in `CONNECTION_PROFILES` or in a JSON file referenced by `CONNECTION_PROFILES_FILE`.
 
-```jsonc
+```json
 {
   "prod": {
     "authMode": "entra",
@@ -326,7 +326,7 @@ The `aggregate` tool rejects `$out` and `$merge` stages unless `ALLOW_AGGREGATE_
 
 Every allow or deny decision is written to **stderr** as a single JSON line prefixed with `[MCP-AUDIT]`:
 
-```jsonc
+```json
 {
   "timestamp": "2026-05-06T17:00:00.123Z",
   "toolName": "find_documents",
