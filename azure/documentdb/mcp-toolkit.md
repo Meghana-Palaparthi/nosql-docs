@@ -263,7 +263,7 @@ Use the same JSON shape under `mcpServers` in `%APPDATA%\Claude\claude_desktop_c
 
 ### Visual Studio Code
 
-In `settings.json`:
+For local stdio use with GitHub Copilot in Visual Studio Code, add the server to `settings.json`:
 
 ```json
 {
@@ -275,6 +275,21 @@ In `settings.json`:
         "TRANSPORT": "stdio",
         "ALLOW_UNAUTHENTICATED_STDIO": "true",
         "CONNECTION_PROFILES": "..."
+      }
+    }
+  }
+}
+```
+
+To connect to a remote server (`streamable-http` transport with Microsoft Entra), reference its URL and supply a Microsoft Entra bearer token instead:
+
+```json
+{
+  "mcp.servers": {
+    "documentdb": {
+      "url": "https://<your-mcp-host>/mcp",
+      "headers": {
+        "Authorization": "Bearer <entra-jwt>"
       }
     }
   }
