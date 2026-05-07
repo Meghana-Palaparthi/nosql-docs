@@ -339,10 +339,6 @@ Every allow or deny decision is written to **stderr** as a single JSON line pref
 
 Diagnostic logs (startup, transport, errors) also go to stderr. There's no built-in sink integration; ship stderr to your central log platform such as Azure Monitor, Splunk, ELK, or Loki.
 
-### Metrics
-
-There's no first-party metrics endpoint. Instrument at the reverse-proxy or sidecar layer if needed.
-
 ## Limitations
 
 ### Functional
@@ -365,6 +361,7 @@ There's no first-party metrics endpoint. Instrument at the reverse-proxy or side
 - No persistent state. Connection pools are per process, and there's no hot reload of configuration; restart to apply changes.
 - Per-IP rate limit only.
 - The audit log is stderr-only.
+- No first-party metrics endpoint; instrument at the reverse-proxy or sidecar layer if needed.
 - Public preview. The API surface and configuration may evolve.
 
 ### Compatibility
