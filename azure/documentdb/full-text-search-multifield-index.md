@@ -141,7 +141,7 @@ const merged = [...results.values()]
   .slice(0, 20);
 ```
 
-The same pattern works for ranked-list fusion when one of the per-field queries is a phrase or fuzzy query — see [Reciprocal Rank Fusion (RRF)](full-text-search-hybrid.md#step-3reciprocal-rank-fusion-rrf) for a fusion variant that doesn't depend on raw BM25 scores being comparable across queries.
+The same pattern works for ranked-list fusion when one of the per-field queries is a phrase or fuzzy query — see [Reciprocal Rank Fusion (RRF)](full-text-search-hybrid.md#step-3-reciprocal-rank-fusion-rrf) for a fusion variant that doesn't depend on raw BM25 scores being comparable across queries.
 
 ## Roadmap: `$search.compound`
 

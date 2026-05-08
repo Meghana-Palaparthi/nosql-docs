@@ -97,7 +97,7 @@ db.products_10M.aggregate([
 ## Known constraint
 
 > [!IMPORTANT]
-> `$search.phrase` and `fuzzy` cannot be combined in a single `$search` clause. When you need both ordered matching and typo tolerance, run two queries and fuse the result lists client-side. The Reciprocal Rank Fusion (RRF) implementation in [Hybrid search](full-text-search-hybrid.md#step-3reciprocal-rank-fusion-rrf) works as a drop-in: pass the phrase hits and the fuzzy hits as the two ranked lists. A simpler alternative is taking the maximum BM25 score per document across the two result sets.
+> `$search.phrase` and `fuzzy` cannot be combined in a single `$search` clause. When you need both ordered matching and typo tolerance, run two queries and fuse the result lists client-side. The Reciprocal Rank Fusion (RRF) implementation in [Hybrid search](full-text-search-hybrid.md#step-3-reciprocal-rank-fusion-rrf) works as a drop-in: pass the phrase hits and the fuzzy hits as the two ranked lists. A simpler alternative is taking the maximum BM25 score per document across the two result sets.
 
 `$search.compound` (server-side multi-clause `should` / `must`) is on the roadmap. Until it ships, phrase queries that need to span multiple fields follow the [fan-out-and-merge pattern](full-text-search-multifield-index.md#fan-out-and-merge-multi-field-query-workaround).
 

@@ -102,7 +102,7 @@ Edge n-gram indexing is O(log n) and ranked, but it doesn't tolerate typos in th
 ## Known constraint
 
 > [!IMPORTANT]
-> `$search.phrase` and `fuzzy` cannot be combined inside the same `$search` clause. If you need both ordering tolerance and typo tolerance, run a phrase query and a fuzzy query separately and fuse the result lists client-side. Reciprocal Rank Fusion (RRF) is the recommended fusion approach — see [Hybrid search](full-text-search-hybrid.md#step-3reciprocal-rank-fusion-rrf) for an implementation.
+> `$search.phrase` and `fuzzy` cannot be combined inside the same `$search` clause. If you need both ordering tolerance and typo tolerance, run a phrase query and a fuzzy query separately and fuse the result lists client-side. Reciprocal Rank Fusion (RRF) is the recommended fusion approach — see [Hybrid search](full-text-search-hybrid.md#step-3-reciprocal-rank-fusion-rrf) for an implementation.
 
 ## Related pages
 

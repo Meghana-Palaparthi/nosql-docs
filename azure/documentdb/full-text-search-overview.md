@@ -82,7 +82,7 @@ A few capabilities aren't yet supported natively. Most have a documented workaro
 | Capability | Status | Workaround |
 | --- | --- | --- |
 | `$search.compound` (server-side `should` / `must` / `minimumShouldMatch` across multiple fields) | Roadmap | Fan-out per field and merge in the application layer. See [Multi-field search index](full-text-search-multifield-index.md#fan-out-and-merge-multi-field-query-workaround). |
-| Combining `$search.phrase` with `fuzzy` in a single clause | Not supported | Run a phrase query and a fuzzy query separately and fuse the result lists with [Reciprocal Rank Fusion](full-text-search-hybrid.md#step-3reciprocal-rank-fusion-rrf). |
+| Combining `$search.phrase` with `fuzzy` in a single clause | Not supported | Run a phrase query and a fuzzy query separately and fuse the result lists with [Reciprocal Rank Fusion](full-text-search-hybrid.md#step-3-reciprocal-rank-fusion-rrf). |
 | Query-time term boosting (per-clause weight in `$search`) | Roadmap (ships with `$search.compound`) | Use BM25's natural inverse-document-frequency weighting; apply weighting at fusion time in client code or `$unionWith`. |
 | Native autocomplete operator | Not yet exposed | Implement type-ahead with the [`edgeGram` custom analyzer](full-text-search-custom-analyzers.md#pattern-2--prefix-matching-on-ids-and-skus). |
 | Faceted search as a first-class operator | Not yet exposed | `$match` and `$group` downstream of `$search` produce facet counts. See [BM25 keyword search](full-text-search-bm25-keyword.md#combining-with-filters). |

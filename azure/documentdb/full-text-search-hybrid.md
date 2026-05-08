@@ -39,7 +39,7 @@ The two indexes use different commands:
 - **BM25 search index** — `createSearchIndexes` (the new search engine).
 - **Vector index** — `createIndex` with `cosmosSearch` and `cosmosSearchOptions` (the vector engine).
 
-## Step 1 — creating both indexes
+## Step 1: creating both indexes
 
 ```javascript
 // ✅ BM25 keyword arm — createSearchIndexes (NOT createIndexes with "text").
@@ -77,7 +77,7 @@ db.products.createIndex(
 );
 ```
 
-## Step 2 — querying both arms
+## Step 2: querying both arms
 
 Each arm runs as its own aggregation pipeline. The keyword arm follows the standard `$search` rules from [BM25 keyword search](full-text-search-bm25-keyword.md) — `index: "<name>"`, `$search` first, `$limit` downstream.
 
@@ -100,7 +100,7 @@ const vecHits = await db.products.aggregate([
 ]).toArray();
 ```
 
-## Step 3 — Reciprocal Rank Fusion (RRF)
+## Step 3: Reciprocal Rank Fusion (RRF)
 
 RRF assigns each document a fused score of `1 / (k + rank)` from each list it appears in, sums those contributions across lists, and ranks by the total. A typical value of `k` is 60. Documents that appear high in either list get a strong contribution; documents that appear in both get added contributions.
 
@@ -186,7 +186,7 @@ db.products.aggregate([
 ]);
 ```
 
-Use the server-side variant when you want a single round-trip and no client-side fusion code. Use the [client-side `rrf()` helper](#step-3reciprocal-rank-fusion-rrf) when you also want to fuse in additional ranked lists — phrase results, per-field fan-out results, or hits from a third retriever — without rewriting the pipeline each time.
+Use the server-side variant when you want a single round-trip and no client-side fusion code. Use the [client-side `rrf()` helper](#step-3-reciprocal-rank-fusion-rrf) when you also want to fuse in additional ranked lists — phrase results, per-field fan-out results, or hits from a third retriever — without rewriting the pipeline each time.
 
 ## Tuning hybrid search
 
