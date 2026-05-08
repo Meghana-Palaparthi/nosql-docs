@@ -16,7 +16,7 @@ ms.subservice: vector-search
 
 This quickstart compares vector index algorithms (DiskANN, HNSW, IVF) in Azure DocumentDB using Java to help you select the best configuration for your vector search workload. The sample uses the same hotel dataset with pre-calculated vectors as the other quickstarts to demonstrate performance differences across algorithms and similarity functions.
 
-[!INCLUDE[Language selector](includes/selector-quickstart-vector-index.md)]
+
 
 ## Prerequisites
 
@@ -1004,7 +1004,7 @@ db.dropDatabase()
 
 ## Related content
 
-- [Vector search in Azure DocumentDB](vector-search)
-- [Optimize vector index performance](how-to-optimize-vector-indexes)
-- [Query vector data with filters](how-to-query-vector-data)
-- [Monitor DocumentDB performance](how-to-monitor-performance)
+- [Vector search overview](vector-search)
+- [ENN vector search](enn-vector-search)
+- [Product quantization](product-quantization)
+- [Quickstart: Vector search with Java](quickstart-java-vector-search)

@@ -16,7 +16,7 @@ ms.subservice: vector-search
 
 This article shows you how to compare all three vector search algorithms (DiskANN, HNSW, and IVF) in Azure DocumentDB using the .NET client library. The sample demonstrates how each algorithm performs with different similarity functions (COS, L2, IP) and helps you choose the right configuration for your workload. This quickstart uses a sample hotel dataset in a JSON file with pre-calculated vectors from the `text-embedding-3-small` model.
 
-[!INCLUDE[Language selector](includes/selector-quickstart-vector-index.md)]
+
 
 Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-dotnet) on GitHub.
 
@@ -630,8 +630,8 @@ public class VectorComparisonService
         {
             case "diskann":
                 // DiskANN: disk-based approximate nearest neighbor
-                cosmosSearchOptions["maxDegree"] = 32;  // Max edges per node in the graph
-                cosmosSearchOptions["lBuild"] = 50;      // Candidates evaluated during index build
+                cosmosSearchOptions["maxDegree"] = 20;  // Max edges per node in the graph
+                cosmosSearchOptions["lBuild"] = 10;      // Candidates evaluated during index build
                 break;
             case "hnsw":
                 // HNSW: hierarchical navigable small world graph
@@ -1106,8 +1106,8 @@ Use this guidance to choose the right vector search algorithm for your workload:
 Each algorithm has tuning parameters that control the accuracy/performance tradeoff:
 
 **DiskANN:**
-- `maxDegree`: Higher values (32-64) improve accuracy but increase memory
-- `lBuild`: Higher values (50-100) improve index quality but slow build time
+- `maxDegree`: Higher values (20-64) improve accuracy but increase memory
+- `lBuild`: Higher values (10-100) improve index quality but slow build time
 - `lSearch`: Higher values (100-200) improve search accuracy but slow queries
 
 **HNSW:**
@@ -1154,7 +1154,7 @@ db.dropDatabase()
 
 ## Related content
 
-- [Vector search concepts in Azure DocumentDB](concepts-vector-search)
-- [How to configure vector indexes](how-to-vector-search)
-- [Tune vector search performance](how-to-tune-vector-search)
-- [Best practices for production workloads](best-practices-vector-search)
+- [Vector search overview](vector-search)
+- [ENN vector search](enn-vector-search)
+- [Product quantization](product-quantization)
+- [Quickstart: Vector search with .NET](quickstart-dotnet-vector-search)

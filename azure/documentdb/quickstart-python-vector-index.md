@@ -16,7 +16,7 @@ ms.subservice: vector-search
 
 In this quickstart, you compare three vector index algorithms (DiskANN, HNSW, and IVF) and three similarity functions (cosine, L2, and inner product) to find the optimal configuration for your search workload. This quickstart uses a sample hotel dataset with pre-calculated embeddings from the `text-embedding-3-small` model.
 
-[!INCLUDE[Language selector](includes/selector-quickstart-vector-index.md)]
+
 
 Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-python) on GitHub.
 
@@ -537,7 +537,7 @@ import os
 import warnings
 from typing import Any
 
-# Suppress the PyMongo CosmosDB cluster detection warning
+# Suppress the PyMongo DocumentDB cluster detection warning
 warnings.filterwarnings(
     "ignore",
     message="You appear to be connected to a CosmosDB cluster.*",
@@ -995,7 +995,7 @@ If you created an Azure DocumentDB cluster specifically for this quickstart, you
 
 ## Related content
 
-- [Vector search concepts in Azure DocumentDB](concept-vector-search)
-- [How to use vector search in Azure DocumentDB](how-to-vector-search)
-- [Optimize vector search performance](how-to-optimize-vector-search-performance)
-- [Azure DocumentDB Python SDK reference](https://pymongo.readthedocs.io/)
+- [Vector search overview](vector-search)
+- [ENN vector search](enn-vector-search)
+- [Product quantization](product-quantization)
+- [Quickstart: Vector search with Python](quickstart-python-vector-search)

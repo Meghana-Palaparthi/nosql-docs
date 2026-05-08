@@ -16,7 +16,7 @@ ms.subservice: vector-search
 
 This quickstart walks you through building a Go application that compares all three vector index algorithms (DiskANN, HNSW, and IVF) side by side with different similarity functions to help you choose the best configuration for your workload. The sample uses a hotels dataset with pre-calculated embeddings from the `text-embedding-3-small` model.
 
-[!INCLUDE[Language selector](includes/selector-quickstart-vector-index.md)]
+
 
 Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-go) on GitHub.
 
@@ -396,9 +396,9 @@ func getIndexOptions(collectionName, indexName, embeddedField string, dimensions
 		// DiskANN: disk-based approximate nearest neighbor search
 		cosmosSearchOptions = append(bson.D{{"kind", "vector-diskann"}}, cosmosSearchOptions...)
 		// maxDegree: maximum number of graph edges per node (higher = better recall, more memory)
-		cosmosSearchOptions = append(cosmosSearchOptions, bson.E{"maxDegree", 32})
+		cosmosSearchOptions = append(cosmosSearchOptions, bson.E{"maxDegree", 20})
 		// lBuild: candidate list size during index construction (higher = better index quality, slower build)
-		cosmosSearchOptions = append(cosmosSearchOptions, bson.E{"lBuild", 50})
+		cosmosSearchOptions = append(cosmosSearchOptions, bson.E{"lBuild", 10})
 	case HNSW:
 		// HNSW: hierarchical navigable small world graph
 		cosmosSearchOptions = append(bson.D{{"kind", "vector-hnsw"}}, cosmosSearchOptions...)
@@ -1090,7 +1090,7 @@ db.dropDatabase()
 
 ## Related content
 
-- [Vector search concepts](concepts-vector-search)
-- [Choose a vector index algorithm](how-to-choose-vector-index)
-- [Tune vector index performance](how-to-tune-vector-index)
-- [Monitor vector search performance](how-to-monitor-vector-search)
+- [Vector search overview](vector-search)
+- [ENN vector search](enn-vector-search)
+- [Product quantization](product-quantization)
+- [Quickstart: Vector search with Go](quickstart-go-vector-search)
