@@ -30,41 +30,59 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 1. Create a new data directory for the hotels data file:
 
-   **Bash:**
+   ### [Bash](#tab/bash)
 
    ```bash
    mkdir data
    ```
 
-   **PowerShell:**
+   ### [PowerShell](#tab/powershell)
 
    ```powershell
    New-Item -ItemType Directory -Name data
    ```
 
+   ---
+
 2. Download the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory:
 
-   **Bash:**
+   ### [Bash](#tab/bash)
 
    ```bash
    curl -o data/Hotels_Vector.json https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json
    ```
 
-   **PowerShell:**
+   ### [PowerShell](#tab/powershell)
 
    ```powershell
    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json" -OutFile "data/Hotels_Vector.json"
    ```
 
+   ---
+
    Verify the file downloaded successfully:
+
+   ### [Bash](#tab/bash)
 
    ```bash
    ls data/Hotels_Vector.json
    ```
 
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Get-ChildItem data\Hotels_Vector.json
+   ```
+
+   ---
+
+   You should see `Hotels_Vector.json` in the `data` directory.
+
 ## Create a .NET project
 
 1. Create a new directory for your project and initialize the .NET console application:
+
+   ### [Bash](#tab/bash)
 
    ```bash
    mkdir select-algorithm-dotnet
@@ -72,11 +90,31 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    dotnet new console --framework net9.0
    ```
 
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   New-Item -ItemType Directory -Name select-algorithm-dotnet
+   Set-Location select-algorithm-dotnet
+   dotnet new console --framework net9.0
+   ```
+
+   ---
+
    Verify the project was created:
+
+   ### [Bash](#tab/bash)
 
    ```bash
    ls *.csproj
    ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Get-ChildItem *.csproj
+   ```
+
+   ---
 
 2. Install the required NuGet packages:
 
@@ -107,8 +145,9 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 3. Create environment variables for authentication. The sample uses DefaultAzureCredential for passwordless authentication:
 
+   ### [Bash](#tab/bash)
+
    ```bash
-   # Set environment variables for passwordless authentication
    export AZURE_OPENAI_EMBEDDING_ENDPOINT="https://<your-openai-resource>.openai.azure.com"
    export AZURE_OPENAI_EMBEDDING_MODEL="text-embedding-3-small"
    export MONGO_CLUSTER_NAME="<your-documentdb-cluster-name>"
@@ -116,7 +155,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    export DATA_FILE_WITH_VECTORS="../../data/Hotels_Vector.json"
    ```
 
-   For Windows PowerShell:
+   ### [PowerShell](#tab/powershell)
 
    ```powershell
    $env:AZURE_OPENAI_EMBEDDING_ENDPOINT="https://<your-openai-resource>.openai.azure.com"
@@ -125,6 +164,8 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    $env:AZURE_TENANT_ID="<your-tenant-id>"
    $env:DATA_FILE_WITH_VECTORS="../../data/Hotels_Vector.json"
    ```
+
+   ---
 
    Replace the placeholder values with your own information:
    - `<your-openai-resource>`: Your Azure OpenAI resource name
@@ -141,9 +182,19 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 5. Create an `appsettings.json` configuration file:
 
+   ### [Bash](#tab/bash)
+
    ```bash
    touch appsettings.json
    ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   New-Item -ItemType File -Name appsettings.json
+   ```
+
+   ---
 
    Add this content to `appsettings.json`:
 
@@ -178,18 +229,41 @@ Continue the project by creating code files for vector search comparison. When y
 
 1. Create the directory structure:
 
+   ### [Bash](#tab/bash)
+
    ```bash
    mkdir Services
    mkdir Utilities
    ```
 
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   New-Item -ItemType Directory -Name Services
+   New-Item -ItemType Directory -Name Utilities
+   ```
+
+   ---
+
 2. Create the code files:
+
+   ### [Bash](#tab/bash)
 
    ```bash
    touch Services/VectorComparisonService.cs
    touch Utilities/Utils.cs
    touch global.json
    ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   New-Item -ItemType File -Path Services\VectorComparisonService.cs
+   New-Item -ItemType File -Path Utilities\Utils.cs
+   New-Item -ItemType File -Name global.json
+   ```
+
+   ---
 
 ## Create the algorithm comparison code
 
@@ -895,21 +969,45 @@ This file specifies the .NET SDK version requirements for the project.
 
 3. To compare all algorithms with all similarity functions, set environment variables:
 
+   ### [Bash](#tab/bash)
+
    ```bash
    export ALGORITHM=all
    export SIMILARITY=all
    dotnet run
    ```
 
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   $env:ALGORITHM="all"
+   $env:SIMILARITY="all"
+   dotnet run
+   ```
+
+   ---
+
    This creates nine collections (3 algorithms x 3 similarity functions) and compares all combinations.
 
 4. To test a specific algorithm with a specific similarity function:
+
+   ### [Bash](#tab/bash)
 
    ```bash
    export ALGORITHM=diskann
    export SIMILARITY=COS
    dotnet run
    ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   $env:ALGORITHM="diskann"
+   $env:SIMILARITY="COS"
+   dotnet run
+   ```
+
+   ---
 
 ### Expected output
 

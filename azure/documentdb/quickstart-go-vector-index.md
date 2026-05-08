@@ -60,7 +60,23 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-   Verify the download: `ls data/Hotels_Vector.json`
+   Verify the file was downloaded:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   ls data/Hotels_Vector.json
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Get-ChildItem data\Hotels_Vector.json
+   ```
+
+   ---
+
+   You should see `Hotels_Vector.json` in the `data` directory.
 
 ## Create a Go project
 
@@ -90,7 +106,21 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    go mod init documentdb-vector-samples
    ```
 
-   Verify: `cat go.mod`
+   Verify the module was initialized:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   cat go.mod
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Get-Content go.mod
+   ```
+
+   ---
 
 3. Install the required packages:
 
@@ -107,7 +137,21 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    - `openai-go/v3`: OpenAI client library with Azure support to generate embeddings
    - `mongo-driver`: Official MongoDB driver for Go to work with DocumentDB
 
-   Verify: `go list -m all | grep mongo`
+   Verify the packages are installed:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   go list -m all | grep mongo
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   go list -m all | Select-String mongo
+   ```
+
+   ---
 
 4. Create a `.env` file for environment variables in `select-algorithm-go`:
 
@@ -142,7 +186,21 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
    - `MONGO_CLUSTER_NAME`: Your Azure DocumentDB cluster name (not the full connection string, just the name)
 
-   Verify: `cat .env`
+   Verify the `.env` file was created:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   cat .env
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Get-Content .env
+   ```
+
+   ---
 
    You should always prefer passwordless authentication. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Go apps to Azure services by using the Azure SDK for Go](/azure/developer/go/azure-sdk-authentication).
 
@@ -809,13 +867,13 @@ This code provides a complete vector algorithm comparison application with these
 
 Before running the code, source your `.env` file to load environment variables into your shell session.
 
-**For Linux/macOS (Bash):**
+### [Bash](#tab/bash)
 
 ```bash
 export $(grep -v '^#' .env | xargs)
 ```
 
-**For Windows (PowerShell):**
+### [PowerShell](#tab/powershell)
 
 ```powershell
 Get-Content .env | ForEach-Object {
@@ -824,6 +882,8 @@ Get-Content .env | ForEach-Object {
     }
 }
 ```
+
+---
 
 After sourcing the environment variables, run the application:
 

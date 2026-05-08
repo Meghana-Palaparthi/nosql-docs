@@ -115,9 +115,19 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    Verify the packages are installed:
 
+   ### [Bash](#tab/bash)
+
    ```bash
    pip list | grep pymongo
    ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   pip list | Select-String pymongo
+   ```
+
+   ---
 
    You should see `pymongo` with a version of 4.7 or greater.
 
@@ -158,9 +168,19 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    Verify the `.env` file was created:
 
+   ### [Bash](#tab/bash)
+
    ```bash
    cat .env
    ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Get-Content .env
+   ```
+
+   ---
 
    You should see your connection string and Azure OpenAI endpoint values.
 

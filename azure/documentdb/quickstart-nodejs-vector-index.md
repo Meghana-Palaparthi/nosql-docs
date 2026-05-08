@@ -61,7 +61,23 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-   Verify: `ls data/Hotels_Vector.json` (Bash) or `Get-ChildItem data\Hotels_Vector.json` (PowerShell).
+   Verify the file was downloaded:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   ls data/Hotels_Vector.json
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Get-ChildItem data\Hotels_Vector.json
+   ```
+
+   ---
+
+   You should see `Hotels_Vector.json` in the `data` directory.
 
 ## Create a Node.js project
 
@@ -91,7 +107,21 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    npm init -y
    ```
 
-   Verify: `ls package.json` (Bash) or `Get-ChildItem package.json` (PowerShell).
+   Verify the project was initialized:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   ls package.json
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Get-ChildItem package.json
+   ```
+
+   ---
 
 3. Install the required packages:
 
@@ -167,7 +197,23 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    SIMILARITY=all
    ```
 
-   Verify: `cat .env` (Bash) or `Get-Content .env` (PowerShell) to confirm all values are set.
+   Verify the `.env` file was created:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   cat .env
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Get-Content .env
+   ```
+
+   ---
+
+   You should see your configuration values including the Azure OpenAI endpoint and cluster name.
 
    For the passwordless authentication used in this article, replace the placeholder values in the `.env` file with your own information:
 

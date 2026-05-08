@@ -30,9 +30,19 @@ This quickstart compares vector index algorithms (DiskANN, HNSW, IVF) in Azure D
 
 1. Create a new data directory for the hotels data file:
 
+   ### [Bash](#tab/bash)
+
    ```bash
    mkdir data
    ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   New-Item -ItemType Directory -Name data
+   ```
+
+   ---
 
 2. Download the `Hotels_Vector.json` data file with vectors to your `data` directory:
 
@@ -227,7 +237,23 @@ This quickstart compares vector index algorithms (DiskANN, HNSW, IVF) in Azure D
    - `AZURE_MANAGED_IDENTITY_PRINCIPAL_ID`: Your managed identity principal ID
    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
 
-   Verify: `cat .env` (Bash) or `Get-Content .env` (PowerShell) to confirm values are set.
+   Verify the `.env` file was created:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   cat .env
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Get-Content .env
+   ```
+
+   ---
+
+   You should see your configuration values including the Azure OpenAI endpoint and cluster name.
 
    This sample uses passwordless authenticationwith `DefaultAzureCredential`, which requires your identity to have proper RBAC roles assigned. For more information on authentication options, see [Authenticate Java apps to Azure services by using the Azure SDK for Java](/azure/developer/java/sdk/authentication/overview).
 
