@@ -1,6 +1,6 @@
 ---
 title: "BM25 keyword search in Azure DocumentDB — ranked text retrieval"
-description: Run BM25-scored keyword search on Azure DocumentDB using the createSearchIndexes command and the $search.text aggregation operator.
+description: Run BM25-scored keyword search on Azure DocumentDB using the createSearchIndexes command and the $search aggregation stage with the text operator.
 author: khelanmodi
 ms.author: khelanmodi
 ms.topic: how-to
@@ -11,7 +11,7 @@ ms.collection:
 
 # BM25 Keyword Search in Azure DocumentDB
 
-BM25 is the relevance-ranking algorithm at the heart of Azure DocumentDB full-text search. This page shows how to create a search index covering one text field and run a BM25-scored `$search.text` query against it. If you're migrating from the legacy `$text` operator or `{ field: "text" }` index type, see the [migration table](full-text-search-overview.md#migrating-from-the-legacy-text-engine) on the overview page.
+BM25 is the relevance-ranking algorithm at the heart of Azure DocumentDB full-text search. This page shows how to create a search index covering one text field and run a BM25-scored `$search` + `text` query against it. If you're migrating from the legacy `$text` operator or `{ field: "text" }` index type, see the [migration table](full-text-search-overview.md#migrating-from-the-legacy-text-engine) on the overview page.
 
 ## What is BM25?
 
@@ -54,7 +54,7 @@ db.runCommand({
 
 Name the index after the field and intent so it's easy to reference from `$search`. After creation the index appears in `db.products_10M.getIndexes()` alongside other indexes on the collection.
 
-## Running a `$search.text` query
+## Running a `$search` + `text` query
 
 ```javascript
 // ❌ Regex substring search on a large collection — COLLSCAN, unranked,
@@ -63,7 +63,7 @@ db.products_10M.find({ title: { $regex: "bracket", $options: "i" } });
 ```
 
 ```javascript
-// ✅ BM25 keyword search with $search.text.
+// ✅ BM25 keyword search with $search` + `text.
 //    Always pass index: "<name>" and cap with a downstream $limit.
 db.products_10M.aggregate([
   {
@@ -86,7 +86,7 @@ db.products_10M.aggregate([
 ]);
 ```
 
-Three rules apply to every `$search.text` query:
+Three rules apply to every `$search` + `text` query:
 
 - `$search` is the first stage of the aggregation pipeline.
 - `index: "<name>"` is set explicitly so the engine knows which search index to use.
@@ -120,13 +120,13 @@ db.products_10M.aggregate([
 ]);
 ```
 
-When `$search.compound` ships, server-side `should` / `must` clauses across multiple fields will be supported. Until then, multi-field queries follow the [fan-out-and-merge pattern](full-text-search-multifield-index.md#fan-out-and-merge-multi-field-query-workaround).
+When `$search` + `compound` ships, server-side `should` / `must` clauses across multiple fields will be supported. Until then, multi-field queries follow the [fan-out-and-merge pattern](full-text-search-multifield-index.md#fan-out-and-merge-multi-field-query-workaround).
 
 ## When to use BM25 vs. other modes
 
 | Mode | Best for | Trade-off |
 | --- | --- | --- |
-| `$search.text` (BM25) | Ranked keyword search on prose, titles, and descriptions. | Requires a search index. |
+| `$search` + `text` (BM25) | Ranked keyword search on prose, titles, and descriptions. | Requires a search index. |
 | `$regex` | Single-character substring patterns on small collections or fields with an existing B-tree index. | Unranked; `COLLSCAN` on large collections. |
 | Equality (`$eq`) | Exact-match lookup on identifiers or enums. | No tokenization — won't match `"bracket"` inside `"steel bracket"`. |
 

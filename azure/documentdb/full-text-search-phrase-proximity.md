@@ -1,6 +1,6 @@
 ---
 title: "Phrase search and proximity matching in Azure DocumentDB"
-description: Match ordered multi-word phrases in Azure DocumentDB full-text search using $search.phrase and the slop parameter for proximity tolerance.
+description: Match ordered multi-word phrases in Azure DocumentDB full-text search using the $search phrase operator and the slop parameter for proximity tolerance.
 author: khelanmodi
 ms.author: khelanmodi
 ms.topic: how-to
@@ -11,11 +11,11 @@ ms.collection:
 
 # Phrase Search and Proximity Matching in Azure DocumentDB
 
-Phrase search matches query terms that appear together in a specific order, with an optional `slop` tolerance for intervening tokens. It's the right tool when word order is meaningful — multi-word product names, quoted user input, error strings — and when a plain `$search.text` query returns too much noise because the tokens are common individually but rare together. Proximity matching was previously listed as **Not available** under the legacy `$text` engine; it's now supported through `$search.phrase`. See the [migration table](full-text-search-overview.md#migrating-from-the-legacy-text-engine) for context.
+Phrase search matches query terms that appear together in a specific order, with an optional `slop` tolerance for intervening tokens. It's the right tool when word order is meaningful — multi-word product names, quoted user input, error strings — and when a plain `$search` + `text` query returns too much noise because the tokens are common individually but rare together. Proximity matching was previously listed as **Not available** under the legacy `$text` engine; it's now supported through `$search` + `phrase`. See the [migration table](full-text-search-overview.md#migrating-from-the-legacy-text-engine) for context.
 
 ## What is phrase search?
 
-A `$search.text` query matches every document that contains the requested tokens, in any order, anywhere in the field. A `$search.phrase` query enforces that the tokens appear in the same order the user supplied, with at most `slop` other tokens between them. Phrase precision matters when:
+A `$search` + `text` query matches every document that contains the requested tokens, in any order, anywhere in the field. A `$search` + `phrase` query enforces that the tokens appear in the same order the user supplied, with at most `slop` other tokens between them. Phrase precision matters when:
 
 - The user enters a quoted string such as `"bracket controller"`.
 - Title, entity, or error-string matching depends on word order.
@@ -97,9 +97,9 @@ db.products_10M.aggregate([
 ## Known constraint
 
 > [!IMPORTANT]
-> `$search.phrase` and `fuzzy` cannot be combined in a single `$search` clause. When you need both ordered matching and typo tolerance, run two queries and fuse the result lists client-side. The Reciprocal Rank Fusion (RRF) implementation in [Hybrid search](full-text-search-hybrid.md#step-3-reciprocal-rank-fusion-rrf) works as a drop-in: pass the phrase hits and the fuzzy hits as the two ranked lists. A simpler alternative is taking the maximum BM25 score per document across the two result sets.
+> `$search` + `phrase` and `fuzzy` cannot be combined in a single `$search` clause. When you need both ordered matching and typo tolerance, run two queries and fuse the result lists client-side. The Reciprocal Rank Fusion (RRF) implementation in [Hybrid search](full-text-search-hybrid.md#step-3-reciprocal-rank-fusion-rrf) works as a drop-in: pass the phrase hits and the fuzzy hits as the two ranked lists. A simpler alternative is taking the maximum BM25 score per document across the two result sets.
 
-`$search.compound` (server-side multi-clause `should` / `must`) is on the roadmap. Until it ships, phrase queries that need to span multiple fields follow the [fan-out-and-merge pattern](full-text-search-multifield-index.md#fan-out-and-merge-multi-field-query-workaround).
+`$search` + `compound` (server-side multi-clause `should` / `must`) is on the roadmap. Until it ships, phrase queries that need to span multiple fields follow the [fan-out-and-merge pattern](full-text-search-multifield-index.md#fan-out-and-merge-multi-field-query-workaround).
 
 ## Related pages
 

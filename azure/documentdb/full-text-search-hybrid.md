@@ -196,9 +196,9 @@ Use the server-side variant when you want a single round-trip and no client-side
 - **Choose the vector index kind for your scale.** DiskANN is the default for production catalogs with millions of vectors. HNSW gives lower-latency lookups at higher memory cost; IVF gives faster builds and lower memory cost at the price of recall. See [Vector search](vector-search.md) for the full matrix.
 - **Cache embeddings for popular queries.** Vector arm latency is dominated by the embedding API call, not the DiskANN lookup. Caching the embeddings for the most common queries cuts hybrid latency to roughly the keyword arm's latency.
 
-## Roadmap: `$search.compound` and a multi-field keyword arm
+## Roadmap: `$search` + `compound` and a multi-field keyword arm
 
-When `$search.compound` ships, the keyword arm of a hybrid query can cover multiple fields server-side instead of fanning out per field. Today, if you want the BM25 arm to span `title`, `description`, and `tags`, follow the [fan-out-and-merge pattern](full-text-search-multifield-index.md#fan-out-and-merge-multi-field-query-workaround) and pass each per-field result list into `rrf()` alongside the vector list. The fusion math doesn't change; only the keyword arm collapses to a single server-side query.
+When `$search` + `compound` ships, the keyword arm of a hybrid query can cover multiple fields server-side instead of fanning out per field. Today, if you want the BM25 arm to span `title`, `description`, and `tags`, follow the [fan-out-and-merge pattern](full-text-search-multifield-index.md#fan-out-and-merge-multi-field-query-workaround) and pass each per-field result list into `rrf()` alongside the vector list. The fusion math doesn't change; only the keyword arm collapses to a single server-side query.
 
 ## Related pages
 

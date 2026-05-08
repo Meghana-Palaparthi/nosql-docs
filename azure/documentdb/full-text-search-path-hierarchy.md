@@ -42,7 +42,7 @@ BN-747-ENG
 BN-747-ENG-2024.05
 ```
 
-A `$search.text` query for any of those four values matches the document. A query for `747` alone — which is not an ancestor at the delimiter boundary — does not.
+A `$search` + `text` query for any of those four values matches the document. A query for `747` alone — which is not an ancestor at the delimiter boundary — does not.
 
 ## Creating a pathHierarchy search index
 

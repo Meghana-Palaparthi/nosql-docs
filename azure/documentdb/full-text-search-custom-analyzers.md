@@ -182,7 +182,7 @@ Cap `maxGram` to a realistic identifier length. Leaving `maxGram: 255` for short
 | Approach | Cost | Ranked | Case-insensitive | Notes |
 | --- | --- | :---: | :---: | --- |
 | `$regex: /^AB2/i` | `COLLSCAN` on text fields. | No | Only with `/i` flag. | Acceptable on small collections; impractical at scale. |
-| `edgeGram` + `$search.text` | O(log n) via the search index. | Yes (BM25) | Built into the analyzer. | Recommended pattern for prefix matching on identifiers. |
+| `edgeGram` + `$search` + `text` | O(log n) via the search index. | Yes (BM25) | Built into the analyzer. | Recommended pattern for prefix matching on identifiers. |
 
 ## Related pages
 

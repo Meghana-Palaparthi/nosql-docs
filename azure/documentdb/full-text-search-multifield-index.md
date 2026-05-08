@@ -91,7 +91,7 @@ db.runCommand({
 
 ## Querying one field at a time (current pattern)
 
-`$search.compound` (server-side multi-clause `should` / `must` / `minimumShouldMatch`) is on the roadmap but is **not yet supported**. Today, target one field per `$search` call:
+`$search` + `compound` (server-side multi-clause `should` / `must` / `minimumShouldMatch`) is on the roadmap but is **not yet supported**. Today, target one field per `$search` call:
 
 ```javascript
 // ✅ Single-field query against the multi-field index.
@@ -144,7 +144,7 @@ const merged = [...results.values()]
 
 The same pattern works for ranked-list fusion when one of the per-field queries is a phrase or fuzzy query — see [Reciprocal Rank Fusion (RRF)](full-text-search-hybrid.md#step-3-reciprocal-rank-fusion-rrf) for a fusion variant that doesn't depend on raw BM25 scores being comparable across queries.
 
-## Roadmap: `$search.compound`
+## Roadmap: `$search` + `compound`
 
 ```javascript
 // ❌ compound is not yet supported on Azure DocumentDB — returns an error today.
@@ -165,7 +165,7 @@ db.products_10M.aggregate([
 ]);
 ```
 
-When `$search.compound` ships, the fan-out loop above becomes a single server-side `should` clause with `minimumShouldMatch: 1`. The application code is deletable; the index definition stays the same. Designing your search index as a multi-field index today makes the eventual switch a one-line change in the query layer.
+When `$search` + `compound` ships, the fan-out loop above becomes a single server-side `should` clause with `minimumShouldMatch: 1`. The application code is deletable; the index definition stays the same. Designing your search index as a multi-field index today makes the eventual switch a one-line change in the query layer.
 
 ## Related pages
 

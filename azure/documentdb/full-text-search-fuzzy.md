@@ -1,6 +1,6 @@
 ---
 title: "Fuzzy search in Azure DocumentDB — typo-tolerant text matching"
-description: Match misspelled terms in Azure DocumentDB full-text search using the fuzzy.maxEdits parameter on $search.text, with guidance on tuning Levenshtein edit distance.
+description: Match misspelled terms in Azure DocumentDB full-text search using the fuzzy.maxEdits parameter on the $search text operator, with guidance on tuning Levenshtein edit distance.
 author: khelanmodi
 ms.author: khelanmodi
 ms.topic: how-to
@@ -11,7 +11,7 @@ ms.collection:
 
 # Fuzzy Search in Azure DocumentDB
 
-Fuzzy search lets `$search.text` match terms that are within a bounded **Levenshtein edit distance** of the user's query. A query for `bracXet` finds documents containing `bracket` because the two strings differ by exactly one character substitution. This page shows how to enable and tune fuzzy matching, and when to reach for the alternative — the [`edgeGram` custom analyzer](full-text-search-custom-analyzers.md). If you're migrating from the legacy `$text` engine, fuzzy matching was previously listed as **Not available**; it's now supported through the same `$search` operator. See the [migration table](full-text-search-overview.md#migrating-from-the-legacy-text-engine) for context.
+Fuzzy search lets `$search` + `text` match terms that are within a bounded **Levenshtein edit distance** of the user's query. A query for `bracXet` finds documents containing `bracket` because the two strings differ by exactly one character substitution. This page shows how to enable and tune fuzzy matching, and when to reach for the alternative — the [`edgeGram` custom analyzer](full-text-search-custom-analyzers.md). If you're migrating from the legacy `$text` engine, fuzzy matching was previously listed as **Not available**; it's now supported through the same `$search` operator. See the [migration table](full-text-search-overview.md#migrating-from-the-legacy-text-engine) for context.
 
 ## What is fuzzy search?
 
@@ -94,7 +94,7 @@ Fuzzy and prefix matching solve different problems and have different cost profi
 
 | Need | Use |
 | --- | --- |
-| Tolerate typos in prose, product names, descriptions, search-as-you-type. | `$search.text` + `fuzzy.maxEdits: 1` |
+| Tolerate typos in prose, product names, descriptions, search-as-you-type. | `$search` + `text` + `fuzzy.maxEdits: 1` |
 | Match the start of identifiers, SKUs, codes, short tokens. | [`edgeGram` custom analyzer](full-text-search-custom-analyzers.md) |
 
 Edge n-gram indexing is O(log n) and ranked, but it doesn't tolerate typos in the middle of a token. Fuzzy tolerates typos but doesn't help with partial-token prefixes on identifier-like fields.
@@ -102,7 +102,7 @@ Edge n-gram indexing is O(log n) and ranked, but it doesn't tolerate typos in th
 ## Known constraint
 
 > [!IMPORTANT]
-> `$search.phrase` and `fuzzy` cannot be combined inside the same `$search` clause. If you need both ordering tolerance and typo tolerance, run a phrase query and a fuzzy query separately and fuse the result lists client-side. Reciprocal Rank Fusion (RRF) is the recommended fusion approach — see [Hybrid search](full-text-search-hybrid.md#step-3-reciprocal-rank-fusion-rrf) for an implementation.
+> `$search` + `phrase` and `fuzzy` cannot be combined inside the same `$search` clause. If you need both ordering tolerance and typo tolerance, run a phrase query and a fuzzy query separately and fuse the result lists client-side. Reciprocal Rank Fusion (RRF) is the recommended fusion approach — see [Hybrid search](full-text-search-hybrid.md#step-3-reciprocal-rank-fusion-rrf) for an implementation.
 
 ## Related pages
 
