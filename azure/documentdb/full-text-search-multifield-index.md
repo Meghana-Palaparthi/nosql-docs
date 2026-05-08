@@ -119,6 +119,7 @@ db.products_10M.aggregate([
 To search across every mapped field today, fan the query out per field and merge the result lists in the application layer, keeping the highest BM25 score per document:
 
 ```javascript
+const query = "<your query string>";
 const fields = ["serialNumber", "basicNumber", "customerCode", "partNumber", "lineNumber"];
 const results = new Map();
 

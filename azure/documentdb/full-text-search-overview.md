@@ -29,7 +29,7 @@ Azure DocumentDB full-text search is a BM25-scored, analyzer-driven keyword sear
 
 A search index in Azure DocumentDB is a separate object from a document index. You create it with the `createSearchIndexes` database command — not with `db.<coll>.createIndex({ field: "text" })` and not with `createIndexes` and a `"textSearch"` key type. The index definition declares which fields are searchable, their types, and the analyzer pipeline used at index time and query time.
 
-Queries run as the first stage of an aggregation pipeline using the `$search` operator. The engine returns documents ordered by BM25 relevance, which you can read through `{ $meta: "searchScore" }` in a downstream `$project` stage. Examples in this section use the Node.js MongoDB driver, but the same commands work from any MongoDB-compatible driver.
+Queries run as the first stage of an aggregation pipeline using the `$search` operator. The engine returns documents ordered by BM25 relevance, which you can read through `{ $meta: "searchScore" }` in a downstream `$project` stage. Examples in this section use mongosh-style MongoDB Shell syntax, but the same operations work from any MongoDB-compatible driver.
 
 Four rules apply to every Azure DocumentDB full-text search query:
 

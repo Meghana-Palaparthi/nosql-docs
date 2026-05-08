@@ -39,7 +39,7 @@ Each searchable field accepts two analyzer references:
 - **`analyzer`** — the index-time tokenization. Determines what's stored in the inverted index.
 - **`searchAnalyzer`** *(optional)* — the query-time tokenization. Defaults to the same value as `analyzer`.
 
-Setting `analyzer` and `searchAnalyzer` to **different** analyzers is the trick that makes prefix matching work: the field is indexed as every prefix using `edgeGram`, but the query is tokenized as a single keyword. A query for `"AB2"` becomes the single token `"ab2"`, which finds the prefix `"ab2"` of the indexed value `"abx098"`... wait, that doesn't match. Prefix matching works when the indexed value's prefix tokens include the query token — for example, indexing `"AB2900"` produces prefix tokens including `"ab2"`, so a query for `"AB2"` matches.
+Setting `analyzer` and `searchAnalyzer` to **different** analyzers is the trick that makes prefix matching work: the field is indexed as every prefix using `edgeGram`, but the query is tokenized as a single keyword. For example, indexing `"AB2900"` produces prefix tokens including `"ab2"`, and a query for `"AB2"` becomes the single token `"ab2"`, which matches that indexed prefix token.
 
 ## Pattern 1 — case-insensitive search
 
