@@ -4,6 +4,11 @@
       "source_path_from_root": "/azure/documentdb/hybrid-search.md",
       "redirect_url": "/azure/documentdb/full-text-search-hybrid",
       "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/azure/documentdb/full-text-search.md",
+      "redirect_url": "/azure/documentdb/full-text-search-overview",
+      "redirect_document_id": false
     }
   ]
 }

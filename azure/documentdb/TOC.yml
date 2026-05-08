@@ -82,8 +82,6 @@
                   href: full-text-search-path-hierarchy.md
                 - name: Multi-field search index
                   href: full-text-search-multifield-index.md
-                - name: Legacy $text engine reference
-                  href: full-text-search.md
             - name: Hybrid search (BM25 + vector)
               href: full-text-search-hybrid.md
             - name: Exact Nearest Neighbor (ENN) Vector Search

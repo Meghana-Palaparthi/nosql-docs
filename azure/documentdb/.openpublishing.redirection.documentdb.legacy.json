@@ -107,8 +107,8 @@
     },
     {
       "source_path_from_root": "/articles/cosmos-db/mongodb/vcore/full-text-search.md",
-      "redirect_url": "/azure/documentdb/full-text-search",
-      "redirect_document_id": true
+      "redirect_url": "/azure/documentdb/full-text-search-overview",
+      "redirect_document_id": false
     },
     {
       "source_path_from_root": "/articles/cosmos-db/mongodb/vcore/geospatial-support.md",
