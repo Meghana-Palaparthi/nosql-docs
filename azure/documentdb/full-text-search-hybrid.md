@@ -61,6 +61,9 @@ db.runCommand({
 });
 
 // ✅ Vector arm — DiskANN vector index for the embedding field.
+//    Swap "vector-diskann" for "vector-hnsw" or "vector-ivf" to use the
+//    HNSW or IVF index kinds; cosine, L2, and inner-product similarities
+//    are all supported. See vector-search.md for the full option matrix.
 db.products.createIndex(
   { embedding: "cosmosSearch" },
   {
@@ -123,10 +126,74 @@ const fused = rrf([kwHits, vecHits]);
 
 The same `rrf()` helper fuses any pair of ranked lists — fuzzy + phrase, multi-field fan-out results, or the keyword + vector combination shown here.
 
+## Server-side RRF with `$unionWith`
+
+When you'd rather keep fusion inside a single aggregation pipeline — no application-layer code, one round trip — combine the keyword and vector arms with `$unionWith`. Each arm computes its own per-rank reciprocal contribution; a final `$group` sums them per document.
+
+```javascript
+// ✅ End-to-end hybrid search in one aggregation pipeline.
+//    The vector arm runs first; the $unionWith inlines the keyword arm;
+//    the final $group sums the per-arm RRF contributions per document.
+const k = 60;     // RRF constant; 60 is a common default
+const topN = 10;  // final result depth
+
+db.products.aggregate([
+  // --- Vector arm ----------------------------------------------------------
+  { $search: { cosmosSearch: { path: "embedding", query: qv, k: 50 } } },
+  { $group: { _id: null, hits: { $push: "$$ROOT" } } },
+  { $unwind: { path: "$hits", includeArrayIndex: "rank" } },
+  {
+    $project: {
+      _id: "$hits._id",
+      title: "$hits.title",
+      rrf: { $divide: [1, { $add: ["$rank", k, 1] }] }
+    }
+  },
+
+  // --- Keyword arm (inlined) ----------------------------------------------
+  {
+    $unionWith: {
+      coll: "products",
+      pipeline: [
+        { $search: {
+            index: "idx_description_fts",
+            text: { query: userQuery, path: "description" }
+        }},
+        { $limit: 50 },
+        { $group: { _id: null, hits: { $push: "$$ROOT" } } },
+        { $unwind: { path: "$hits", includeArrayIndex: "rank" } },
+        {
+          $project: {
+            _id: "$hits._id",
+            title: "$hits.title",
+            rrf: { $divide: [1, { $add: ["$rank", k, 1] }] }
+          }
+        }
+      ]
+    }
+  },
+
+  // --- Fuse ----------------------------------------------------------------
+  {
+    $group: {
+      _id: "$_id",
+      title: { $first: "$title" },
+      score: { $sum: "$rrf" }
+    }
+  },
+  { $sort: { score: -1 } },
+  { $limit: topN }
+]);
+```
+
+Use the server-side variant when you want a single round-trip and no client-side fusion code. Use the [client-side `rrf()` helper](#step-3reciprocal-rank-fusion-rrf) when you also want to fuse in additional ranked lists — phrase results, per-field fan-out results, or hits from a third retriever — without rewriting the pipeline each time.
+
 ## Tuning hybrid search
 
 - **Keep per-arm depth modest.** Set `$limit` for the keyword arm and `k` for the vector arm to 20–100. RRF doesn't benefit from deep lists; quality plateaus quickly past the top results from each arm.
-- **Weight the more reliable signal.** When one arm consistently outperforms the other for your workload, weight its contribution: `score += w / (k + rank)` with `w` between 1.0 and 2.0 for the favored arm.
+- **Weight the more reliable signal.** When one arm consistently outperforms the other for your workload, weight its contribution: `score += w / (k + rank)` with `w` between 1.0 and 2.0 for the favored arm. In the `$unionWith` variant, multiply the per-arm `$divide` expression by the weight before the final `$group`.
+- **Tune the RRF constant per arm.** The `$unionWith` example uses the same `k` for both arms. Using a larger `k` for the keyword arm (for example, `k = 60` for vector and `k = 10` for keyword) penalizes lower-ranked keyword hits more aggressively when the keyword arm is noisier.
+- **Choose the vector index kind for your scale.** DiskANN is the default for production catalogs with millions of vectors. HNSW gives lower-latency lookups at higher memory cost; IVF gives faster builds and lower memory cost at the price of recall. See [Vector search](vector-search.md) for the full matrix.
 - **Cache embeddings for popular queries.** Vector arm latency is dominated by the embedding API call, not the DiskANN lookup. Caching the embeddings for the most common queries cuts hybrid latency to roughly the keyword arm's latency.
 
 ## Roadmap: `$search.compound` and a multi-field keyword arm
