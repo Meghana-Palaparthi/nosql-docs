@@ -67,7 +67,25 @@
         - name: Data Retrieval
           items:
             - name: Full-text search
-              href: full-text-search.md
+              items:
+                - name: Overview
+                  href: full-text-search-overview.md
+                - name: BM25 keyword search
+                  href: full-text-search-bm25-keyword.md
+                - name: Fuzzy search
+                  href: full-text-search-fuzzy.md
+                - name: Phrase search and proximity matching
+                  href: full-text-search-phrase-proximity.md
+                - name: Custom analyzers
+                  href: full-text-search-custom-analyzers.md
+                - name: Hierarchical identifier search
+                  href: full-text-search-path-hierarchy.md
+                - name: Multi-field search index
+                  href: full-text-search-multifield-index.md
+                - name: Hybrid search (BM25 + vector)
+                  href: full-text-search-hybrid.md
+                - name: Legacy $text engine reference
+                  href: full-text-search.md
             - name: Hybrid Search
               href: hybrid-search.md
             - name: Exact Nearest Neighbor (ENN) Vector Search
