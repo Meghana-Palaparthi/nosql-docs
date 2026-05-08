@@ -80,6 +80,8 @@
       items:
         - name: Vector indexing and search
           href: vector-search.md
+        - name: Integrated Embeddings
+          href: integrated-embeddings.md
         - name: Sharded DiskANN for focused search
           href: gen-ai/sharded-diskann.md
         - name: Tips for vector search performance
