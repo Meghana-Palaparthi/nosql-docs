@@ -190,3 +190,9 @@ Cap `maxGram` to a realistic identifier length. Leaving `maxGram: 255` for short
 - [Multi-field search index](full-text-search-multifield-index.md)
 - [BM25 keyword search](full-text-search-bm25-keyword.md)
 - [Full-text search overview and migration table](full-text-search-overview.md)
+
+
+## Next step
+
+> [!div class="nextstepaction"]
+> [Create a lifetime free-tier cluster for Azure DocumentDB](free-tier.md)

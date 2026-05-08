@@ -173,3 +173,9 @@ When `$search.compound` ships, the fan-out loop above becomes a single server-si
 - [Hierarchical identifier search (`pathHierarchy` tokenizer)](full-text-search-path-hierarchy.md)
 - [Hybrid search (BM25 + vector)](full-text-search-hybrid.md)
 - [Full-text search overview and migration table](full-text-search-overview.md)
+
+
+## Next step
+
+> [!div class="nextstepaction"]
+> [Create a lifetime free-tier cluster for Azure DocumentDB](free-tier.md)

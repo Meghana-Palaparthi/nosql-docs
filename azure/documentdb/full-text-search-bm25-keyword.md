@@ -137,3 +137,9 @@ When `$search.compound` ships, server-side `should` / `must` clauses across mult
 - [Custom analyzers](full-text-search-custom-analyzers.md)
 - [Hybrid search (BM25 + vector)](full-text-search-hybrid.md)
 - [Full-text search overview and migration table](full-text-search-overview.md)
+
+
+## Next step
+
+> [!div class="nextstepaction"]
+> [Create a lifetime free-tier cluster for Azure DocumentDB](free-tier.md)

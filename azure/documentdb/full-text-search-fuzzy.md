@@ -110,3 +110,9 @@ Edge n-gram indexing is O(log n) and ranked, but it doesn't tolerate typos in th
 - [Custom analyzers (edgeGram alternative for IDs and SKUs)](full-text-search-custom-analyzers.md)
 - [Phrase search and proximity matching](full-text-search-phrase-proximity.md)
 - [Full-text search overview and migration table](full-text-search-overview.md)
+
+
+## Next step
+
+> [!div class="nextstepaction"]
+> [Create a lifetime free-tier cluster for Azure DocumentDB](free-tier.md)

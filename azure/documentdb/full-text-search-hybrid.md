@@ -206,3 +206,9 @@ When `$search.compound` ships, the keyword arm of a hybrid query can cover multi
 - [Multi-field search index](full-text-search-multifield-index.md)
 - [Custom analyzers](full-text-search-custom-analyzers.md)
 - [Full-text search overview and migration table](full-text-search-overview.md)
+
+
+## Next step
+
+> [!div class="nextstepaction"]
+> [Create a lifetime free-tier cluster for Azure DocumentDB](free-tier.md)

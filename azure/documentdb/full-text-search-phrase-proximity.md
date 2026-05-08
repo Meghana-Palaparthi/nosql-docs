@@ -107,3 +107,9 @@ db.products_10M.aggregate([
 - [Fuzzy search (constraint callout)](full-text-search-fuzzy.md#known-constraint)
 - [Hybrid search (BM25 + vector)](full-text-search-hybrid.md)
 - [Full-text search overview and migration table](full-text-search-overview.md)
+
+
+## Next step
+
+> [!div class="nextstepaction"]
+> [Create a lifetime free-tier cluster for Azure DocumentDB](free-tier.md)

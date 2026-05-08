@@ -97,3 +97,9 @@ A few capabilities aren't yet supported natively. Most have a documented workaro
 - [Hierarchical identifier search](full-text-search-path-hierarchy.md)
 - [Multi-field search index](full-text-search-multifield-index.md)
 - [Hybrid search (BM25 + vector)](full-text-search-hybrid.md)
+
+
+## Next step
+
+> [!div class="nextstepaction"]
+> [Create a lifetime free-tier cluster for Azure DocumentDB](free-tier.md)
