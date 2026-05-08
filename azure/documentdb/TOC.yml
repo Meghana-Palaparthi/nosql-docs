@@ -60,40 +60,40 @@
           href: tutorial-nodejs-web-app.md
         - name: Real-time AI-driven custom content generation
           href: tutorial-ai-advertisement-generation.md
-    - name: Integrated vector database
+    - name: Search and Retrieval
       items:
-        - name: Vector database
-          href: vector-search.md
-        - name: Data Retrieval
+        - name: Full-text search
           items:
-            - name: Full-text search
-              items:
-                - name: Overview
-                  href: full-text-search-overview.md
-                - name: BM25 keyword search
-                  href: full-text-search-bm25-keyword.md
-                - name: Fuzzy search
-                  href: full-text-search-fuzzy.md
-                - name: Phrase search and proximity matching
-                  href: full-text-search-phrase-proximity.md
-                - name: Custom analyzers
-                  href: full-text-search-custom-analyzers.md
-                - name: Hierarchical identifier search
-                  href: full-text-search-path-hierarchy.md
-                - name: Multi-field search index
-                  href: full-text-search-multifield-index.md
-            - name: Hybrid search (BM25 + vector)
-              href: full-text-search-hybrid.md
+            - name: Overview
+              href: full-text-search-overview.md
+            - name: BM25 keyword search
+              href: full-text-search-bm25-keyword.md
+            - name: Fuzzy search
+              href: full-text-search-fuzzy.md
+            - name: Phrase search and proximity matching
+              href: full-text-search-phrase-proximity.md
+            - name: Custom analyzers
+              href: full-text-search-custom-analyzers.md
+            - name: Hierarchical identifier search
+              href: full-text-search-path-hierarchy.md
+            - name: Multi-field search index
+              href: full-text-search-multifield-index.md
+        - name: Vector search
+          items:
+            - name: Vector database
+              href: vector-search.md
             - name: Exact Nearest Neighbor (ENN) Vector Search
               href: enn-vector-search.md
-            - name: RAG with Langchain & OpenAI
-              href: rag.md
-        - name: Vector Index Compression
-          items:
-            - name: Product Quantization
-              href: product-quantization.md
-            - name: Half-Precision Vector Indexing
-              href: half-precision.md
+            - name: Vector Index Compression
+              items:
+                - name: Product Quantization
+                  href: product-quantization.md
+                - name: Half-Precision Vector Indexing
+                  href: half-precision.md
+        - name: Hybrid search (BM25 + vector)
+          href: full-text-search-hybrid.md
+        - name: RAG with Langchain & OpenAI
+          href: rag.md
     - name: Integrate with AI Tools
       items:
         - name: AI Frameworks
