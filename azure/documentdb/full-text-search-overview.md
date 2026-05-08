@@ -15,15 +15,15 @@ Azure DocumentDB full-text search is a BM25-scored, analyzer-driven keyword sear
 
 ## What's new in this release
 
-| Capability | Operator or primitive | Status |
-| --- | --- | --- |
-| BM25 keyword search | `$search.text` | Generally available |
-| Phrase search and proximity matching | `$search.phrase` + `slop` | Generally available |
-| Fuzzy (typo-tolerant) search | `$search.text.fuzzy.maxEdits` | Generally available |
-| Custom analyzers (case-insensitive, prefix matching) | `keyword` / `lowerCase` / `asciiFolding` / `edgeGram` | Generally available |
-| Hierarchical identifier search | `pathHierarchy` tokenizer | Generally available |
-| Multi-field search index | One index, many `mappings.fields` entries | Generally available |
-| Hybrid keyword + vector retrieval | `$search.text` + `cosmosSearch` + RRF (client-side) | Generally available |
+| Capability | Operator or primitive |
+| --- | --- |
+| BM25 keyword search | `$search.text` |
+| Phrase search and proximity matching | `$search.phrase` + `slop` |
+| Fuzzy (typo-tolerant) search | `$search.text.fuzzy.maxEdits` |
+| Custom analyzers (case-insensitive, prefix matching) | `keyword` / `lowerCase` / `asciiFolding` / `edgeGram` |
+| Hierarchical identifier search | `pathHierarchy` tokenizer |
+| Multi-field search index | One index, many `mappings.fields` entries |
+| Hybrid keyword + vector retrieval | `$search.text` + `cosmosSearch` + RRF |
 
 ## How Azure DocumentDB full-text search works
 
@@ -74,6 +74,19 @@ If your application uses the community MongoDB `$text` operator or `{ field: "te
 | Synonym support | *Not available* | Not yet supported natively; planned | — |
 
 The migration story is straightforward: every capability the legacy engine offered remains available, and most of what it could not do — fuzzy matching, proximity, custom analyzers, hierarchical identifier search, hybrid retrieval — is now part of the same `$search` surface area.
+
+## Limitations and roadmap
+
+A few capabilities aren't yet supported natively. Most have a documented workaround you can use today.
+
+| Capability | Status | Workaround |
+| --- | --- | --- |
+| `$search.compound` (server-side `should` / `must` / `minimumShouldMatch` across multiple fields) | Roadmap | Fan-out per field and merge in the application layer. See [Multi-field search index](full-text-search-multifield-index.md#fan-out-and-merge-multi-field-query-workaround). |
+| Combining `$search.phrase` with `fuzzy` in a single clause | Not supported | Run a phrase query and a fuzzy query separately and fuse the result lists with [Reciprocal Rank Fusion](full-text-search-hybrid.md#step-3reciprocal-rank-fusion-rrf). |
+| Query-time term boosting (per-clause weight in `$search`) | Roadmap (ships with `$search.compound`) | Use BM25's natural inverse-document-frequency weighting; apply weighting at fusion time in client code or `$unionWith`. |
+| Native autocomplete operator | Not yet exposed | Implement type-ahead with the [`edgeGram` custom analyzer](full-text-search-custom-analyzers.md#pattern-2--prefix-matching-on-ids-and-skus). |
+| Faceted search as a first-class operator | Not yet exposed | `$match` and `$group` downstream of `$search` produce facet counts. See [BM25 keyword search](full-text-search-bm25-keyword.md#combining-with-filters). |
+| Synonym support | Roadmap | Expand synonyms client-side and `OR` the expanded terms into the query string until native support ships. |
 
 ## Next steps
 
