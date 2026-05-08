@@ -86,8 +86,6 @@
                   href: full-text-search-hybrid.md
                 - name: Legacy $text engine reference
                   href: full-text-search.md
-            - name: Hybrid Search
-              href: hybrid-search.md
             - name: Exact Nearest Neighbor (ENN) Vector Search
               href: enn-vector-search.md
             - name: RAG with Langchain & OpenAI

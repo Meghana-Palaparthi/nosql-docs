@@ -267,8 +267,8 @@
     },
     {
       "source_path_from_root": "/articles/cosmos-db/mongodb/vcore/hybrid-search.md",
-      "redirect_url": "/azure/documentdb/hybrid-search",
-      "redirect_document_id": true
+      "redirect_url": "/azure/documentdb/full-text-search-hybrid",
+      "redirect_document_id": false
     },
     {
       "source_path_from_root": "/articles/cosmos-db/mongodb/vcore/index.yml",
