@@ -183,6 +183,8 @@ Use the **View Existing Jobs** tab to monitor the migration status of initialize
 
 The status is automatically updated at frequent intervals. Offline jobs automatically complete once the selected collection snapshots are copied to target. However, the online migrations need to be manually cut over.
 
+You can **Pause** a migration job to temporarily halt it at a logical point. When you're ready to continue, select **Resume** to pick up from where the job stopped.
+
 :::image type="content" source="media/how-to-migrate-vs-code-extension/monitor-job.png" alt-text="Screenshot of the view existing jobs screen." lightbox="media/how-to-migrate-vs-code-extension/monitor-job.png" :::
 
 To view the collection-wise status, select a row from the table.
