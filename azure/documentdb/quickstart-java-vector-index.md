@@ -9,7 +9,6 @@ ai-usage: ai-generated
 author: diberry
 ms.author: diberry
 ms.service: azure-documentdb
-ms.subservice: vector-search
 ---
 
 # Quickstart: Vector index with Java in Azure DocumentDB
@@ -1007,4 +1006,3 @@ db.dropDatabase()
 - [Vector search overview](vector-search)
 - [ENN vector search](enn-vector-search)
 - [Product quantization](product-quantization)
-- [Quickstart: Vector search with Java](quickstart-java-vector-search)

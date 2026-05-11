@@ -9,7 +9,6 @@ ai-usage: ai-generated
 author: diberry
 ms.author: diberry
 ms.service: azure-documentdb
-ms.subservice: vector-search
 ---
 
 # Quickstart: Vector index with Python in Azure DocumentDB
@@ -998,4 +997,3 @@ If you created an Azure DocumentDB cluster specifically for this quickstart, you
 - [Vector search overview](vector-search)
 - [ENN vector search](enn-vector-search)
 - [Product quantization](product-quantization)
-- [Quickstart: Vector search with Python](quickstart-python-vector-search)
