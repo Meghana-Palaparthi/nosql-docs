@@ -994,6 +994,6 @@ If you created an Azure DocumentDB cluster specifically for this quickstart, you
 
 ## Related content
 
-- [Vector search overview](vector-search)
-- [ENN vector search](enn-vector-search)
-- [Product quantization](product-quantization)
+- [Vector search overview](./vector-search.md)
+- [ENN vector search](./enn-vector-search.md)
+- [Product quantization](./product-quantization.md)
