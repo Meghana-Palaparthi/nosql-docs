@@ -53,6 +53,9 @@ Integrated Embeddings is configured as part of the container vector embedding po
 | `endpoint`       | The endpoint URL of the Microsoft Foundry resource that hosts the deployment, for example `https://<foundry-resource-name>.openai.azure.com/`. |
 | `authType`       | The authentication type used to make inference API calls to the embedding model. `Entra` is currently the only supported value.                |
 
+> [!NOTE]
+> For each item, Azure Cosmos DB concatenates the string values at the paths listed in `sourcePaths` and sends the result to the embedding model as a single input. The combined input is limited to 8,192 tokens per item, which is the maximum supported by the [Azure OpenAI embedding models](/azure/foundry/openai/how-to/embeddings#best-practice). If the combined text exceeds this limit, the trailing content is truncated before embedding.
+
 ### Example: single source path
 
 This example configures Azure Cosmos DB to generate an embedding from the `/text` property and store it in `/embedding`.
@@ -338,7 +341,6 @@ Integrated Embeddings is available at no additional cost. You pay only for the u
 Integrated Embeddings has the following limitations:
 
 - **Supported models**: Integrated Embeddings supports Azure OpenAI embedding models via Microsoft Foundry. The initial release supports `text-embedding-ada-002`, `text-embedding-3-small`, and `text-embedding-3-large`.
-- **Source input size**: The values from all `sourcePaths` are concatenated and sent to the embedding model as a single input. The combined input is capped at 8,192 tokens; longer inputs are truncated before embedding.
 
 ## Related content
 
