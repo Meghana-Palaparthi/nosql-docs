@@ -270,7 +270,7 @@ Use your preferred VPN tools to set up network connectivity between Azure and yo
 
 In this topology, the VPN/ExpressRoute gateway and source workloads are in the same virtual network. DMS peers directly with this virtual network and uses `useRemoteGateways` to reach the on-premises or other-cloud source.
 
-:::image type="content" source="media/how-to-migrate-vs-code-extension/private-endpoint-single-vnet.png" alt-text="Shows single virtual network topology for private connectivity from on-premises or other cloud." lightbox="media/how-to-migrate-vs-code-extension/private-endpoint-single-vnet.png" :::
+:::image type="content" source="media/how-to-migrate-vs-code-extension/private-endpoint-single-virtual-network.png" alt-text="Shows single virtual network topology for private connectivity from on-premises or other cloud." lightbox="media/how-to-migrate-vs-code-extension/private-endpoint-single-virtual-network.png" :::
 
 ##### Hub-direct
 
