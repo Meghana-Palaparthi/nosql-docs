@@ -123,13 +123,13 @@ When you choose a partition key, avoid patterns that look convenient at first bu
 
 ### Using `id` as the partition key for general-purpose workloads
 
-Using `/id` creates a 1:1 mapping between items and logical partitions. This pattern gives excellent write distribution and makes point reads efficient. However, for any query that filters on properties other than `id`, Azure Cosmos DB usually needs a cross-partition query.
+Using `/id` creates a 1:1 mapping between items and partition key values, which means each item is effectively its own logical partition. This pattern gives excellent write distribution and makes point reads efficient. However, for any query that filters on properties other than `id`, Azure Cosmos DB usually needs a cross-partition query.
 
 Use `/id` when your workload is mostly point reads and writes, and you rarely run broader filters. For mixed query workloads, choose a key that also matches your filter patterns.
 
 ### Using low-cardinality fields
 
-Using fields like `status`, `type`, or `country` can create only a small number of logical partitions. This pattern often leads to uneven RU and storage distribution, and can create hot partitions under load.
+Using fields like `status`, `type`, or `country` creates a limited number of logical partitions equal to the number of distinct values. This pattern often leads to uneven RU and storage distribution, and can create hot partitions under load.
 
 Use a low-cardinality field only when data volume is small or traffic per value is predictable and low. Otherwise, use a property (or synthetic key) with more distinct values.
 
@@ -137,7 +137,7 @@ Use a low-cardinality field only when data volume is small or traffic per value 
 
 A high-cardinality key isn't enough by itself. For example, if you use a random GUID that your queries never filter on, most reads become cross-partition queries even though writes distribute well.
 
-Use a high-cardinality key only if it also aligns with common query predicates. If your application has multiple independent query patterns, consider [global secondary indexes (preview)](global-secondary-indexes.md).
+Use a high-cardinality key only if it also aligns with common query predicates. If your application has multiple independent query patterns, consider [global secondary indexes (preview)](global-secondary-indexes.md) when preview features fit your deployment requirements.
 
 For more partition key selection guidance, see [Choose a partition key](#choose-a-partition-key) and [Partition keys for read-heavy containers](#partition-keys-for-read-heavy-containers).
 
