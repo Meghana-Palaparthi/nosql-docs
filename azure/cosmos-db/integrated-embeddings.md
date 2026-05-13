@@ -16,7 +16,9 @@ appliesto:
   - ✅ NoSQL
 ---
 
-# Integrated Embeddings in Azure Cosmos DB for NoSQL
+# Integrated Embeddings in Azure Cosmos DB for NoSQL (Preview)
+
+[!INCLUDE[Preview](includes/notice-preview.md)]
 
 ## What are integrated embeddings?
 
@@ -55,7 +57,7 @@ Integrated Embeddings is configured as part of the container vector embedding po
 | `authType`       | The authentication type used to make inference API calls to the embedding model. `Entra` is currently the only supported value.                |
 
 > [!NOTE]
-> For each item, Azure Cosmos DB concatenates the string values at the paths listed in `sourcePaths` and sends the result to the embedding model as a single input. The combined input is limited to 8,192 tokens per item, which is the maximum supported by the [Azure OpenAI embedding models](/azure/foundry/openai/how-to/embeddings#best-practice). If the combined text exceeds this limit, the trailing content is truncated before embedding.
+> For each item, Azure Cosmos DB concatenates the string values at the paths listed in `sourcePaths` and sends the result to the embedding model as a single input. This combined input is limited to 8,192 tokens per item, which is the maximum supported by the [Azure OpenAI embedding models](/azure/foundry/openai/how-to/embeddings#best-practice). If the combined input exceeds this limit, only the trailing portion of that input is truncated before it's sent to the embedding model. Truncation applies only to the embedding input. The item stored in Azure Cosmos DB, including any properties not listed in `sourcePaths`, isn't modified.
 
 ### Example: single source path
 
