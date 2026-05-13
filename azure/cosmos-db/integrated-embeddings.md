@@ -337,12 +337,6 @@ Integrated Embeddings is available at no additional cost. You pay only for the u
 - **Microsoft Foundry**: Embedding model inference is billed to your [Microsoft Foundry resource](https://azure.microsoft.com/pricing/details/ai-foundry-models/aoai/#pricing).
 - **Azure Cosmos DB**: Request units are consumed when Azure Cosmos DB reads the change feed to detect item changes and writes generated embeddings back to your items.
 
-## Limitations
-
-Integrated Embeddings has the following limitations:
-
-- **Supported models**: Integrated Embeddings supports Azure OpenAI embedding models via Microsoft Foundry. The initial release supports `text-embedding-ada-002`, `text-embedding-3-small`, and `text-embedding-3-large`.
-
 ## Related content
 
 - [VectorDistance system function](/cosmos-db/query/vectordistance)
