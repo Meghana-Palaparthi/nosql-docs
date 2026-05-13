@@ -6,7 +6,7 @@ ms.author: mjbrown
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: concept-article
-ms.date: 12/05/2025
+ms.date: 05/13/2026
 ms.custom: cosmos-db-video
 ai-usage: ai-assisted
 appliesto:
@@ -428,6 +428,44 @@ Review documents:
     "type": "review"
 }
 ```
+
+## Versioning and temporal data patterns
+
+Choose a versioning pattern based on retention requirements, query latency goals, and cost limits when your data changes frequently and you need to query older states.
+
+### Event sourcing with change feed
+
+Use an append-only event model where each mutation is written as a new event item. Use the [change feed design patterns](change-feed-design-patterns.md#event-sourcing) guidance to project current state into one or more materialized views.
+
+- **Storage cost:** Higher over time because every mutation is retained as an event.
+- **Query complexity:** Higher for point-in-time reconstruction unless you maintain read-optimized projections.
+- **Write throughput:** Higher than overwrite-in-place because each mutation is an extra write, but writes stay simple and scalable.
+
+### Snapshot plus delta pattern
+
+Store periodic full snapshots of an entity and store incremental deltas between snapshots. To read a historical version, load the closest snapshot and then apply later deltas up to the target timestamp.
+
+- **Storage cost:** Lower than keeping every version as full copies, especially for large items with small changes.
+- **Query complexity:** Moderate to high because historical reads might require replaying multiple deltas.
+- **Write throughput:** Moderate because you write small deltas frequently and larger snapshots on a schedule.
+
+### TTL-based version expiry
+
+Use [time to live (TTL)](time-to-live.md) to automatically age out older versions while keeping the current version indefinitely. A common approach is to set container TTL to `-1` and assign `ttl` only to historical version items.
+
+- **Storage cost:** Predictable and bounded because expired versions are removed automatically.
+- **Query complexity:** Low to moderate, depending on whether your retention window is enough for your audit or replay needs.
+- **Write throughput:** Similar to your chosen versioning model, with extra background delete activity as versions expire.
+
+### Analytical store for historical access
+
+Enable [analytical store](analytical-store-introduction.md) to run large historical and trend queries on a synchronized column store without affecting transactional query performance on your operational container. Analytical store reflects the data that you persist, but it doesn't create prior versions when items are overwritten. For versioned or point-in-time reads, first store append-only events or snapshots, and then query that temporal dataset through analytical store.
+
+- **Storage cost:** Adds analytical storage charges, but can reduce transactional RU consumption for historical reporting.
+- **Query complexity:** Lower for long-range analytics because columnar scans and aggregations are optimized for this workload.
+- **Write throughput:** Minimal direct impact on transactional writes because analytical synchronization is managed automatically.
+
+In practice, teams often combine these patterns. For example, use event sourcing or snapshots for retention semantics, TTL for lifecycle control, and analytical store for cost-efficient historical analytics.
 
 ## Data modeling for Microsoft Fabric and Azure Cosmos DB Mirroring
 

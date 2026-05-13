@@ -130,6 +130,10 @@ Key subdirectories:
 - For alignment: `| :-- |` (left), `| :--: |` (center), `| --: |` (right)
 - Empty first column headers are allowed when first column values are bolded
 
+#### File endings
+
+- All Markdown files must end with a trailing newline
+
 ### Writing Style
 
 #### Word choice
@@ -156,6 +160,57 @@ Use verbs that work for all input methods (mouse, keyboard, touch):
 - Use people-first language: "users who are blind" not "blind users"
 - Use gender-neutral terms: "sales representative" not "salesman"
 - Show diverse perspectives in examples
+
+### Pull request and issue naming
+
+When creating pull requests or issues, follow this naming convention.
+
+#### PR title format
+
+```text
+<Service prefix> | <Short description>
+```
+
+Choose the service prefix based on which files the PR changes:
+
+| Prefix | When to use |
+| --- | --- |
+| `Cosmos DB` | Changes to `azure/cosmos-db/` or `cosmos-db/` files |
+| `DocumentDB` | Changes to `azure/documentdb/` or `documentdb/` files |
+| `NoSQL` | Changes that span both services, touch `nosql/` files, or affect cross-cutting configuration |
+
+Examples:
+
+- `Cosmos DB | Update query language TOC`
+- `DocumentDB | Fix broken links`
+- `NoSQL | Enable public contributions`
+
+#### PR title suffixes
+
+Append a bracketed suffix when the PR has a special status:
+
+| Suffix | Meaning |
+| --- | --- |
+| `[WIP]` | Work in progress, not ready for review |
+| `[BULK]` | Bulk mechanical change across many files |
+| `[DO NOT MERGE]` | Experimental or test PR that must not be merged |
+
+Examples:
+
+- `Cosmos DB | Update branding to drop "for NoSQL" in articles [BULK]`
+- `DocumentDB | Test manual content sync [DO NOT MERGE]`
+
+#### Issue title format
+
+AI-generated issues must include an emoji prefix. The presence of the emoji prefix indicates AI authorship, so there's no need for a "robot" emoji. Choose an emoji that reflects the nature of the issue rather than a generic robot emoji. Use a `[TODO]` suffix for future items or placeholder issues. Do not include a service prefix in issue titles.
+
+Examples:
+
+- `🔧 Add MongoDB delete examples to Python quickstart`
+- `📊 AI Response Quality pilot — Cosmos DB retrievability improvements`
+- `🟡 Items to fix — Partially incorrect`
+- `🔗 Fix broken cross-reference links in partition key articles`
+- `📝 Document RU charge behavior for cross-partition queries`
 
 ### Review Style
 

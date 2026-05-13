@@ -36,7 +36,7 @@ The following sections demonstrate how to manage the Azure Cosmos DB account, in
 
 * [Create an Azure Cosmos DB account](#create-account)
 * [Update an Azure Cosmos DB account](#update-account)
-* [List all Azure Cosmos DB accounts in a subscription](#list-accounts)
+* [Filter and list Azure Cosmos DB accounts by resource group](#list-accounts)
 * [Get an Azure Cosmos DB account](#get-account)
 * [Delete an Azure Cosmos DB account](#delete-account)
 * [Update tags for an Azure Cosmos DB account](#update-tags)
@@ -46,7 +46,7 @@ The following sections demonstrate how to manage the Azure Cosmos DB account, in
 
 ### <a id="create-account"></a> Create an Azure Cosmos DB account
 
-This command creates an Azure Cosmos DB database account with [multiple regions][distribute-data-globally], [service-managed failover](how-to-manage-database-account.yml#enable-service-managed-failover-for-your-azure-cosmos-db-account) and bounded-staleness [consistency policy](consistency-levels.md).
+This command creates an Azure Cosmos DB database account with [multiple regions][distribute-data-globally], [service-managed failover](how-to-manage-database-account.yml) and bounded-staleness [consistency policy](consistency-levels.md).
 
 ```azurepowershell-interactive
 $resourceGroupName = "myResourceGroup"
@@ -78,9 +78,11 @@ New-AzCosmosDBAccount `
 
 Azure Cosmos DB accounts can be configured with IP Firewall, Virtual Network service endpoints, and private endpoints. For information on how to configure the IP Firewall for Azure Cosmos DB, see [Configure IP Firewall](how-to-configure-firewall.md). For information on how to enable service endpoints for Azure Cosmos DB, see [Configure access from virtual networks](how-to-configure-vnet-service-endpoint.md). For information on how to enable private endpoints for Azure Cosmos DB, see [Configure access from private endpoints](how-to-configure-private-endpoints.md).
 
-### <a id="list-accounts"></a> List all Azure Cosmos DB accounts in a Resource Group
+### <a id="list-accounts"></a> Filter and list Azure Cosmos DB accounts by resource group
 
-This command lists all Azure Cosmos DB accounts in a Resource Group.
+Use resource group filtering when you organize accounts by team, environment, or cost center and need to list only the relevant Azure Cosmos DB accounts.
+
+This command lists all Azure Cosmos DB accounts in a resource group.
 
 ```azurepowershell-interactive
 $resourceGroupName = "myResourceGroup"

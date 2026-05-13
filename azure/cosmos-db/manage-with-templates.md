@@ -6,8 +6,9 @@ ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.custom: devx-track-arm-template
 ms.topic: how-to
-ms.date: 02/18/2022
+ms.date: 05/13/2026
 ms.author: mjbrown
+ai-usage: ai-assisted
 appliesto:
   - ✅ NoSQL
 ---
@@ -24,6 +25,9 @@ This article only shows Azure Resource Manager template examples for API for NoS
 > * To change the throughput values, redeploy the template with updated RU/s.
 > * When you add or remove locations to an Azure Cosmos DB account, you can't simultaneously modify other properties. These operations must be done separately.
 > * To provision throughput at the database level and share across all containers, apply the throughput values to the database options property.
+
+> [!TIP]
+> Azure Resource Manager (ARM) template deployments might fail if Azure Policy assignments block certain configurations. Common examples include requiring private endpoints, disabling public access, or enforcing specific backup policies. To identify the blocking policy, check the deployment error message in the Azure portal or Azure CLI output — it includes the policy assignment name and definition ID. You can then modify your template to comply with the policy, request a policy exemption, or work with your Azure administrator to adjust the policy assignment. For resolution steps, see [Troubleshoot Azure Policy](/azure/governance/policy/troubleshoot/general). For a list of built-in Azure Policy definitions for Azure Cosmos DB, see [Azure Policy built-in definitions for Azure Cosmos DB](policy-reference.md).
 
 To create any of the Azure Cosmos DB resources below, copy the following example template into a new json file. You can optionally create a parameters json file to use when deploying multiple instances of the same resource with different names and values. There are many ways to deploy Azure Resource Manager templates including, [Azure portal](/azure/azure-resource-manager/templates/deploy-portal), [Azure CLI](/azure/azure-resource-manager/templates/deploy-cli), [Azure PowerShell](/azure/azure-resource-manager/templates/deploy-powershell) and [GitHub](/azure/azure-resource-manager/templates/deploy-to-azure-button).
 
