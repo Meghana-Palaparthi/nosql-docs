@@ -117,6 +117,30 @@ If you need [multi-item ACID transactions](database-transactions-optimistic-conc
 > [!NOTE]
 > If you only have one physical partition, or the number of partitions is small, for example <= 5, the value of the partition key might not be relevant. For queries, the overhead of checking each additional physical partition when the partition key is not included is 2-3 RU per physical partition. Learn more about [physical partitions](partitioning.md#physical-partitions).
 
+## Common partition key anti-patterns
+
+When you choose a partition key, avoid patterns that look convenient at first but can create scale or query issues later.
+
+### Using `id` as the partition key for general-purpose workloads
+
+Using `/id` creates a 1:1 mapping between items and logical partitions. This pattern gives excellent write distribution and makes point reads efficient. However, for any query that filters on properties other than `id`, Azure Cosmos DB usually needs a cross-partition query.
+
+Use `/id` when your workload is mostly point reads and writes, and you rarely run broader filters. For mixed query workloads, choose a key that also matches your filter patterns.
+
+### Using low-cardinality fields
+
+Using fields like `status`, `type`, or `country` can create only a small number of logical partitions. This pattern often leads to uneven RU and storage distribution, and can create hot partitions under load.
+
+Use a low-cardinality field only when data volume is small or traffic per value is predictable and low. Otherwise, use a property (or synthetic key) with more distinct values.
+
+### Using high-cardinality fields with no query alignment
+
+A high-cardinality key isn't enough by itself. For example, if you use a random GUID that your queries never filter on, most reads become cross-partition queries even though writes distribute well.
+
+Use a high-cardinality key only if it also aligns with common query predicates. If your application has multiple independent query patterns, consider [global secondary indexes (preview)](global-secondary-indexes.md).
+
+For more partition key selection guidance, see [Choose a partition key](#choose-a-partition-key) and [Partition keys for read-heavy containers](#partition-keys-for-read-heavy-containers).
+
 ## Types of partition keys
 
 | **Partitioning strategy** | **When to use** | **Pros** | **Cons** |
