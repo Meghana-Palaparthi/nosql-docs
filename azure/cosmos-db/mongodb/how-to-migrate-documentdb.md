@@ -154,8 +154,6 @@ Azure DocumentDB clusters are created locked down by default. To enable communic
 
 1. Observe the **IP Address** in this step.
 
-    :::image source="media/how-to-migrate-documentdb/target-firewall.png" alt-text="Screenshot of the target firewall check section and the source account's IP address.":::
-
 1. Navigate to your target Azure DocumentDB cluster using another browser window or tab.
 
 1. Select **Networking** in the **Settings** section of the resource menu.
