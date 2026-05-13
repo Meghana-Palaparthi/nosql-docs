@@ -21,29 +21,34 @@ ms.custom:
 
 Learn to use vector search in Azure DocumentDB with the .NET MongoDB driver to store and query vector data efficiently.
 
-This quickstart provides a guided tour of key vector search techniques using a [.NET sample app](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/vector-search-dotnet) on GitHub.
+This quickstart provides a guided tour of key vector search techniques by using a [.NET sample app](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/vector-search-dotnet) on GitHub.
 
-The app uses a sample hotel dataset in a JSON file with pre-calculated vectors from the `text-embedding-3-small` model, though you can also generate the vectors yourself. The hotel data includes hotel names, locations, descriptions, and vector embeddings.
+The app uses a sample hotel dataset in a JSON file with pre-calculated vectors from the `text-embedding-3-small` model. You can also generate the vectors yourself. The hotel data includes hotel names, locations, descriptions, and vector embeddings.
 
 ## Prerequisites
 
 [!INCLUDE[Prerequisites - Vector Search Quickstart](includes/prerequisite-quickstart-vector-search-model.md)]
 
 > [!TIP]
-> To customize Azure OpenAI model parameters before deployment, see [Customize Azure OpenAI deployment](#customize-azure-openai-deployment-optional) below.
+> To customize Azure OpenAI model parameters before deployment, see the section [Customize Azure OpenAI deployment](#customize-azure-openai-deployment-optional) later in this article.
+
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) or later
 
-    - [C# extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
+  - [C# extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
 
 ## App dependencies
 
 The app uses the following NuGet packages:
 
-- [`Azure.Identity`](https://www.nuget.org/packages/Azure.Identity): Azure Identity library for passwordless authentication with Microsoft Entra ID
-- [`Azure.AI.OpenAI`](https://www.nuget.org/packages/Azure.AI.OpenAI): Azure OpenAI client library to communicate with AI models and create vector embeddings
-- [`Microsoft.Extensions.Configuration`](https://www.nuget.org/packages/Microsoft.Extensions.Configuration): Configuration management for app settings
-- [`MongoDB.Driver`](https://www.nuget.org/packages/MongoDB.Driver): Official MongoDB .NET driver for database connectivity and operations
-- [`Newtonsoft.Json`](https://www.nuget.org/packages/Newtonsoft.Json): Popular JSON serialization and deserialization library
+- [`Azure.Identity`](https://www.nuget.org/packages/Azure.Identity): Azure Identity library for passwordless authentication with Microsoft Entra ID.
+
+- [`Azure.AI.OpenAI`](https://www.nuget.org/packages/Azure.AI.OpenAI): Azure OpenAI client library to communicate with AI models and create vector embeddings.
+
+- [`Microsoft.Extensions.Configuration`](https://www.nuget.org/packages/Microsoft.Extensions.Configuration): Configuration management for app settings.
+
+- [`MongoDB.Driver`](https://www.nuget.org/packages/MongoDB.Driver): The official MongoDB .NET driver for database connectivity and operations.
+
+- [`Newtonsoft.Json`](https://www.nuget.org/packages/Newtonsoft.Json): A popular JSON serialization and deserialization library.
 
 ## Configure and run the app
 
@@ -57,10 +62,10 @@ Update the `appsettings.json` placeholder values with your own:
 
 ### Authenticate to Azure
 
-The sample app uses passwordless authentication via `DefaultAzureCredential` and Microsoft Entra ID. [Sign in to Azure using a supported tool](/dotnet/azure/sdk/authentication/credential-chains?tabs=dac#defaultazurecredential-overview) such as the Azure CLI or Azure PowerShell before you run the application so it can access Azure resources securely.
+The sample app uses passwordless authentication via `DefaultAzureCredential` and Microsoft Entra ID. Before you run the application, [sign in to Azure by using a supported tool](/dotnet/azure/sdk/authentication/credential-chains?tabs=dac#defaultazurecredential-overview), such as the Azure CLI or Azure PowerShell. These tools help ensure that the application can access Azure resources securely.
 
 > [!NOTE]
-> Ensure your signed-in identity has the required data plane roles on both the Azure DocumentDB account and the Azure OpenAI resource.
+> Ensure that your signed-in identity has the required data plane roles on both the Azure DocumentDB account and the Azure OpenAI resource.
 
 ### [Azure CLI](#tab/azure-cli)
 
@@ -84,7 +89,7 @@ Connect-AzAccount
 
 ### Build and run the project
 
-The sample app populates vectorized sample data in a MongoDB collection and lets you run different types of search queries. 
+The sample app populates vectorized sample data in a MongoDB collection. You can run different types of search queries.
 
 #### [DiskANN](#tab/tab-diskann)
 
@@ -93,9 +98,9 @@ The sample app populates vectorized sample data in a MongoDB collection and lets
     ```bash
     dotnet run
     ```
-    
+  
     The app prints a menu for you to select database and search options:
-    
+  
     ```output
     === DocumentDB Vector Samples Menu ===
     Please enter your choice (0-5):
@@ -107,17 +112,17 @@ The sample app populates vectorized sample data in a MongoDB collection and lets
     0. Exit
     ```
 
-1. Type `5` and press enter.
+1. Type `5` and press Enter.
 
-    After the app populates the database and runs the search, you see the top five hotels that match the selected vector search query and their similarity scores.
-    
+    After the app populates the database and runs the search, you see the top five hotels that match the selected vector search query, and you see their similarity scores.
+  
     The app logging and output show:
-    - Collection creation and data insertion status
-    - Vector index creation confirmation
-    - Search results with hotel names, locations, and similarity scores
-    
+    - Collection creation and data insertion status.
+    - Vector index creation confirmation.
+    - Search results with hotel names, locations, and similarity scores.
+  
     Example output (shortened for brevity):
-    
+  
     ```output
     MongoDB client initialized with passwordless authentication
     Starting DiskANN vector search workflow
@@ -142,9 +147,9 @@ The sample app populates vectorized sample data in a MongoDB collection and lets
     ```bash
     dotnet run
     ```
-    
+  
     The app prints a menu for you to select database and search options:
-    
+  
     ```output
     === DocumentDB Vector Samples Menu ===
     Please enter your choice (0-5):
@@ -156,17 +161,17 @@ The sample app populates vectorized sample data in a MongoDB collection and lets
     0. Exit
     ```
 
-1. Type `3` and press enter.
+1. Type `3` and press Enter.
 
-    After the app populates the database and runs the search, you see the top five hotels that match the selected vector search query and their similarity scores.
-    
+    After the app populates the database and runs the search, you see the top five hotels that match the selected vector search query, and you see their similarity scores.
+  
     The app logging and output show:
-    - Collection creation and data insertion status
-    - Vector index creation confirmation
-    - Search results with hotel names, locations, and similarity scores
-    
+    - Collection creation and data insertion status.
+    - Vector index creation confirmation.
+    - Search results with hotel names, locations, and similarity scores.
+  
     Example output (shortened for brevity):
-    
+  
     ```output
     MongoDB client initialized with passwordless authentication
     Starting IVF vector search workflow
@@ -191,9 +196,9 @@ The sample app populates vectorized sample data in a MongoDB collection and lets
     ```bash
     dotnet run
     ```
-    
+  
     The app prints a menu for you to select database and search options:
-    
+  
     ```output
     === DocumentDB Vector Samples Menu ===
     Please enter your choice (0-5):
@@ -205,17 +210,17 @@ The sample app populates vectorized sample data in a MongoDB collection and lets
     0. Exit
     ```
 
-1. Type `4` and press enter.
+1. Type `4` and press Enter.
 
-    After the app populates the database and runs the search, you see the top five hotels that match the selected vector search query and their similarity scores.
-    
+    After the app populates the database and runs the search, you see the top five hotels that match the selected vector search query, and you see their similarity scores.
+  
     The app logging and output show:
-    - Collection creation and data insertion status
-    - Vector index creation confirmation
-    - Search results with hotel names, locations, and similarity scores
-    
+    - Collection creation and data insertion status.
+    - Vector index creation confirmation.
+    - Search results with hotel names, locations, and similarity scores.
+  
     Example output (shortened for brevity):
-    
+  
     ```output
     MongoDB client initialized with passwordless authentication
     Starting HNSW vector search workflow
@@ -241,38 +246,49 @@ The following sections provide details about the most important services and cod
 
 ### Explore the search service
 
-The `VectorSearchService` orchestrates an end‑to‑end vector similarity search using IVF, HNSW, and DiskANN search techniques with Azure OpenAI embeddings.
+The `VectorSearchService` orchestrates an end‑to‑end vector similarity search. The service uses Inverted File (IVF), Hierarchical Navigable Small World (HNSW), and DiskANN search techniques with Azure OpenAI embeddings.
 
 :::code language="csharp" source="~/../documentdb-samples/ai/vector-search-dotnet/services/vectorsearchservice.cs" :::
 
 In the preceding code, the `VectorSearchService` performs the following tasks:
 
-- Determines the collection and index names based on the requested algorithm
-- Creates or gets the MongoDB collection and loads JSON data if it's empty
-- Builds the algorithm-specific index options (IVF / HNSW / DiskANN) and ensures the vector index exists
-- Generates an embedding for the configured query via Azure OpenAI
-- Constructs and runs the aggregation search pipeline
-- Deserializes and prints the results
+- Determines the collection and index names based on the requested algorithm.
+
+- Creates or gets the MongoDB collection, and loads JSON data if it's empty.
+
+- Builds the algorithm-specific index options (such as IVF, HNSW, or DiskANN), and ensures the vector index exists.
+
+- Generates an embedding for the configured query via Azure OpenAI.
+
+- Constructs and runs the aggregation search pipeline.
+
+- Deserializes and prints the results.
 
 ### Explore the Azure DocumentDB service
 
-The `MongoDbService` manages interactions with Azure DocumentDB to handle tasks like loading data, vector index creation, index listing, and bulk inserts for hotel vector search.
+The `MongoDbService` manages interactions with Azure DocumentDB. The service handles tasks like loading data, vector index creation, index listing, and bulk inserts for hotel vector search.
 
 :::code language="csharp" source="~/../documentdb-samples/ai/vector-search-dotnet/services/MongoDbService.cs" :::
 
 In the preceding code, the `MongoDbService` performs the following tasks:
 
-- Reads configuration and builds a passwordless client with Azure credentials
-- Provides database or collection references on demand
-- Creates a vector search index only if it doesn't already exist
-- Lists all non-system databases, their collections, and each collection's indexes
-- Inserts sample data if the collection is empty and adds supporting indexes
+- Reads configuration and builds a passwordless client with Azure credentials.
+
+- Provides database or collection references on demand.
+
+- Creates a vector search index only if it doesn't already exist.
+
+- Lists all non-system databases, their collections, and each collection's indexes.
+
+- Inserts sample data if the collection is empty, and adds supporting indexes.
 
 ## View and manage data in Visual Studio Code
 
 1. Install the [DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) and [C# extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp) in Visual Studio Code.
-1. Connect to your Azure DocumentDB account using the DocumentDB extension.
-1. View the data and indexes in the Hotels database.
+
+1. Connect to your Azure DocumentDB account by using the DocumentDB extension.
+
+1. View the data and indexes in the **Hotels** database.
 
     :::image type="content" source="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" lightbox="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" alt-text="Screenshot of DocumentDB extension showing the DocumentDB collection.":::
 
@@ -280,10 +296,9 @@ In the preceding code, the `MongoDbService` performs the following tasks:
 
 ## Clean up resources
 
-Delete the resource group, Azure DocumentDB cluster, and Azure OpenAI resource when you no longer need them to avoid unnecessary costs.
+When you no longer need them, delete the resource group, Azure DocumentDB cluster, and Azure OpenAI resource to avoid unnecessary costs.
 
 ## Related content
 
 - [Vector store in Azure DocumentDB](vector-search.md)
 - [Support for geospatial queries](geospatial-support.md)
-
