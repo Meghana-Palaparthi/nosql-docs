@@ -286,7 +286,7 @@ Distributed transactions are in public preview, and your feedback shapes the pat
 
 ## Next steps
 
-- [Distributed transactions in Azure Cosmos DB for NoSQL — concepts](concept-distributed-transactions.md)
+- [Distributed transactions in Azure Cosmos DB for NoSQL — concepts](distributed-transactions.md)
 - [Consistency levels in Azure Cosmos DB](consistency-levels.md)
 - [Optimistic concurrency control with ETags](database-transactions-optimistic-concurrency.md)
 - [Azure Cosmos DB .NET SDK v3 reference](/dotnet/api/microsoft.azure.cosmos)
