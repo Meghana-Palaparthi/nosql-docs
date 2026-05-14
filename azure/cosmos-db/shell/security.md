@@ -5,7 +5,7 @@ author: sajeetharan
 ms.author: sasinnat
 ms.reviewer: mjbrown
 ms.service: azure-cosmos-db
-ms.topic: conceptual
+ms.topic: article
 ms.date: 05/04/2024
 ---
 
