@@ -726,8 +726,8 @@ az vm run-command invoke --subscription "$SUBSCRIPTION" \
 
 #### Phase 4: Clean up
 
-> [!TIP]
-> Keep the test virtual network and VM running while you retry the migration job. Clean up only after the migration succeeds.
+> [!IMPORTANT]
+> Clean up the simulation virtual network and VM **before** retrying the migration job. If they remain, DMS fails to create its own virtual network and VM due to IP address conflicts.
 
 ```bash
 # Remove the test resource group
