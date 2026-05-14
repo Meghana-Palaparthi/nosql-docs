@@ -158,9 +158,18 @@ This example configures Azure Cosmos DB to generate `/desc_embedding` from the `
 
 ## Getting started with integrated embeddings
 
-This quickstart walks you through creating a container configured for Integrated Embeddings, inserting items, and verifying that Azure Cosmos DB generates and stores the embeddings. It assumes you have completed the [prerequisites](#prerequisites).
+This quickstart walks you through creating a container configured for integrated embeddings, inserting items, and verifying that Azure Cosmos DB generates and stores the embeddings. It assumes you have completed the [prerequisites](#prerequisites).
 
-Install the [Azure Cosmos DB Python SDK](https://github.com/Azure/azure-sdk-for-python):
+Integrated embeddings is a preview feature. Support across the Azure Cosmos DB management SDKs, Azure CLI, Azure Resource Manager (ARM), and Bicep will expand over time. For now, you can try the feature with one of the following options:
+
+- the Azure Cosmos DB SDK with key-based authentication
+- the Azure Cosmos DB management SDK with Microsoft Entra ID
+
+### Use the Azure Cosmos DB SDK with key-based authentication
+
+This option uses the Azure Cosmos DB SDK to create the database and container, and an account key for authentication.
+
+Install the [Azure Cosmos DB Python SDK](https://pypi.org/project/azure-cosmos):
 
 ```bash
 pip install azure-cosmos
@@ -321,6 +330,292 @@ Generated embedding for item-1 (dimensions: 1536, preview: [0.0123, -0.0456, 0.0
 Generated embedding for item-2 (dimensions: 1536, preview: [-0.0231, 0.0567, 0.0103]...)
 Generated embedding for item-3 (dimensions: 1536, preview: [0.0456, -0.0210, 0.0398]...)
 ```
+
+### Use the management SDK with Microsoft Entra ID
+
+This option uses the Azure Cosmos DB management SDK to create the database and container, and Microsoft Entra ID for authentication.
+
+Install the [Azure Cosmos DB Python SDK](https://pypi.org/project/azure-cosmos/), the [Azure Cosmos DB Python management SDK](https://pypi.org/project/azure-mgmt-cosmosdb/), and the [Azure Identity library](https://pypi.org/project/azure-identity/):
+
+```bash
+pip install azure-cosmos azure-identity azure-mgmt-cosmosdb
+```
+
+Sign in to the Azure CLI:
+
+```bash
+az login
+```
+
+Assign the following roles to the identity that runs the script:
+
+- `Cosmos DB Operator` on the Azure Cosmos DB account, to create the database and container through Azure Resource Manager.
+- `Cosmos DB Built-in Data Contributor` on the Azure Cosmos DB account, to insert and read items.
+
+> [!NOTE]
+>
+> - To assign the **Cosmos DB Operator** role, your account needs `Microsoft.Authorization/roleAssignments/write`, included in roles such as **Owner** and **User Access Administrator**.
+> - To assign the **Cosmos DB Built-in Data Contributor** role, your account needs `Microsoft.DocumentDB/databaseAccounts/sqlRoleAssignments/write`, included in roles such as **Owner**, **Contributor**, and **DocumentDB Account Contributor**.
+>
+> For more information, see [Connect to Azure Cosmos DB for NoSQL using role-based access control and Microsoft Entra ID](how-to-connect-role-based-access-control.md).
+
+```bash
+# Find your principal ID (for an interactive user)
+PRINCIPAL_ID=$(az ad signed-in-user show --query id -o tsv)
+
+# Cosmos DB Operator (Azure RBAC)
+az role assignment create \
+  --assignee "$PRINCIPAL_ID" \
+  --role "Cosmos DB Operator" \
+  --scope "/subscriptions/<subscription-id>/resourceGroups/<resource-group>/providers/Microsoft.DocumentDB/databaseAccounts/<account-name>"
+
+# Cosmos DB Built-in Data Contributor (Azure Cosmos DB RBAC)
+az cosmosdb sql role assignment create \
+  --account-name "<account-name>" \
+  --resource-group "<resource-group>" \
+  --scope "/" \
+  --principal-id "$PRINCIPAL_ID" \
+  --role-definition-id 00000000-0000-0000-0000-000000000002
+```
+
+Set the following environment variables for your Azure Cosmos DB account and Microsoft Foundry embedding model deployment:
+
+```bash
+export COSMOS_SUBSCRIPTION_ID="<subscription-id>"
+export COSMOS_RESOURCE_GROUP="<resource-group-name>"
+export COSMOS_ACCOUNT_NAME="<account-name>"
+export COSMOS_LOCATION="<azure-region>"
+export COSMOS_ENDPOINT="https://<account-name>.documents.azure.com:443/"
+export COSMOS_DATABASE="integrated-embeddings-db"
+export COSMOS_CONTAINER="integrated-embeddings-items"
+export FOUNDRY_ENDPOINT="https://<foundry-resource-name>.openai.azure.com/"
+export FOUNDRY_DEPLOYMENT_NAME="text-embedding-3-small"
+export FOUNDRY_MODEL_NAME="text-embedding-3-small"
+```
+
+Save the following script as `integrated_embeddings_quickstart_mgmt_sdk.py`. The script creates a database and a new container, configures the vector embedding policy with an `embeddingSource`, inserts sample items with a `description` property, and polls them until Azure Cosmos DB adds the generated embeddings to `/embedding`.
+
+The script sets `dimensions` to `1536`, which matches `text-embedding-3-small` and `text-embedding-ada-002`. Use `3072` for `text-embedding-3-large`.
+
+> [!NOTE]
+> This example uses a `quantizedFlat` vector index. To learn about other supported vector index types, see [Vector Indexing Policies](vector-search.md#vector-indexing-policies).
+
+```python
+import json
+import os
+import time
+
+from azure.cosmos import CosmosClient
+from azure.core.exceptions import HttpResponseError, ResourceNotFoundError
+from azure.identity import DefaultAzureCredential
+from azure.mgmt.cosmosdb import CosmosDBManagementClient
+from azure.mgmt.cosmosdb.models import (
+  SqlDatabaseCreateUpdateParameters,
+  SqlDatabaseResource,
+)
+
+
+SUBSCRIPTION_ID = os.environ["COSMOS_SUBSCRIPTION_ID"]
+RESOURCE_GROUP_NAME = os.environ["COSMOS_RESOURCE_GROUP"]
+ACCOUNT_NAME = os.environ["COSMOS_ACCOUNT_NAME"]
+LOCATION = os.environ["COSMOS_LOCATION"]
+COSMOS_ENDPOINT = os.environ["COSMOS_ENDPOINT"]
+DATABASE_NAME = os.environ.get("COSMOS_DATABASE", "integrated-embeddings-db")
+CONTAINER_NAME = os.environ.get("COSMOS_CONTAINER", "integrated-embeddings-items")
+FOUNDRY_ENDPOINT = os.environ["FOUNDRY_ENDPOINT"]
+FOUNDRY_DEPLOYMENT_NAME = os.environ["FOUNDRY_DEPLOYMENT_NAME"]
+FOUNDRY_MODEL_NAME = os.environ["FOUNDRY_MODEL_NAME"]
+
+EMBEDDING_PATH = "embedding"
+MAX_AUTOSCALE_THROUGHPUT = 1000
+POLL_INTERVAL_SECONDS = 5
+POLL_TIMEOUT_SECONDS = 120
+
+
+container_body = {
+  "location": LOCATION,
+  "properties": {
+    "resource": {
+      "id": CONTAINER_NAME,
+      "partitionKey": {"paths": ["/id"], "kind": "Hash"},
+      "indexingPolicy": {
+        "indexingMode": "consistent",
+        "automatic": True,
+        "includedPaths": [
+          {"path": "/*"}
+        ],
+        "excludedPaths": [
+          {"path": "/\"_etag\"/?"},
+          {"path": f"/{EMBEDDING_PATH}/*"}
+        ],
+        "vectorIndexes": [
+          {"path": f"/{EMBEDDING_PATH}", "type": "quantizedFlat"}
+        ]
+      },
+      "vectorEmbeddingPolicy": {
+        "vectorEmbeddings": [
+          {
+            "path": f"/{EMBEDDING_PATH}",
+            "dataType": "float32",
+            "dimensions": 1536,
+            "distanceFunction": "cosine",
+            "embeddingSource": {
+              "sourcePaths": ["/description"],
+              "deploymentName": FOUNDRY_DEPLOYMENT_NAME,
+              "modelName": FOUNDRY_MODEL_NAME,
+              "endpoint": FOUNDRY_ENDPOINT,
+              "authType": "Entra"
+            }
+          }
+        ]
+      }
+    },
+    "options": {
+      "autoscaleSettings": {"maxThroughput": MAX_AUTOSCALE_THROUGHPUT}
+    }
+  }
+}
+
+
+sample_items = [
+  {
+    "id": "item-1",
+    "description": "Azure Cosmos DB for NoSQL supports vector search for AI applications."
+  },
+  {
+    "id": "item-2",
+    "description": "Cosmos DB offers global distribution with multi-region writes and tunable consistency levels."
+  },
+  {
+    "id": "item-3",
+    "description": "Use the change feed to react to data changes in real time without polling."
+  }
+]
+
+
+def create_database(mgmt):
+  print(f"Creating database '{DATABASE_NAME}'...")
+  params = SqlDatabaseCreateUpdateParameters(
+    location=LOCATION,
+    resource=SqlDatabaseResource(id=DATABASE_NAME),
+  )
+  poller = mgmt.sql_resources.begin_create_update_sql_database(
+    resource_group_name=RESOURCE_GROUP_NAME,
+    account_name=ACCOUNT_NAME,
+    database_name=DATABASE_NAME,
+    create_update_sql_database_parameters=params,
+  )
+  result = poller.result()
+  print(f"  Database ready: {result.id}")
+
+
+def create_container(mgmt):
+  print(f"Checking container '{CONTAINER_NAME}'...")
+  try:
+    mgmt.sql_resources.get_sql_container(
+      resource_group_name=RESOURCE_GROUP_NAME,
+      account_name=ACCOUNT_NAME,
+      database_name=DATABASE_NAME,
+      container_name=CONTAINER_NAME,
+    )
+  except ResourceNotFoundError:
+    pass
+  else:
+    raise RuntimeError(
+      f"Container '{CONTAINER_NAME}' already exists. Use a new container name for this quickstart."
+    )
+
+  print(f"Creating container '{CONTAINER_NAME}'...")
+  body_bytes = json.dumps(container_body).encode("utf-8")
+  poller = mgmt.sql_resources.begin_create_update_sql_container(
+    resource_group_name=RESOURCE_GROUP_NAME,
+    account_name=ACCOUNT_NAME,
+    database_name=DATABASE_NAME,
+    container_name=CONTAINER_NAME,
+    create_update_sql_container_parameters=body_bytes,
+    content_type="application/json",
+  )
+  result = poller.result()
+  print(f"  Container ready: {result.id}")
+
+
+def upsert_and_poll(credential):
+  client = CosmosClient(COSMOS_ENDPOINT, credential=credential)
+  container = client.get_database_client(DATABASE_NAME).get_container_client(CONTAINER_NAME)
+
+  for item in sample_items:
+    container.upsert_item(item)
+    print(f"Inserted item: {item['id']}")
+
+  pending = {item["id"] for item in sample_items}
+  deadline = time.time() + POLL_TIMEOUT_SECONDS
+  while pending and time.time() < deadline:
+    for item_id in list(pending):
+      item = container.read_item(item=item_id, partition_key=item_id)
+      embedding = item.get(EMBEDDING_PATH)
+      if embedding:
+        print(
+          f"Generated embedding for {item_id} "
+          f"(dimensions: {len(embedding)}, preview: {embedding[:3]}...)"
+        )
+        pending.remove(item_id)
+
+    if pending:
+      print(f"Waiting for embeddings: {sorted(pending)}")
+      time.sleep(POLL_INTERVAL_SECONDS)
+
+  if pending:
+    raise TimeoutError(f"Embeddings were not generated for: {sorted(pending)}")
+
+
+def main():
+  credential = DefaultAzureCredential()
+  try:
+    mgmt = CosmosDBManagementClient(
+      credential=credential,
+      subscription_id=SUBSCRIPTION_ID,
+    )
+    try:
+      create_database(mgmt)
+      create_container(mgmt)
+    except HttpResponseError as ex:
+      print(f"ARM call failed: status={ex.status_code} message={ex.message}")
+      raise
+    finally:
+      mgmt.close()
+
+    upsert_and_poll(credential)
+  finally:
+    credential.close()
+
+
+if __name__ == "__main__":
+  main()
+```
+
+Run the script:
+
+```bash
+python integrated_embeddings_quickstart_mgmt_sdk.py
+```
+
+The output should look similar to this example:
+
+```text
+Creating database 'integrated-embeddings-db'...
+  Database ready: <database-resource-id>
+Checking container 'integrated-embeddings-items'...
+Creating container 'integrated-embeddings-items'...
+  Container ready: <container-resource-id>
+Inserted item: item-1
+Inserted item: item-2
+Inserted item: item-3
+Waiting for embeddings: ['item-1', 'item-2', 'item-3']
+Generated embedding for item-1 (dimensions: 1536, preview: [0.0123, -0.0456, 0.0789]...)
+Generated embedding for item-2 (dimensions: 1536, preview: [-0.0231, 0.0567, 0.0103]...)
+Generated embedding for item-3 (dimensions: 1536, preview: [0.0456, -0.0210, 0.0398]...)
+```
+
 
 ## Troubleshoot common issues
 
