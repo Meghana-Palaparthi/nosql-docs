@@ -730,8 +730,8 @@ az vm run-command invoke --subscription "$SUBSCRIPTION" \
 > Clean up the simulation virtual network and VM **before** retrying the migration job. If they remain, DMS fails to create its own virtual network and VM due to IP address conflicts.
 
 ```bash
-# Remove the test resource group
-az group delete --subscription "$SUBSCRIPTION" -n "$TEST_RG" --yes --no-wait
+# Remove the test resource group (includes the test VNet and VM)
+az group delete --subscription "$SUBSCRIPTION" -n "$TEST_RG" --yes
 
 # Remove peerings on your existing VNets
 az network vnet peering delete --subscription "$SUBSCRIPTION" \
