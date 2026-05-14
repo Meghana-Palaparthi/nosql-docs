@@ -493,6 +493,12 @@
           href: global-secondary-indexes.md
         - name: Configure global secondary indexes (preview)
           href: how-to-configure-global-secondary-indexes.md
+    - name: Distributed Transactions (preview)
+      items:
+        - name: Overview
+          href: distirbuted-transactions.md
+        - name: Configure distributed transactions (preview)
+          href: how-to-configure-distributed-transactions.md
     - name: Index and query geospatial data
       displayName: geospatial, geojson, spatial, index, query, geography, geometry
       href: how-to-geospatial-index-query.md
