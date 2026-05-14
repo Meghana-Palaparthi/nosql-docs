@@ -338,6 +338,59 @@ Book documents:
 
 With this model, you can easily see which books an author wrote by looking at their document. You can also see which authors wrote a book by checking the book document. You don't need to use a separate join table or make extra queries. This model makes it faster and simpler for your application to get the data it needs.
 
+## Migrating from relational databases
+
+If you're migrating from PostgreSQL or another relational database, plan to reshape both your data model and your queries. In relational systems, queries often reconstruct business entities with JOINs across tables. In Azure Cosmos DB, design each item around the way your application reads and writes that data.
+
+### Understand JOIN semantics
+
+In Azure Cosmos DB, a JOIN works within a single item, typically between the root item and a nested array. It doesn't join items across containers or across top-level items.
+
+- Relational JOINs across tables typically require you to remodel data based on access patterns, using approaches such as embedding, references, or read-optimized projections.
+- Use embedding for contained data that is read together.
+- Use references when related entities are large, unbounded, or updated independently.
+
+For JOIN syntax details, see [JOIN in Azure Cosmos DB query language](/cosmos-db/query/join).
+
+### Apply common restructuring patterns
+
+Use these patterns when you convert normalized tables:
+
+- **One-to-few parent-child:** Embed child rows in the parent item.
+- **One-to-many with unbounded growth:** Keep children as separate items and store a reference, such as `parentId`.
+- **Frequently updated child entities:** Keep the changing entity separate to avoid fan-out updates across many parent items.
+- **Many-to-many:** Replace join tables with reference arrays or duplicated read-optimized projections that match your query patterns.
+
+### Adapt queries
+
+A common relational pattern joins parent and child tables:
+
+```sql
+SELECT c.customer_id, c.name, o.order_id, o.total
+FROM Customers c
+JOIN Orders o ON o.customer_id = c.customer_id
+WHERE c.customer_id = 42
+```
+
+In Azure Cosmos DB, if you embed orders inside a customer item, query that single item and join to the nested array:
+
+```nosql
+SELECT c.id, c.name, o.id AS order_id, o.total
+FROM c
+JOIN o IN c.orders
+WHERE c.id = "42" AND c.tenantId = "adventureworks"
+```
+
+If orders are large or updated independently, store them as separate items and query by `customerId` instead of performing a cross-item JOIN:
+
+```nosql
+SELECT o.id, o.total, o.customerId
+FROM o
+WHERE o.customerId = "42"
+```
+
+To keep these queries efficient, include the partition key in your filter whenever possible. For separate order items, `customerId` is often a good partition key when your common access pattern is "all orders for one customer," but choose it only when each customer's orders fit within the storage and throughput limits of a single logical partition. If some customers can grow without bound or create disproportionately high traffic, use a hierarchical or synthetic partitioning strategy instead of placing all of that customer's orders in one logical partition.
+
 ## Hybrid data models
 
 We explore embedding (or denormalizing) and referencing (or normalizing) data. Each approach offers benefits and involves trade-offs.
