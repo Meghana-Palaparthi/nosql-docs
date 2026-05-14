@@ -76,7 +76,8 @@ If you need true interactive multi-statement transactions across partitions (the
 
 Under the hood, a distributed transaction is coordinated using a **two-phase commit (2PC)** protocol orchestrated by a **transaction coordinator** that runs on the Cosmos DB Compute Gateway.
 
-![Conceptual diagram: SDK sends a batch to the Compute Gateway coordinator, which runs prepare and commit phases against participant partitions.](media/distributed-transactions/coordinator.png)
+
+[![Conceptual diagram: SDK sends a batch to the Compute Gateway coordinator, which runs prepare and commit phases against participant partitions.](media/distributed-transactions/dtx-transaction-commits.png)](media/distributed-transactions/dtx-transaction-commits.png#lightbox)
 
 A simplified end-to-end flow:
 

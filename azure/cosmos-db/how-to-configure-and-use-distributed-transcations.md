@@ -30,23 +30,16 @@ Before you begin, make sure you have:
   - Use the **NoSQL (Core SQL) API**. MongoDB, Cassandra, Table, and Gremlin APIs are not supported in preview.
   - Be a **provisioned throughput** (manual or autoscale) account. Serverless accounts are not supported in preview.
   - Run on a **public Azure cloud region**. Sovereign, air-gapped, and government clouds are not supported in preview.
+  - Be a **single-write-region** account. Multi-region write (multi-master) accounts aren't supported in preview.
   - Not have any of the following features enabled: **Customer-Managed Keys (CMK)**, **Per-Partition Automatic Failover (PPAF)**, **Partition Reuse**, **Continuous backup / Point-in-Time Restore (PITR)**, **Long-Term Retention (LTR)**, **Merge**, **Hierarchical Partition Keys (HPK)**, **16 MB document support**, or **Fabric Native databases**.
-- The **.NET 6 SDK** or later.
-- The **Azure Cosmos DB .NET v3 preview SDK** that includes the `CreateDistributedWriteTransaction` API. Use the latest preview package from NuGet (search for `Microsoft.Azure.Cosmos` preview versions tagged for distributed transactions).
+- The **Azure Cosmos DB .NET v3 SDK** that includes the `CreateDistributedWriteTransaction` API. Use the latest preview package from NuGet (search for `Microsoft.Azure.Cosmos` preview versions tagged for distributed transactions).
 - A **database named `dts-log-db` must not already exist** on the account. Enabling distributed transactions creates a system database with this name. Enrollment fails if the name is already in use.
 
 ## Step 1: Request enrollment for your account
 
-Distributed transactions are a **gated public preview** feature. Self-service enrollment through the Azure portal, Azure CLI, or PowerShell is **not** available in preview.
+Distributed transactions are a **public preview** feature. Self-service enrollment through the Azure portal, Azure CLI, or PowerShell is **not** available in preview.
 
-To request enrollment, contact the Azure Cosmos DB engineering team with the following information:
-
-| Information | Description |
-|---|---|
-| Azure subscription ID | The subscription that owns the Cosmos DB account. |
-| Account name | The name of the Cosmos DB for NoSQL account. |
-| Azure region(s) | The write region and any read regions on the account. |
-| Workload description | A short description of the cross-partition or cross-container atomicity requirement you intend to evaluate. |
+To request enrollment, submit your onboarding request at [https://aka.ms/cosmosdb/dtx-onboard](https://aka.ms/cosmosdb/dtx-onboard). Requests are typically fulfilled within 1-2 business days.
 
 Enrollment runs a backend workflow that:
 
@@ -54,17 +47,17 @@ Enrollment runs a backend workflow that:
 2. Creates a system database `dts-log-db` and a system container `dts-log-coll` on the account. These store the coordinator transaction log and are readable and writable only by the system.
 3. Sets an account-level capability that allows new distributed transactions to be initiated.
 
-Enrollment typically completes within one business day. You'll receive a confirmation once your account is ready.
+You'll receive a confirmation once your account is ready.
 
 > [!NOTE]
 > Do not create a database named `dts-log-db` on your account. This name is reserved for the distributed transactions system database.
 
-## Step 2: Install the preview .NET SDK
+## Step 2: Install the required .NET SDK
 
 Add the preview Azure Cosmos DB .NET SDK to your project:
 
 ```dotnetcli
-dotnet add package Microsoft.Azure.Cosmos --prerelease
+dotnet add package Microsoft.Azure.Cosmos --version <latest-version>
 ```
 
 Make sure the installed version supports distributed transactions. The `CreateDistributedWriteTransaction()` method on `CosmosClient` is the indicator that the feature is available in your SDK build.
@@ -119,7 +112,7 @@ DistributedTransactionResponse response = await client
 
 if (response.IsSuccessStatusCode)
 {
-    Console.WriteLine($"Transaction committed. RU consumed: {response.RequestCharge}");
+    Console.WriteLine($"Transaction committed.");
 }
 ```
 
@@ -226,7 +219,7 @@ For diagnostics, capture the full `CosmosException.Diagnostics` string — it co
 
 ## Step 8: Multi-region considerations
 
-In a multi-region account, distributed transactions are **atomic within the write region only**.
+In a multi-region account, distributed transactions are **atomic within the write region only**. Multi-region write accounts aren't supported in preview — the account must have a single write region.
 
 - All transactional reads and writes are routed to the account's **write/hub region** by the SDK.
 - Committed data replicates to secondary regions **asynchronously and per-partition**. Readers in secondary regions may temporarily observe partial updates until replication catches up.
@@ -287,15 +280,9 @@ Do not delete or modify `dts-log-db` or `dts-log-coll`. They are managed by the 
 
 ## Send feedback
 
-Distributed transactions are in early public preview, and your feedback shapes the path to general availability. To share feedback, file an Azure support request that references *Cosmos DB Distributed Transactions (Public Preview)*, or contact the engineering team directly through your account representative.
+Distributed transactions are in public preview, and your feedback shapes the path to general availability. To share feedback, please reach out to the team at [azcosmosdbdtxpreview@microsoft.com](mailto:azcosmosdbdtxpreview@microsoft.com).
 
-When reporting an issue, include:
 
-- Account name and Azure region
-- Transaction ID (idempotency token) and activity IDs from the SDK diagnostics
-- Full exception message with HTTP status and substatus codes
-- SDK version
-- Reproduction steps and approximate time window
 
 ## Next steps
 
