@@ -1,5 +1,5 @@
 ---
-title: Connect using role-based access control and Microsoft Entra ID
+title: Connect by Using RBAC and Microsoft Entra ID
 titleSuffix: Azure Cosmos DB for Apache Gremlin
 description: Learn how to set up role-based access control for Azure Cosmos DB for Apache Gremlin accounts and data. Enhance security for your applications with step-by-step guidance.
 author: seesharprun
@@ -23,21 +23,19 @@ dev_langs:
 ai-usage: ai-assisted
 appliesto:
   - ✅ Apache Gremlin
-#Customer Intent: As a developer, I want to connect to Azure Cosmos DB for Apache Gremlin using role-based access control, so that I can securely manage access to my database resources.
+#Customer Intent: As a developer, I want to connect to Azure Cosmos DB for Apache Gremlin by using role-based access control so that I can securely manage access to my database resources.
 ---
 
-# Connect to Azure Cosmos DB for Apache Gremlin using role-based access control and Microsoft Entra ID
+# Connect to Azure Cosmos DB for Apache Gremlin by using RBAC and Microsoft Entra ID
 
-Role-based access control refers to a method to manage access to resources in Azure. This method is based on specific identities being assigned roles that manage what level of access they have to one or more resources. Role-based access control provides a flexible system of fine-grained access management that ensures identities only have the least privileged level of access they need to perform their task.
+Role-based access control (RBAC) refers to a method to manage access to resources in Azure. This method is based on specific identities being assigned roles that manage what level of access they have to one or more resources. RBAC provides a flexible system of fine-grained access management to ensure that identities have only the least privileged level of access that they need to perform their task.
 
-For more information, see [role-based access control](/azure/role-based-access-control/overview).
+For more information, see [Role-based access control](/azure/role-based-access-control/overview).
 
 ## Prerequisites
 
 - An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
-
 - An existing Azure Cosmos DB for Gremlin account.
-
 - One or more existing identities in Microsoft Entra ID.
 
 ::: zone pivot="azure-cli,azure-resource-manager-bicep"
@@ -62,7 +60,7 @@ For more information, see [role-based access control](/azure/role-based-access-c
 
 ## Validate that key-based authentication is disabled
 
-To validate that key-based access is disabled, attempt to use the Azure SDK to connect to Azure Cosmos DB for Gremlin using a resource-owner password credential (ROPC). This attempt should fail. If necessary, code samples for common programming languages are provided here.
+To validate that key-based access is disabled, attempt to use the Azure SDK to connect to Azure Cosmos DB for Gremlin by using a resource-owner password credential. This attempt should fail. If necessary, code samples for common programming languages are provided here.
 
 ```csharp
 using Azure.Data.Tables;

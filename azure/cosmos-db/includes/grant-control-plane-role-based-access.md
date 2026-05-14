@@ -18,9 +18,9 @@ Control plane access refers to the ability to manage resources for an Azure serv
 - Modify account properties.
 
 > [!IMPORTANT]
-> In Azure Cosmos DB, you need control plane access to manage native data-plane RBAC definitions and assignments. Because Azure Cosmos DB's data plane RBAC mechanism is native, you need control plane access to create definitions and assignments and store them as resources within an Azure Cosmos DB account.
+> In Azure Cosmos DB, you need control plane access to manage native data-plane RBAC definitions and assignments. Because the Azure Cosmos DB data plane RBAC mechanism is native, you need control plane access to create definitions and assignments and store them as resources within an Azure Cosmos DB account.
 
-First, you must prepare a role definition with a list of `actions` to grant access to manage account resources in Azure Cosmos DB. In this article, you prepare a built-in and custom role. Then, assign the newly defined role or roles to an identity so that your applications can access resources in Azure Cosmos DB.
+First, you must prepare a role definition with a list of actions to grant access to manage account resources in Azure Cosmos DB. In this article, you prepare a built-in and custom role. Then, you assign the newly defined role or roles to an identity so that your applications can access resources in Azure Cosmos DB.
 
 ::: zone pivot="azure-cli"
 
@@ -182,7 +182,7 @@ First, you must prepare a role definition with a list of `actions` to grant acce
         --scope "/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourcegroups/msdocs-identity-example"
     ```
 
-   In this example command, the `scope` was set to the fictitious example `/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourcegroups/msdocs-identity-example` from the previous step's example. Your resource group's identifier is distinct from this example. The `role` value was also set to the fictitious `/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourcegroups/msdocs-identity-example/providers/Microsoft.Authorization/roleDefinitions/a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1`. Again, your role identifier is distinct.
+   In this example command, the `scope` property was set to the fictitious example `/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourcegroups/msdocs-identity-example` from the previous step's example. Your resource group's identifier is distinct from this example. The `role` value was also set to the fictitious `/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourcegroups/msdocs-identity-example/providers/Microsoft.Authorization/roleDefinitions/a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1`. Again, your role identifier is distinct.
 
 1. Observe the output from the command. The output includes a unique identifier for the assignment in the `id` property.
 
@@ -208,7 +208,7 @@ First, you must prepare a role definition with a list of `actions` to grant acce
 
 ::: zone pivot="azure-resource-manager-bicep"
 
-1. List all the role definitions associated with your Azure Cosmos DB account by using [`az role definition list`](/cli/azure/role/definition#az-role-definition-list). 
+1. List all the role definitions associated with your Azure Cosmos DB account by using [`az role definition list`](/cli/azure/role/definition#az-role-definition-list).
 
     ```azurecli-interactive
     az role definition list \
@@ -448,15 +448,15 @@ First, you must prepare a role definition with a list of `actions` to grant acce
 
 1. In the **Access control (IAM)** pane, select **Add** > **Add role assignment**.
 
-    :::image source="media/grant-control-plane-role-based-access/add-role-assignment.png" alt-text="Screenshot that shows the Add role assignment option in the 'Access Control (IAM)' menu for the 'Add' option.":::
+    :::image source="media/grant-control-plane-role-based-access/add-role-assignment.png" alt-text="Screenshot that shows the Add role assignment option on the Access Control (IAM) menu for the Add option.":::
 
-1. In the **Role** pane, search for **Azure Cosmos DB** and then select the **Azure Cosmos DB Control Plane Owner** role created earlier in this article. Then, select **Next**.
+1. In the **Role** pane, search for **Azure Cosmos DB** and then select the **Azure Cosmos DB Control Plane Owner** role that you created earlier in this article. Then select **Next**.
 
     :::image source="media/grant-control-plane-role-based-access/assignment-role-pane.png" alt-text="Screenshot that shows the Role pane for adding a role assignment.":::
 
-   You can optionally filter the list of roles to only include custom roles.
+   You can optionally filter the list of roles to include only custom roles.
 
-1. In the **Members** pane, select the **Select members** option. In the **Members** dialog, select the identity that you want to grant this level of access for your Azure Cosmos DB account and then use the **Select** option to confirm your choice.
+1. In the **Members** pane, select the **Select members** option. In the **Members** dialog, select the identity that you want to grant this level of access for your Azure Cosmos DB account. Then use the **Select** option to confirm your choice.
 
     :::image source="media/grant-control-plane-role-based-access/assignment-members-pane.png" alt-text="Screenshot that shows the Members pane for adding a role assignment.":::
 

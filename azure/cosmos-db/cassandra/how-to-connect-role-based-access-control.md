@@ -110,7 +110,7 @@ Data plane access refers to the ability to read and write data within an Azure s
 - Run stored procedures.
 - Manage conflicts in the conflict feed.
 
-First, you must prepare a role definition with a list of `dataActions` to grant access to read, query, and manage data in Azure Cosmos DB for Cassandra. In this article, you prepare a built-in and custom role. Then, assign the newly defined role to an identity so that your applications can access data in Azure Cosmos DB for Cassandra.
+First, you must prepare a role definition with a list of data actions to grant access to read, query, and manage data in Azure Cosmos DB for Cassandra. In this article, you prepare a built-in and custom role. Then, assign the newly defined role to an identity so that your applications can access data in Azure Cosmos DB for Cassandra.
 
 ::: zone pivot="azure-cli"
 
@@ -213,7 +213,7 @@ First, you must prepare a role definition with a list of `dataActions` to grant 
     > [!NOTE]
     > In this example, the `id` value is `/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/msdocs-identity-example/providers/Microsoft.DocumentDB/databaseAccounts/msdocs-identity-example-cassandra/cassandraRoleDefinitions/00000000-0000-0000-0000-000000000004`. This example uses fictitious data, and your identifier is distinct from this example. This example output is truncated.
 
-1. Create a new Bicep file to define your role definition. Name the file `data-plane-role-definition.bicep`. Add the following `dataActions` to the definition:
+1. Create a new Bicep file to define your role definition. Name the file `data-plane-role-definition.bicep`. Add the following data actions to the definition:
 
     | | Description |
     | --- | --- |
