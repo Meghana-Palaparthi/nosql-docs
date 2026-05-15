@@ -20,6 +20,10 @@ appliesto:
 
 [!INCLUDE[Preview](includes/notice-preview.md)]
 
+> [!IMPORTANT]
+> As Integrated Embeddings is gradually rolling out across Azure regions, availability may vary, and the feature might not yet be accessible in your subscription or region.
+
+
 ## What are integrated embeddings?
 
 Integrated Embeddings automatically generates and maintains vector embeddings for your data in Azure Cosmos DB. You specify the source properties to embed, the Microsoft Foundry embedding model to use, and the path where the generated embeddings are stored. Azure Cosmos DB detects data changes and generates embeddings asynchronously, writing them back to your items.
@@ -169,11 +173,23 @@ Integrated embeddings is a preview feature. Support across the Azure Cosmos DB m
 
 This option uses the Azure Cosmos DB SDK to create the database and container, and an account key for authentication.
 
+#### [Python](#tab/python)
+
 Install the [Azure Cosmos DB Python SDK](https://pypi.org/project/azure-cosmos):
 
 ```bash
 pip install azure-cosmos
 ```
+
+#### [Node.js](#tab/nodejs)
+
+Install the [Azure Cosmos DB JavaScript SDK](https://www.npmjs.com/package/@azure/cosmos):
+
+```bash
+npm init -y && npm install @azure/cosmos
+```
+
+---
 
 Set the following environment variables for your Azure Cosmos DB account and Microsoft Foundry embedding model deployment:
 
@@ -187,12 +203,16 @@ export FOUNDRY_DEPLOYMENT_NAME="text-embedding-3-small"
 export FOUNDRY_MODEL_NAME="text-embedding-3-small"
 ```
 
-Save the following script as `integrated_embeddings_quickstart.py`. The script creates a database and a new container, configures the vector embedding policy with an `embeddingSource`, inserts sample items with a `description` property, and polls them until Azure Cosmos DB adds the generated embeddings to `/embedding`.
+The following script creates a database and a new container, configures the vector embedding policy with an `embeddingSource`, inserts sample items with a `description` property, and polls them until Azure Cosmos DB adds the generated embeddings to `/embedding`.
 
 The script sets `dimensions` to `1536`, which matches `text-embedding-3-small` and `text-embedding-ada-002`. Use `3072` for `text-embedding-3-large`.
 
 > [!NOTE]
 > This example uses a `quantizedFlat` vector index. To learn about other supported vector index types, see [Vector Indexing Policies](vector-search.md#vector-indexing-policies).
+
+#### [Python](#tab/python)
+
+Save the following script as `integrated_embeddings_quickstart.py`:
 
 ```python
 import os
@@ -330,6 +350,155 @@ Generated embedding for item-1 (dimensions: 1536, preview: [0.0123, -0.0456, 0.0
 Generated embedding for item-2 (dimensions: 1536, preview: [-0.0231, 0.0567, 0.0103]...)
 Generated embedding for item-3 (dimensions: 1536, preview: [0.0456, -0.0210, 0.0398]...)
 ```
+
+#### [Node.js](#tab/nodejs)
+
+Save the following script as `integrated_embeddings_quickstart.js`:
+
+```javascript
+const { CosmosClient } = require("@azure/cosmos");
+
+const COSMOS_ENDPOINT = process.env.COSMOS_ENDPOINT;
+const COSMOS_KEY = process.env.COSMOS_KEY;
+const DATABASE_NAME = process.env.COSMOS_DATABASE || "integrated-embeddings-db";
+const CONTAINER_NAME = process.env.COSMOS_CONTAINER || "integrated-embeddings-items";
+const FOUNDRY_ENDPOINT = process.env.FOUNDRY_ENDPOINT;
+const FOUNDRY_DEPLOYMENT_NAME = process.env.FOUNDRY_DEPLOYMENT_NAME;
+const FOUNDRY_MODEL_NAME = process.env.FOUNDRY_MODEL_NAME;
+
+const EMBEDDING_PATH = "embedding";
+const POLL_INTERVAL_MS = 5000;
+const POLL_TIMEOUT_MS = 120000;
+
+const vectorEmbeddingPolicy = {
+  vectorEmbeddings: [
+    {
+      path: `/${EMBEDDING_PATH}`,
+      dataType: "float32",
+      dimensions: 1536,
+      distanceFunction: "cosine",
+      embeddingSource: {
+        sourcePaths: ["/description"],
+        deploymentName: FOUNDRY_DEPLOYMENT_NAME,
+        modelName: FOUNDRY_MODEL_NAME,
+        endpoint: FOUNDRY_ENDPOINT,
+        authType: "Entra",
+      },
+    },
+  ],
+};
+
+const indexingPolicy = {
+  indexingMode: "consistent",
+  automatic: true,
+  includedPaths: [{ path: "/*" }],
+  excludedPaths: [
+    { path: '/"_etag"/?' },
+    { path: `/${EMBEDDING_PATH}/*` },
+  ],
+  vectorIndexes: [
+    { path: `/${EMBEDDING_PATH}`, type: "quantizedFlat" },
+  ],
+};
+
+const sampleItems = [
+  {
+    id: "item-1",
+    description: "Azure Cosmos DB for NoSQL supports vector search for AI applications.",
+  },
+  {
+    id: "item-2",
+    description: "Cosmos DB offers global distribution with multi-region writes and tunable consistency levels.",
+  },
+  {
+    id: "item-3",
+    description: "Use the change feed to react to data changes in real time without polling.",
+  },
+];
+
+async function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function main() {
+  const client = new CosmosClient({ endpoint: COSMOS_ENDPOINT, key: COSMOS_KEY });
+
+  const { database } = await client.databases.createIfNotExists({ id: DATABASE_NAME });
+
+  let container;
+  try {
+    const result = await database.containers.create({
+      id: CONTAINER_NAME,
+      partitionKey: { paths: ["/id"], kind: "Hash" },
+      vectorEmbeddingPolicy,
+      indexingPolicy,
+    });
+    container = result.container;
+  } catch (err) {
+    if (err.code === 409) {
+      throw new Error(
+        `Container '${CONTAINER_NAME}' already exists. Use a new container name for this quickstart.`
+      );
+    }
+    throw err;
+  }
+
+  for (const item of sampleItems) {
+    await container.items.upsert(item);
+    console.log(`Inserted item: ${item.id}`);
+  }
+
+  const pending = new Set(sampleItems.map((i) => i.id));
+  const deadline = Date.now() + POLL_TIMEOUT_MS;
+
+  while (pending.size > 0 && Date.now() < deadline) {
+    for (const id of [...pending]) {
+      const { resource } = await container.item(id, id).read();
+      const embedding = resource && resource[EMBEDDING_PATH];
+      if (embedding) {
+        console.log(
+          `Generated embedding for ${id} ` +
+            `(dimensions: ${embedding.length}, preview: ${JSON.stringify(embedding.slice(0, 3))}...)`
+        );
+        pending.delete(id);
+      }
+    }
+    if (pending.size > 0) {
+      console.log(`Waiting for embeddings: ${[...pending].sort().join(", ")}`);
+      await sleep(POLL_INTERVAL_MS);
+    }
+  }
+
+  if (pending.size > 0) {
+    throw new Error(`Embeddings were not generated for: ${[...pending].sort().join(", ")}`);
+  }
+}
+
+main().catch((err) => {
+  console.error(err.message || err);
+  process.exit(1);
+});
+```
+
+Run the script:
+
+```bash
+node integrated_embeddings_quickstart.js
+```
+
+The output should look similar to this example:
+
+```text
+Inserted item: item-1
+Inserted item: item-2
+Inserted item: item-3
+Waiting for embeddings: item-1, item-2, item-3
+Generated embedding for item-1 (dimensions: 1536, preview: [0.0049,0.0271,0.0490]...)
+Generated embedding for item-2 (dimensions: 1536, preview: [0.0424,0.0374,0.1035]...)
+Generated embedding for item-3 (dimensions: 1536, preview: [0.0129,0.0336,-0.0186]...)
+```
+
+---
 
 ### Use the management SDK with Microsoft Entra ID
 
