@@ -17,7 +17,7 @@ Get started with Azure Cosmos DB Shell in just a few minutes with these practica
 
 - Azure Cosmos DB Shell installed ([Installation Guide](install.md))
 - Azure Cosmos DB account
-- Authentication configured (Entra ID, Managed Identity, or Account Keys)
+- Authentication configured (Microsoft Entra ID, Managed Identity, or Account Keys)
 
 ## Launch the shell
 
@@ -32,19 +32,28 @@ CS >
 
 ## Connect to your account
 
-When you launch Cosmos DB Shell, it prompts you for authentication. You can:
+When launched without connection arguments, Azure Cosmos DB Shell starts in a disconnected state.
+Use the `connect` command to authenticate and connect to an account.
 
-- **Use Entra ID** (Recommended)
-  - Follow the browser authentication flow
-  - Most secure method
+**Use Microsoft Entra ID** (recommended):
 
-- **Use Managed Identity** (Production)
-  - Automatically uses Azure managed identity
-  - Best for production environments
+```bash
+CS > connect https://<account-name>.documents.azure.com:443/ --auth-method entra-id
+```
 
-- **Use Account Key** (Development)
-  - Provide connection string or account key
-  - Quick for development/testing
+This starts the browser sign-in flow.
+
+**Use Managed Identity** (production):
+
+```bash
+CS > connect https://<account-name>.documents.azure.com:443/ --auth-method managed-identity
+```
+
+**Use Account Key** (development/testing):
+
+```bash
+CS > connect DefaultEndpointProtocol=https;AccountName=<account-name>;AccountKey=<account-key>; --auth-method key
+```
 
 ## Basic navigation
 
