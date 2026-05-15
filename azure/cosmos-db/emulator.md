@@ -30,7 +30,7 @@ The emulator provides an environment on your developer workspace that isn't capa
 > [!IMPORTANT]
 > The Linux emulator currently doesn't support developer machines running on Apple silicon series or Microsoft ARM chips. A temporary workaround is to install a Windows virtual machine and run the emulator on that platform.
 >
-> Alternatively, you can used the new [Linux-based Azure Cosmos DB emulator](emulator-linux.md).
+> Alternatively, you can use the new [Linux-based Azure Cosmos DB emulator](emulator-linux.md).
 
 - The emulator's **Data Explorer** pane is only supported in the API for NoSQL and API for MongoDB.
 - The emulator only supports **provisioned throughput**. The emulator doesn't support **serverless** throughput.
