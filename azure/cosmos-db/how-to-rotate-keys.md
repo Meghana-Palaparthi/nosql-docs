@@ -6,7 +6,7 @@ ms.author: sidandrews
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: how-to
-ms.date: 10/20/2025
+ms.date: 05/15/2026
 ms.custom:
   - sfi-image-nochange
   - sfi-ropc-nochange
@@ -36,7 +36,7 @@ Azure Cosmos DB for NoSQL allows you to rotate primary and secondary keys to mai
 
 ## Rotate keys using account key usage metadata
 > [!IMPORTANT]
-> Account key usage metadata feature is in private preview. This feature is provided without a service-level agreement, and we don't recommend it for production workloads. For more information, see [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/)
+> Account key usage metadata feature is in public preview. This feature is provided without a service-level agreement, and we don't recommend it for production workloads. For more information, see [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/)
 
 Azure Cosmos DB now offers additional feature to ensure safe key rotation or disabling local authentication with Account Key Usage Metadata. This feature is designed to provide extra visibility into when an account key was last used, allowing teams to make informed decisions before rotating or migrating to Entra ID.
 
@@ -52,9 +52,6 @@ This is especially valuable for:
 - Customers currently using keys but planning to migrate fully to Entra ID.
 - Infrequently used keys: Monthly or yearly jobs that still depend on keys.
 - Shared Keys across teams: Where visibility is often limited.
-
-> [!NOTE]
-> Customers interested in early access using [sign up form](https://aka.ms/SafeKeyRotationSignUp) or reach out to us on cosmosdb-sec-feature@microsoft.com
 
 ## Rotate keys when using the primary key
 
