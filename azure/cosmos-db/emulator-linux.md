@@ -1,17 +1,18 @@
 ---
-title: Linux-based emulator - vNext (preview)
+title: Linux-based emulator - vNext
 description: Use the Azure Cosmos DB Linux-based emulator to test your applications against API for NoSQL endpoints.
-author: Sajeetharan
-ms.author: sasinnat
+author: abhirockzz
+ms.author: guabhishek
 ms.service: azure-cosmos-db
 ms.topic: how-to
-ms.date: 4/21/2026
+ms.date: 6/02/2026
 # CustomerIntent: As a developer, I want to use the Linux-based Azure Cosmos DB emulator so that I can develop my application against a database during development.
 appliesto:
   - ✅ NoSQL
+ai-usage: ai-assisted
 ---
 
-# Linux-based emulator - vNext (preview)
+# Linux-based emulator - vNext
 
 The next generation of the Azure Cosmos DB emulator is entirely Linux-based and is available as a Docker container. It supports running on a wide variety of processors and operating systems.
 
@@ -24,10 +25,10 @@ The next generation of the Azure Cosmos DB emulator is entirely Linux-based and 
 
 ## Installation
 
-Get the Docker container image using `docker pull`. The container image is published to the [Microsoft Artifact Registry](https://mcr.microsoft.com/) as `mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-preview`.
+Get the Docker container image using `docker pull`. The container image is published to the [Microsoft Artifact Registry](https://mcr.microsoft.com/) as `mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-latest`.
 
 ```bash
-docker pull mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-preview
+docker pull mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-latest
 ```
 
 ## Running
@@ -35,14 +36,14 @@ docker pull mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-preview
 To run the container, use `docker run`. Afterwards, use `docker ps` to validate that the container is running.
 
 ```bash
-docker run --detach --publish 8081:8081 --publish 8080:8080 --publish 1234:1234 mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-preview
+docker run --detach --publish 8081:8081 --publish 8080:8080 --publish 1234:1234 mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-latest
 
 docker ps
 ```
 
 ```output
 CONTAINER ID   IMAGE                                                             COMMAND                  CREATED         STATUS         PORTS                                                                                  NAMES
-c1bb8cf53f8a   mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-preview  "/bin/bash -c /home/…"   5 seconds ago   Up 5 seconds   0.0.0.0:1234->1234/tcp, :::1234->1234/tcp, 0.0.0.0:8081->8081/tcp, :::8081->8081/tcp   <container-name>
+c1bb8cf53f8a   mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-latest  "/bin/bash -c /home/…"   5 seconds ago   Up 5 seconds   0.0.0.0:1234->1234/tcp, :::1234->1234/tcp, 0.0.0.0:8081->8081/tcp, :::8081->8081/tcp   <container-name>
 ```
 
 The emulator includes two components:
@@ -70,7 +71,7 @@ The following endpoints are available:
 The .NET and Java SDKs don't support HTTP mode in the emulator. Since this version of the emulator starts with HTTP by default, you will need to explicitly enable HTTPS when starting the container (see below). For the Java SDK, you will also need to [install certificates](#installing-certificates-for-java-sdk).
 
 ```bash
-docker run --detach --publish 8081:8081 --publish 8080:8080 --publish 1234:1234 mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-preview --protocol https
+docker run --detach --publish 8081:8081 --publish 8080:8080 --publish 1234:1234 mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-latest --protocol https
 ```
 
 When you use HTTPS with persisted data volumes, the emulator automatically regenerates SSL certificates at startup, so you don't need to manage certificate renewal.
@@ -97,12 +98,14 @@ The following table summarizes the available Docker commands for configuring the
 | Enable console exporter                          | `--enable-console`    | ENABLE_CONSOLE_EXPORTER | `true`, `false`                                    | `false`                        | Enable console output of telemetry data (useful for debugging).                                                                                                                                                                                                     |
 | Enable verbose mode                              | `--verbose`           | VERBOSE                 | `true`, `false`                                    | `false`                        | Enable verbose mode to print PostgreSQL logs (pglog) to console. Useful for debugging.                                                                                                                                                                              |
 | Set query buffer size                            | `--query-buffer-size` | QUERY_BUFFER_SIZE_KB    | INT                                                | 4096 (4 MB), max 65536 (64 MB) | The maximum size in KB for query result buffers. Increase this if you encounter HTTP 500 errors on large queries.                                                                                                                                                   |
+| Enable seeding data on container start           | `--enable-init-data`  | ENABLE_INIT_DATA        | `true`, `false`                                    | `false`                        | Run any `.csh` scripts found at the top level of the init directory in alphabetical order before the emulator accepts requests. See [Azure Cosmos DB Shell integration](#use-azure-cosmos-db-shell-with-the-emulator).                                              |
+| Set the directory for init scripts               | `--init-path [PATH]`  | INIT_PATH               | PATH                                               | `/init`                        | The directory the emulator scans for `.csh` seed scripts when `ENABLE_INIT_DATA=true`.                                                                                                                                                                              |
 | Enable diagnostic info being sent to Microsoft   | `--enable-telemetry`  | ENABLE_TELEMETRY        | `true`, `false`                                    | `true`                         | Enable sending usage data to Microsoft to help us improve the emulator.                                                                                                                                                                                             |
 
 
 ## Feature support
 
-This emulator is in active development and preview. As a result, not all Azure Cosmos DB features are supported. Some features will also not be supported in the future. This table includes the state of various features and their level of support.
+Not all Azure Cosmos DB features are supported by the emulator, and some aren't planned for future support. This table includes the state of various features and their level of support.
 
 | Feature                                            | Support               |
 | -------------------------------------------------- | --------------------- |
@@ -165,13 +168,6 @@ This emulator is in active development and preview. As a result, not all Azure C
 > [!NOTE]
 > Features marked **No-op** accept requests and return valid HTTP status codes but don't execute the underlying operation. Your code won't break, but don't depend on these features for functional behavior. Custom index policies and collection updates are accepted for compatibility, but queries aren't optimized by custom indexes.
 
-## Limitations
-
-In addition to features not yet supported or not planned, the following list includes current limitations of the emulator.
-
-- The .NET SDK for Azure Cosmos DB doesn't support bulk execution in the emulator.
-- If you get HTTP 500 errors on large query results, increase the query buffer size with the `--query-buffer-size` flag or the `QUERY_BUFFER_SIZE_KB` environment variable. The default is `4096` KB (`4` MB), and the maximum is `65536` KB (`64` MB).
-
 ## Installing certificates for Java SDK
 
 When using the [Java SDK for Azure Cosmos DB](sdk-java-v4.md) with this version of the emulator in https mode, it is necessary to install its certificates to your local Java trust store.
@@ -207,6 +203,134 @@ If you get an error because the alias already exists, delete it and then run the
 ```bash
 keytool -cacerts -delete -alias cosmos_emulator
 ```
+
+## Use Azure Cosmos DB Shell with the emulator
+
+[Azure Cosmos DB Shell](shell/overview.md) is an open-source command-line interface (CLI) that enables you to interact with your Azure Cosmos DB databases using bash-like commands. The shell is included in the emulator container image, so you don't need to install it separately.
+
+To start an interactive session against the running emulator, use `docker exec`:
+
+```bash
+docker exec -it <container-name> cosmoshell.sh
+```
+
+> [!NOTE]
+> The `cosmoshell.sh` wrapper auto-detects the emulator endpoint and authenticates with the well-known account key. The underlying binary is located at `/usr/local/bin/cosmosdbshell` inside the container.
+
+The shell can also run scripts when the container first starts, so databases, containers, seed documents, and any other state are ready before your application connects. To opt in, set `ENABLE_INIT_DATA=true` or pass `--enable-init-data=true`. The default is `false`. When enabled, the emulator processes any `.csh` files at the top level of `/init` in alphabetical order. To use a different directory, point `INIT_PATH` (or `--init-path`) at it.
+
+### Use the included sample data
+
+The image ships with example seed scripts under `/scripts/init_examples/`, which are copied to `/init` at build time. To load them, start the container with `ENABLE_INIT_DATA=true`:
+
+```bash
+docker run --name emulator --rm -e ENABLE_INIT_DATA=true -p 8081:8081 mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-latest
+```
+
+You can then connect to the shell and explore the data:
+
+```bash
+docker exec emulator cosmoshell.sh -c 'ls; cd SampleDB; ls'
+```
+
+### Seed your own data
+
+You can seed your own data. For example, create three files (`01-create-db.csh`, `02-load-movies.csh`, and `03-verify.csh`) in a local folder `movies`.
+
+```bash
+mkdir movies && cd movies
+```
+
+`01-create-db.csh`:
+
+```text
+mkdb MovieDB
+mkcon Movies /genre --database=MovieDB
+```
+
+`02-load-movies.csh`:
+
+```text
+mkitem -container Movies --database=MovieDB '{"id":"m1","genre":"scifi","title":"Inception","year":2010}'
+mkitem -container Movies --database=MovieDB '{"id":"m2","genre":"scifi","title":"The Matrix","year":1999}'
+mkitem -container Movies --database=MovieDB '{"id":"m3","genre":"drama","title":"The Godfather","year":1972}'
+```
+
+`03-verify.csh`:
+
+```text
+query "SELECT VALUE COUNT(1) FROM c" --database=MovieDB --container=Movies
+```
+
+Then run the emulator with that directory mounted at `/init`:
+
+```bash
+docker run --name emulator --rm -e ENABLE_INIT_DATA=true -v "$(pwd):/init" -p 8081:8081 mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-latest
+```
+
+You can verify the data was loaded by connecting to the shell and running a query:
+
+```bash
+docker exec emulator cosmoshell.sh -c 'ls; query "SELECT VALUE COUNT(1) FROM c" --database=MovieDB --container=Movies'
+```
+
+> [!NOTE]
+> Seed data in `/init` is processed alphabetically. To ensure consistent ordering, prefix files with `01-`, `02-`, `03-`, and so on. Either always use 2-digit prefixes (`01-`, `02-`, ..., `99-`) or 3-digit prefixes.
+>
+> Filenames must contain only letters, digits, dots, underscores, and hyphens. For example, `01-create-catalog.csh` and `02_load_books.csh` are valid, but `01 create catalog.csh` (spaces) and `café.csh` (non-ASCII character) are not.
+
+### Share state across init scripts
+
+Each `.csh` file in `/init` runs in the same shell session, so state set in one file is still in effect in the next. This includes the current path set by `cd`, custom commands defined with `def`, and `for`-loop variables.
+
+You can use this to avoid repeating `--database=MovieDB` on every line of the previous example. Add `cd MovieDB` to the end of `01-create-db.csh`:
+
+`01-create-db.csh`:
+
+```text
+mkdb MovieDB
+mkcon Movies /genre --database=MovieDB
+cd MovieDB
+```
+
+Later files can then omit `--database=MovieDB`:
+
+`02-load-movies.csh`:
+
+```text
+mkitem -container Movies '{"id":"m1","genre":"scifi","title":"Inception","year":2010}'
+mkitem -container Movies '{"id":"m2","genre":"scifi","title":"The Matrix","year":1999}'
+mkitem -container Movies '{"id":"m3","genre":"drama","title":"The Godfather","year":1972}'
+```
+
+`03-verify.csh`:
+
+```text
+query "SELECT VALUE COUNT(1) FROM c" --container=Movies
+```
+
+### Persist data across restarts
+
+By default, every `docker run --rm` wipes the emulator's data when the container stops, so init scripts re-run from scratch on the next start. To keep your seeded data (and skip init on subsequent runs), bind-mount a host folder at `/data`:
+
+```bash
+mkdir -p ./cosmos-data
+
+docker run --rm -p 8081:8081 -e ENABLE_INIT_DATA=true -v "$(pwd):/init" -v "$(pwd)/cosmos-data:/data" mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-latest
+```
+
+On any subsequent start with the same `-v "$(pwd)/cosmos-data:/data"` flag, the emulator detects the existing data and skips the init process, so your previously seeded state is preserved. To re-seed from scratch, delete the host folder (`rm -rf ./cosmos-data`) and start again.
+
+### Connect from a local shell
+
+You can also connect to the running emulator from a locally installed version of Azure Cosmos DB Shell. Point it at the emulator's endpoint and key:
+
+```bash
+cosmosdbshell --connect "AccountEndpoint=http://localhost:8081/;AccountKey=<emulator-account-key>"
+```
+
+> [!NOTE]
+> Replace `<emulator-account-key>` with the well-known emulator account key.
 
 ## OpenTelemetry support
 
@@ -253,7 +377,7 @@ jobs:
 
     services:
       cosmosdb:
-        image: mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-preview
+        image: mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-latest
         ports:
           - 8081:8081
         env:
@@ -290,9 +414,16 @@ jobs:
         run: cd java-app && mvn test
 ```
 
-This job runs on an Ubuntu runner and uses the `mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-preview` Docker image as a service container. It uses environment variables to configure the connection string, database name, and container name. Since in this case the job is running directly on the GitHub Actions runner machine, the **Run tests** step in the job can access the emulator is accessible using `localhost:8081` (`8081` is the port exposed by the emulator).
+This job runs on an Ubuntu runner and uses the `mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-latest` Docker image as a service container. It uses environment variables to configure the connection string, database name, and container name. Since in this case the job is running directly on the GitHub Actions runner machine, the **Run tests** step in the job can access the emulator is accessible using `localhost:8081` (`8081` is the port exposed by the emulator).
 
 The **Export Cosmos DB Emulator Certificate** step is specific to Java applications since the Azure Cosmos DB Java SDK currently doesn't support `HTTP` mode in emulator. The `PROTOCOL` environment variable is set to `https` in the `services` section and this step exports the emulator certificate and import it into the Java keystore. The same applies to .NET as well.
+
+## Limitations
+
+In addition to features not yet supported or not planned, the following list includes current limitations of the emulator.
+
+- The .NET SDK for Azure Cosmos DB doesn't support bulk execution in the emulator.
+- If you get HTTP 500 errors on large query results, increase the query buffer size with the `--query-buffer-size` flag or the `QUERY_BUFFER_SIZE_KB` environment variable. The default is `4096` KB (`4` MB), and the maximum is `65536` KB (`64` MB).
 
 ## Reporting issues
 

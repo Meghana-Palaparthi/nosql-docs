@@ -643,7 +643,7 @@
       items:
         - name: Emulator
           href: emulator.md?context=/azure/cosmos-db/context/context
-        - name: Linux emulator (preview)
+        - name: Linux emulator
           href: emulator-linux.md?context=/azure/cosmos-db/context/context
         - name: Release notes
           href: emulator-release-notes.md
