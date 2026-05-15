@@ -66,7 +66,7 @@ For development and quick testing, the toolkit can also use local in-memory stor
 
 ## Get the toolkit
 
-Download the toolkit, review setup steps, and get current installation guidance from the [Agent Memory Toolkit](http://aka.ms/AgentMemoryToolkit).
+Download the toolkit, review setup steps, and get current installation guidance from the [Agent Memory Toolkit](https://aka.ms/AgentMemoryToolkit).
 
 ## Related content
 
