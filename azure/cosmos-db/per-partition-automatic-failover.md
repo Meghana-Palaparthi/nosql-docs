@@ -136,7 +136,7 @@ For most applications, the only requirement is to upgrade to a supported SDK ver
 - Automatically detects PPAF on the account and adjusts retry behavior so writes are redirected to the new write region for any failed-over partition.
 - Caches partition-to-region routing at the partition-key-range level so failover is transparent on subsequent requests.
 - Auto-populates the preferred-region order from the account's failover priority. Setting `ApplicationPreferredRegions` or `ApplicationRegion` is no longer mandatory but remains a best practice.
-- Enables **Per-Partition Circuit Breaker** by default to protect read availability for the offended partition.
+- Enables **Per-Partition Circuit Breaker** by default to protect read availability for the affected partition.
 - Enables **Read Hedging** by default with a 1-second threshold and 500-ms step. You can override with a custom availability strategy or disable it via `DisabledAvailabilityStrategy`.
 
 No application code changes are required beyond the SDK upgrade.
