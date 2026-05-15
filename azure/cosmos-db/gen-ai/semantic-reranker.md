@@ -1,7 +1,7 @@
 ---
 title: Semantic Reranker
 titleSuffix: Azure Cosmos DB for NoSQL
-description: Improve relevancy of search results using AI-powered Semantic Reranker.
+description: Improve relevancy of search results using AI-powered Semantic Reranker in Public Preview.
 author: jcodella
 ms.author: jacodel
 ms.service: azure-cosmos-db
@@ -9,51 +9,330 @@ ms.subservice: nosql
 ms.custom:
   - ignite-2025
 ms.topic: concept-article
-ms.date: 10/30/2025
+ms.date: 05/15/2026
 ms.update-cycle: 180-days
 ms.collection:
   - ce-skilling-ai-copilot
 appliesto:
   - ✅ NoSQL
+ai-usage: ai-assisted
 ---
 
-# Semantic Reranker in Azure Cosmos DB for NoSQL (Preview)
+# Semantic Reranker in Azure Cosmos DB for NoSQL (Public Preview)
 
- The Semantic Reranker uses an AI model to score and reorder the results from a query (vector search, hybrid search, or other type of query) based on *relevancy* to the provided user search phrase or context. By integrating the reranker directly with Azure Cosmos DB, developers can apply reranking on any query results retrieved from any container (for example, using [vector](../vector-search.md), [full-text](full-text-search.md), or [hybrid](hybrid-search.md) search), while using the latest Azure Cosmos DB SDKs (Python & .NET) with minimal code changes.
+Semantic Reranker is available in public preview. It uses an AI model to score and reorder the results from a query, including vector search, hybrid search, full-text search, or another query type, based on relevance to the provided user search phrase or context. By integrating the reranker directly with Azure Cosmos DB, developers can apply reranking on query results retrieved from any container while using supported Azure Cosmos DB SDKs with minimal code changes.
 
 The Semantic Reranker service uses the Microsoft AI Semantic Ranker model, developed internally by Microsoft and available today in [Azure AI Search's Semantic Ranker](/azure/search/semantic-search-overview).
 
 ## Why use Semantic Reranker?
 
-When evaluating a search or retrieval system, four primary metrics define the end-user experience:
+When evaluating a search or retrieval system, three primary metrics define the end-user experience:
 
-- **Accuracy / Recall**: How closely the retrieved results match the ground truth. For example, approximate vector search (DiskANN) vs exact search (flat)
-- **Latency**: The total time taken to return results from query submission to response
-- **Relevancy**: How well the retrieved documents match the user's intent. For example, a query for "best surf spots in Hawaii", a curated surf guide is more relevant than a general Hawaii travel article
+- **Accuracy or recall**: How closely the retrieved results match the ground truth. For example, approximate vector search with DiskANN compared to exact search with a flat index.
+- **Latency**: The total time taken to return results from query submission to response.
+- **Relevance**: How well the retrieved documents match the user's intent. For example, for a query like "best surf spots in Hawaii," a curated surf guide is more relevant than a general Hawaii travel article.
 
-The goal of the Semantic Reranker is to improve *relevancy* of the ordering of search results compared to the user's question or other context. The AI-powered semantic understanding can provide higher quality results near the top of your search, enhancing end-user experience and enriching agents with more relevant data in [Retrieval Augmented Generation (RAG)](rag.md). However, it may not provide benefits across all workloads. Calling the semantic reranker also increases the overall latency of the search by introducing another network call and inference time for the model to generate relevancy scores. It's important to evaluate relevance both before and after applying the Semantic Reranker to determine whether it delivers measurable improvements to your search and retrieval scenarios given the increase in latency.
+The goal of Semantic Reranker is to improve the relevance of search result ordering compared to the user's question or other context. AI-powered semantic understanding can provide higher quality results near the top of your search, enhancing the user experience and enriching agents with more relevant data in [retrieval-augmented generation (RAG)](rag.md). However, it might not provide benefits across all workloads. Calling Semantic Reranker also increases the overall latency of the search by introducing another network call and inference time for the model to generate relevance scores. Evaluate relevance before and after applying Semantic Reranker to determine whether it delivers measurable improvements to your search and retrieval scenarios.
 
-- **Enhanced result quality**: AI-powered semantic understanding can provide higher quality results near the top of your search, enhancing end-user experience and enriching agents with more relevant data in [Retrieval Augmented Generation (RAG)](rag.md)
-- **Seamless integration in Cosmos DB SDKs**: Works with existing vector, full-text, and hybrid search queries
-- **Minimal code changes**: Easy to implement with the latest Azure Cosmos DB SDKs
-- **Flexible application**: Can be applied to any query results from any container
+- **Enhanced result quality**: AI-powered semantic understanding can provide higher quality results near the top of your search, enhancing the user experience and enriching agents with more relevant data in RAG applications.
+- **SDK integration**: Apply reranking to existing vector, full-text, and hybrid search query results by using supported Azure Cosmos DB SDKs.
+- **Minimal code changes**: Add reranking to existing retrieval flows without moving data into a separate search service.
+- **Flexible application**: Apply reranking to query results from any container.
 
 ## Semantic Reranker output
 
-When you use make a call to the Semantic Reranker, the response can contain multiple fields including:
-- **Original documents**: The reranked results contain the same documents that were returned from your original query, but reordered based on their semantic relevance to your provided context string. The document content and metadata remain unchanged and only the ordering is modified to improve relevancy.
-- **Relevancy score**:  Each document in the reranked results includes a relevancy score from 0-1 that indicates how *semantically relevant* the document is to your provided search terms or context. The higher the score, the higher the relevance. These scores are generated by the AI model and help you understand:
-    - Which results are most relevant to the user's intent
-    - The confidence level of the semantic matching
-    - How to potentially filter or threshold results based on relevancy
-- **Inference latency**: The time spent by the service in the rerank request. 
+When you call Semantic Reranker, the response can contain multiple fields, including:
 
-## How to sign up for the preview
+- **Original documents**: The reranked results contain the same documents that were returned from your original query, but can be reordered based on their semantic relevance to your provided context string. The document content and metadata remain unchanged.
+- **Relevance score**: Each document in the reranked results includes a relevance score from 0-1 that indicates how semantically relevant the document is to your provided search terms or context. The higher the score, the higher the relevance. These scores are generated by the AI model and help you understand which results are most relevant to the user's intent, the confidence level of semantic matching, and whether to filter results based on relevance.
+- **Inference latency**: The time spent by the service in the rerank request.
 
-The Semantic Reranker is currently available in gated preview. To get access to this feature: [Sign up for the Semantic Reranker preview](https://aka.ms/AzureCosmosDB/RerankerPreview) and you are added to the waitlist
+## Set up Semantic Reranker in the Azure portal
+
+Use the Azure portal to enable, disable, and configure Semantic Reranker for a specific Azure Cosmos DB resource.
+
+1. Go to your Azure Cosmos DB account in the Azure portal.
+1. In the resource menu, find the Semantic Reranker setup experience.
+1. Review the public preview information and enable the feature for your resource. You can return to this experience later to disable Semantic Reranker for the same resource.
+
+:::image type="content" source="../media/gen-ai/semantic-reranker/semantic-reranker-portal-disabled.png" lightbox="../media/gen-ai/semantic-reranker/semantic-reranker-portal-enable.svg" alt-text="Screenshot placeholder showing where to enable Semantic Reranker in the Azure portal.":::
+
+1. Configure the reranker settings for your account and workload. You can assign roles in this Semantic Reranker portal experience, or assign roles from **Access control (IAM)** for the Azure Cosmos DB resource.
+
+:::image type="content" source="../media/gen-ai/semantic-reranker/semantic-reranker-portal-configure.png" lightbox="../media/gen-ai/semantic-reranker/semantic-reranker-portal-configure.svg" alt-text="Screenshot placeholder showing Semantic Reranker configuration in the Azure portal.":::
+
+1. Review the configuration, then save your changes.
+
+## Optional: assign the inference role with Azure CLI
+
+If you don't use the Azure portal for setup, assign the `Azure.Inference.Executor` app role to the identity that calls Semantic Reranker. Use this option for a user-assigned managed identity, system-assigned managed identity, or Microsoft Entra user.
+
+Before you run these commands, replace `<inference-service-application-id>` with the application ID for the inference service first-party app. You need permissions to read service principals and create app role assignments in Microsoft Entra ID.
+
+### Assign the role to a managed identity
+
+For a user-assigned or system-assigned managed identity, use the managed identity's object ID as the principal ID.
+
+```azurecli
+az login
+
+inferenceAppId="<inference-service-application-id>"
+principalId="<managed-identity-object-id>"
+
+inferenceServicePrincipalId=$(az ad sp show \
+  --id "$inferenceAppId" \
+  --query id \
+  --output tsv)
+
+appRoleId=$(az ad sp show \
+  --id "$inferenceAppId" \
+  --query "appRoles[?value=='Azure.Inference.Executor'].id | [0]" \
+  --output tsv)
+
+az rest \
+  --method post \
+  --url "https://graph.microsoft.com/v1.0/servicePrincipals/${inferenceServicePrincipalId}/appRoleAssignedTo" \
+  --headers "Content-Type=application/json" \
+  --body "{\"principalId\":\"${principalId}\",\"resourceId\":\"${inferenceServicePrincipalId}\",\"appRoleId\":\"${appRoleId}\"}"
+```
+
+### Assign the role to a Microsoft Entra user
+
+For a Microsoft Entra user, get the user's object ID and use it as the principal ID.
+
+```azurecli
+az login
+
+inferenceAppId="<inference-service-application-id>"
+userObjectId="<user-object-id>"
+
+inferenceServicePrincipalId=$(az ad sp show \
+  --id "$inferenceAppId" \
+  --query id \
+  --output tsv)
+
+appRoleId=$(az ad sp show \
+  --id "$inferenceAppId" \
+  --query "appRoles[?value=='Azure.Inference.Executor'].id | [0]" \
+  --output tsv)
+
+az rest \
+  --method post \
+  --url "https://graph.microsoft.com/v1.0/servicePrincipals/${inferenceServicePrincipalId}/appRoleAssignedTo" \
+  --headers "Content-Type=application/json" \
+  --body "{\"principalId\":\"${userObjectId}\",\"resourceId\":\"${inferenceServicePrincipalId}\",\"appRoleId\":\"${appRoleId}\"}"
+```
+
+## API parameters
+
+Semantic Reranker takes a query context and an optional set of options that control output behavior. The .NET and Python SDKs use the same conceptual inputs with language-specific parameter names.
+
+### [.NET](#tab/dotnet)
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `rerankContext` | `string` | Yes | Query text or context used for semantic reranking. |
+| `documents` | `IEnumerable<string>` | Yes | Candidate documents to rerank, serialized as strings. |
+| `options` | `Dictionary<string, dynamic>` | No | Key-value options that modify reranking behavior and output. |
+
+### [Python](#tab/python)
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `context` | `str` | Yes | Query text or context used for semantic reranking. |
+| `documents` | `list[str]` | Yes | Candidate documents to rerank, serialized as strings. |
+| `options` | `dict[str, object]` | No | Key-value options that modify reranking behavior and output. |
+
+---
+
+### Supported options
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `return_documents` | `bool` | `true` | If set to `true`, the reranking response includes the original documents. If set to `false`, documents aren't returned in the response. |
+| `top_k` | `int` | None | Limits the number of reranked results returned. |
+| `sort` | `bool` | None | Sorts the response by reranking score when set to `true`. |
+| `document_type` | `string` | None | Identifies the document format, such as `json`. |
+| `target_paths` | `string` | None | Identifies the document field or fields to consider for reranking. |
+
+## Use Semantic Reranker from an SDK
+
+Use the supported SDKs to pass query results and a reranking context to Semantic Reranker. The reranking context should represent the user's query or task, while the documents should represent the candidate results returned from vector search, full-text search, hybrid search, or another query.
+
+### [.NET](#tab/dotnet)
+
+```csharp
+namespace DotNetReranker;
+
+using Azure.Identity;
+using Microsoft.Azure.Cosmos;
+using System;
+using System.Collections.Generic;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+class Program
+{
+  static async Task Main(string[] args)
+  {
+    string cdbEndpoint = "https://mytestaccount.documents.azure.com:443/";
+    string cdbDatabase = "testdatabase";
+    string cdbContainer = "testcontainer";
+
+    Environment.SetEnvironmentVariable(
+      "AZURE_COSMOS_SEMANTIC_RERANKER_INFERENCE_ENDPOINT",
+      "https://mytestaccount.eastus2.dbinference.azure.com",
+      EnvironmentVariableTarget.Process);
+
+    var tokenCredential = new DefaultAzureCredential(new DefaultAzureCredentialOptions()
+    {
+      ExcludeAzureCliCredential = false,
+      ExcludeAzureDeveloperCliCredential = true,
+      ExcludeAzurePowerShellCredential = true,
+      ExcludeEnvironmentCredential = true,
+      ExcludeInteractiveBrowserCredential = true,
+      ExcludeSharedTokenCacheCredential = true,
+      ExcludeVisualStudioCredential = true,
+      ExcludeWorkloadIdentityCredential = true,
+      ExcludeManagedIdentityCredential = false
+    });
+
+    CosmosClient client = new(cdbEndpoint, tokenCredential);
+    Container container = client.GetDatabase(cdbDatabase).GetContainer(cdbContainer);
+
+    QueryDefinition queryDefinition = new(
+      "SELECT TOP 15 c.id, c.Title, c.Studio, c.Description, c.YearReleased " +
+      "FROM c " +
+      "WHERE FullTextContainsAny(c.Description, \"Sandra Bullock\", \"Johnny Depp\", \"comedy\") " +
+      "ORDER BY RANK FullTextScore(c.Description, \"comedy\")");
+
+    IList<string> results = new List<string>();
+
+    using FeedIterator<Dictionary<string, dynamic>> resultSet =
+      container.GetItemQueryIterator<Dictionary<string, dynamic>>(queryDefinition);
+
+    while (resultSet.HasMoreResults)
+    {
+      foreach (Dictionary<string, dynamic> item in await resultSet.ReadNextAsync())
+      {
+        results.Add(JsonSerializer.Serialize(item));
+      }
+    }
+
+    string rerankingContext = "audience rated PG-13 and public sentiment strong and positive";
+    string documentType = "json";
+    string targetPaths = "Description";
+
+    SemanticRerankResult rerankedResults = await container.SemanticRerankAsync(
+      rerankContext: rerankingContext,
+      documents: results,
+      options: new Dictionary<string, dynamic>
+      {
+        { "return_documents", true },
+        { "top_k", 5 },
+        { "sort", true },
+        { "document_type", documentType },
+        { "target_paths", targetPaths }
+      });
+
+    Console.WriteLine($"Full text search results count: {results.Count}");
+    Console.WriteLine($"Reranker results count: {rerankedResults.RerankScores.Count}");
+    Console.WriteLine($"Reranking context: {rerankingContext}");
+    Console.WriteLine($"Latency details: Data preprocess time: {rerankedResults.Latency["data_preprocess_time"]}, Inference time: {rerankedResults.Latency["inference_time"]}, Postprocess time: {rerankedResults.Latency["postprocess_time"]}");
+    Console.WriteLine($"Token usage details: {rerankedResults.TokenUseage["total_tokens"]}");
+    Console.WriteLine($"{"DocumentId",-36}|{"Reranked order",-14}|{"FTS order",-9}|{"Reranking score",-15}");
+    Console.WriteLine(new string('-', 77));
+
+    for (int index = 0; index < rerankedResults.RerankScores.Count; index++)
+    {
+      RerankScore score = rerankedResults.RerankScores[index];
+      IDictionary<string, object>? document = JsonSerializer.Deserialize<IDictionary<string, object>>(results[score.Index]);
+
+      Console.WriteLine($"{document?["id"],-36}|{index,-14}|{score.Index,-9}|{score.Score,-15}");
+    }
+  }
+}
+```
+
+### [Python](#tab/python)
+
+```python
+import json
+import os
+
+from azure.cosmos import CosmosClient
+from azure.identity import DefaultAzureCredential
+
+os.environ["AZURE_COSMOS_SEMANTIC_RERANKER_INFERENCE_ENDPOINT"] = \
+  "https://mytestaccount.eastus2.dbinference.azure.com"
+
+endpoint = "https://mytestaccount.documents.azure.com:443/"
+database_name = "testdatabase"
+container_name = "testcontainer"
+
+credential = DefaultAzureCredential()
+client = CosmosClient(endpoint, credential=credential)
+database = client.get_database_client(database_name)
+container = database.get_container_client(container_name)
+
+query = """
+SELECT TOP 15 c.id, c.Title, c.Studio, c.Description, c.YearReleased
+FROM c
+WHERE FullTextContainsAny(c.Description, "Sandra Bullock", "Johnny Depp", "comedy")
+ORDER BY RANK FullTextScore(c.Description, "comedy")
+"""
+
+documents = list(container.query_items(
+    query=query,
+    enable_cross_partition_query=True,
+))
+
+reranking_context = "audience rated PG-13 and public sentiment strong and positive"
+document_type = "json"
+target_paths = "Description"
+
+reranked_results = container.semantic_rerank(
+  context=reranking_context,
+  documents=[json.dumps(document) for document in documents],
+  options={
+    "return_documents": True,
+    "top_k": 5,
+    "sort": True,
+    "document_type": document_type,
+    "target_paths": target_paths,
+  },
+)
+
+for score in reranked_results["Scores"]:
+  print(f"index: {score['index']}, score: {score['score']}, document: {score['document']}")
+
+print("Latency stats:")
+print(
+  f"Preprocess: {reranked_results['latency']['data_preprocess_time']}, "
+  f"Inference: {reranked_results['latency']['inference_time']}, "
+  f"Postprocess: {reranked_results['latency']['postprocess_time']}"
+)
+
+print("Token stats:")
+print(f"Token usage: {reranked_results['token_usage']}")
+```
+
+---
+
+## Limitations
+
+Semantic Reranker supports a maximum of 50 documents per rerank call.
+
+## Pricing
+
+Semantic Reranker pricing is `$1` USD for 1,000 rerank calls. Regional and cloud pricing might vary. For full details, see the [Azure Cosmos DB pricing page](https://azure.microsoft.com/pricing/details/cosmos-db/).
+
+## Supported SDKs
+
+Semantic Reranker is supported in the Azure Cosmos DB .NET and Python SDKs. Use the SDK integration to send retrieved documents and user context to the reranker, then use the reranked response in your search, RAG, or agent workflow.
 
 ## Related content
 
-- [Vector Search in Azure Cosmos DB for NoSQL](../vector-search.md)
+- [Vector search in Azure Cosmos DB for NoSQL](../vector-search.md)
 - [Full-text search in Azure Cosmos DB for NoSQL](full-text-search.md)
 - [Hybrid search in Azure Cosmos DB for NoSQL](hybrid-search.md)
