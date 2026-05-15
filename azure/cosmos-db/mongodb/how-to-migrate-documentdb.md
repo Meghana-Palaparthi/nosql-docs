@@ -120,7 +120,7 @@ The **Select Migration Mode** section is used to provide the migration mode that
 
     :::image source="media/how-to-migrate-documentdb/mode-selection.png" alt-text="Screenshot of the mode selection options for a migration job.":::
 
-    > [!NOTE]
+    > [!IMPORTANT]
     > Continuous Backup is a prerequisite for online migrations. For more information, see [continuous backup](../continuous-backup-restore-introduction.md).
 
 1. Select **Next**.
@@ -141,7 +141,8 @@ As a security best practice, Microsoft Entra ID is the preferred authentication 
 
 ### Configure using Microsoft Entra ID authentication
 
-1. Make sure the managed identity has been assigned read-write privileges on the target DocumentDB cluster.
+1. Make sure the managed identity configured on the source account has been [assigned read-write privileges on the target DocumentDB cluster](../../documentdb/how-to-connect-role-based-access-control.md#enable-microsoft-entra-id-authentication).
+
 1. Set the **Azure DocumentDB (with MongoDB Compatibility) account name** field value.  
 
 ## Configure Network Security
