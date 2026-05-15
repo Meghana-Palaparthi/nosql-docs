@@ -161,7 +161,7 @@ In the Data Explorer, you can configure a limit to the request units per second 
 
     ![Screenshot of the individual settings to configure the request unit threshold.](media/data-explorer/configure-ru-threshold.png)
    
-       > [!TIP]
+    > [!TIP]
     > The request unit (RU) threshold is enabled automatically with a default value of **5,000** request units.
 
 ## Use with Microsoft Entra authentication
