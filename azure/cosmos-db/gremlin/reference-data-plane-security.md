@@ -41,7 +41,7 @@ You can set the following data actions individually in a role definition.
 | `Microsoft.DocumentDB/databaseAccounts/gremlin/containers/write` | Creates or updates a container. |
 | `Microsoft.DocumentDB/databaseAccounts/gremlin/containers/delete` | Deletes a container. |
 | `Microsoft.DocumentDB/databaseAccounts/gremlin/containers/readChangeFeed` | Reads from the container's change feed. |
-| `Microsoft.DocumentDB/databaseAccounts/gremlin/containers/manageConflicts` | Manages conflicts for multi-write region accounts (list and delete items from the conflict feed). |
+| `Microsoft.DocumentDB/databaseAccounts/gremlin/containers/manageConflicts` | Manages conflicts for multi-write region accounts (lists and deletes items from the conflict feed). |
 
 ### Data action wildcards
 
@@ -58,14 +58,15 @@ The wildcard (`*`) operator is supported at the `tables`, `containers`, and `ent
 
 The Azure Cosmos DB SDKs issue read-only metadata requests during initialization and to serve specific data requests. These requests fetch various configuration details, such as:
 
-- The global configuration of your account, which includes the Azure regions the account is available in
-- The partition key of your containers or their indexing policy
-- The list of physical partitions that make a container and their addresses
-- They don't fetch any of the data that stored in your account
+- The global configuration of your account, which includes the Azure regions in which the account is available.
+- The partition key of your containers or their indexing policy.
+- The list of physical partitions that make a container and their addresses.
+
+The requests don't fetch any of the data stored in your account.
 
 To ensure the best transparency of our permission model, these metadata requests are explicitly covered by the `Microsoft.DocumentDB/databaseAccounts/readMetadata` data action. This action must be allowed in every situation where your Azure Cosmos DB account is accessed through one of the Azure Cosmos DB SDKs.
 
-You can assign the action at any level in an Azure Cosmos DB account's hierarchy, including account, database, or container. The actual metadata requests allowed depend on the scope:
+You can assign the action at any level in an Azure Cosmos DB account's hierarchy, including account, database, or container. The actual metadata requests that are allowed depend on the scope:
 
 - Account:
   - Lists the databases under the account.
@@ -73,7 +74,7 @@ You can assign the action at any level in an Azure Cosmos DB account's hierarchy
 - Gremlin:
   - Reads table metadata.
   - Lists the containers under the table.
-  - Allows the actions at the container scope for each container under the table,
+  - Allows the actions at the container scope for each container under the table.
 - Container:
   - Reads container metadata.
   - Lists physical partitions under the table.
@@ -90,21 +91,23 @@ Azure Cosmos DB for Gremlin defines data plane-specific role definitions. The ro
 
 ID: `00000000-0000-0000-0000-000000000003`
 
-- Included actions:
-  - `Microsoft.DocumentDB/databaseAccounts/readMetadata`
-  - `Microsoft.DocumentDB/databaseAccounts/throughputSettings/read`
-  - `Microsoft.DocumentDB/databaseAccounts/gremlin/containers/entities/read`
-  - `Microsoft.DocumentDB/databaseAccounts/gremlin/containers/ExecuteQuery`
-  - `Microsoft.DocumentDB/databaseAccounts/gremlin/containers/ReadChangeFeed`
+Included actions:
+
+- `Microsoft.DocumentDB/databaseAccounts/readMetadata`
+- `Microsoft.DocumentDB/databaseAccounts/throughputSettings/read`
+- `Microsoft.DocumentDB/databaseAccounts/gremlin/containers/entities/read`
+- `Microsoft.DocumentDB/databaseAccounts/gremlin/containers/ExecuteQuery`
+- `Microsoft.DocumentDB/databaseAccounts/gremlin/containers/ReadChangeFeed`
 
 ### Cosmos DB Built-in Data Contributor
 
 ID: `00000000-0000-0000-0000-000000000004`
 
-- Included actions:
-  - `Microsoft.DocumentDB/databaseAccounts/readMetadata`
-  - `Microsoft.DocumentDB/databaseAccounts/throughputSettings/read`
-  - `Microsoft.DocumentDB/databaseAccounts/throughputSettings/write`
-  - `Microsoft.DocumentDB/databaseAccounts/gremlin/*`
-  - `Microsoft.DocumentDB/databaseAccounts/gremlin/containers/*`
-  - `Microsoft.DocumentDB/databaseAccounts/gremlin/containers/entities/*`
+Included actions:
+
+- `Microsoft.DocumentDB/databaseAccounts/readMetadata`
+- `Microsoft.DocumentDB/databaseAccounts/throughputSettings/read`
+- `Microsoft.DocumentDB/databaseAccounts/throughputSettings/write`
+- `Microsoft.DocumentDB/databaseAccounts/gremlin/*`
+- `Microsoft.DocumentDB/databaseAccounts/gremlin/containers/*`
+- `Microsoft.DocumentDB/databaseAccounts/gremlin/containers/entities/*`

@@ -118,10 +118,9 @@ First, you must prepare a role definition with a list of data actions to grant a
       --resource-group <resource-group>
     ```
 
-1. Review the output and locate the role definition named `Cosmos DB Built-in Data Contributor`. The output contains the unique identifier of the role definition in the `id` property. Record this value because you must use it in the assignment step later in this article.
+1. Review the output and locate the role definition named `Cosmos DB Built-in Data Contributor`. The output contains the unique identifier of the role definition in the `id` property. Record this value because you need to use it in the assignment step later in this article.
 
-    > [!NOTE]
-    > In this example, the `id` value is `/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/msdocs-identity-example/providers/Microsoft.DocumentDB/databaseAccounts/msdocs-identity-example-gremlin/gremlinRoleDefinitions/00000000-0000-0000-0000-000000000004`. This example uses fictitious data, and your identifier is distinct from this example.
+   In this example, the `id` value is `/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/msdocs-identity-example/providers/Microsoft.DocumentDB/databaseAccounts/msdocs-identity-example-gremlin/gremlinRoleDefinitions/00000000-0000-0000-0000-000000000004`. This example uses fictitious data, and your identifier is distinct from this example.
 
 1. Create a new JSON file named `role-definition.json`. In this file, create a resource definition that specifies the data actions that you want to allow.
 
@@ -147,7 +146,7 @@ First, you must prepare a role definition with a list of data actions to grant a
       --scope /
     ```
 
-1. Use `az cosmosdb gremlin role assignment list` to list all role assignments for your account and verify your assignment.
+1. Use `az cosmosdb gremlin role assignment list` to list all role assignments for your account, and verify your assignment.
 
     ```azurecli-interactive
     az cosmosdb gremlin role assignment list \
@@ -159,7 +158,7 @@ First, you must prepare a role definition with a list of data actions to grant a
 
 ::: zone pivot="azure-resource-manager-bicep"
 
-1. First, get the resource identifier of the existing Azure Cosmos DB for Gremlin account by using `az cosmsodb show` and store it in a variable.
+1. First, get the resource identifier of the existing Azure Cosmos DB for Gremlin account by using `az cosmsodb show`, and store it in a variable.
 
     ```azurecli-interactive
     resourceId=$( \
@@ -175,7 +174,7 @@ First, you must prepare a role definition with a list of data actions to grant a
         --url $resourceId/gremlinRoleDefinitions?api-version=2023-04-15
     ```
 
-1. Then, list all the role definitions associated with your Azure Cosmos DB for Gremlin account by using `az rest`. Finally, review the output and locate the role definition named `Cosmos DB Built-in Data Contributor`. The output contains the unique identifier of the role definition in the `id` property. Record this value because you must use it in the assignment step later in this article.
+1. Then, list all the role definitions associated with your Azure Cosmos DB for Gremlin account by using `az rest`. Finally, review the output and locate the role definition named `Cosmos DB Built-in Data Contributor`. The output contains the unique identifier of the role definition in the `id` property. Record this value because you need to use it in the assignment step later in this article.
     
     ```json
     [
@@ -206,10 +205,9 @@ First, you must prepare a role definition with a list of data actions to grant a
     ]
     ```
 
-    > [!NOTE]
-    > In this example, the `id` value is `/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/msdocs-identity-example/providers/Microsoft.DocumentDB/databaseAccounts/msdocs-identity-example-gremlin/gremlinRoleDefinitions/00000000-0000-0000-0000-000000000004`. This example uses fictitious data, and your identifier is distinct from this example. This example output is truncated.
+    In this example, the `id` value is `/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/msdocs-identity-example/providers/Microsoft.DocumentDB/databaseAccounts/msdocs-identity-example-gremlin/gremlinRoleDefinitions/00000000-0000-0000-0000-000000000004`. This example uses fictitious data, and your identifier is distinct from this example. This example output is truncated.
 
-1. Create a new Bicep file to define your role definition. Name the file `data-plane-role-definition.bicep`. Add these data actions to the definition:
+1. Create a new Bicep file to define your role definition. Name the file `data-plane-role-definition.bicep`. Add the following data actions to the definition:
 
     | | Description |
     | --- | --- |
@@ -303,7 +301,7 @@ First, you must prepare a role definition with a list of data actions to grant a
         --template-file data-plane-role-definition.bicep
     ```
 
-1. Review the output from the deployment. The output contains the unique identifier of the role definition in the `properties.outputs.definitionId.value` property. Record this value because you must use it in the assignment step later in this article.
+1. Review the output from the deployment. The output contains the unique identifier of the role definition in the `properties.outputs.definitionId.value` property. Record this value because you need to use it in the assignment step later in this article.
 
     ```json
     {
@@ -318,8 +316,7 @@ First, you must prepare a role definition with a list of data actions to grant a
     }
     ```
 
-    > [!NOTE]
-    > In this example, the `id` value is `/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourcegroups/msdocs-identity-example/providers/Microsoft.DocumentDB/databaseAccounts/msdocs-identity-example-table-account/gremlinRoleDefinitions/dddddddd-9999-0000-1111-eeeeeeeeeeee`. This example uses fictitious data, and your identifier is distinct from this example. This example is a subset of the typical JSON outputted from the deployment for clarity.
+   In this example, the `id` value is `/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourcegroups/msdocs-identity-example/providers/Microsoft.DocumentDB/databaseAccounts/msdocs-identity-example-table-account/gremlinRoleDefinitions/dddddddd-9999-0000-1111-eeeeeeeeeeee`. This example uses fictitious data, and your identifier is distinct from this example. This example is a subset of the typical JSON outputted from the deployment for clarity.
 
 1. Create another Bicep file to assign a role to an identity. Name this file `data-plane-role-assignment.bicep`.
 
@@ -373,8 +370,7 @@ First, you must prepare a role definition with a list of data actions to grant a
 
 1. Repeat these steps to grant access to the account from any other identities that you want to use.
 
-    > [!TIP]
-    > You can repeat these steps for as many identities as you want. Typically, these steps are at least repeated to allow developers access to an account by using their human identity and to allow applications access to data by using a managed identity.
+   You can repeat these steps for as many identities as you want. Typically, these steps are at least repeated to allow developers access to an account by using their human identity and to allow applications access to data by using a managed identity.
 
 ::: zone-end
 
@@ -388,7 +384,7 @@ First, you must prepare a role definition with a list of data actions to grant a
       -ResourceGroupName <resource-group>
     ```
 
-1. Review the output and locate the role definition named `Cosmos DB Built-in Data Contributor`. The output contains the unique identifier of the role definition in the `Id` property. Record this value because you must use it in the assignment step later in this article.
+1. Review the output and locate the role definition named `Cosmos DB Built-in Data Contributor`. The output contains the unique identifier of the role definition in the `Id` property. Record this value because you need to use it in the assignment step later in this article.
 
 1. Create a new role definition by using `New-AzCosmosDBGremlinRoleDefinition` and a JSON file that describes the permissions that you want to allow.
 
@@ -412,7 +408,7 @@ First, you must prepare a role definition with a list of data actions to grant a
       -Scope /
     ```
 
-1. List all role assignments for your account and verify your assignment.
+1. List all role assignments for your account, and verify your assignment.
 
     ```azurepowershell-interactive
     Get-AzCosmosDBGremlinRoleAssignment \

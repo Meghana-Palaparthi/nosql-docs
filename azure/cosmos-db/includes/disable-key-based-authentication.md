@@ -25,7 +25,7 @@ az resource update \
 
 Create a new account with key-based authentication disabled so that applications are required to use Microsoft Entra authentication.
 
-1. Create a new Bicep file to deploy your new account with key-based authentication disabled. Name the file *deploy-new-account.bicep*.
+1. Create a new Bicep file to deploy your new account with key-based authentication disabled. Name the file `deploy-new-account.bicep`.
 
     ```bicep
     metadata description = 'Deploys a new Azure Cosmos DB account with key-based auth disabled.'

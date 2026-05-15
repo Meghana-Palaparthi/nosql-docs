@@ -41,5 +41,5 @@ This article provides guidance on how to best secure your Azure Cosmos DB for Ap
 
 ## Backup and restore
 
-- **Enable native continuous backup and restore:** Protect your data by enabling continuous backup, which allows you to restore your Azure Cosmos DB account to any point in time within the retention period. For more information, see [Continuous backup and restore](../online-backup-and-restore.md).
+- **Enable native continuous backup and restore:** Protect your data by enabling continuous backup so that you can restore your Azure Cosmos DB account to any point in time within the retention period. For more information, see [Continuous backup and restore](../online-backup-and-restore.md).
 - **Test backup and recovery procedures:** Verify the effectiveness of backup processes by regularly testing the restoration of databases, containers, and items. For more information, see [Restore a container or database](../how-to-restore-in-account-continuous-backup.md).

@@ -56,16 +56,17 @@ The wildcard (`*`) operator is supported at the `tables`, `containers`, and `ent
 
 ### Required metadata for actions
 
-The Azure Cosmos DB SDKs issue read-only metadata requests during initialization and to serve specific data requests. These requests fetch various configuration details such as:
+The Azure Cosmos DB SDKs issue read-only metadata requests during initialization and to serve specific data requests. These requests fetch various configuration details, such as:
 
 - The global configuration of your account, which includes the Azure regions in which the account is available.
 - The partition key of your containers or their indexing policy.
 - The list of physical partitions that make a container and their addresses.
-- They don't fetch any of the data that stored in your account.
+
+The requests don't fetch any of the data stored in your account.
 
 To ensure the best transparency of our permission model, these metadata requests are explicitly covered by the `Microsoft.DocumentDB/databaseAccounts/readMetadata` data action. This action must be allowed in every situation where your Azure Cosmos DB account is accessed through one of the Azure Cosmos DB SDKs.
 
-You can assign the action at any level in an Azure Cosmos DB account's hierarchy, including account, database, or container. The actual metadata requests allowed depend on the scope:
+You can assign the action at any level in an Azure Cosmos DB account's hierarchy, including account, database, or container. The actual metadata requests that are allowed depend on the scope:
 
 - Account:
   - Lists the databases under the account.
@@ -90,21 +91,23 @@ Azure Cosmos DB for Cassandra defines data plane-specific role definitions. Thes
 
 ID: `00000000-0000-0000-0000-000000000003`
 
-- Included actions:
-  - `Microsoft.DocumentDB/databaseAccounts/readMetadata`
-  - `Microsoft.DocumentDB/databaseAccounts/throughputSettings/read`
-  - `Microsoft.DocumentDB/databaseAccounts/cassandra/containers/entities/read`
-  - `Microsoft.DocumentDB/databaseAccounts/cassandra/containers/ExecuteQuery`
-  - `Microsoft.DocumentDB/databaseAccounts/cassandra/containers/ReadChangeFeed`
+Included actions:
+
+- `Microsoft.DocumentDB/databaseAccounts/readMetadata`
+- `Microsoft.DocumentDB/databaseAccounts/throughputSettings/read`
+- `Microsoft.DocumentDB/databaseAccounts/cassandra/containers/entities/read`
+- `Microsoft.DocumentDB/databaseAccounts/cassandra/containers/ExecuteQuery`
+- `Microsoft.DocumentDB/databaseAccounts/cassandra/containers/ReadChangeFeed`
 
 ### Cosmos DB Built-in Data Contributor
 
 ID: `00000000-0000-0000-0000-000000000004`
 
-- Included actions:
-  - `Microsoft.DocumentDB/databaseAccounts/readMetadata`
-  - `Microsoft.DocumentDB/databaseAccounts/throughputSettings/read`
-  - `Microsoft.DocumentDB/databaseAccounts/throughputSettings/write`
-  - `Microsoft.DocumentDB/databaseAccounts/cassandra/*`
-  - `Microsoft.DocumentDB/databaseAccounts/cassandra/containers/*`
-  - `Microsoft.DocumentDB/databaseAccounts/cassandra/containers/entities/*`
+Included actions:
+
+- `Microsoft.DocumentDB/databaseAccounts/readMetadata`
+- `Microsoft.DocumentDB/databaseAccounts/throughputSettings/read`
+- `Microsoft.DocumentDB/databaseAccounts/throughputSettings/write`
+- `Microsoft.DocumentDB/databaseAccounts/cassandra/*`
+- `Microsoft.DocumentDB/databaseAccounts/cassandra/containers/*`
+- `Microsoft.DocumentDB/databaseAccounts/cassandra/containers/entities/*`

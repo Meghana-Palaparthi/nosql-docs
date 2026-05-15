@@ -26,7 +26,7 @@ This article provides guidance on how to best secure your Azure Cosmos DB for Ca
 ## Network security
 
 - **Disable public network access and use private endpoints only:** Deploy Azure Cosmos DB for NoSQL with a configuration that restricts network access to an Azure-deployed virtual network. The account is exposed through the specific subnet that you configured. Then, disable public network access for the entire account and use private endpoints exclusively for services that connect to the account. For more information, see [Configure virtual network access](../how-to-configure-vnet-service-endpoint.md) and [Configure access from private endpoints](../how-to-configure-private-endpoints.md).
-- **Enable network security perimeter (NSP) for network isolation:** Use NSP to restrict access to your Azure Cosmos DB account by defining network boundaries and isolating it from public internet access. For more information, see [Configure Network Security Perimeter](../how-to-configure-nsp.md).
+- **Enable network security perimeter (NSP) for network isolation:** Use NSP to restrict access to your Azure Cosmos DB account by defining network boundaries and isolating it from public internet access. For more information, see [Configure network security perimeter](../how-to-configure-nsp.md).
 
 ## Identity management
 
