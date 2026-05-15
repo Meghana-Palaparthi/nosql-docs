@@ -8,8 +8,9 @@ ms.service: azure-cosmos-db
 ms.subservice: mongodb
 ms.devlang: python
 ms.topic: quickstart-sdk
-ms.date: 04/08/2025
+ms.date: 05/13/2026
 ms.custom: devx-track-python, devx-track-extended-azdevcli, sfi-image-nochange
+ai-usage: ai-assisted
 appliesto:
 - ✅ MongoDB
 # CustomerIntent: As a developer, I want to learn the basics of the Python library so that I can build applications with Azure Cosmos DB for MongoDB.
@@ -118,6 +119,7 @@ from pymongo import MongoClient
 - [Create a document](#create-a-document)
 - [Get a document](#read-a-document)
 - [Query documents](#query-documents)
+- [Delete documents](#delete-documents)
 
 The sample code in the template uses a database named `cosmicworks` and collection named `products`. The `products` collection contains details such as name, category, quantity, and a unique identifier for each product. The collection uses the `/category` property as a shard key.
 
@@ -195,6 +197,29 @@ matched_documents = collection.find(filter)
 
 for document in matched_documents:
     # Do something with each item
+```
+
+### Delete documents
+
+Delete a single document from the collection using `collection.delete_one`. This method performs a point delete using both the unique identifier (`_id`) and shard key (`category`) fields to efficiently target a single document without a cross-shard operation.
+
+```python
+filter = {
+    "_id": "aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb",
+    "category": "gear-surf-surfboards"
+}
+result = collection.delete_one(filter)
+print(f"Deleted document: {result.deleted_count}")
+```
+
+Delete multiple documents from the collection using `collection.delete_many`. This method removes all documents that match the specified filter. Check `deleted_count` to confirm how many documents were removed.
+
+```python
+filter = {
+    "category": "gear-surf-surfboards"
+}
+result = collection.delete_many(filter)
+print(f"Deleted documents: {result.deleted_count}")
 ```
 
 ### Explore your data

@@ -1,0 +1,26 @@
+name: Copilot Setup Steps
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+jobs:
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      # Checkout source code
+      - name: Checkout code
+        uses: actions/checkout@v6
+      # Setup Node LTS
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      # Install the Azure Cosmos DB agent skills from https://github.com/azurecosmosdb/cosmosdb-agent-kit
+      - name: Install Cosmos DB agent skills
+        run: npx skills add AzureCosmosDB/cosmosdb-agent-kit

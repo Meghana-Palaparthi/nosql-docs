@@ -83,7 +83,21 @@
     - name: Integrate with AI Tools
       items:
         - name: AI Frameworks
-          href: ai-frameworks.md
+          items:
+            - name: Overview
+              href: ai-frameworks.md
+            - name: CosmosAIGraph (OmniRAG)
+              href: https://aka.ms/cosmosaigraph
+            - name: Haystack
+              href: build-rag-pipelines.md
+            - name: LangChain on Azure
+              href: build-rag-applications.md
+            - name: LangGraph
+              href: persist-agent-state.md
+            - name: LlamaIndex
+              href: query-knowledge-base.md
+            - name: Semantic Kernel
+              href: /semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/azure-cosmosdb-mongodb-connector
     - name: Connect using Spark connector from Azure Databricks
       href: how-to-connect-from-databricks.md
 - name: Architect secure solutions

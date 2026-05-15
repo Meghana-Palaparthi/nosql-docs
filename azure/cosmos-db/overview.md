@@ -30,6 +30,8 @@ The surge of AI-powered applications created another layer of complexity, becaus
 
 Azure Cosmos DB simplifies and expedites your application development by being the single database for your operational data needs, from [geo-replicated distributed caching](https://medium.com/@marcodesanctis2/using-azure-cosmos-db-as-your-persistent-geo-replicated-distributed-cache-b381ad80f8a0) to back up to [vector indexing and search](vector-database.md). It provides the data infrastructure for modern applications like [AI agent](ai-agents.md), digital commerce, Internet of Things, and booking management. It can accommodate all your operational data models, including document, vector, key-value, graph, and table.
 
+If you're comparing Azure database services to find the right fit for your workload, see [Choose an Azure data service](/azure/architecture/guide/technology-choices/data-store-overview) in the Azure Architecture Center.
+
 ## An AI database providing industry-leading capabilities...
 
 ## ...for free
@@ -53,7 +55,7 @@ As a fully managed service, Azure Cosmos DB takes database administration off yo
 The following free options are available:
 
 * [Azure Cosmos DB lifetime free tier](free-tier.md) provides 1000 [RU/s](request-units.md) of throughput and 25 GB of storage free.
-* [Azure free account](https://azure.microsoft.com/pricing/purchase-options/azure-account) gives you $200 in Azure credits for the first 30 days and 400 RU/s of provisioned throughput with 25-GB storage for 12 months.
+* [Azure free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) gives you $200 in Azure credits for the first 30 days and 400 RU/s of provisioned throughput with 25-GB storage for 12 months.
 * [Azure Cosmos DB emulator](emulator.md) provides a local environment that emulates the Azure Cosmos DB service for development and testing at no cost.
 
 When you decide that Azure Cosmos DB is right for you, you can receive up to 63% discount on [Azure Cosmos DB prices through Reserved Capacity](reserved-capacity.md).

@@ -1,7 +1,8 @@
 ---
 title: SELECT
 description: The `SELECT` clause identifies fields to return in query results. The clause then projects those fields into the JSON result set.
-ms.date: 11/10/2025
+ms.date: 05/13/2026
+ai-usage: ai-assisted
 ---
 
 # `SELECT` - Query language in Cosmos DB (in Azure and Fabric)
@@ -134,6 +135,84 @@ FROM
     "firstTag": "polyester"
   },
   ...
+]
+```
+
+## Common query patterns
+
+The following examples show common patterns for querying items by nested object properties and array element values. Each example uses this sample document:
+
+```json
+{
+  "id": "68719519015",
+  "name": "Cosmic Works Trail Blazer",
+  "category": "outdoor-furniture",
+  "metadata": {
+    "sku": "TBL-9201",
+    "status": "active"
+  },
+  "tags": [
+    { "name": "waterproof" },
+    { "name": "lightweight" }
+  ]
+}
+```
+
+### Query by nested object property
+
+Use dot notation to access properties on a nested object. In this example, the query filters items where `metadata.status` equals `"active"` and returns their `id` values.
+
+```nosql
+SELECT c.id
+FROM c
+WHERE c.metadata.status = "active"
+```
+
+```json
+[
+  {
+    "id": "68719519015"
+  }
+]
+```
+
+### Query by array element property
+
+Use the `ARRAY_CONTAINS` function with the partial-match flag (`true`) to check whether any element in an array matches a specific property value. In this example, the query returns the `id` of each item that has a tag with `"name": "waterproof"`.
+
+```nosql
+SELECT c.id
+FROM c
+WHERE ARRAY_CONTAINS(c.tags, {"name": "waterproof"}, true)
+```
+
+```json
+[
+  {
+    "id": "68719519015"
+  }
+]
+```
+
+### Query by array element property using JOIN
+
+Use the `JOIN` keyword to unnest array elements and filter on a nested property. `JOIN` lets you access each matched element directly, which is useful when you also want to return or further filter the matching array element. In this example, the query returns the `id` and the matching `tag` for each item that has a tag named `"waterproof"`.
+
+```nosql
+SELECT c.id, t AS tag
+FROM c
+JOIN t IN c.tags
+WHERE t.name = "waterproof"
+```
+
+```json
+[
+  {
+    "id": "68719519015",
+    "tag": {
+      "name": "waterproof"
+    }
+  }
 ]
 ```
 
