@@ -13,11 +13,12 @@ ms.collection:
   - ce-skilling-ai-copilot
 appliesto:
   - ✅ NoSQL
+ai-usage: ai-assisted 
 ---
 
 # Agentic retrieval toolkit for Azure Cosmos DB and Azure OpenAI
 
-The Agentic Retrieval toolkit is a reference implementation for building multi-step retrieval-augmented generation (RAG) applications on Azure. It combines Azure Cosmos DB for NoSQL vector search, full-text search, Azure OpenAI embeddings, and large language model reasoning to retrieve diverse evidence and generate grounded answers.
+[The Agentic Retrieval Toolkit](https://aka.ms/agenticretrieval) is a reference implementation for building multi-step retrieval-augmented generation (RAG) applications on Azure. It combines Azure Cosmos DB for NoSQL vector search, full-text search, Azure OpenAI embeddings, and large language model reasoning to retrieve diverse evidence and generate grounded answers.
 
 Unlike a basic one-shot RAG pipeline, this toolkit performs iterative retrieval. It first retrieves relevant documents, generates a preliminary answer, identifies information gaps, creates follow-up sub-questions, retrieves additional evidence, and synthesizes a final answer. Use this toolkit when you need a reference architecture for RAG scenarios that require more than a single retrieval pass. It is useful for complex questions, multi-document synthesis, scientific or technical corpora, and workloads where retrieved context should be diversified before answer generation.
 
@@ -52,8 +53,6 @@ The retrieval stage answers user questions by combining several retrieval and re
 4. Generate focused sub-questions for the missing information.
 5. Retrieve additional context for those sub-questions.
 6. Regenerate or synthesize a final answer grounded in the retrieved evidence.
-
-The main implementation lives in [agentic_retriever.py](agentic_retriever.py). The Cosmos DB retrieval logic is factored into [utils/cosmos_retriever.py](utils/cosmos_retriever.py). Document ingestion is handled by [cosmos_db_upload.py](cosmos_db_upload.py).
 
 ## Primary components
 
@@ -92,51 +91,9 @@ That does not mean the retrieval pipeline is limited to predefined questions. Ap
 
 For app integration, initialize the retriever and pipeline once at startup, then call the pipeline for each user request.
 
-```python
-import asyncio
-from pathlib import Path
-
-import agentic_retriever
-
-async def main():
-    agentic_retriever.load_config(Path("config.yaml"))
-
-    from agentic_retriever import CONFIG, LLMClient, DecomposedRAGPipeline
-    from utils.cosmos_retriever import CombinedRetriever, RETRIEVAL_SOURCES
-
-    retriever = CombinedRetriever(
-        retrieval_sources=RETRIEVAL_SOURCES,
-        k_diverse=CONFIG["retrieval"]["k_diverse"],
-        k_ranker=CONFIG.get("ranker", {}).get("k_ranker", 0),
-        eta=CONFIG["retrieval"]["eta"],
-        rescale_power=CONFIG["retrieval"]["rescale_power"],
-    )
-
-    await retriever.initialize()
-
-    llm = LLMClient()
-    pipeline_cfg = CONFIG.get("pipeline", {})
-
-    pipeline = DecomposedRAGPipeline(
-        retriever=retriever,
-        llm=llm,
-        max_sub_q=pipeline_cfg.get("max_sub_questions", 5),
-        num_rounds=pipeline_cfg.get("rounds", 2),
-        subq_fanout_cap=pipeline_cfg.get("subq_fanout_cap", 3),
-        subq_max_concurrency=pipeline_cfg.get("subq_max_concurrency", 2),
-    )
-
-    try:
-        result = await pipeline.run_efficient("What does the corpus say about Mars?")
-        print(result["final_answer"])
-    finally:
-        await retriever.close()
-        await llm.close()
-
-asyncio.run(main())
 
 ## Related content
-
+- [The Agentic Retrieval Toolkit](https://aka.ms/agenticretrieval)
 - [Hybrid search in Azure Cosmos DB for NoSQL](hybrid-search.md)
 - [Vector search in Azure Cosmos DB for NoSQL](../vector-search.md)
 - [Full-text search in Azure Cosmos DB for NoSQL](full-text-search.md)

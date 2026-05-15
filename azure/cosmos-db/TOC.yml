@@ -85,7 +85,7 @@
         - name: Tips for vector search performance
           href: gen-ai/vector-search-performance-tips.md
         - name: Multi-vector search with MaxSim
-          href: gen-ai/multivector-search.md
+          href: gen-ai/multi-vector-search.md
     - name: Full text indexing and search
       items:
         - name: Full text search overview

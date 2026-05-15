@@ -55,11 +55,11 @@ Use the Azure portal to enable, disable, and configure Semantic Reranker for a s
 1. In the resource menu, find the Semantic Reranker setup experience.
 1. Review the public preview information and enable the feature for your resource. You can return to this experience later to disable Semantic Reranker for the same resource.
 
-:::image type="content" source="../media/gen-ai/semantic-reranker/semantic-reranker-portal-disabled.png" lightbox="../media/gen-ai/semantic-reranker/semantic-reranker-portal-enable.svg" alt-text="Screenshot placeholder showing where to enable Semantic Reranker in the Azure portal.":::
+:::image type="content" source="../media/gen-ai/semantic-reranker/semantic-reranker-portal-disabled.png" lightbox="../media/gen-ai/semantic-reranker/semantic-reranker-portal-disabled.png" alt-text="Screenshot placeholder showing where to enable Semantic Reranker in the Azure portal.":::
 
 1. Configure the reranker settings for your account and workload. You can assign roles in this Semantic Reranker portal experience, or assign roles from **Access control (IAM)** for the Azure Cosmos DB resource.
 
-:::image type="content" source="../media/gen-ai/semantic-reranker/semantic-reranker-portal-configure.png" lightbox="../media/gen-ai/semantic-reranker/semantic-reranker-portal-configure.svg" alt-text="Screenshot placeholder showing Semantic Reranker configuration in the Azure portal.":::
+:::image type="content" source="../media/gen-ai/semantic-reranker/semantic-reranker-portal-configure.png" lightbox="../media/gen-ai/semantic-reranker/semantic-reranker-portal-configure.png" alt-text="Screenshot placeholder showing Semantic Reranker configuration in the Azure portal.":::
 
 1. Review the configuration, then save your changes.
 
@@ -72,6 +72,8 @@ Before you run these commands, replace `<inference-service-application-id>` with
 ### Assign the role to a managed identity
 
 For a user-assigned or system-assigned managed identity, use the managed identity's object ID as the principal ID.
+
+You can also assign this role to a managed identity in the Azure portal by using the Semantic Reranker setup experience described earlier, or from **Access control (IAM)** for the Azure Cosmos DB resource.
 
 ```azurecli
 az login
@@ -240,6 +242,7 @@ class Program
     Console.WriteLine($"Reranking context: {rerankingContext}");
     Console.WriteLine($"Latency details: Data preprocess time: {rerankedResults.Latency["data_preprocess_time"]}, Inference time: {rerankedResults.Latency["inference_time"]}, Postprocess time: {rerankedResults.Latency["postprocess_time"]}");
     Console.WriteLine($"Token usage details: {rerankedResults.TokenUseage["total_tokens"]}");
+    Console.WriteLine($"Token usage details: {rerankedResults.TokenUsage["total_tokens"]}");
     Console.WriteLine($"{"DocumentId",-36}|{"Reranked order",-14}|{"FTS order",-9}|{"Reranking score",-15}");
     Console.WriteLine(new string('-', 77));
 
