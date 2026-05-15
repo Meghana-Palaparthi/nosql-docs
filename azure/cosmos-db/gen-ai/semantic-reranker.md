@@ -329,7 +329,7 @@ Semantic Reranker pricing is `$1` USD for 1,000 rerank calls. Regional and cloud
 
 ## Supported SDKs
 
-Semantic Reranker is supported in the Azure Cosmos DB .NET and Python SDKs. Use the SDK integration to send retrieved documents and user context to the reranker, then use the reranked response in your search, RAG, or agent workflow.
+Semantic Reranker is supported in the Azure Cosmos DB .NET, Python, and JavaScript SDKs. For .NET, use the latest preview version of the Azure Cosmos DB .NET SDK. Use the SDK integration to send retrieved documents and user context to the reranker, then use the reranked response in your search, RAG, or agent workflow.
 
 ## Related content
 
