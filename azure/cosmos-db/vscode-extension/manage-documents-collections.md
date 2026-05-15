@@ -24,6 +24,8 @@ Use the extension to:
 1. Expand the target database and container.
 1. Open the documents or items view for that container.
 
+:::image type="content" source="media/manage-documents/manage-documents.png" alt-text="Azure Cosmos DB items view in Visual Studio Code with document list and JSON editor for create, edit, and delete operations." lightbox="media/manage-documents/manage-documents.png":::
+
 ## Create a document
 
 1. Select the action to add a new document.

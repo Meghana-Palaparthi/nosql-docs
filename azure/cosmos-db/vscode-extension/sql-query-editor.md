@@ -24,6 +24,8 @@ The query editor helps you author and run Azure Cosmos DB SQL queries with:
 1. Expand a database and then a container.
 1. Right-click the container and select the query editor action.
 
+:::image type="content" source="media/sql-query-editor/sql-query-editor.png" alt-text="Azure Cosmos DB SQL query editor in Visual Studio Code with query input and result panes." lightbox="media/sql-query-editor/sql-query-editor.png":::
+
 ## Write and run a query
 
 1. Enter a query in the editor.

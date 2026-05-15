@@ -25,6 +25,8 @@ This preview capability uses Copilot Chat context to help draft and refine Azure
 
 In Chat, invoke the participant with natural prompts or slash commands.
 
+:::image type="content" source="media/chat-query-assistant/chat-query-assistant.png" alt-text="Copilot Chat in Visual Studio Code using the @cosmosdb participant to generate and refine Azure Cosmos DB queries." lightbox="media/chat-query-assistant/chat-query-assistant.png":::
+
 Example commands:
 
 ```text

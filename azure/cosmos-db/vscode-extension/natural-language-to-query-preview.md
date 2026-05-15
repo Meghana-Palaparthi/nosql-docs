@@ -32,6 +32,8 @@ For private preview setup and validation assets, see the preview repository: [co
 1. Insert the generated query into the editor.
 1. Run the query and validate results.
 
+:::image type="content" source="media/natural-langauge-to-query/natural-language-to-query.png" alt-text="Natural language to query experience in Visual Studio Code generating Azure Cosmos DB SQL from a plain-language prompt." lightbox="media/natural-langauge-to-query/natural-language-to-query.png":::
+
 Example prompts:
 
 ```text

@@ -38,6 +38,8 @@ Use the extension's resource explorer to:
 1. Expand a database to view containers.
 1. Select a container node to view actions such as opening a query editor or item view.
 
+:::image type="content" source="media/browse-accounts-databases/browse-accounts-databases.png" alt-text="Azure Cosmos DB resource tree in Visual Studio Code showing an expanded account with databases and containers." lightbox="media/browse-accounts-databases/browse-accounts-databases.png":::
+
 ## Useful navigation tips
 
 - Refresh a node when you create resources outside Visual Studio Code.

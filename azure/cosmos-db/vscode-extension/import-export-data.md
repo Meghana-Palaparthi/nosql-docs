@@ -25,12 +25,16 @@ The extension supports data movement operations for local workflows:
 1. Confirm the import and monitor completion.
 1. Validate imported items by querying the container.
 
+:::image type="content" source="media/import-export/import-documents.png" alt-text="Import documents workflow in Visual Studio Code showing JSON file selection for an Azure Cosmos DB container." lightbox="media/import-export/import-documents.png":::
+
 ## Export documents from a container
 
 1. Open the container documents view.
 1. Select the export action.
 1. Choose full container export or current filtered view.
 1. Save output as JSON.
+
+:::image type="content" source="media/import-export/export-documents.png" alt-text="Export documents action in Visual Studio Code for Azure Cosmos DB showing options to export container data." lightbox="media/import-export/export-documents.png":::
 
 ## Export query results
 

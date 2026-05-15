@@ -13,23 +13,24 @@ ms.update-cycle: 180-days
 
 The Azure Cosmos DB extension for Visual Studio Code helps you explore resources, query data, and manage documents from within your editor.
 
+Use the extension to stay inside your development workflow while working with Azure Cosmos DB. You can connect to cloud accounts or local environments, inspect and edit data, run and refine queries, and use assistant experiences to speed up common tasks.
+
+AI-friendly features such as natural language to query and Copilot Chat assistance help you create and improve queries faster, especially when exploring unfamiliar data models.
+
 ## Feature map
 
-### Core capabilities
+### Capabilities
 
-- Browse Azure Cosmos DB accounts, databases, and containers.
-- Execute SQL queries with syntax highlighting.
-- Create, read, update, and delete items.
-- Connect to a local Azure Cosmos DB emulator.
-- Import and export data.
-- Open related resources in the Azure portal.
-
-### Preview capabilities
-
-- Natural language to query.
-- Copilot Chat query assistance.
-- IntelliSense and auto-completion in the query editor.
-- Relational Migration Assistant.
+- Browse Azure Cosmos DB accounts, databases, and containers: Navigate your resource hierarchy directly from Visual Studio Code.
+- Execute SQL queries with syntax highlighting: Write and run queries with editor support for readability and accuracy.
+- Create, read, update, and delete items: Perform common data operations without leaving your development environment.
+- Connect to a local Azure Cosmos DB emulator: Develop and test workloads locally before using cloud resources.
+- Import and export data: Move data in and out of containers to support seeding, backup, and migration tasks.
+- Open related resources in the Azure portal: Jump to portal views for advanced configuration and diagnostics.
+- Natural language to query (preview): Generate query drafts from plain language prompts to speed up discovery.
+- Copilot Chat query assistance (preview): Get AI guidance to refine queries and troubleshoot query logic.
+- IntelliSense and auto-completion in the query editor (preview): Use schema-aware suggestions to author queries faster.
+- Relational Migration Assistant (preview): Get guided help when mapping relational concepts to Azure Cosmos DB models.
 
 ## Documentation structure
 
