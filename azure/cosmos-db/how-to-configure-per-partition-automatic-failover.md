@@ -16,13 +16,7 @@ appliesto:
 
 This article explains how to configure Per Partition Automatic Failover on your Azure Cosmos DB account.
 
-> [!IMPORTANT]
-> Per Partition Automatic Failover is in public preview.
-> This feature is provided without a service level agreement.
-> For more information, see [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/).
-
-
-**Per-Partition Automatic Failover (PPAF)**  is a new Azure Cosmos DB feature (currently in **Public Preview**) that improves availability for single-write region accounts. Instead of failing over an entire database account during a regional outage, Cosmos DB can **automatically fail over at the *partition level***, thus minimizing downtime and faster recovery. 
+**Per-Partition Automatic Failover (PPAF)**  is a new Azure Cosmos DB feature that improves availability for single-write region accounts. Instead of failing over an entire database account during a regional outage, Cosmos DB can **automatically fail over at the *partition level***, thus minimizing downtime and faster recovery. 
 
 
 ## Prerequisites
@@ -30,19 +24,72 @@ This article explains how to configure Per Partition Automatic Failover on your 
 Before enabling PPAF, ensure your environment meets the following **prerequisites**:
 
 - **Multi-region account:** Single-write region account with **at least one** other **read region** configured.
-- **Consistency Model:** In the current preview, **Strong**, **Session**, **Consistent Prefix**, or **Eventual** consistencies are currently supported.
+- **Consistency Model:** **Strong**, **Session**, **Consistent Prefix**, or **Eventual** consistencies are currently supported. **Bounded Staleness** will be supported in a future release.
 - **API Type:** The account must use the **Core (SQL) API** (NoSQL API).
-- **Azure Region:** The account should be in **Azure public cloud regions** (Global Azure). Accounts in sovereign clouds aren't eligible during preview.
+- **Azure Region:** The account should be in **Azure public cloud regions** (Global Azure). Accounts in sovereign clouds are not supported. .
 - **SDK Version:** Your application must use a **latest supported Azure Cosmos DB SDK** that implements PPAF logic. Currently, the preview supports:
-  - **.NET SDK v3** : v 3.54.0 or later
+  - **.NET SDK v3** : v 3.59.0 or later
   - **Java SDK**: v 4.75.0 or later
-- **In Account Restore**: In Account Restore is not supported for accounts with PPAF enabled.
+  - **Python SDK**: v 4.15.0 or later
+  - **Node.js SDK**: v 4.7.0 or later
 
-## Register for Preview
 
-To enable this feature, register for the preview feature **Per Partition Automatic Failover Preview** in your subscription. For more information, see [register for an Azure Cosmos DB preview feature](access-previews.md).
+## How to enable PPAF on your Azure Cosmos DB account
 
-Azure Cosmos DB team reviews your request and enables the feature upon validation of prerequisites. You receive an email once the feature is enabled. You can also reach out to [cosmosdbppafpreview@microsoft.com](mailto:cosmosdbppafpreview@microsoft.com) if you have any questions about the onboarding.
+You can enable PPAF by using the Azure portal, Azure CLI, or Azure PowerShell.
+
+> [!IMPORTANT]
+> Before you enable Per Partition Automatic Failover, confirm that your account meets every requirement in the [Prerequisites](#prerequisites) section and that **all** application instances are upgraded to a supported SDK version. Enabling PPAF with an unsupported SDK or a misconfigured account can cause availability issues, including failed writes during a partition-level failover.
+
+#### [Azure portal](#tab/azure-portal)
+
+1. Sign in to the [Azure portal](https://portal.azure.com/).
+1. Navigate to your Azure Cosmos DB account.
+1. In the left menu, select **Features** under the **Settings** section.
+1. Select **Per Partition Automatic Failover**.
+1. Review the information and prerequisites, and then switch to **Enable** PPAF.
+
+   :::image type="content" source="media/how-to-configure-per-partition-automatic-failover/enable-per-partition-automatic-failover-portal.png" alt-text="Screenshot of the Per Partition Automatic Failover feature in the Azure portal with the Enable toggle highlighted.":::
+
+#### [Azure CLI](#tab/azure-cli)
+
+1. Retrieve the existing capabilities on your account so that you don't accidentally remove any when you update it. The `az cosmosdb update` command replaces the full capability list, so you must include every existing capability along with `EnablePerPartitionAutomaticFailover`.
+
+    ```azurecli-interactive
+    az cosmosdb show \
+      --resource-group "<resource-group-name>" \
+      --name "<account-name>" \
+      --query "capabilities"
+    ```
+
+1. Update the account by passing every existing capability returned in the previous step plus `EnablePerPartitionAutomaticFailover`.
+
+    ```azurecli-interactive
+    az cosmosdb update \
+      --resource-group "<resource-group-name>" \
+      --name "<account-name>" \
+      --capabilities <existing-capability-1> <existing-capability-2> EnablePerPartitionAutomaticFailover
+    ```
+
+#### [Azure PowerShell](#tab/azure-powershell)
+
+1. Retrieve the existing capabilities on your account. The `Update-AzCosmosDBAccount` cmdlet replaces the full capability list, so you must include every existing capability along with `EnablePerPartitionAutomaticFailover`.
+
+    ```azurepowershell-interactive
+    $account = Get-AzCosmosDBAccount -ResourceGroupName "<resource-group-name>" -Name "<account-name>"
+    $account.Capabilities.Name
+    ```
+
+1. Update the account by passing every existing capability returned in the previous step plus `EnablePerPartitionAutomaticFailover`.
+
+    ```azurepowershell-interactive
+    Update-AzCosmosDBAccount `
+      -ResourceGroupName "<resource-group-name>" `
+      -Name "<account-name>" `
+      -Capabilities "<existing-capability-1>", "<existing-capability-2>", "EnablePerPartitionAutomaticFailover"
+    ```
+
+---
 
 ## PPAF Pricing
 PPAF is part of Business Critical Service Tier and is charged accordingly. For more information, see [Azure Cosmos DB pricing](https://azure.microsoft.com/pricing/details/cosmos-db/).
