@@ -18,7 +18,7 @@ Control plane access refers to the ability to manage resources for an Azure serv
 - Modify account properties.
 
 > [!IMPORTANT]
-> In Azure Cosmos DB, you need control plane access to manage native data-plane RBAC definitions and assignments. Because the Azure Cosmos DB data plane RBAC mechanism is native, you need control plane access to create definitions and assignments and store them as resources within an Azure Cosmos DB account.
+> In Azure Cosmos DB, you need control plane access to manage native data-plane role-based access control definitions and assignments. Because the Azure Cosmos DB data plane role-based access control mechanism is native, you need control plane access to create definitions and assignments and store them as resources within an Azure Cosmos DB account.
 
 First, you must prepare a role definition with a list of actions to grant access to manage account resources in Azure Cosmos DB. In this article, you prepare a built-in and custom role. Then, you assign the newly defined role or roles to an identity so that your applications can access resources in Azure Cosmos DB.
 
@@ -594,4 +594,4 @@ First, you must prepare a role definition with a list of actions to grant access
 ::: zone-end
 
 > [!IMPORTANT]
-> Assigning a role definition requires you to already have the unique identifier of any identity that you want to grant RBAC permissions.
+> Assigning a role definition requires you to already have the unique identifier of any identity that you want to grant role-based access control permissions.

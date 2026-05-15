@@ -25,9 +25,9 @@ appliesto:
 #Customer Intent: As a developer, I want to connect to Azure Cosmos DB for Apache Cassandra by using role-based access control so that I can securely manage access to my database resources.
 ---
 
-# Connect to Azure Cosmos DB for Apache Cassandra by using RBAC and Microsoft Entra ID
+# Connect to Azure Cosmos DB for Apache Cassandra by using role-based access control and Microsoft Entra ID
 
-Role-based access control (RBAC) refers to a method to manage access to resources in Azure. This method is based on specific identities being assigned roles that manage what level of access they have to one or more resources. RBAC provides a flexible system of fine-grained access management that ensures identities have only the least privileged level of access that they need to perform their task.
+Role-based access control refers to a method to manage access to resources in Azure. This method is based on specific identities being assigned roles that manage what level of access they have to one or more resources. Role-based access control provides a flexible system of fine-grained access management that ensures identities have only the least privileged level of access that they need to perform their task.
 
 For more information, see [Role-based access control](/azure/role-based-access-control/overview).
 
@@ -127,9 +127,9 @@ First, you must prepare a role definition with a list of data actions to grant a
     > [!NOTE]
     > In this example, the `id` value is `/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/msdocs-identity-example/providers/Microsoft.DocumentDB/databaseAccounts/msdocs-identity-example-cassandra/cassandraRoleDefinitions/00000000-0000-0000-0000-000000000004`. This example uses fictitious data, and your identifier is distinct from this example.
 
-1. Create a new JSON file named *role-definition.json*. In this file, create a resource definition that specifies the data actions that you want to allow.
+1. Create a new JSON file named `role-definition.json`. In this file, create a resource definition that specifies the data actions that you want to allow.
 
-1. Next, use `az cosmosdb cassandra role definition create` to create the role definition. Use `role-definition.json` as the input for the `--body` argument.
+1. Use `az cosmosdb cassandra role definition create` to create the role definition. Use `role-definition.json` as the input for the `--body` argument.
 
     ```azurecli-interactive
     az cosmosdb cassandra role definition create \
@@ -138,7 +138,7 @@ First, you must prepare a role definition with a list of data actions to grant a
       --body @role-definition.json
     ```
 
-1. Now, list all the role definitions again, and record the `id` value of your new custom role.
+1. List all the role definitions again, and record the `id` value of your new custom role.
 
 1. Assign the new role by using `az cosmosdb cassandra role assignment create`. Use the previously recorded role definition identifier, the unique identifier for your identity, and the scope (account, keyspace, or table).
 
@@ -259,7 +259,7 @@ First, you must prepare a role definition with a list of data actions to grant a
     ```
 
     > [!TIP]
-    > In Azure Cosmos DB's native implementation of RBAC, *scope* refers to the granularity of resources within an account for which you want permission applied. At the highest level, you can scope a data plane RBAC assignment to the entire account by using the largest scope. This scope includes all databases and containers within the account:
+    > In Azure Cosmos DB's native implementation of role-based access control, *scope* refers to the granularity of resources within an account for which you want permission applied. At the highest level, you can scope a data plane role-based access control assignment to the entire account by using the largest scope. This scope includes all databases and containers within the account:
     >
     > ```output
     > /subscriptions/<subscription-id>/resourcegroups/<resource-group-name>/providers/Microsoft.DocumentDB/databaseAccounts/<account-name>/
@@ -277,7 +277,7 @@ First, you must prepare a role definition with a list of data actions to grant a
     > /subscriptions/<subscription-id>/resourcegroups/<resource-group-name>/providers/Microsoft.DocumentDB/databaseAccounts/<account-name>/dbs/<database-name>/colls/<container-name>
     > ```
     >
-    > In many cases, you can use the relative scope instead of the fully qualified scope. For example, you can use this relative scope to grant data plane RBAC permissions to a specific database and container from an Azure CLI command:
+    > In many cases, you can use the relative scope instead of the fully qualified scope. For example, you can use this relative scope to grant data plane role-based access control permissions to a specific database and container from an Azure CLI command:
     >
     > ```output
     > /dbs/<database-name>/colls/<container-name>
@@ -428,7 +428,7 @@ First, you must prepare a role definition with a list of data actions to grant a
 ::: zone pivot="azure-portal"
 
 > [!WARNING]
-> Managing data plane RBAC isn't supported in the Azure portal.
+> Managing data plane role-based access control isn't supported in the Azure portal.
 
 ::: zone-end
 

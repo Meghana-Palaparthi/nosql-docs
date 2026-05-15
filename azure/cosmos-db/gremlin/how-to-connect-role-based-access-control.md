@@ -1,5 +1,5 @@
 ---
-title: Connect by Using RBAC and Microsoft Entra ID
+title: Connect by Using Role-based Access Control and Microsoft Entra ID
 titleSuffix: Azure Cosmos DB for Apache Gremlin
 description: Learn how to set up role-based access control for Azure Cosmos DB for Apache Gremlin accounts and data. Enhance security for your applications with step-by-step guidance.
 author: seesharprun
@@ -26,9 +26,9 @@ appliesto:
 #Customer Intent: As a developer, I want to connect to Azure Cosmos DB for Apache Gremlin by using role-based access control so that I can securely manage access to my database resources.
 ---
 
-# Connect to Azure Cosmos DB for Apache Gremlin by using RBAC and Microsoft Entra ID
+# Connect to Azure Cosmos DB for Apache Gremlin by using role-based access control and Microsoft Entra ID
 
-Role-based access control (RBAC) refers to a method to manage access to resources in Azure. This method is based on specific identities being assigned roles that manage what level of access they have to one or more resources. RBAC provides a flexible system of fine-grained access management to ensure that identities have only the least privileged level of access that they need to perform their task.
+Role-based access control refers to a method to manage access to resources in Azure. This method is based on specific identities being assigned roles that manage what level of access they have to one or more resources. Role-based access control provides a flexible system of fine-grained access management to ensure that identities have only the least privileged level of access that they need to perform their task.
 
 For more information, see [Role-based access control](/azure/role-based-access-control/overview).
 
@@ -99,18 +99,18 @@ client = TableServiceClient(endpoint, connection_string)
 
 Data plane access refers to the ability to read and write data within an Azure service without the ability to manage resources in the account. For example, Azure Cosmos DB data plane access could include the ability to:
 
-- Read some account and resource metadata
-- Create, read, update, patch, and delete items
-- Execute Gremlin queries
-- Read from a container's change feed
-- Execute stored procedures
-- Manage conflicts in the conflict feed
+- Read some account and resource metadata.
+- Create, read, update, patch, and delete items.
+- Run Gremlin queries.
+- Read from a container's change feed.
+- Run stored procedures.
+- Manage conflicts in the conflict feed.
 
-First, you must prepare a role definition with a list of `dataActions` to grant access to read, query, and manage data in Azure Cosmos DB for Gremlin. In this guide, you prepare a built-in and custom role. Then, assign the newly defined role\[s\] to an identity so that your applications can access data in Azure Cosmos DB for Gremlin.
+First, you must prepare a role definition with a list of data actions to grant access to read, query, and manage data in Azure Cosmos DB for Gremlin. In this article, you prepare a built-in and custom role. Then, assign the newly defined role to an identity so that your applications can access data in Azure Cosmos DB for Gremlin.
 
 ::: zone pivot="azure-cli"
 
-1. List all of the role definitions associated with your Azure Cosmos DB for Gremlin account using `az cosmosdb gremlin role definition list`.
+1. List all the role definitions associated with your Azure Cosmos DB for Gremlin account by using `az cosmosdb gremlin role definition list`.
 
     ```azurecli-interactive
     az cosmosdb gremlin role definition list \
@@ -118,14 +118,14 @@ First, you must prepare a role definition with a list of `dataActions` to grant 
       --resource-group <resource-group>
     ```
 
-1. Review the output and locate the role definition named **Cosmos DB Built-in Data Contributor**. The output contains the unique identifier of the role definition in the `id` property. Record this value as it is required to use in the assignment step later in this guide.
+1. Review the output and locate the role definition named `Cosmos DB Built-in Data Contributor`. The output contains the unique identifier of the role definition in the `id` property. Record this value because you must use it in the assignment step later in this article.
 
     > [!NOTE]
-    > In this example, the `id` value would be `/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/msdocs-identity-example/providers/Microsoft.DocumentDB/databaseAccounts/msdocs-identity-example-gremlin/gremlinRoleDefinitions/00000000-0000-0000-0000-000000000004`. This example uses fictitious data and your identifier would be distinct from this example.
+    > In this example, the `id` value is `/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/msdocs-identity-example/providers/Microsoft.DocumentDB/databaseAccounts/msdocs-identity-example-gremlin/gremlinRoleDefinitions/00000000-0000-0000-0000-000000000004`. This example uses fictitious data, and your identifier is distinct from this example.
 
-1. Create a new JSON file named *role-definition.json*. In this file, create a resource definition specifying the data actions you want to allow.
+1. Create a new JSON file named `role-definition.json`. In this file, create a resource definition that specifies the data actions that you want to allow.
 
-1. Next, use `az cosmosdb gremlin role definition create` to create the role definition. Use the *role-definition.json* as the input for the `--body` argument.
+1. Use `az cosmosdb gremlin role definition create` to create the role definition. Use `role-definition.json` as the input for the `--body` argument.
 
     ```azurecli-interactive
     az cosmosdb gremlin role definition create \
@@ -134,9 +134,9 @@ First, you must prepare a role definition with a list of `dataActions` to grant 
       --body @role-definition.json
     ```
 
-1. Now, list all of the role definitions again and record the `id` of your new custom role.
+1. List all the role definitions again and record the `id` property of your new custom role.
 
-1. Assign the new role using `az cosmosdb gremlin role assignment create`. Use the previously recorded role definition identifier, the unique identifier for your identity, and the scope (account, database, or graph).
+1. Assign the new role by using `az cosmosdb gremlin role assignment create`. Use the previously recorded role definition identifier, the unique identifier for your identity, and the scope (account, database, or graph).
 
     ```azurecli-interactive
     az cosmosdb gremlin role assignment create \
@@ -159,7 +159,7 @@ First, you must prepare a role definition with a list of `dataActions` to grant 
 
 ::: zone pivot="azure-resource-manager-bicep"
 
-1. First, get the resource identifier of the existing Azure Cosmos DB for Gremlin account using `az cosmsodb show` and store it in a variable.
+1. First, get the resource identifier of the existing Azure Cosmos DB for Gremlin account by using `az cosmsodb show` and store it in a variable.
 
     ```azurecli-interactive
     resourceId=$( \
@@ -175,7 +175,7 @@ First, you must prepare a role definition with a list of `dataActions` to grant 
         --url $resourceId/gremlinRoleDefinitions?api-version=2023-04-15
     ```
 
-1. Then, list all of the role definitions associated with your Azure Cosmos DB for Gremlin account using `az rest`. Finally, review the output and locate the role definition named **Cosmos DB Built-in Data Contributor**. The output contains the unique identifier of the role definition in the `id` property. Record this value as it is required to use in the assignment step later in this guide.
+1. Then, list all the role definitions associated with your Azure Cosmos DB for Gremlin account by using `az rest`. Finally, review the output and locate the role definition named `Cosmos DB Built-in Data Contributor`. The output contains the unique identifier of the role definition in the `id` property. Record this value because you must use it in the assignment step later in this article.
     
     ```json
     [
@@ -207,15 +207,15 @@ First, you must prepare a role definition with a list of `dataActions` to grant 
     ```
 
     > [!NOTE]
-    > In this example, the `id` value would be `/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/msdocs-identity-example/providers/Microsoft.DocumentDB/databaseAccounts/msdocs-identity-example-gremlin/gremlinRoleDefinitions/00000000-0000-0000-0000-000000000004`. This example uses fictitious data and your identifier would be distinct from this example. This example output is truncated.
+    > In this example, the `id` value is `/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/msdocs-identity-example/providers/Microsoft.DocumentDB/databaseAccounts/msdocs-identity-example-gremlin/gremlinRoleDefinitions/00000000-0000-0000-0000-000000000004`. This example uses fictitious data, and your identifier is distinct from this example. This example output is truncated.
 
-1. Create a new Bicep file to define your role definition. Name the file *data-plane-role-definition.bicep*. Add these `dataActions` to the definition:
+1. Create a new Bicep file to define your role definition. Name the file `data-plane-role-definition.bicep`. Add these data actions to the definition:
 
     | | Description |
     | --- | --- |
-    | **`Microsoft.DocumentDB/databaseAccounts/readMetadata`** | |
-    | **`Microsoft.DocumentDB/databaseAccounts/tables/*`** | |
-    | **`Microsoft.DocumentDB/databaseAccounts/tables/containers/entities/*`** | |
+    | `Microsoft.DocumentDB/databaseAccounts/readMetadata` | |
+    | `Microsoft.DocumentDB/databaseAccounts/tables/*` | |
+    | `Microsoft.DocumentDB/databaseAccounts/tables/containers/entities/*` | |
 
     ```bicep
     metadata description = 'Create RBAC definition for data plane access to Azure Cosmos DB for Gremlin.'
@@ -255,7 +255,7 @@ First, you must prepare a role definition with a list of `dataActions` to grant 
     ```
 
     > [!TIP]
-    > In Azure Cosmos DB's native implementation of role-based access control, **scope** refers to the granularity of resources within an account for which you want permission applied. At the highest level, you can scope a data plane role-based access control assignment to the entire account using the largest scope. This scope includes all databases and containers within the account:
+    > In the Azure Cosmos DB native implementation of role-based access control, *scope* refers to the granularity of resources within an account for which you want permission applied. At the highest level, you can scope a data plane role-based access control assignment to the entire account by using the largest scope. This scope includes all databases and containers within the account:
     >
     > ```output
     > /subscriptions/<subscription-id>/resourcegroups/<resource-group-name>/providers/Microsoft.DocumentDB/databaseAccounts/<account-name>/
@@ -279,14 +279,14 @@ First, you must prepare a role definition with a list of `dataActions` to grant 
     > /dbs/<database-name>/colls/<container-name>
     > ```
     >
-    > You can also grant universal access to all databases and containers using the relative scope:
+    > You can also grant universal access to all databases and containers by using the relative scope:
     >
     > ```output
     > /
     > ```
     >
 
-1. Create a new Bicep parameters file named *`data-plane-role-definition.bicepparam`*. In this parameters file, assign the name of your existing Azure Cosmos DB for Gremlin account to the `accountName` parameter.
+1. Create a new Bicep parameters file named `data-plane-role-definition.bicepparam`. In this parameters file, assign the name of your existing Azure Cosmos DB for Gremlin account to the `accountName` parameter.
 
     ```bicep
     using './data-plane-role-definition.bicep'
@@ -294,7 +294,7 @@ First, you must prepare a role definition with a list of `dataActions` to grant 
     param accountName = '<name-of-existing-table-account>'
     ```
 
-1. Deploy the Bicep template using `az deployment group create`. Specify the name of the Bicep template, parameters file, and Azure resource group.
+1. Deploy the Bicep template by using `az deployment group create`. Specify the name of the Bicep template, parameters file, and Azure resource group.
 
     ```azurecli-interactive
     az deployment group create \
@@ -303,7 +303,7 @@ First, you must prepare a role definition with a list of `dataActions` to grant 
         --template-file data-plane-role-definition.bicep
     ```
 
-1. Review the output from the deployment. The output contains the unique identifier of the role definition in the `properties.outputs.definitionId.value` property. Record this value as it is required to use in the assignment step later in this guide.
+1. Review the output from the deployment. The output contains the unique identifier of the role definition in the `properties.outputs.definitionId.value` property. Record this value because you must use it in the assignment step later in this article.
 
     ```json
     {
@@ -319,9 +319,9 @@ First, you must prepare a role definition with a list of `dataActions` to grant 
     ```
 
     > [!NOTE]
-    > In this example, the `id` value would be `/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourcegroups/msdocs-identity-example/providers/Microsoft.DocumentDB/databaseAccounts/msdocs-identity-example-table-account/gremlinRoleDefinitions/dddddddd-9999-0000-1111-eeeeeeeeeeee`. This example uses fictitious data and your identifier would be distinct from this example. This example is a subset of the typical JSON outputted from the deployment for clarity.
+    > In this example, the `id` value is `/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourcegroups/msdocs-identity-example/providers/Microsoft.DocumentDB/databaseAccounts/msdocs-identity-example-table-account/gremlinRoleDefinitions/dddddddd-9999-0000-1111-eeeeeeeeeeee`. This example uses fictitious data, and your identifier is distinct from this example. This example is a subset of the typical JSON outputted from the deployment for clarity.
 
-1. Create another Bicep file to assign a role to an identity. Name this file *data-plane-role-assignment.bicep*.
+1. Create another Bicep file to assign a role to an identity. Name this file `data-plane-role-assignment.bicep`.
 
     ```bicep
     metadata description = 'Assign RBAC role for data plane access to Azure Cosmos DB for Gremlin.'
@@ -352,7 +352,7 @@ First, you must prepare a role definition with a list of `dataActions` to grant 
     output id string = assignment.id
     ```
 
-1. Create a new Bicep parameters file named *`data-plane-role-assignment.bicepparam`*. In this parameters file; assign the name of your existing Azure Cosmos DB for Gremlin account to the `accountName` parameter, the previously recorded role definition identifiers to the `roleDefinitionId` parameter, and the unique identifier for your identity to the `identityId` parameter.
+1. Create a new Bicep parameters file named `data-plane-role-assignment.bicepparam`. In this parameters file, assign the name of your existing Azure Cosmos DB for Gremlin account to the `accountName` parameter. Assign the previously recorded role definition identifiers to the `roleDefinitionId` parameter. Also assign the unique identifier for your identity to the `identityId` parameter.
 
     ```bicep
     using './data-plane-role-assignment.bicep'
@@ -362,7 +362,7 @@ First, you must prepare a role definition with a list of `dataActions` to grant 
     param identityId = '<id-of-existing-identity>'
     ```
 
-1. Deploy this Bicep template using `az deployment group create`.
+1. Deploy this Bicep template by using `az deployment group create`.
 
     ```azurecli-interactive
     az deployment group create \
@@ -371,16 +371,16 @@ First, you must prepare a role definition with a list of `dataActions` to grant 
         --template-file data-plane-role-assignment.bicep
     ```
 
-1. Repeat these steps to grant access to the account from any other identities you would like to use.
+1. Repeat these steps to grant access to the account from any other identities that you want to use.
 
     > [!TIP]
-    > You can repeat these steps for as many identities as you'd like. Typically, these steps are at least repeated to allow developers access to an account using their human identity and to allow applications access to data using a managed identity.
+    > You can repeat these steps for as many identities as you want. Typically, these steps are at least repeated to allow developers access to an account by using their human identity and to allow applications access to data by using a managed identity.
 
 ::: zone-end
 
 ::: zone pivot="azure-powershell"
 
-1. List all of the role definitions associated with your Azure Cosmos DB for Gremlin account using `Get-AzCosmosDBGremlinRoleDefinition`.
+1. List all the role definitions associated with your Azure Cosmos DB for Gremlin account by using `Get-AzCosmosDBGremlinRoleDefinition`.
 
     ```azurepowershell-interactive
     Get-AzCosmosDBGremlinRoleDefinition \
@@ -388,9 +388,9 @@ First, you must prepare a role definition with a list of `dataActions` to grant 
       -ResourceGroupName <resource-group>
     ```
 
-1. Review the output and locate the role definition named **Cosmos DB Built-in Data Contributor**. The output contains the unique identifier of the role definition in the `Id` property. Record this value as it is required to use in the assignment step later in this guide.
+1. Review the output and locate the role definition named `Cosmos DB Built-in Data Contributor`. The output contains the unique identifier of the role definition in the `Id` property. Record this value because you must use it in the assignment step later in this article.
 
-1. Create a new role definition using `New-AzCosmosDBGremlinRoleDefinition` and a JSON file describing the permissions you want to allow.
+1. Create a new role definition by using `New-AzCosmosDBGremlinRoleDefinition` and a JSON file that describes the permissions that you want to allow.
 
     ```azurepowershell-interactive
     New-AzCosmosDBGremlinRoleDefinition \
@@ -399,9 +399,9 @@ First, you must prepare a role definition with a list of `dataActions` to grant 
       -InputObject (Get-Content -Raw -Path ./role-definition.json | ConvertFrom-Json)
     ```
 
-1. List all of the role definitions again and record the `Id` of your new custom role.
+1. List all the role definitions again, and record the `Id` value of your new custom role.
 
-1. Assign the new role using `New-AzCosmosDBGremlinRoleAssignment`. Use the previously recorded role definition identifier, the unique identifier for your identity, and the scope (account, database, or graph).
+1. Assign the new role by using `New-AzCosmosDBGremlinRoleAssignment`. Use the previously recorded role definition identifier, the unique identifier for your identity, and the scope (account, database, or graph).
 
     ```azurepowershell-interactive
     New-AzCosmosDBGremlinRoleAssignment \
@@ -431,7 +431,7 @@ First, you must prepare a role definition with a list of `dataActions` to grant 
 
 ## Validate data plane role-based access in code
 
-Validate that you correctly granted access using application code and the Azure SDK.
+Validate that you correctly granted access by using application code and the Azure SDK.
 
 ```csharp
 using Azure.Identity;

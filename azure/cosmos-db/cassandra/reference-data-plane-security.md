@@ -18,13 +18,13 @@ appliesto:
 Azure Cosmos DB for Apache Cassandra exposes a unique set of data actions and roles within its native role-based access control implementation. This article includes a list of those actions and roles with descriptions on what permissions are granted for each resource.
 
 > [!WARNING]
-> Azure Cosmos DB for Cassandra's native role-based access control (RBAC) doesn't support the `notDataActions` property. Any action that isn't specified as an allowed `dataAction` property is excluded automatically.
+> Azure Cosmos DB for Cassandra's native role-based access control doesn't support the `notDataActions` property. Any action that isn't specified as an allowed `dataAction` property is excluded automatically.
 
 ## Built-in actions
 
-Here's a list of data actions that you can set individually in a role definition.
+You can set the following data actions individually in a role definition.
 
-| Data actions | Description |
+| Data action | Description |
 | --- | --- |
 | `Microsoft.DocumentDB/databaseAccounts/readMetadata` | Reads some account metadata. |
 | `Microsoft.DocumentDB/databaseAccounts/cassandra/containers/executeQuery` | Runs a query against a table. |
@@ -34,7 +34,7 @@ Here's a list of data actions that you can set individually in a role definition
 | `Microsoft.DocumentDB/databaseAccounts/cassandra/containers/entities/replace` | Entirely replaces an existing entity (item). |
 | `Microsoft.DocumentDB/databaseAccounts/cassandra/containers/entities/upsert` | Creates an entity (item) if it doesn't exist or replaces the entity if it already exists. |
 | `Microsoft.DocumentDB/databaseAccounts/cassandra/containers/entities/delete` | Deletes an entity (item). |
-| `Microsoft.DocumentDB/databaseAccounts/throughputSettings/read` | Read the current throughput. |
+| `Microsoft.DocumentDB/databaseAccounts/throughputSettings/read` | Reads the current throughput. |
 | `Microsoft.DocumentDB/databaseAccounts/throughputSettings/write` | Modifies the current throughput. |
 | `Microsoft.DocumentDB/databaseAccounts/cassandra/write` | Creates or updates a table. |
 | `Microsoft.DocumentDB/databaseAccounts/cassandra/delete` | Deletes a table. |
@@ -47,7 +47,7 @@ Here's a list of data actions that you can set individually in a role definition
 
 The wildcard (`*`) operator is supported at the `tables`, `containers`, and `entities` levels for actions. Use the wildcard to grant broad access to a specific resource type.
 
-| Data actions with wildcards | Description |
+| Data action wildcards | Description |
 | --- | --- |
 | `Microsoft.DocumentDB/databaseAccounts/cassandra/*` | Performs all operations on tables. |
 | `Microsoft.DocumentDB/databaseAccounts/cassandra/containers/*` | Performs all operations on containers. |
@@ -67,14 +67,14 @@ To ensure the best transparency of our permission model, these metadata requests
 
 You can assign the action at any level in an Azure Cosmos DB account's hierarchy, including account, database, or container. The actual metadata requests allowed depend on the scope:
 
-- **Account**
+- Account:
   - Lists the databases under the account.
   - Allows the actions at the database scope for each database under the account.
-- **Cassandra**
+- Cassandra:
   - Reading table metadata.
   - Lists the containers under the table.
   - Allows the actions at the container scope for each container under the table.
-- **Container**
+- Container:
   - Reads container metadata.
   - Lists physical partitions under the table.
   - Resolves the address of each physical partition.
@@ -84,13 +84,13 @@ You can assign the action at any level in an Azure Cosmos DB account's hierarchy
 
 ## Built-in roles
 
-Azure Cosmos DB for Cassandra defines data plane-specific role definitions. These roles are distinct from Azure RBAC role definitions.
+Azure Cosmos DB for Cassandra defines data plane-specific role definitions. These roles are distinct from Azure role-based access control role definitions.
 
 ### Cosmos DB Built-in Data Reader
 
-**ID:** `00000000-0000-0000-0000-000000000003`
+ID: `00000000-0000-0000-0000-000000000003`
 
-- **Included actions:**
+- Included actions:
   - `Microsoft.DocumentDB/databaseAccounts/readMetadata`
   - `Microsoft.DocumentDB/databaseAccounts/throughputSettings/read`
   - `Microsoft.DocumentDB/databaseAccounts/cassandra/containers/entities/read`
@@ -99,9 +99,9 @@ Azure Cosmos DB for Cassandra defines data plane-specific role definitions. Thes
 
 ### Cosmos DB Built-in Data Contributor
 
-**ID:** `00000000-0000-0000-0000-000000000004`
+ID: `00000000-0000-0000-0000-000000000004`
 
-- **Included actions:**
+- Included actions:
   - `Microsoft.DocumentDB/databaseAccounts/readMetadata`
   - `Microsoft.DocumentDB/databaseAccounts/throughputSettings/read`
   - `Microsoft.DocumentDB/databaseAccounts/throughputSettings/write`
