@@ -171,6 +171,9 @@ Azure DocumentDB clusters are created locked down by default. To enable communic
 
 Network bypass mode provides a secure alternative to adding firewall rules when public network access is disabled on your target Azure DocumentDB cluster. Instead of opening firewall rules, bypass mode allows trusted Azure Cosmos DB services to access the cluster while blocking native authentication and all other public access. This creates a secure channel specifically for migration. For more information, see [network bypass mode](#network-bypass-mode).
 
+> [!IMPORTANT]
+> Make sure the managed identity [configured on the source account](#configure-managed-identity-for-your-source-account) has been assigned read-write privileges on the target DocumentDB cluster.
+
 1. Follow the steps in the [enable network bypass mode](#enable-network-bypass-mode) section to configure your target cluster.
 
 1. Navigate back to the browser window or tab with the migration job configuration steps.
