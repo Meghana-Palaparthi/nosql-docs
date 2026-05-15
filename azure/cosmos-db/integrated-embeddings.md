@@ -234,6 +234,8 @@ POLL_INTERVAL_SECONDS = 5
 POLL_TIMEOUT_SECONDS = 120
 
 
+# Vector embedding policy: tells Cosmos DB which property to embed,
+# which Foundry deployment to call, and where to store the generated embedding.
 vector_embedding_policy = {
   "vectorEmbeddings": [
     {
@@ -254,6 +256,8 @@ vector_embedding_policy = {
   ]
 }
 
+# Indexing policy: exclude the embedding path from the standard index
+# and add a vector index.
 indexing_policy = {
   "indexingMode": "consistent",
   "automatic": True,
@@ -291,6 +295,7 @@ sample_items = [
 def main():
   client = CosmosClient(COSMOS_ENDPOINT, credential=COSMOS_KEY)
 
+  # Create the database and a new container with the embedding and indexing policies.
   database = client.create_database_if_not_exists(id=DATABASE_NAME)
   try:
     container = database.create_container(
@@ -304,10 +309,13 @@ def main():
       f"Container '{CONTAINER_NAME}' already exists. Use a new container name for this quickstart."
     ) from err
 
+  # Insert sample items. Cosmos DB picks up the changes asynchronously
+  # and generates embeddings in the background.
   for item in sample_items:
     container.upsert_item(item)
     print(f"Inserted item: {item['id']}")
 
+  # Poll each item until Cosmos DB writes the generated embedding back to it.
   pending = {item["id"] for item in sample_items}
   deadline = time.time() + POLL_TIMEOUT_SECONDS
   while pending and time.time() < deadline:
@@ -370,6 +378,8 @@ const EMBEDDING_PATH = "embedding";
 const POLL_INTERVAL_MS = 5000;
 const POLL_TIMEOUT_MS = 120000;
 
+// Vector embedding policy: tells Cosmos DB which property to embed,
+// which Foundry deployment to call, and where to store the generated embedding.
 const vectorEmbeddingPolicy = {
   vectorEmbeddings: [
     {
@@ -388,6 +398,8 @@ const vectorEmbeddingPolicy = {
   ],
 };
 
+// Indexing policy: exclude the embedding path from the standard index
+// and add a vector index.
 const indexingPolicy = {
   indexingMode: "consistent",
   automatic: true,
@@ -423,6 +435,7 @@ async function sleep(ms) {
 async function main() {
   const client = new CosmosClient({ endpoint: COSMOS_ENDPOINT, key: COSMOS_KEY });
 
+  // Create the database and a new container with the embedding and indexing policies.
   const { database } = await client.databases.createIfNotExists({ id: DATABASE_NAME });
 
   let container;
@@ -443,11 +456,14 @@ async function main() {
     throw err;
   }
 
+  // Insert sample items. Cosmos DB picks up the changes asynchronously
+  // and generates embeddings in the background.
   for (const item of sampleItems) {
     await container.items.upsert(item);
     console.log(`Inserted item: ${item.id}`);
   }
 
+  // Poll each item until Cosmos DB writes the generated embedding back to it.
   const pending = new Set(sampleItems.map((i) => i.id));
   const deadline = Date.now() + POLL_TIMEOUT_MS;
 
@@ -601,6 +617,9 @@ POLL_INTERVAL_SECONDS = 5
 POLL_TIMEOUT_SECONDS = 120
 
 
+# Container definition passed to the management SDK. Combines the indexing policy
+# (with a vector index on the embedding path) and the vector embedding policy
+# (with embeddingSource pointing at the Foundry deployment).
 container_body = {
   "location": LOCATION,
   "properties": {
@@ -712,10 +731,13 @@ def upsert_and_poll(credential):
   client = CosmosClient(COSMOS_ENDPOINT, credential=credential)
   container = client.get_database_client(DATABASE_NAME).get_container_client(CONTAINER_NAME)
 
+  # Insert sample items. Cosmos DB picks up the changes asynchronously
+  # and generates embeddings in the background.
   for item in sample_items:
     container.upsert_item(item)
     print(f"Inserted item: {item['id']}")
 
+  # Poll each item until Cosmos DB writes the generated embedding back to it.
   pending = {item["id"] for item in sample_items}
   deadline = time.time() + POLL_TIMEOUT_SECONDS
   while pending and time.time() < deadline:
