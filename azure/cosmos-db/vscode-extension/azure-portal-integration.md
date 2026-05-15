@@ -37,15 +37,15 @@ Use integration actions to move between Visual Studio Code and Azure portal whil
 
 Use Azure portal when you need operations that are outside your current editor flow, such as:
 
-	- Account-level configuration.
-	- Networking, security, and keys.
-	- Monitoring and diagnostics views.
+- Account-level configuration.
+- Networking, security, and keys.
+- Monitoring and diagnostics views.
 
 Use Visual Studio Code when you want an editor-first workflow, such as:
 
-	- Query authoring and iteration.
-	- Item-level edits and validation.
-	- Local development with the emulator.
+- Query authoring and iteration.
+- Item-level edits and validation.
+- Local development with the emulator.
 
 ## Work between editor and portal
 
@@ -56,11 +56,11 @@ Use Visual Studio Code when you want an editor-first workflow, such as:
 
 ## Troubleshooting
 
-	- If the wrong resource opens, verify tenant and subscription context in Visual Studio Code.
-	- If portal actions fail, sign in again and retry.
-	- If the **Open in Visual Studio Code** action is not available in Azure portal, open Visual Studio Code directly and browse to the same account from the Azure extension.
-	- If changes do not appear in Visual Studio Code, reload the window and refresh the node.
+- If the wrong resource opens, verify tenant and subscription context in Visual Studio Code.
+- If portal actions fail, sign in again and retry.
+- If the **Open in Visual Studio Code** action is not available in Azure portal, open Visual Studio Code directly and browse to the same account from the Azure extension.
+- If changes do not appear in Visual Studio Code, reload the window and refresh the node.
 
 ## Related articles
 
-	- [Browse Azure Cosmos DB accounts and databases in Visual Studio Code](browse-accounts-databases.md)
+- [Browse Azure Cosmos DB accounts and databases in Visual Studio Code](browse-accounts-databases.md)

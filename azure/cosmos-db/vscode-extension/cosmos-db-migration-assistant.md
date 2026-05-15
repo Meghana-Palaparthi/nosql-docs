@@ -29,7 +29,7 @@ Migration Assistant in Visual Studio Code provides a guided, phase-based workflo
 - A workspace containing the application you want to migrate
 - Database schema files
 - Volumetrics information and access patterns (optional)
-- An Azure subscription and permissions to sign in and provision Azure Cosmos DB resources, or a local [Azure Cosmos DB Emulator](../how-to-develop-emulator)
+- An Azure subscription and permissions to sign in and provision Azure Cosmos DB resources, or a local [Azure Cosmos DB Emulator](../how-to-develop-emulator.md)
 
 ## Open Migration Assistant
 
@@ -50,7 +50,7 @@ Discovery analyzes your workspace and collects core migration inputs: schema DDL
 1. In the Migration Assistant panel, allow the assistant to scan the workspace to infer language, framework, ORM, and deployment context.
 1. Provide **Database Schema Files** for the source database containing the DDLs, and optionally **Volumetrics** and **Access patterns** information.
 
-   :::image type="content" source="media/cosmos-db-migration-assistant/migration-project-ph1-discovery.png" alt-text="Cosmos DB Migration Assistant with file explorer showing the 1-discovery folder with schema-ddl, access-patterns, and volumetrics artifacts, and sample markdown files for access patterns and volumetrics.":::
+   :::image type="content" source="media/cosmos-db-migration-assistant/migration-project-phase1-discovery.png" alt-text="Cosmos DB Migration Assistant with file explorer showing the 1-discovery folder with schema-ddl, access-patterns, and volumetrics artifacts, and sample markdown files for access patterns and volumetrics.":::
 
    - Volumetrics information helps estimate RU/s and choose an optimal partition key. A sample template is provided in *volumetrics.md* (select **Open Volumetrics Template**) and includes estimated rows, average row size, read transactions per second, and write transactions per second. You can provide data in this format or use AI to read your input data and generate it using the template.
    - Access patterns information helps design containers and partitioning strategies. A sample template is in *access-patterns.md* (select **Open Access Patterns Template**) and includes read and write patterns such as order by, list by, create, update, and delete, along with latency requirements. You can use an AI model to format the data in the required template.
@@ -58,15 +58,15 @@ Discovery analyzes your workspace and collects core migration inputs: schema DDL
 
 1. Fill in other repository details (for example, Type, Language, and Database) manually or select **Auto-Detect** to auto-populate them.
 
-   :::image type="content" source="media/cosmos-db-migration-assistant/migration-project-ph1-schema.png" alt-text="Database schema upload section with Application information fields for project name, type, language, frameworks, database, and access method, with an Auto-Detect button.":::
+   :::image type="content" source="media/cosmos-db-migration-assistant/migration-project-phase1-schema.png" alt-text="Database schema upload section with Application information fields for project name, type, language, frameworks, database, and access method, with an Auto-Detect button.":::
 
    Auto-Detect traverses the project repository and fills in the information. The fields are editable, so you can update them if required.
 
-   :::image type="content" source="media/cosmos-db-migration-assistant/migration-project-ph1-app-detection.png" alt-text="Application information filled via Auto-Detect for the AdventureWorks.Web project, showing Web App type, C# language, ASP.NET Core and Entity Framework Core frameworks, SQL Server database, and Entity Framework Core access method.":::
+   :::image type="content" source="media/cosmos-db-migration-assistant/migration-project-phase1-app-detection.png" alt-text="Application information filled via Auto-Detect for the AdventureWorks.Web project, showing Web App type, C# language, ASP.NET Core and Entity Framework Core frameworks, SQL Server database, and Entity Framework Core access method.":::
 
 1. Start Discovery by selecting **Generate Discovery Report**.
 
-   :::image type="content" source="media/cosmos-db-migration-assistant/migration-project-ph1-discovery-report.png" alt-text="AI-assisted multi-phase project workflow showing Phase 1 Discovery Report expanded with uploaded schema and volumetrics files and a button to generate the report.":::
+   :::image type="content" source="media/cosmos-db-migration-assistant/migration-project-phase1-discovery-report.png" alt-text="AI-assisted multi-phase project workflow showing Phase 1 Discovery Report expanded with uploaded schema and volumetrics files and a button to generate the report.":::
 
 1. Review the generated *discovery-report.md* in the migration artifacts folder.
 
@@ -77,7 +77,7 @@ Artifacts you can expect:
 - `phases/1-discovery/access-patterns/`
 - `phases/1-discovery/discovery-report.md`
 
-:::image type="content" source="media/cosmos-db-migration-assistant/migration-project-ph1-artefacts.png" alt-text="Discovery Report marked complete with options to view the discovery report and re-generate it, along with discovery-report.md visible in file explorer.":::
+:::image type="content" source="media/cosmos-db-migration-assistant/migration-project-phase1-artifacts.png" alt-text="Discovery Report marked complete with options to view the discovery report and re-generate it, along with discovery-report.md visible in file explorer.":::
 
 ## Run Phase 2: Assessment
 
@@ -85,7 +85,7 @@ Assessment normalizes the collected access patterns and groups tables into domai
 
 1. Start Assessment by selecting **Run Assessment**.
 
-   :::image type="content" source="media/cosmos-db-migration-assistant/migration-project-ph2-domain-assesment.png" alt-text="Multi-phase project workflow Phase 2 Domain Assessment with a Run Assessment button.":::
+   :::image type="content" source="media/cosmos-db-migration-assistant/migration-project-phase2-domain-assessment.png" alt-text="Multi-phase project workflow Phase 2 Domain Assessment with a Run Assessment button.":::
 
 1. Review the extracted and normalized access patterns.
 1. Review the domain grouping output and any domain splitting decisions.
@@ -96,7 +96,7 @@ Artifacts you can expect:
 - `phases/2-assessment/domains/`
 - `phases/2-assessment/assessment-summary.md`
 
-:::image type="content" source="media/cosmos-db-migration-assistant/migration-project-ph2-domain-assesment-report.png" alt-text="Domain Assessment marked complete with a table listing four identified domains including columns for domain names, number of tables, estimated tokens, and code references, along with assessment-summary.md in the folder structure.":::
+:::image type="content" source="media/cosmos-db-migration-assistant/migration-project-phase2-domain-assessment-report.png" alt-text="Domain Assessment marked complete with a table listing four identified domains including columns for domain names, number of tables, estimated tokens, and code references, along with assessment-summary.md in the folder structure.":::
 
 ## Run Phase 3: Schema Conversion
 
@@ -125,9 +125,9 @@ Provisioning signs you into Azure, lets you select or create the target account 
 
    | Target environment | Best for | Access requirements / prerequisites |
    |---|---|---|
-   | Local Cosmos DB Emulator | Local dev, early validation, no Azure subscription | Install [Cosmos DB emulator](../how-to-develop-emulator?tabs=docker-linux%2Ccsharp&pivots=api-nosql) on local Windows or Docker (Linux/Windows container); import cert if required |
-   | Azure Cosmos DB account (existing) | Existing workloads on Cosmos DB | Access to subscription/resource group; permission for creating database/containers; RBAC role if Entra ID is used ([link](../how-to-connect-role-based-access-control?pivots=azure-powershell#grant-data-plane-role-based-access)) |
-   | Provision new Cosmos DB account | Early validation in Azure, dedicated environment | Active Azure subscription; [Control plane RBAC](../how-to-connect-role-based-access-control?pivots=azure-powershell#grant-control-plane-role-based-access) and [Data plane RBAC](../how-to-connect-role-based-access-control?pivots=azure-powershell#grant-data-plane-role-based-access) |
+   | Local Cosmos DB Emulator | Local dev, early validation, no Azure subscription | Install [Cosmos DB emulator](../how-to-develop-emulator.md?tabs=docker-linux%2Ccsharp&pivots=api-nosql) on local Windows or Docker (Linux/Windows container); import cert if required |
+   | Azure Cosmos DB account (existing) | Existing workloads on Cosmos DB | Access to subscription/resource group; permission for creating database/containers; RBAC role if Entra ID is used ([link](../how-to-connect-role-based-access-control.md?pivots=azure-powershell#grant-data-plane-role-based-access)) |
+   | Provision new Cosmos DB account | Early validation in Azure, dedicated environment | Active Azure subscription; [Control plane RBAC](../how-to-connect-role-based-access-control.md?pivots=azure-powershell#grant-control-plane-role-based-access) and [Data plane RBAC](../how-to-connect-role-based-access-control.md?pivots=azure-powershell#grant-data-plane-role-based-access) |
 
    :::image type="content" source="media/cosmos-db-migration-assistant/migration-project-ph4-env-creation.png" alt-text="Provisioning target Azure Cosmos DB environment with options to select Local Cosmos DB Emulator, an existing Azure Cosmos DB Account, or provisioning a new Azure Cosmos DB account, green checkmarks indicating successful provisioning and verification.":::
 
@@ -189,14 +189,14 @@ Migration Assistant persists the project and phase artifacts under `.cosmosdb-mi
 
 ## Next steps
 
-- Explore the [Azure Cosmos DB extension in Visual Studio Code](../visual-studio-code-extension) by trying migrations from different RDBMS platforms to Azure Cosmos DB for NoSQL.
+- Explore the [Azure Cosmos DB extension in Visual Studio Code](../visual-studio-code-extension.md) by trying migrations from different RDBMS platforms to Azure Cosmos DB for NoSQL.
 - To share feedback or report issues, use GitHub: <https://aka.ms/cosmosdb-migration-assistant-report-issue>.
 
 ## Related content
 
 - [Relational vs. NoSQL data - .NET](/dotnet/architecture/cloud-native/relational-vs-nosql-data) — Compares relational (SQL) and non-relational (NoSQL) databases, focusing on their architecture, data storage methods, and access patterns.
-- [Data Modeling - Azure Cosmos DB](../modeling-data) — Best practices in data modeling to optimize performance, scalability, and cost in schema-free databases.
-- [Migrate one-to-few relational data - Azure Cosmos DB](../migrate-relational-data?source=recommendations) — How to migrate relational data into Azure Cosmos DB for NoSQL.
-- [Azure Cosmos DB Agent Kit - Azure Cosmos DB for NoSQL](../gen-ai/agent-kit) — Enhances AI coding assistants with expert-level best practices for Azure Cosmos DB and integrates with tools like GitHub Copilot.
-- [Use Visual Studio Code to Connect and Manage Resources - Azure Cosmos DB](../visual-studio-code-extension?pivots=api-nosql) — Quickstart for connecting to Azure Cosmos DB for NoSQL using Visual Studio Code, including querying, inserting, updating, and deleting data.
-- [Azure Cosmos DB Shell Visual Studio Code Extension](../shell/visual-studio-code) — Provides a seamless, integrated experience for managing and querying Cosmos DB databases directly from the code editor.
+- [Data Modeling - Azure Cosmos DB](../modeling-data.md) — Best practices in data modeling to optimize performance, scalability, and cost in schema-free databases.
+- [Migrate one-to-few relational data - Azure Cosmos DB](../migrate-relational-data.md?source=recommendations) — How to migrate relational data into Azure Cosmos DB for NoSQL.
+- [Azure Cosmos DB Agent Kit - Azure Cosmos DB for NoSQL](../gen-ai/agent-kit.md) — Enhances AI coding assistants with expert-level best practices for Azure Cosmos DB and integrates with tools like GitHub Copilot.
+- [Use Visual Studio Code to Connect and Manage Resources - Azure Cosmos DB](../visual-studio-code-extension.md?pivots=api-nosql) — Quickstart for connecting to Azure Cosmos DB for NoSQL using Visual Studio Code, including querying, inserting, updating, and deleting data.
+- [Azure Cosmos DB Shell Visual Studio Code Extension](../shell/visual-studio-code.md) — Provides a seamless, integrated experience for managing and querying Cosmos DB databases directly from the code editor.

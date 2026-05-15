@@ -66,4 +66,4 @@ ORDER BY c.updatedAt DESC
 ## Related articles
 
 - [CRUD operations on documents and collections](manage-documents-collections.md)
-- [IntelliSense and auto-completion (preview)](intellisense-autocomplete-preview.md)
+- [IntelliSense and auto-completion (preview)](intellisense-auto-completion-preview.md)

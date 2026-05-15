@@ -19,6 +19,6 @@
     - name: Copilot Chat query assistance (preview)
       href: copilot-chat-query-assistance-preview.md
     - name: IntelliSense and auto-completion (preview)
-      href: intellisense-autocomplete-preview.md
+      href: intellisense-auto-completion-preview.md
     - name: Migration Assistant (preview)
-      href: cosmos-db-migration-assistantmd
+      href: cosmos-db-migration-assistant.md
