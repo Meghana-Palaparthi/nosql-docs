@@ -203,9 +203,9 @@ export FOUNDRY_DEPLOYMENT_NAME="text-embedding-3-small"
 export FOUNDRY_MODEL_NAME="text-embedding-3-small"
 ```
 
-The following script creates a database and a new container, configures the vector embedding policy with an `embeddingSource`, inserts sample items with a `description` property, and polls them until Azure Cosmos DB adds the generated embeddings to `/embedding`.
+The following example creates a database and a new container, configures the vector embedding policy with an `embeddingSource`, inserts sample items with a `description` property, and polls them until Azure Cosmos DB adds the generated embeddings to `/embedding`.
 
-The script sets `dimensions` to `1536`, which matches `text-embedding-3-small` and `text-embedding-ada-002`. Use `3072` for `text-embedding-3-large`.
+`dimensions` is set to `1536`, which matches `text-embedding-3-small` and `text-embedding-ada-002`. Use `3072` for `text-embedding-3-large`.
 
 > [!NOTE]
 > This example uses a `quantizedFlat` vector index. To learn about other supported vector index types, see [Vector Indexing Policies](vector-search.md#vector-indexing-policies).
