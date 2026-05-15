@@ -496,9 +496,9 @@
     - name: Distributed Transactions (preview)
       items:
         - name: Overview
-          href: distirbuted-transactions.md
+          href: distributed-transactions.md
         - name: Configure distributed transactions (preview)
-          href: how-to-configure-distributed-transactions.md
+          href: how-to-configure-and-use-distributed-transactions.md
     - name: Index and query geospatial data
       displayName: geospatial, geojson, spatial, index, query, geography, geometry
       href: how-to-geospatial-index-query.md

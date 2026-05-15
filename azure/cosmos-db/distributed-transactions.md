@@ -77,7 +77,7 @@ If you need true interactive multi-statement transactions across partitions (the
 Under the hood, a distributed transaction is coordinated using a **two-phase commit (2PC)** protocol orchestrated by a **transaction coordinator** that runs on the Cosmos DB Compute Gateway.
 
 
-[![Conceptual diagram: SDK sends a batch to the Compute Gateway coordinator, which runs prepare and commit phases against participant partitions.](media/distributed-transactions/dtx-transaction-commits.png)](media/distributed-transactions/dtx-transaction-commits.png#lightbox)
+[![Conceptual diagram: SDK sends a batch to the Compute Gateway coordinator, which runs prepare and commit phases against participant partitions.](media/distributed-transactions/distributed-transactions-commits.png)](media/distributed-transactions/distributed-transactions-commits.png#lightbox)
 
 A simplified end-to-end flow:
 
@@ -215,7 +215,7 @@ If your workload only requires atomicity across documents that share a partition
 
 ## Related content
 
-- [Use distributed transactions in Azure Cosmos DB for NoSQL — how-to](how-to-distributed-transactions.md)
+- [Use distributed transactions in Azure Cosmos DB for NoSQL — how-to](how-to-configure-and-use-distributed-transactions.md)
 - [Consistency levels in Azure Cosmos DB](consistency-levels.md)
 - [Optimistic concurrency control with ETags](database-transactions-optimistic-concurrency.md)
 - [Transactional batch operations in Azure Cosmos DB for NoSQL](transactional-batch.md)
