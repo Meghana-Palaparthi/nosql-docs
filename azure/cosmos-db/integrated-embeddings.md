@@ -41,7 +41,7 @@ Before you use Integrated Embeddings, you need the following resources and confi
 - An existing Azure Cosmos DB for NoSQL account with [vector search enabled](vector-search.md#enable-the-vector-indexing-and-search-feature).
 - [All versions and deletes change feed mode](change-feed-modes.md?tabs=all-versions-and-deletes#all-versions-and-deletes-change-feed-mode-preview) enabled on the account.
 - A Microsoft Foundry resource with a deployed [Azure OpenAI embedding model](/azure/foundry-classic/foundry-models/concepts/models-sold-directly-by-azure?tabs=americas%2Caz-global-standard%2Cglobal-standard&pivots=azure-openai#embeddings).
-- A [managed identity](how-to-setup-managed-identity.md) on the Azure Cosmos DB account. Azure Cosmos DB uses this identity to authenticate to the Microsoft Foundry resource on your behalf.
+- A [managed identity](how-to-setup-managed-identity.md) (system-assigned or user-assigned) on the Azure Cosmos DB account, set as the account's [default identity](/cli/azure/cosmosdb#az-cosmosdb-update-optional-parameters). Azure Cosmos DB uses this identity to authenticate to the Microsoft Foundry resource on your behalf.
 - A [role assignment](/azure/foundry-classic/openai/how-to/role-based-access-control#add-role-assignment-to-an-azure-openai-resource) on the Microsoft Foundry resource that grants the Azure Cosmos DB managed identity the [Cognitive Services OpenAI User](/azure/foundry-classic/openai/how-to/role-based-access-control#azure-openai-roles) role, so it can make inference API calls to the embedding model.
 
 ## Enable integrated embeddings
@@ -802,6 +802,13 @@ Integrated Embeddings is available at no additional cost. You pay only for the u
 
 - **Microsoft Foundry**: Embedding model inference is billed to your [Microsoft Foundry resource](https://azure.microsoft.com/pricing/details/ai-foundry-models/aoai/#pricing).
 - **Azure Cosmos DB**: Request units are consumed when Azure Cosmos DB reads the change feed to detect item changes and writes generated embeddings back to your items.
+
+## Limitations
+
+Integrated Embeddings is in preview, and the following limitations apply.
+
+- Portal support: [Container vector policies](vector-search.md#container-vector-policies) can be managed in the Azure portal, but the `embeddingSource` configuration isn't supported there yet. Use the SDK options shown in the [quickstart](#getting-started-with-integrated-embeddings). Portal support will be added in a future update.
+- Tooling support: Support across the Azure Cosmos DB management SDKs, Azure CLI, Azure Resource Manager (ARM), and Bicep will expand over time. Refer to the [quickstart](#getting-started-with-integrated-embeddings) for how to use the feature with the currently supported options.
 
 ## Related content
 
