@@ -74,7 +74,7 @@ Update-AzCosmosDBAccount -ResourceGroupName $resourceGroupName `
 The service sets the default consistency level, but clients can override it. The consistency level can be set on a per-request basis, which overrides the default consistency level set at the account level.
 
 > [!TIP]
-> Consistency can only be **relaxed** at the SDK instance or request level. To move from weaker to stronger consistency, update the default consistency for the Azure Cosmos DB account.
+> When using the traditional `ConsistencyLevel` override, consistency can only be **relaxed** at the SDK instance or request level. To move from weaker to stronger consistency using this approach, update the default consistency for the Azure Cosmos DB account. However, the newer [ReadConsistencyStrategy](#use-read-consistency-strategy) feature (Java SDK v4.69+, .NET SDK v3.46+) allows you to set any supported read-consistency strategy per-read, including stronger than the account default, without changing the account configuration.
 
 > [!TIP]
 > Overriding the default consistency level only applies to reads within the SDK client. An account configured for strong consistency by default still writes and replicates data synchronously to every region in the account. When the SDK client instance or request overrides this level with Session or weaker consistency, reads are performed using a single replica. For more information, see [Consistency levels and throughput](consistency-levels.md#consistency-levels-and-throughput).
@@ -189,6 +189,102 @@ container.ReadItem(context.Background(), azcosmos.NewPartitionKeyString("Quentin
 		ConsistencyLevel: azcosmos.ConsistencyLevelStrong.ToPtr(),
 })
 ```
+
+## <a id="use-read-consistency-strategy"></a>Use Read Consistency Strategy
+
+The `ReadConsistencyStrategy` feature (available in Java SDK v4.69+ and .NET SDK v3.46+) provides a more flexible way to control read consistency. Unlike the traditional `ConsistencyLevel` override which can only relax consistency, `ReadConsistencyStrategy` allows you to set any supported read-consistency strategy per-read, including stronger than the account default, without changing your account configuration.
+
+> [!IMPORTANT]
+> `ReadConsistencyStrategy` is currently in **preview**. It's supported in **direct mode only** and isn't available when using gateway mode.
+
+### Available strategies
+
+| Strategy | Behavior | Use case |
+|----------|----------|----------|
+| **DEFAULT** | Uses the account or client-level consistency setting | No override needed |
+| **SESSION** | Read-your-writes and monotonic reads within a session | Per-user consistency in web apps |
+| **EVENTUAL** | Maximum availability, minimum latency | During outages when availability > consistency |
+| **LATEST_COMMITTED** | Performs quorum reads with barrier requests against the local region's replicas. The SDK reads from a read quorum of secondary replicas and uses barrier requests to ensure they have converged to the latest quorum-acknowledged (committed) LSN within that region. This gives you the freshest data that has been committed locally. On the write path, replication across regions remains asynchronous (no RPO boundary), which provides better write availability | Strong consistency within a region without an RPO boundary |
+| **GLOBAL_STRONG** | Linearizable reads across all regions (synchronous) | Financial transactions, inventory systems |
+
+> [!TIP]
+> `LATEST_COMMITTED` is often a better choice than bounded staleness when consistent reads are required but an RPO guarantee isn't. It performs quorum reads against secondary replicas within the local region, ensuring they have converged to the latest committed version. The trade-off: unlike bounded staleness, which guarantees reads lag behind writes by at most *K* versions or *T* time interval, `LATEST_COMMITTED` provides no such staleness bound across regions.
+
+### <a id="read-consistency-strategy-java"></a>Java SDK
+
+**Client-level default:**
+
+```java
+CosmosAsyncClient client = new CosmosClientBuilder()
+    .endpoint(endpoint)
+    .credential(new DefaultAzureCredentialBuilder().build())
+    .readConsistencyStrategy(ReadConsistencyStrategy.LATEST_COMMITTED)
+    .buildAsyncClient();
+```
+
+**Per-request override (for example, during a detected outage):**
+
+```java
+CosmosItemRequestOptions options = new CosmosItemRequestOptions();
+options.setReadConsistencyStrategy(ReadConsistencyStrategy.EVENTUAL);
+container.readItem(id, partitionKey, options, MyItem.class);
+```
+
+**Per-request override for queries:**
+
+```java
+CosmosQueryRequestOptions queryOptions = new CosmosQueryRequestOptions();
+queryOptions.setReadConsistencyStrategy(ReadConsistencyStrategy.LATEST_COMMITTED);
+
+SqlQuerySpec querySpec = new SqlQuerySpec(
+    "SELECT * FROM c WHERE c.category = @cat",
+    new SqlParameter("@cat", "electronics"));
+container.queryItems(querySpec, queryOptions, MyItem.class);
+```
+
+### <a id="read-consistency-strategy-dotnet"></a>.NET SDK
+
+**Client-level default:**
+
+```csharp
+CosmosClient client = new CosmosClientBuilder(endpoint, new DefaultAzureCredential())
+    .WithReadConsistencyStrategy(ReadConsistencyStrategy.LatestCommitted)
+    .Build();
+```
+
+**Per-request override:**
+
+```csharp
+ItemRequestOptions options = new ItemRequestOptions
+{
+    ReadConsistencyStrategy = ReadConsistencyStrategy.Eventual
+};
+var response = await container.ReadItemAsync<MyItem>(id, new PartitionKey(partitionKey), options);
+```
+
+**Per-request override for queries:**
+
+```csharp
+QueryRequestOptions queryOptions = new QueryRequestOptions
+{
+    ReadConsistencyStrategy = ReadConsistencyStrategy.LatestCommitted
+};
+var iterator = container.GetItemQueryIterator<MyItem>("SELECT * FROM c", requestOptions: queryOptions);
+```
+
+### ReadConsistencyStrategy vs ConsistencyLevel override
+
+| Capability | ConsistencyLevel override | ReadConsistencyStrategy |
+|---|---|---|
+| Relax consistency below account default | ✅ | ✅ |
+| Strengthen consistency above account default | ❌ | ✅ |
+| Set at client level | ✅ | ✅ |
+| Set per-request | ✅ | ✅ |
+| Dynamic runtime switching | Limited | ✅ Designed for this |
+| Available strategies | Strong, Bounded Staleness, Session, Consistent Prefix, Eventual (can only relax from account default) | Default, Session, Eventual, Latest Committed, Global Strong |
+
+> [!NOTE]
+> When both `ConsistencyLevel` and `ReadConsistencyStrategy` are set on the same request, `ReadConsistencyStrategy` takes precedence.
 
 ## Utilize session tokens
 
