@@ -826,8 +826,8 @@ Integrated Embeddings is available at no additional cost. You pay only for the u
 
 Integrated Embeddings is in preview, and the following limitations apply.
 
-- Portal support: [Container vector policies](vector-search.md#container-vector-policies) can be managed in the Azure portal, but the `embeddingSource` configuration isn't supported there yet. Use the SDK options shown in the [quickstart](#getting-started-with-integrated-embeddings). Portal support will be added in a future update.
-- Tooling support: Support across the Azure Cosmos DB management SDKs, Azure CLI, Azure Resource Manager (ARM), and Bicep will expand over time. Refer to the [quickstart](#getting-started-with-integrated-embeddings) for how to use the feature with the currently supported options.
+- Portal support: [Container vector policies](vector-search.md#container-vector-policies) can be managed in the Azure portal, but the `embeddingSource` configuration isn't supported there yet. Use the SDK options shown in the [quickstart](#get-started-with-integrated-embeddings). Portal support will be added in a future update.
+- Tooling support: Support across the Azure Cosmos DB management SDKs, Azure CLI, Azure Resource Manager (ARM), and Bicep will expand over time. Refer to the [quickstart](#get-started-with-integrated-embeddings) for how to use the feature with the currently supported options.
 
 ## Related content
 
