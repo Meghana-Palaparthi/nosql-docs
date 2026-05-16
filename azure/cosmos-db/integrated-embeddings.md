@@ -1,6 +1,6 @@
 ---
-title: Integrated Embeddings in Azure Cosmos DB for NoSQL
-description: Automatically generate and maintain vector embeddings for your data in Azure Cosmos DB for NoSQL.
+title: Integrated Embeddings in Azure Cosmos DB
+description: Automatically generate and maintain vector embeddings for your data in Azure Cosmos DB.
 author: abhirockzz
 ms.author: guabhishek
 ms.service: azure-cosmos-db
@@ -14,6 +14,7 @@ ms.collection:
   - ce-skilling-ai-copilot
 appliesto:
   - ✅ NoSQL
+ai-usage: ai-assisted
 ---
 
 # Integrated Embeddings in Azure Cosmos DB for NoSQL (Preview)
@@ -23,16 +24,14 @@ appliesto:
 > [!IMPORTANT]
 > As Integrated Embeddings is gradually rolling out across Azure regions, availability may vary, and the feature might not yet be accessible in your subscription or region.
 
-
-## What are integrated embeddings?
+## What are Integrated Embeddings?
 
 Integrated Embeddings automatically generates and maintains vector embeddings for your data in Azure Cosmos DB. You specify the source properties to embed, the Microsoft Foundry embedding model to use, and the path where the generated embeddings are stored. Azure Cosmos DB detects data changes and generates embeddings asynchronously, writing them back to your items.
 
-Without integrated embedding generation, you typically need to build and operate separate data pipelines that track data changes, call an embedding model for each change, handle errors and retries, and write the generated embeddings back to Azure Cosmos DB. After you configure Integrated Embeddings, Azure Cosmos DB handles this work for you and keeps embeddings up to date as your data changes. You can focus on building AI applications instead of managing embedding pipelines.
+Without Integrated Embeddings, you typically need to build and operate separate data pipelines that track data changes, call an embedding model for each change, handle errors and retries, and write the generated embeddings back to Azure Cosmos DB. After you configure Integrated Embeddings, Azure Cosmos DB handles this work for you and keeps embeddings up to date as your data changes. You can focus on building AI applications instead of managing embedding pipelines.
 
 > [!IMPORTANT]
 > Integrated Embeddings currently supports the following Azure OpenAI embedding models: `text-embedding-3-large`, `text-embedding-3-small`, and `text-embedding-ada-002`.
-
 
 ## Prerequisites
 
@@ -44,11 +43,11 @@ Before you use Integrated Embeddings, you need the following resources and confi
 - A [managed identity](how-to-setup-managed-identity.md) (system-assigned or user-assigned) on the Azure Cosmos DB account, set as the account's [default identity](/cli/azure/cosmosdb#az-cosmosdb-update-optional-parameters). Azure Cosmos DB uses this identity to authenticate to the Microsoft Foundry resource on your behalf.
 - A [role assignment](/azure/foundry-classic/openai/how-to/role-based-access-control#add-role-assignment-to-an-azure-openai-resource) on the Microsoft Foundry resource that grants the Azure Cosmos DB managed identity the [Cognitive Services OpenAI User](/azure/foundry-classic/openai/how-to/role-based-access-control#azure-openai-roles) role, so it can make inference API calls to the embedding model.
 
-## Enable integrated embeddings
+## Enable Integrated Embeddings
 
 To enable Integrated Embeddings on your Azure Cosmos DB account, [follow these steps](https://aka.ms/enable-integrated-embeddings).
 
-## Policy for integrated embeddings
+## Policy for Integrated Embeddings
 
 Integrated Embeddings is configured as part of the container vector embedding policy. The existing vector embedding policy defines the vector path, data type, dimensions, and distance function. To have Azure Cosmos DB generate embeddings for a vector path, add an `embeddingSource` object to the corresponding `vectorEmbeddings` entry.
 
@@ -159,15 +158,14 @@ This example configures Azure Cosmos DB to generate `/desc_embedding` from the `
 }
 ```
 
+## Get started with Integrated Embeddings
 
-## Getting started with integrated embeddings
+This quickstart walks you through creating a container configured for Integrated Embeddings, inserting items, and verifying that Azure Cosmos DB generates and stores the embeddings. It assumes you have completed the [prerequisites](#prerequisites).
 
-This quickstart walks you through creating a container configured for integrated embeddings, inserting items, and verifying that Azure Cosmos DB generates and stores the embeddings. It assumes you have completed the [prerequisites](#prerequisites).
+Integrated Embeddings is a preview feature. Support across the Azure Cosmos DB management SDKs, Azure CLI, Azure Resource Manager (ARM), and Bicep will expand over time. For now, you can try the feature in one of the following ways:
 
-Integrated embeddings is a preview feature. Support across the Azure Cosmos DB management SDKs, Azure CLI, Azure Resource Manager (ARM), and Bicep will expand over time. For now, you can try the feature with one of the following options:
-
-- the Azure Cosmos DB SDK with key-based authentication
-- the Azure Cosmos DB management SDK with Microsoft Entra ID
+- Use the Azure Cosmos DB SDK with key-based authentication.
+- Use the Azure Cosmos DB management SDK with Microsoft Entra ID.
 
 ### Use the Azure Cosmos DB SDK with key-based authentication
 
@@ -237,108 +235,108 @@ POLL_TIMEOUT_SECONDS = 120
 # Vector embedding policy: tells Cosmos DB which property to embed,
 # which Foundry deployment to call, and where to store the generated embedding.
 vector_embedding_policy = {
-  "vectorEmbeddings": [
-    {
-      "path": f"/{EMBEDDING_PATH}",
-      "dataType": "float32",
-      "dimensions": 1536,
-      "distanceFunction": "cosine",
-      "embeddingSource": {
-        "sourcePaths": [
-          "/description"
-        ],
-        "deploymentName": FOUNDRY_DEPLOYMENT_NAME,
-        "modelName": FOUNDRY_MODEL_NAME,
-        "endpoint": FOUNDRY_ENDPOINT,
-        "authType": "Entra"
-      }
-    }
-  ]
+    "vectorEmbeddings": [
+        {
+            "path": f"/{EMBEDDING_PATH}",
+            "dataType": "float32",
+            "dimensions": 1536,
+            "distanceFunction": "cosine",
+            "embeddingSource": {
+                "sourcePaths": [
+                    "/description"
+                ],
+                "deploymentName": FOUNDRY_DEPLOYMENT_NAME,
+                "modelName": FOUNDRY_MODEL_NAME,
+                "endpoint": FOUNDRY_ENDPOINT,
+                "authType": "Entra"
+            }
+        }
+    ]
 }
 
 # Indexing policy: exclude the embedding path from the standard index
 # and add a vector index.
 indexing_policy = {
-  "indexingMode": "consistent",
-  "automatic": True,
-  "includedPaths": [
-    {"path": "/*"}
-  ],
-  "excludedPaths": [
-    {"path": "/\"_etag\"/?"},
-    {"path": f"/{EMBEDDING_PATH}/*"}
-  ],
-  "vectorIndexes": [
-    {
-      "path": f"/{EMBEDDING_PATH}",
-      "type": "quantizedFlat"
-    }
-  ]
+    "indexingMode": "consistent",
+    "automatic": True,
+    "includedPaths": [
+        {"path": "/*"}
+    ],
+    "excludedPaths": [
+        {"path": "/\"_etag\"/?"},
+        {"path": f"/{EMBEDDING_PATH}/*"}
+    ],
+    "vectorIndexes": [
+        {
+            "path": f"/{EMBEDDING_PATH}",
+            "type": "quantizedFlat"
+        }
+    ]
 }
 
 sample_items = [
-  {
-    "id": "item-1",
-    "description": "Azure Cosmos DB for NoSQL supports vector search for AI applications."
-  },
-  {
-    "id": "item-2",
-    "description": "Cosmos DB offers global distribution with multi-region writes and tunable consistency levels."
-  },
-  {
-    "id": "item-3",
-    "description": "Use the change feed to react to data changes in real time without polling."
-  }
+    {
+        "id": "item-1",
+        "description": "Azure Cosmos DB for NoSQL supports vector search for AI applications."
+    },
+    {
+        "id": "item-2",
+        "description": "Azure Cosmos DB offers global distribution with multi-region writes and tunable consistency levels."
+    },
+    {
+        "id": "item-3",
+        "description": "Use the change feed to react to data changes in real time without polling."
+    }
 ]
 
 
 def main():
-  client = CosmosClient(COSMOS_ENDPOINT, credential=COSMOS_KEY)
+    client = CosmosClient(COSMOS_ENDPOINT, credential=COSMOS_KEY)
 
-  # Create the database and a new container with the embedding and indexing policies.
-  database = client.create_database_if_not_exists(id=DATABASE_NAME)
-  try:
-    container = database.create_container(
-      id=CONTAINER_NAME,
-      partition_key=PartitionKey(path="/id"),
-      vector_embedding_policy=vector_embedding_policy,
-      indexing_policy=indexing_policy,
-    )
-  except exceptions.CosmosResourceExistsError as err:
-    raise RuntimeError(
-      f"Container '{CONTAINER_NAME}' already exists. Use a new container name for this quickstart."
-    ) from err
-
-  # Insert sample items. Cosmos DB picks up the changes asynchronously
-  # and generates embeddings in the background.
-  for item in sample_items:
-    container.upsert_item(item)
-    print(f"Inserted item: {item['id']}")
-
-  # Poll each item until Cosmos DB writes the generated embedding back to it.
-  pending = {item["id"] for item in sample_items}
-  deadline = time.time() + POLL_TIMEOUT_SECONDS
-  while pending and time.time() < deadline:
-    for item_id in list(pending):
-      item = container.read_item(item=item_id, partition_key=item_id)
-      embedding = item.get(EMBEDDING_PATH)
-      if embedding:
-        print(
-          f"Generated embedding for {item_id} "
-          f"(dimensions: {len(embedding)}, preview: {embedding[:3]}...)"
+    # Create the database and a new container with the embedding and indexing policies.
+    database = client.create_database_if_not_exists(id=DATABASE_NAME)
+    try:
+        container = database.create_container(
+            id=CONTAINER_NAME,
+            partition_key=PartitionKey(path="/id"),
+            vector_embedding_policy=vector_embedding_policy,
+            indexing_policy=indexing_policy,
         )
-        pending.remove(item_id)
+    except exceptions.CosmosResourceExistsError as err:
+        raise RuntimeError(
+            f"Container '{CONTAINER_NAME}' already exists. Use a new container name for this quickstart."
+        ) from err
+
+    # Insert sample items. Azure Cosmos DB picks up the changes asynchronously
+    # and generates embeddings in the background.
+    for item in sample_items:
+        container.upsert_item(item)
+        print(f"Inserted item: {item['id']}")
+
+    # Poll each item until Azure Cosmos DB writes the generated embedding back to it.
+    pending = {item["id"] for item in sample_items}
+    deadline = time.time() + POLL_TIMEOUT_SECONDS
+    while pending and time.time() < deadline:
+        for item_id in list(pending):
+            item = container.read_item(item=item_id, partition_key=item_id)
+            embedding = item.get(EMBEDDING_PATH)
+            if embedding:
+                print(
+                    f"Generated embedding for {item_id} "
+                    f"(dimensions: {len(embedding)}, preview: {embedding[:3]}...)"
+                )
+                pending.remove(item_id)
+
+        if pending:
+            print(f"Waiting for embeddings: {sorted(pending)}")
+            time.sleep(POLL_INTERVAL_SECONDS)
 
     if pending:
-      print(f"Waiting for embeddings: {sorted(pending)}")
-      time.sleep(POLL_INTERVAL_SECONDS)
-
-  if pending:
-    raise TimeoutError(f"Embeddings were not generated for: {sorted(pending)}")
+        raise TimeoutError(f"Embeddings were not generated for: {sorted(pending)}")
 
 
 if __name__ == "__main__":
-  main()
+    main()
 ```
 
 Run the script:
@@ -420,7 +418,7 @@ const sampleItems = [
   },
   {
     id: "item-2",
-    description: "Cosmos DB offers global distribution with multi-region writes and tunable consistency levels.",
+    description: "Azure Cosmos DB offers global distribution with multi-region writes and tunable consistency levels.",
   },
   {
     id: "item-3",
@@ -456,14 +454,14 @@ async function main() {
     throw err;
   }
 
-  // Insert sample items. Cosmos DB picks up the changes asynchronously
+  // Insert sample items. Azure Cosmos DB picks up the changes asynchronously
   // and generates embeddings in the background.
   for (const item of sampleItems) {
     await container.items.upsert(item);
     console.log(`Inserted item: ${item.id}`);
   }
 
-  // Poll each item until Cosmos DB writes the generated embedding back to it.
+  // Poll each item until Azure Cosmos DB writes the generated embedding back to it.
   const pending = new Set(sampleItems.map((i) => i.id));
   const deadline = Date.now() + POLL_TIMEOUT_MS;
 
@@ -516,7 +514,7 @@ Generated embedding for item-3 (dimensions: 1536, preview: [0.0129,0.0336,-0.018
 
 ---
 
-### Use the management SDK with Microsoft Entra ID
+### Use the Azure Management SDK with Microsoft Entra ID
 
 This option uses the Azure Cosmos DB management SDK to create the database and container, and Microsoft Entra ID for authentication.
 
@@ -595,8 +593,8 @@ from azure.core.exceptions import HttpResponseError, ResourceNotFoundError
 from azure.identity import DefaultAzureCredential
 from azure.mgmt.cosmosdb import CosmosDBManagementClient
 from azure.mgmt.cosmosdb.models import (
-  SqlDatabaseCreateUpdateParameters,
-  SqlDatabaseResource,
+    SqlDatabaseCreateUpdateParameters,
+    SqlDatabaseResource,
 )
 
 
@@ -621,167 +619,167 @@ POLL_TIMEOUT_SECONDS = 120
 # (with a vector index on the embedding path) and the vector embedding policy
 # (with embeddingSource pointing at the Foundry deployment).
 container_body = {
-  "location": LOCATION,
-  "properties": {
-    "resource": {
-      "id": CONTAINER_NAME,
-      "partitionKey": {"paths": ["/id"], "kind": "Hash"},
-      "indexingPolicy": {
-        "indexingMode": "consistent",
-        "automatic": True,
-        "includedPaths": [
-          {"path": "/*"}
-        ],
-        "excludedPaths": [
-          {"path": "/\"_etag\"/?"},
-          {"path": f"/{EMBEDDING_PATH}/*"}
-        ],
-        "vectorIndexes": [
-          {"path": f"/{EMBEDDING_PATH}", "type": "quantizedFlat"}
-        ]
-      },
-      "vectorEmbeddingPolicy": {
-        "vectorEmbeddings": [
-          {
-            "path": f"/{EMBEDDING_PATH}",
-            "dataType": "float32",
-            "dimensions": 1536,
-            "distanceFunction": "cosine",
-            "embeddingSource": {
-              "sourcePaths": ["/description"],
-              "deploymentName": FOUNDRY_DEPLOYMENT_NAME,
-              "modelName": FOUNDRY_MODEL_NAME,
-              "endpoint": FOUNDRY_ENDPOINT,
-              "authType": "Entra"
+    "location": LOCATION,
+    "properties": {
+        "resource": {
+            "id": CONTAINER_NAME,
+            "partitionKey": {"paths": ["/id"], "kind": "Hash"},
+            "indexingPolicy": {
+                "indexingMode": "consistent",
+                "automatic": True,
+                "includedPaths": [
+                    {"path": "/*"}
+                ],
+                "excludedPaths": [
+                    {"path": "/\"_etag\"/?"},
+                    {"path": f"/{EMBEDDING_PATH}/*"}
+                ],
+                "vectorIndexes": [
+                    {"path": f"/{EMBEDDING_PATH}", "type": "quantizedFlat"}
+                ]
+            },
+            "vectorEmbeddingPolicy": {
+                "vectorEmbeddings": [
+                    {
+                        "path": f"/{EMBEDDING_PATH}",
+                        "dataType": "float32",
+                        "dimensions": 1536,
+                        "distanceFunction": "cosine",
+                        "embeddingSource": {
+                            "sourcePaths": ["/description"],
+                            "deploymentName": FOUNDRY_DEPLOYMENT_NAME,
+                            "modelName": FOUNDRY_MODEL_NAME,
+                            "endpoint": FOUNDRY_ENDPOINT,
+                            "authType": "Entra"
+                        }
+                    }
+                ]
             }
-          }
-        ]
-      }
-    },
-    "options": {
-      "autoscaleSettings": {"maxThroughput": MAX_AUTOSCALE_THROUGHPUT}
+        },
+        "options": {
+            "autoscaleSettings": {"maxThroughput": MAX_AUTOSCALE_THROUGHPUT}
+        }
     }
-  }
 }
 
 
 sample_items = [
-  {
-    "id": "item-1",
-    "description": "Azure Cosmos DB for NoSQL supports vector search for AI applications."
-  },
-  {
-    "id": "item-2",
-    "description": "Cosmos DB offers global distribution with multi-region writes and tunable consistency levels."
-  },
-  {
-    "id": "item-3",
-    "description": "Use the change feed to react to data changes in real time without polling."
-  }
+    {
+        "id": "item-1",
+        "description": "Azure Cosmos DB for NoSQL supports vector search for AI applications."
+    },
+    {
+        "id": "item-2",
+        "description": "Azure Cosmos DB offers global distribution with multi-region writes and tunable consistency levels."
+    },
+    {
+        "id": "item-3",
+        "description": "Use the change feed to react to data changes in real time without polling."
+    }
 ]
 
 
 def create_database(mgmt):
-  print(f"Creating database '{DATABASE_NAME}'...")
-  params = SqlDatabaseCreateUpdateParameters(
-    location=LOCATION,
-    resource=SqlDatabaseResource(id=DATABASE_NAME),
-  )
-  poller = mgmt.sql_resources.begin_create_update_sql_database(
-    resource_group_name=RESOURCE_GROUP_NAME,
-    account_name=ACCOUNT_NAME,
-    database_name=DATABASE_NAME,
-    create_update_sql_database_parameters=params,
-  )
-  result = poller.result()
-  print(f"  Database ready: {result.id}")
+    print(f"Creating database '{DATABASE_NAME}'...")
+    params = SqlDatabaseCreateUpdateParameters(
+        location=LOCATION,
+        resource=SqlDatabaseResource(id=DATABASE_NAME),
+    )
+    poller = mgmt.sql_resources.begin_create_update_sql_database(
+        resource_group_name=RESOURCE_GROUP_NAME,
+        account_name=ACCOUNT_NAME,
+        database_name=DATABASE_NAME,
+        create_update_sql_database_parameters=params,
+    )
+    result = poller.result()
+    print(f"  Database ready: {result.id}")
 
 
 def create_container(mgmt):
-  print(f"Checking container '{CONTAINER_NAME}'...")
-  try:
-    mgmt.sql_resources.get_sql_container(
-      resource_group_name=RESOURCE_GROUP_NAME,
-      account_name=ACCOUNT_NAME,
-      database_name=DATABASE_NAME,
-      container_name=CONTAINER_NAME,
-    )
-  except ResourceNotFoundError:
-    pass
-  else:
-    raise RuntimeError(
-      f"Container '{CONTAINER_NAME}' already exists. Use a new container name for this quickstart."
-    )
+    print(f"Checking container '{CONTAINER_NAME}'...")
+    try:
+        mgmt.sql_resources.get_sql_container(
+            resource_group_name=RESOURCE_GROUP_NAME,
+            account_name=ACCOUNT_NAME,
+            database_name=DATABASE_NAME,
+            container_name=CONTAINER_NAME,
+        )
+    except ResourceNotFoundError:
+        pass
+    else:
+        raise RuntimeError(
+            f"Container '{CONTAINER_NAME}' already exists. Use a new container name for this quickstart."
+        )
 
-  print(f"Creating container '{CONTAINER_NAME}'...")
-  body_bytes = json.dumps(container_body).encode("utf-8")
-  poller = mgmt.sql_resources.begin_create_update_sql_container(
-    resource_group_name=RESOURCE_GROUP_NAME,
-    account_name=ACCOUNT_NAME,
-    database_name=DATABASE_NAME,
-    container_name=CONTAINER_NAME,
-    create_update_sql_container_parameters=body_bytes,
-    content_type="application/json",
-  )
-  result = poller.result()
-  print(f"  Container ready: {result.id}")
+    print(f"Creating container '{CONTAINER_NAME}'...")
+    body_bytes = json.dumps(container_body).encode("utf-8")
+    poller = mgmt.sql_resources.begin_create_update_sql_container(
+        resource_group_name=RESOURCE_GROUP_NAME,
+        account_name=ACCOUNT_NAME,
+        database_name=DATABASE_NAME,
+        container_name=CONTAINER_NAME,
+        create_update_sql_container_parameters=body_bytes,
+        content_type="application/json",
+    )
+    result = poller.result()
+    print(f"  Container ready: {result.id}")
 
 
 def upsert_and_poll(credential):
-  client = CosmosClient(COSMOS_ENDPOINT, credential=credential)
-  container = client.get_database_client(DATABASE_NAME).get_container_client(CONTAINER_NAME)
+    client = CosmosClient(COSMOS_ENDPOINT, credential=credential)
+    container = client.get_database_client(DATABASE_NAME).get_container_client(CONTAINER_NAME)
 
-  # Insert sample items. Cosmos DB picks up the changes asynchronously
-  # and generates embeddings in the background.
-  for item in sample_items:
-    container.upsert_item(item)
-    print(f"Inserted item: {item['id']}")
+    # Insert sample items. Azure Cosmos DB picks up the changes asynchronously
+    # and generates embeddings in the background.
+    for item in sample_items:
+        container.upsert_item(item)
+        print(f"Inserted item: {item['id']}")
 
-  # Poll each item until Cosmos DB writes the generated embedding back to it.
-  pending = {item["id"] for item in sample_items}
-  deadline = time.time() + POLL_TIMEOUT_SECONDS
-  while pending and time.time() < deadline:
-    for item_id in list(pending):
-      item = container.read_item(item=item_id, partition_key=item_id)
-      embedding = item.get(EMBEDDING_PATH)
-      if embedding:
-        print(
-          f"Generated embedding for {item_id} "
-          f"(dimensions: {len(embedding)}, preview: {embedding[:3]}...)"
-        )
-        pending.remove(item_id)
+    # Poll each item until Azure Cosmos DB writes the generated embedding back to it.
+    pending = {item["id"] for item in sample_items}
+    deadline = time.time() + POLL_TIMEOUT_SECONDS
+    while pending and time.time() < deadline:
+        for item_id in list(pending):
+            item = container.read_item(item=item_id, partition_key=item_id)
+            embedding = item.get(EMBEDDING_PATH)
+            if embedding:
+                print(
+                    f"Generated embedding for {item_id} "
+                    f"(dimensions: {len(embedding)}, preview: {embedding[:3]}...)"
+                )
+                pending.remove(item_id)
+
+        if pending:
+            print(f"Waiting for embeddings: {sorted(pending)}")
+            time.sleep(POLL_INTERVAL_SECONDS)
 
     if pending:
-      print(f"Waiting for embeddings: {sorted(pending)}")
-      time.sleep(POLL_INTERVAL_SECONDS)
-
-  if pending:
-    raise TimeoutError(f"Embeddings were not generated for: {sorted(pending)}")
+        raise TimeoutError(f"Embeddings were not generated for: {sorted(pending)}")
 
 
 def main():
-  credential = DefaultAzureCredential()
-  try:
-    mgmt = CosmosDBManagementClient(
-      credential=credential,
-      subscription_id=SUBSCRIPTION_ID,
-    )
+    credential = DefaultAzureCredential()
     try:
-      create_database(mgmt)
-      create_container(mgmt)
-    except HttpResponseError as ex:
-      print(f"ARM call failed: status={ex.status_code} message={ex.message}")
-      raise
-    finally:
-      mgmt.close()
+        mgmt = CosmosDBManagementClient(
+            credential=credential,
+            subscription_id=SUBSCRIPTION_ID,
+        )
+        try:
+            create_database(mgmt)
+            create_container(mgmt)
+        except HttpResponseError as ex:
+            print(f"ARM call failed: status={ex.status_code} message={ex.message}")
+            raise
+        finally:
+            mgmt.close()
 
-    upsert_and_poll(credential)
-  finally:
-    credential.close()
+        upsert_and_poll(credential)
+    finally:
+        credential.close()
 
 
 if __name__ == "__main__":
-  main()
+    main()
 ```
 
 Run the script:
@@ -806,7 +804,6 @@ Generated embedding for item-1 (dimensions: 1536, preview: [0.0123, -0.0456, 0.0
 Generated embedding for item-2 (dimensions: 1536, preview: [-0.0231, 0.0567, 0.0103]...)
 Generated embedding for item-3 (dimensions: 1536, preview: [0.0456, -0.0210, 0.0398]...)
 ```
-
 
 ## Troubleshoot common issues
 
