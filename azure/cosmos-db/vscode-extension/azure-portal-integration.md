@@ -21,7 +21,7 @@ Use integration actions to move between Visual Studio Code and Azure portal whil
 1. Expand your Azure Cosmos DB account.
 1. Right-click the account node and select the action to open in Azure portal.
 
-:::image type="content" source="media/azure-portal/vscode-open-portal.png" alt-text="Screenshot showing how to open a Cosmos DB account in the Azure portal from Visual Studio Code." lightbox="media/azure-portal/vscode-open-portal.png":::
+:::image type="content" source="media/azure-portal/vs-code-open-portal.png" alt-text="Screenshot of opening a Cosmos DB account in the Azure portal from Visual Studio Code." lightbox="media/azure-portal/vs-code-open-portal.png":::
 
 ## Open in Visual Studio Code from Azure portal
 
@@ -31,7 +31,7 @@ Use integration actions to move between Visual Studio Code and Azure portal whil
 1. In Visual Studio Code, confirm the selected tenant and subscription if prompted.
 1. Continue your workflow in the Azure extension by expanding the account, databases, and containers.
 
-:::image type="content" source="media/azure-portal/portal-open-vscode.png" alt-text="Screenshot showing how to open a Cosmos DB account in Visual Studio Code from the Azure portal." lightbox="media/azure-portal/portal-open-vscode.png":::
+:::image type="content" source="media/azure-portal/portal-open-vs-code.png" alt-text="Screenshot of opening a Cosmos DB account in Visual Studio Code from the Azure portal." lightbox="media/azure-portal/portal-open-vs-code.png":::
 
 ## Open database and container experiences
 

@@ -26,7 +26,7 @@ The extension can connect to a local emulator for offline or preproduction devel
 1. Use the extension action to connect to a local emulator endpoint.
 1. Provide the emulator endpoint and key when prompted.
 
-:::image type="content" source="media/connect-local-emulator/connect-emulator.png" alt-text="Connect to local emulator dialog in Visual Studio Code for Azure Cosmos DB with endpoint and key fields." lightbox="media/connect-local-emulator/connect-emulator.png":::
+:::image type="content" source="media/connect-local-emulator/connect-emulator.png" alt-text="Screenshot of connect to local emulator dialog in Visual Studio Code for Azure Cosmos DB with endpoint and key fields." lightbox="media/connect-local-emulator/connect-emulator.png":::
 
 Common local endpoint:
 

@@ -58,7 +58,7 @@ Discovery analyzes your workspace and collects core migration inputs: schema DDL
 
 1. Fill in other repository details (for example, Type, Language, and Database) manually or select **Auto-Detect** to auto-populate them.
 
-   :::image type="content" source="media/migration-assistant/migration-project-phase-1-schema.png" alt-text="Database schema upload section with Application information fields for project name, type, language, frameworks, database, and access method, with an Auto-Detect button.":::
+   :::image type="content" source="media/migration-assistant/migration-project-phase-1-schema.png" alt-text="Screenshot of database schema upload section with Application information fields for project name, type, language, frameworks, database, and access method, with an Auto-Detect button."
 
    Auto-Detect traverses the project repository and fills in the information. The fields are editable, so you can update them if required.
 
