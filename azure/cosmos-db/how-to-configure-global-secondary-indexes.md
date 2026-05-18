@@ -6,7 +6,7 @@ ms.author: jucocchi
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: how-to
-ms.date: 4/29/2025
+ms.date: 5/17/2026
 ms.custom:
   - build-2025
 appliesto:
