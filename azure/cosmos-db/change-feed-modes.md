@@ -131,9 +131,9 @@ The following methods to read the change feed are available for each client SDK:
 
 To get started using all versions and deletes change feed mode, navigate to the **Features** page in your Azure Cosmos DB account. Select and enable the **All versions and deletes change feed mode** feature. You must have [continuous backups](continuous-backup-restore-introduction.md) configured for your Azure Cosmos DB account before enabling the feature. The enablement process can take up to 30 minutes to be complete and no other changes can be made to the account during this time. 
 
-:::image type="content" source="media/change-feed-modes/enroll-account.png" alt-text="Screenshot of All versions and deletes change feed mode feature in Features page in the Azure portal.":::
+:::image type="content" source="media/change-feed-modes/enroll-account.png" alt-text="Screenshot of All versions and deletes change feed mode feature in Features page in the Azure portal." lightbox="media/change-feed-modes/enroll-account.png":::
 
-Alternately, enable all versions and deletes mode on a pre-existing account with the REST API by adding `"enableAllVersionsAndDeletesChangeFeed" : true` to the `properties` of your account. This property is available in preview API version `2024-12-01-preview` or later preview version. Enabling this feature during account creation isn't supported.
+Alternately, enable all versions and deletes mode on a preexisting account with the REST API by adding `"enableAllVersionsAndDeletesChangeFeed" : true` to the `properties` of your account. This property is available in preview API version `2024-12-01-preview` or later preview version. Enabling this feature during account creation isn't supported.
 
 ### Parse the response object
 
