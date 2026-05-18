@@ -187,7 +187,7 @@
       href: geospatial-support.md
     - name: Indexing
       href: indexing.md
-    - name: Change Stream
+    - name: Change streams
       href: change-streams.md
     - name: Data API
       href: data-api.md
