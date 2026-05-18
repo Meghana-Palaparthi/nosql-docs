@@ -1,5 +1,5 @@
 ---
-title: "BM25 keyword search in Azure DocumentDB — ranked text retrieval"
+title: "BM25 keyword search in Azure DocumentDB - ranked text retrieval"
 description: Run BM25-scored keyword search on Azure DocumentDB using the createSearchIndexes command and the $search aggregation stage with the text operator.
 author: khelanmodi
 ms.author: khelanmodi
@@ -21,12 +21,12 @@ BM25 (Best Match 25) ranks each document by how well its terms match the query, 
 - **Inverse document frequency.** Rare terms across the corpus carry more weight than common ones, so matching `bracket` is worth more than matching `the`.
 - **Document length normalization.** Long documents aren't unfairly penalized for repeating terms, and short documents aren't unfairly rewarded.
 
-The algorithm is well-studied, defaults are reasonable, and the score returned by Azure DocumentDB is monotonic — higher means more relevant within a single query. Scores are not directly comparable across different queries.
+The algorithm is well-studied, defaults are reasonable, and the score returned by Azure DocumentDB is monotonic (higher means more relevant within a single query). Scores are not directly comparable across different queries.
 
 ## Creating a search index for keyword search
 
 ```javascript
-// ❌ Community MongoDB text-index shape — not the Azure DocumentDB FTS path.
+// ❌ Community MongoDB text-index shape. Not the Azure DocumentDB FTS path.
 //    The new $search engine does not consume this form.
 db.products_10M.createIndex({ title: "text" });
 ```
@@ -52,18 +52,18 @@ db.runCommand({
 });
 ```
 
-Name the index after the field and intent so it's easy to reference from `$search`. After creation the index appears in `db.products_10M.getIndexes()` alongside other indexes on the collection.
+Name the index after the field and intent so it's easy to reference from `$search`. The index builds asynchronously. Confirm it appears in `db.products_10M.getIndexes()` before issuing `$search` queries against it.
 
 ## Running a `$search` + `text` query
 
 ```javascript
-// ❌ Regex substring search on a large collection — COLLSCAN, unranked,
+// ❌ Regex substring search on a large collection: COLLSCAN, unranked,
 //    case-sensitive without the /i flag.
 db.products_10M.find({ title: { $regex: "bracket", $options: "i" } });
 ```
 
 ```javascript
-// ✅ BM25 keyword search with $search` + `text.
+// ✅ BM25 keyword search with $search + text.
 //    Always pass index: "<name>" and cap with a downstream $limit.
 db.products_10M.aggregate([
   {
@@ -120,21 +120,10 @@ db.products_10M.aggregate([
 ]);
 ```
 
-When `$search` + `compound` ships, server-side `should` / `must` clauses across multiple fields will be supported. Until then, multi-field queries follow the [fan-out-and-merge pattern](full-text-search-multifield-index.md#fan-out-and-merge-multi-field-query-workaround).
-
-## When to use BM25 vs. other modes
-
-| Mode | Best for | Trade-off |
-| --- | --- | --- |
-| `$search` + `text` (BM25) | Ranked keyword search on prose, titles, and descriptions. | Requires a search index. |
-| `$regex` | Single-character substring patterns on small collections or fields with an existing B-tree index. | Unranked; `COLLSCAN` on large collections. |
-| Equality (`$eq`) | Exact-match lookup on identifiers or enums. | No tokenization — won't match `"bracket"` inside `"steel bracket"`. |
-
 ## Related pages
 
 - [Fuzzy search](full-text-search-fuzzy.md)
 - [Phrase search and proximity matching](full-text-search-phrase-proximity.md)
-- [Custom analyzers](full-text-search-custom-analyzers.md)
 - [Hybrid search (BM25 + vector)](full-text-search-hybrid.md)
 - [Full-text search overview and migration table](full-text-search-overview.md)
 

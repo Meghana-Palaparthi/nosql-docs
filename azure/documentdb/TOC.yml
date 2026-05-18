@@ -72,12 +72,8 @@
               href: full-text-search-fuzzy.md
             - name: Phrase search and proximity matching
               href: full-text-search-phrase-proximity.md
-            - name: Custom analyzers
-              href: full-text-search-custom-analyzers.md
-            - name: Hierarchical identifier search
-              href: full-text-search-path-hierarchy.md
-            - name: Multi-field search index
-              href: full-text-search-multifield-index.md
+            - name: Hybrid search (BM25 + vector)
+              href: full-text-search-hybrid.md
         - name: Vector search
           items:
             - name: Vector database
@@ -90,8 +86,6 @@
                   href: product-quantization.md
                 - name: Half-Precision Vector Indexing
                   href: half-precision.md
-        - name: Hybrid search (BM25 + vector)
-          href: full-text-search-hybrid.md
         - name: RAG with Langchain & OpenAI
           href: rag.md
     - name: Integrate with AI Tools
