@@ -16,11 +16,20 @@ appliesto:
 ai-usage: ai-assisted
 ---
 
-# Multi-vector search with MaxSim in Azure Cosmos DB for NoSQL (Public Preview)
+# Multi-vector search (Public Preview)
+
+[!INCLUDE[Preview](../includes//notice-preview.md)]
 
 Multi-vector search lets you store more than one vector at the same embedding path in an Azure Cosmos DB item. Instead of storing a single vector, the embedding path stores an array of vectors. This pattern is useful for retrieval approaches that represent one document with multiple embeddings, such as ColBERT-style embeddings.
 
 Use multi-vector search when one item contains multiple semantic units that should be compared independently during retrieval. For example, a product, document, memory, or passage group might have one vector for each token, phrase, chunk, image region, or other subunit. Multi-vector search keeps those vectors with the source item while still returning the item as the search result.
+
+
+> [!IMPORTANT]
+> As Multi-vector search is gradually rolling out across Azure regions, availability may vary, and the feature might not yet be accessible in your subscription or region. 
+
+> [!NOTE]
+> Currently only the quantizedFlat vector index type is supported for multi-vector search. Support for DiskANN indexes is planned for the future.
 
 ## SDK support
 

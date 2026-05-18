@@ -20,6 +20,8 @@ ai-usage: ai-assisted
 
 # Semantic Reranker in Azure Cosmos DB for NoSQL (Public Preview)
 
+[!INCLUDE[Preview](../includes//notice-preview.md)]
+
 Semantic Reranker uses an AI model to both score and reorder the results from a query, including vector search,  full-text search, hybrid search, or another query type, based on relevance to the provided user search phrase or context. By integrating the reranker directly with Azure Cosmos DB, developers can apply reranking on query results retrieved from any container while using supported Azure Cosmos DB SDKs with minimal code changes.
 
 The Semantic Reranker uses the Microsoft AI Semantic Ranker model, developed internally by Microsoft [Azure AI Search](/azure/search/semantic-search-overview).
@@ -52,6 +54,9 @@ When you call Semantic Reranker, the response can contain multiple fields, inclu
 - **Token usage**: The number of tokens consumed by the reranking request.
 
 ## Set up Semantic Reranker in the Azure portal
+
+> [!IMPORTANT]
+>  Semantic Reranker is in Public Preview. After enabling it in the Azure portal, allow up to 1 hour for activation.
 
 Use the Azure portal to enable, disable, and configure Semantic Reranker for a specific Azure Cosmos DB resource.
 

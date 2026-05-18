@@ -16,13 +16,11 @@ appliesto:
 ai-usage: ai-assisted 
 ---
 
-# Agent Memory Toolkit for Azure Cosmos DB
+# Agent Memory Toolkit for Azure Cosmos DB (Public Preview))
 
 Agent Memory Toolkit is a Python SDK that helps you add memory to AI agents that use Azure Cosmos DB. It stores raw conversation history and creates higher-value derived memories, such as summaries, facts, and user profiles, so your agent can recall useful context across messages, threads, and sessions.
 
 :::image type="content" source="../media/agent-memory-toolkit/overview.png" lightbox="../media/agent-memory-toolkit/overview.png" alt-text="Diagram showing an overview of Agent Memory Toolkit with Azure Cosmos DB.":::
-
-
 
 
 ## What it supports
