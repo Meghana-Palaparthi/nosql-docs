@@ -1,5 +1,5 @@
 ---
-title: Global Secondary Indexes (preview)
+title: Global Secondary Indexes
 description: Global secondary indexes can be used to avoid cross-partition queries on a source container in Azure Cosmos DB.
 author: jcocchi
 ms.author: jucocchi
@@ -10,15 +10,12 @@ ms.custom:
   - devx-track-azurecli
   - build-2025
 ms.topic: concept-article
-ms.date: 01/28/2026
+ms.date: 05/17/2026
 appliesto:
   - ✅ NoSQL
 ---
 
-# Azure Cosmos DB for NoSQL global secondary indexes (preview)
-
-> [!IMPORTANT]
-> Azure Cosmos DB for NoSQL global secondary indexes are currently in preview. For more information, see the [supplemental terms of use for Microsoft Azure previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/).
+# Azure Cosmos DB for NoSQL global secondary indexes
 
 Global secondary indexes (GSIs) improve query efficiency by storing data with a different partition key than the source container. GSIs are read-only containers that are automatically synchronized with the source container. Each GSI has its own partition key, indexing policy, throughput (RU) limit, and data model.
 
@@ -65,9 +62,11 @@ For example, a valid query is: `SELECT c.id, c.name.first, c.emailAddress FROM c
 
 ## Syncing global secondary indexes
 
-Global secondary indexes are automatically kept in sync with changes to data in source containers using [change feed](change-feed.md). When a GSI is defined for a source container, a change feed job is created and managed for you. Changes are asynchronously reflected to data in index containers and don't affect writes to the source container. Index containers are eventually consistent with the source container regardless of the [consistency level](consistency-levels.md) set for the account.
+Global secondary indexes are automatically kept in sync with changes to data in source containers using [change feed](change-feed.md). When a GSI is defined for a source container, a change feed job is created and managed for you. Changes are asynchronously reflected to data in the GSI container and don't affect writes to the source container. GSIs are eventually consistent with the source container regardless of the [consistency level](consistency-levels.md) set for the account.
 
-Change feed reads consume RUs from the source container, and writes to the GSI consume RUs from the GSI container. RUs provisioned on both containers determine how quickly data is hydrated and synced.
+Change feed reads consume RUs from the source container, and writes to the GSI consume RUs from the GSI container. RUs provisioned on both containers determine how quickly data is hydrated and synced. 
+
+When a source container has one or more global secondary indexes, replace and delete operations on the source container incur an additional RU charge. Azure Cosmos DB persists both the previous and current versions of replaced and deleted items so the change can be reliably propagated to the GSI. The surcharge scales with item size and ranges from 50-100% on top of the [base write RU charges by document size](understand-request-unit-consumption.md#document-size). Create operations aren't affected.
 
 ### Global secondary indexes in multi-region accounts
 
@@ -115,6 +114,10 @@ There are two status types to differentiate between propagation latency when bui
 #### I want to know if my GSI has enough throughput
 
 The RUs provisioned on source and GSI affect the rate of changes propagated. Check the **Normalized RU Consumption** metric, if it's too high the container may benefit from increasing the maximum RUs.
+
+#### I want to monitor write errors on my GSI
+
+GSI propagation runs asynchronously and source writes succeed independently of GSI writes. Set up [alerts](./create-alerts.md) on the GSI for any HTTP status code 400 or greater to catch issues writing items, such as an item exceeding the 2-KB partition key size limit.
 
 ## Next steps
 
