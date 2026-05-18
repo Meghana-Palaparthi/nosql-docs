@@ -4,7 +4,8 @@ description: Free tier on Azure DocumentDB.
 author: suvishodcitus
 ms.author: suvishod
 ms.topic: how-to
-ms.date: 11/08/2023
+ms.date: 05/18/2026
+ai-usage: ai-assisted
 ms.custom:
   - references_regions
 # CustomerIntent: As a database owner, I want customers/developers to be able to evaluate the service for free.
@@ -15,6 +16,10 @@ ms.custom:
 Azure DocumentDB now introduces a new SKU, the "Free Tier," enabling users to explore the platform without any financial commitments. The free tier lasts for the lifetime of your account, boasting command and feature parity with a regular Azure DocumentDB account.
 
 It makes it easy for you to get started, develop, test your applications, or even run small production workloads for free. With Free Tier, you get a dedicated MongoDB cluster with 32-GB storage, perfect for all of your learning & evaluation needs. Users can provision a single free database server per subscription. This feature is currently available in limited set of regions only.
+
+## Instant provisioning for free tier clusters
+
+Free tier clusters in Azure DocumentDB are now provisioned nearly instantly, making it faster to start functional testing and rapid iteration. There is no change in feature compatibility compared to previous free tier versions. With this optimization, the admin username is assigned in advance. You can view the assigned username immediately after the free tier cluster is available in the **Connection string** view in the Azure portal, or retrieve credentials programmatically.
 
 
 ## Get started
