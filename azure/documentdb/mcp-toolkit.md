@@ -3,7 +3,7 @@ title: MCP Toolkit
 description: Use the Azure DocumentDB MCP Toolkit to give AI agents and MCP-aware applications a curated, audited tool surface against Azure DocumentDB clusters.
 author: khelanmodi
 ms.topic: how-to
-ms.date: 05/06/2026
+ms.date: 05/18/2026
 ms.author: khelanmodi
 ms.collection:
   - ce-skilling-ai-copilot
@@ -47,7 +47,7 @@ A typical deployment has one **MCP host** (the application running the LLM, such
 - **Managed identity support** — No connection strings or shared secrets in production; the server exchanges its workload identity for a DocumentDB access token.
 - **Role-based access** — Each tool is gated on a `read`, `write`, or `management` role; capability flags let operators disable entire tool classes.
 - **Secure communication** — TLS-only transport to the DocumentDB cluster; HTTPS endpoints with bearer-token auth between MCP clients and the server.
-- **Safety guardrails** — Retype-to-confirm on destructive tools (`drop_database`, `drop_collection`, `drop_index`, `rename_collection`) and a write-stage guard that blocks `$out` / `$merge` in `aggregate` unless explicitly allowed.
+- **Safety guardrails** — Retype-to-confirm on destructive tools (`drop_database`, `drop_collection`, `drop_index`) and a write-stage guard that blocks `$out` / `$merge` in `aggregate` unless explicitly allowed.
 
 ### Flexible deployment
 
@@ -70,7 +70,7 @@ The server registers 18 tools. Every tool requires a `connection_profile` argume
 | `sample_documents` | Collection | `read` | Random sample for schema inference. |
 | `get_statistics` | Collection | `read` | `collStats` data. |
 | `current_ops` | Collection | `management` | Server-side `currentOp`. |
-| `rename_collection` | Collection | `management` | Requires confirmation retype. |
+| `rename_collection` | Collection | `management` | Renames a collection. |
 | `drop_collection` | Collection | `management` | Requires `confirm_collection_name` retype. |
 | `find_documents` | Document | `read` | Filter, projection, sort, limit, skip. |
 | `count_documents` | Document | `read` | |
@@ -186,7 +186,7 @@ ENABLE_READ_TOOLS=true
 ENABLE_WRITE_TOOLS=false
 ENABLE_MANAGEMENT_TOOLS=false
 
-CONNECTION_PROFILES={"prod":{"authMode":"entra","endpoint":"...","tokenScope":"...","allowedHosts":["*.documents.azure.com"]}}
+CONNECTION_PROFILES={"prod":{"authMode":"entra","endpoint":"<cluster>.mongocluster.cosmos.azure.com","tokenScope":"https://ossrdbms-aad.database.windows.net/.default","allowedHosts":["*.mongocluster.cosmos.azure.com"]}}
 ```
 
 ## Configuration reference
@@ -220,25 +220,26 @@ All configuration is environment-driven. The repository's `.env.example` documen
 
 ### Connection profiles
 
-Define profiles either inline in `CONNECTION_PROFILES` or in a JSON file referenced by `CONNECTION_PROFILES_FILE`.
+Define profiles either inline in `CONNECTION_PROFILES` or in a JSON file referenced by `CONNECTION_PROFILES_FILE`. The recommended profile mode is `entra`; the `connectionString` form is a legacy SCRAM fallback for local or sandbox use.
 
 ```json
 {
   "prod": {
     "authMode": "entra",
-    "endpoint": "<cluster>.documents.azure.com",
-    "tokenScope": "<oauth-resource-uri>",
-    "allowedHosts": ["*.documents.azure.com"],
+    "endpoint": "<cluster>.mongocluster.cosmos.azure.com",
+    "tokenScope": "https://ossrdbms-aad.database.windows.net/.default",
+    "allowedHosts": ["*.mongocluster.cosmos.azure.com"],
     "tls": true,
     "retryWrites": true,
     "appName": "documentdb-mcp"
   },
   "local": {
-    "authMode": "connectionString",
     "uriEnv": "DOCUMENTDB_LOCAL_URI"
   }
 }
 ```
+
+The `local` profile shown above is a legacy SCRAM connection-string profile — the server resolves the URI from the environment variable named in `uriEnv` (for example, `DOCUMENTDB_LOCAL_URI=mongodb://localhost:27017`). Use it only for local or sandbox development; production deployments should use the `entra` profile mode with a managed identity.
 
 ## Deployment topologies
 
@@ -305,6 +306,17 @@ For destructive and high-impact tools, the server stacks four independent layers
 | Role | The caller must have the required role. |
 | Profile | A valid administrator-defined profile must be supplied. |
 | Retype-to-confirm | The caller must echo the target name in a confirmation field. |
+
+### Deleting databases, collections, or indexes
+
+Drop operations (`drop_database`, `drop_collection`, `drop_index`) are classified as **management** tools. Every drop call must clear *all* of the following — failing any single check denies the request:
+
+1. **`ENABLE_MANAGEMENT_TOOLS=true`** is set on the server. This flag is off by default; management tools aren't even registered until an operator opts in.
+2. The caller's token carries a claim that maps to the **`management`** MCP role (for example, `DocumentDB.MCP.Management` via `MCP_MANAGEMENT_ROLE_VALUES`).
+3. The tool call names a valid administrator-defined **`connection_profile`**.
+4. The caller **retypes the target name** in the matching confirmation field (see the table below). The confirmation must match exactly — the server rejects mismatches before issuing the drop.
+
+Read and write roles cannot invoke drop tools even if `ENABLE_MANAGEMENT_TOOLS=true`, and a `management` caller cannot drop anything while `ENABLE_MANAGEMENT_TOOLS=false`. Keep the flag off in any deployment that does not need destructive operations.
 
 ### Retype-to-confirm
 
@@ -375,7 +387,7 @@ Every allow or deny decision is written to **stderr** as a single JSON line pref
 
 - Requires Node.js 20+.
 - Validated against Azure DocumentDB. Other MongoDB-compatible engines might work where they implement the same wire-protocol commands but aren't validated in CI.
-- No published npm package yet. Install from source or with `npx -y github:microsoft/documentdb-mcp`.
+- No published npm package yet. Install from source (`git clone https://github.com/microsoft/documentdb-mcp.git && npm install && npm run build`) or run directly with `npx -y github:microsoft/documentdb-mcp`.
 
 ## Related content
 
