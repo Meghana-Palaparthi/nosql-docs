@@ -487,11 +487,11 @@
           href: how-to-migrate-from-change-feed-library.md
         - name: Async Java sample with change feed
           href: how-to-java-change-feed.md
-    - name: Global secondary indexes (preview)
+    - name: Global secondary indexes
       items:
         - name: Overview
           href: global-secondary-indexes.md
-        - name: Configure global secondary indexes (preview)
+        - name: Configure global secondary indexes
           href: how-to-configure-global-secondary-indexes.md
     - name: Index and query geospatial data
       displayName: geospatial, geojson, spatial, index, query, geography, geometry
