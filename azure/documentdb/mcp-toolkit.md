@@ -11,9 +11,9 @@ ms.collection:
 
 # Azure DocumentDB MCP Toolkit
 
-The **Azure DocumentDB MCP Toolkit** is an open-source [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that lets AI agents and MCP-aware applications operate against Azure DocumentDB through a curated, audited tool surface. It's written in TypeScript on Node.js 20+ and distributed from the [`microsoft/documentdb-mcp`](https://github.com/microsoft/documentdb-mcp) repository.
+The **Azure DocumentDB MCP Toolkit** is an open-source [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that lets AI agents and MCP-aware applications operate against Azure DocumentDB through a curated, audited tool surface. The toolkit runs on Node.js 20+, uses TypeScript, and ships from the [`microsoft/documentdb-mcp`](https://github.com/microsoft/documentdb-mcp) repository.
 
-The toolkit is a **tools-only** server: database connection details (endpoints, credentials, auth modes) are administrator-controlled and never accepted as MCP arguments — agents only ever name a profile.
+The toolkit is a **tools-only** server: database connection details (endpoints, credentials, auth modes) are administrator-controlled and never accepted as MCP arguments. Agents only ever name a profile.
 
 > [!NOTE]
 > The MCP Toolkit is in public preview. Interfaces, configuration, and tool behavior may change.
@@ -43,17 +43,17 @@ A typical deployment has one **MCP host** (the application running the LLM, such
 
 ### Enterprise-grade security
 
-- **Microsoft Entra ID authentication** — Token-based access with role-based authorization on every tool call.
-- **Managed identity support** — No connection strings or shared secrets in production; the server exchanges its workload identity for a DocumentDB access token.
-- **Role-based access** — Each tool is gated on a `read`, `write`, or `management` role; capability flags let operators disable entire tool classes.
-- **Secure communication** — TLS-only transport to the DocumentDB cluster; HTTPS endpoints with bearer-token auth between MCP clients and the server.
-- **Safety guardrails** — Retype-to-confirm on destructive tools (`drop_database`, `drop_collection`, `drop_index`) and a write-stage guard that blocks `$out` / `$merge` in `aggregate` unless explicitly allowed.
+- **Microsoft Entra ID authentication**. Token-based access with role-based authorization on every tool call.
+- **Managed identity support**. No connection strings or shared secrets in production; the server exchanges its workload identity for a DocumentDB access token.
+- **Role-based access**. Each tool is gated on a `read`, `write`, or `management` role; capability flags let operators disable entire tool classes.
+- **Secure communication**. TLS-only transport to the DocumentDB cluster; HTTPS endpoints with bearer-token auth between MCP clients and the server.
+- **Safety guardrails**. Retype-to-confirm on destructive tools (`drop_database`, `drop_collection`, `drop_index`) and a write-stage guard that blocks `$out` / `$merge` in `aggregate` unless explicitly allowed.
 
 ### Flexible deployment
 
-- **Multiple transports** — Run over `stdio` for local agents (Copilot CLI, Claude Code, VS Code) or `streamable-http` / `sse` for shared and production deployments.
-- **Run anywhere** — Self-host on Azure Container Apps, AKS, a VM, or any container runtime; the server is a standard Node.js 20+ container with no Azure-specific runtime dependencies.
-- **Auditable operations** — Structured logs and an `[MCP-AUDIT]` JSON stream record every allow or deny decision for ingestion into Log Analytics, Application Insights, or any log aggregator.
+- **Multiple transports**. Run over `stdio` for local agents (Copilot CLI, Claude Code, VS Code) or `streamable-http` / `sse` for shared and production deployments.
+- **Run anywhere**. Self-host on Azure Container Apps, AKS, a VM, or any container runtime; the server is a standard Node.js 20+ container with no Azure-specific runtime dependencies.
+- **Auditable operations**. Structured logs and an `[MCP-AUDIT]` JSON stream record every allow or deny decision for ingestion into Log Analytics, Application Insights, or any log aggregator.
 
 ## Architecture
 
@@ -90,7 +90,7 @@ Before you deploy the Azure DocumentDB MCP Toolkit:
 
 - **Azure subscription** with access to your Azure DocumentDB cluster. [Create a free account](https://azure.microsoft.com/free/).
 - **Azure CLI** installed and signed in. [Install Azure CLI](/cli/azure/install-azure-cli).
-- **Existing Azure DocumentDB cluster** with data — the toolkit connects to your existing cluster and doesn't provision one.
+- **Existing Azure DocumentDB cluster** with data. The toolkit connects to your existing cluster and doesn't provision one.
 - **Microsoft Entra ID permissions** to register an application and assign roles on the DocumentDB cluster (required for `streamable-http` / `sse` deployments).
 - *Optional:* **Azure OpenAI service** if your agent generates embeddings for vector queries that it runs through the `aggregate` tool. Embedding generation happens on the agent side; the toolkit doesn't call Azure OpenAI directly.
 - *Optional:* **Docker** for local container development. [Install Docker Desktop](https://www.docker.com/products/docker-desktop/).
@@ -206,8 +206,8 @@ All configuration is environment-driven. The repository's `.env.example` documen
 | Variable | Default | Purpose |
 | --- | --- | --- |
 | `AUTH_REQUIRED` | `true` | Require JWT on HTTP and SSE. |
-| `ENTRA_TENANT_ID` | — | Tenant for token issuer validation. |
-| `ENTRA_AUDIENCE` | — | Required audience claim (Application ID URI or client ID). |
+| `ENTRA_TENANT_ID` | (none) | Tenant for token issuer validation. |
+| `ENTRA_AUDIENCE` | (none) | Required audience claim (Application ID URI or client ID). |
 | `ALLOW_UNAUTHENTICATED_STDIO` | `false` | Permit unauthenticated stdio (development only). |
 
 ### Rate limiting
@@ -239,7 +239,7 @@ Define profiles either inline in `CONNECTION_PROFILES` or in a JSON file referen
 }
 ```
 
-The `local` profile shown above is a legacy SCRAM connection-string profile — the server resolves the URI from the environment variable named in `uriEnv` (for example, `DOCUMENTDB_LOCAL_URI=mongodb://localhost:27017`). Use it only for local or sandbox development; production deployments should use the `entra` profile mode with a managed identity.
+The `local` profile shown above is a legacy SCRAM connection-string profile. The server resolves the URI from the environment variable named in `uriEnv` (for example, `DOCUMENTDB_LOCAL_URI=mongodb://localhost:27017`). Use it only for local or sandbox development; production deployments should use the `entra` profile mode with a managed identity.
 
 ## Deployment topologies
 
@@ -309,14 +309,14 @@ For destructive and high-impact tools, the server stacks four independent layers
 
 ### Deleting databases, collections, or indexes
 
-Drop operations (`drop_database`, `drop_collection`, `drop_index`) are classified as **management** tools. Every drop call must clear *all* of the following — failing any single check denies the request:
+Drop operations (`drop_database`, `drop_collection`, `drop_index`) are classified as **management** tools. Every drop call must clear *all* of the following. Failing any single check denies the request:
 
 1. **`ENABLE_MANAGEMENT_TOOLS=true`** is set on the server. This flag is off by default; management tools aren't even registered until an operator opts in.
 2. The caller's token carries a claim that maps to the **`management`** MCP role (for example, `DocumentDB.MCP.Management` via `MCP_MANAGEMENT_ROLE_VALUES`).
 3. The tool call names a valid administrator-defined **`connection_profile`**.
-4. The caller **retypes the target name** in the matching confirmation field (see the table below). The confirmation must match exactly — the server rejects mismatches before issuing the drop.
+4. The caller **retypes the target name** in the matching confirmation field (see the table below). The confirmation must match exactly. The server rejects mismatches before issuing the drop.
 
-Read and write roles cannot invoke drop tools even if `ENABLE_MANAGEMENT_TOOLS=true`, and a `management` caller cannot drop anything while `ENABLE_MANAGEMENT_TOOLS=false`. Keep the flag off in any deployment that does not need destructive operations.
+Read and write roles cannot invoke drop tools even if `ENABLE_MANAGEMENT_TOOLS=true`, and a `management` caller cannot drop anything while `ENABLE_MANAGEMENT_TOOLS=false`. Keep off the flag in any deployment that does not need destructive operations.
 
 ### Retype-to-confirm
 
