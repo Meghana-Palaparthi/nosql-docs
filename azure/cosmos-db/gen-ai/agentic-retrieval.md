@@ -16,13 +16,15 @@ appliesto:
 ai-usage: ai-assisted 
 ---
 
-# Agentic retrieval toolkit for Azure Cosmos DB and Azure OpenAI
+# Agentic Retrieval Toolkit for Azure Cosmos DB (Public Preview)
 
 [The Agentic Retrieval Toolkit](https://aka.ms/agenticretrieval) is a reference implementation for building multi-step retrieval-augmented generation (RAG) applications on Azure. It combines Azure Cosmos DB for NoSQL vector search, full-text search, Azure OpenAI embeddings, and large language model reasoning to retrieve diverse evidence and generate grounded answers.
 
 Unlike a basic one-shot RAG pipeline, this toolkit performs iterative retrieval. It first retrieves relevant documents, generates a preliminary answer, identifies information gaps, creates follow-up sub-questions, retrieves additional evidence, and synthesizes a final answer. Use this toolkit when you need a reference architecture for RAG scenarios that require more than a single retrieval pass. It is useful for complex questions, multi-document synthesis, scientific or technical corpora, and workloads where retrieved context should be diversified before answer generation.
 
 The repository includes scripts for document ingestion, Cosmos DB container setup, embedding generation, retrieval, answer generation, timing analysis, and sample evaluation workflows.
+
+:::image type="content" source="../media/agentic-retrieval/infographic.png" lightbox="../media/agentic-retrieval/infographic.png" alt-text="Infographic showing the Agentic Retrieval Toolkit workflow.":::
 
 ## What the toolkit does
 
@@ -43,6 +45,7 @@ The toolkit supports the following capabilities:
 
 The toolkit has two main stages.
 
+
 The ingestion stage reads configured document sources, generates embeddings, and uploads records to Azure Cosmos DB. Each source maps to a Cosmos DB container and defines its own document root, embedding fields, retrieval settings, vector index policy, and full-text policy.
 
 The retrieval stage answers user questions by combining several retrieval and reasoning steps:
@@ -54,10 +57,14 @@ The retrieval stage answers user questions by combining several retrieval and re
 5. Retrieve additional context for those sub-questions.
 6. Regenerate or synthesize a final answer grounded in the retrieved evidence.
 
+:::image type="content" source="../media/agentic-retrieval/overview.png" lightbox="../media/agentic-retrieval/overview.png" alt-text="Diagram showing the Agentic Retrieval Toolkit overview.":::
+
+
+
 ## Primary components
 
 | Component | Description |
-|---|---|
+| --- | --- |
 | Ingestion script | Reads source documents, generates embeddings, creates or uses configured Cosmos DB containers, and uploads documents. |
 | Cosmos DB retriever | Runs vector and full-text queries across one or more configured sources. |
 | Diversity selector | Uses greedy log-determinant selection to reduce redundant retrieved chunks. |

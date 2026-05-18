@@ -24,6 +24,9 @@ Semantic Reranker uses an AI model to both score and reorder the results from a 
 
 The Semantic Reranker uses the Microsoft AI Semantic Ranker model, developed internally by Microsoft [Azure AI Search](/azure/search/semantic-search-overview).
 
+:::image type="content" source="../media/semantic-reranker/overview.png" lightbox="../media/semantic-reranker/overview.png" alt-text="Diagram showing an overview of Semantic Reranker in Azure Cosmos DB.":::
+
+
 ## Why use Semantic Reranker?
 
 When evaluating a search or retrieval system, three primary metrics define the end-user experience:
@@ -66,7 +69,7 @@ Use the Azure portal to enable, disable, and configure Semantic Reranker for a s
 
 ## Optional: assign the inference role with Azure CLI
 
-If you don't use the Azure portal for setup, assign the `Azure.Inference.Executor` app role to the identity that calls Semantic Reranker. Use this option for a user-assigned managed identity, system-assigned managed identity, or Microsoft Entra user.
+Assign the `Azure.Inference.Executor` app role to the identity that calls Semantic Reranker. You can assign this role from **Access control (IAM)**, from the Semantic Reranker blade in the Azure portal, or by using Azure CLI. Use the CLI option for a user-assigned managed identity, system-assigned managed identity, or Microsoft Entra user.
 
 Before you run these commands, replace `<inference-service-application-id>` with the application ID for the inference service first-party app. You need permissions to read service principals and create app role assignments in Microsoft Entra ID.
 
@@ -453,7 +456,8 @@ public class SemanticRerankSample {
 
 ## Limitations
 
-Semantic Reranker supports a maximum of 50 documents per rerank call.
+- Semantic Reranker supports a maximum of 50 documents per rerank call.
+- A single context-document pair should be at most 2,048 tokens.
 
 ## Pricing
 
