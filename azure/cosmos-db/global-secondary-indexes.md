@@ -62,7 +62,7 @@ For example, a valid query is: `SELECT c.id, c.name.first, c.emailAddress FROM c
 
 ## Syncing global secondary indexes
 
-Global secondary indexes are automatically kept in sync with changes to data in source containers using [change feed](change-feed.md). When a GSI is defined for a source container, a change feed job is created and managed for you. Changes are asynchronously reflected to data in the gsi and don't affect writes to the source container. GSIs are eventually consistent with the source container regardless of the [consistency level](consistency-levels.md) set for the account.
+Global secondary indexes are automatically kept in sync with changes to data in source containers using [change feed](change-feed.md). When a GSI is defined for a source container, a change feed job is created and managed for you. Changes are asynchronously reflected to data in the GSI container and don't affect writes to the source container. GSIs are eventually consistent with the source container regardless of the [consistency level](consistency-levels.md) set for the account.
 
 Change feed reads consume RUs from the source container, and writes to the GSI consume RUs from the GSI container. RUs provisioned on both containers determine how quickly data is hydrated and synced. 
 
