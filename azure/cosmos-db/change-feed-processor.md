@@ -7,7 +7,7 @@ ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.devlang: csharp
 ms.topic: how-to
-ms.date: 07/02/2025
+ms.date: 05/18/2026
 ms.custom: devx-track-csharp, build-2023
 ai-usage: ai-assisted
 appliesto:

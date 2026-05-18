@@ -5,7 +5,7 @@ author: seesharprun
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: how-to
-ms.date: 07/25/2024
+ms.date: 05/18/2026
 ms.author: sidandrews
 ms.devlang: csharp
 ms.custom: devx-track-csharp

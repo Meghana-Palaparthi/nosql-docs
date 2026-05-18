@@ -7,7 +7,7 @@ ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.devlang: csharp
 ms.topic: how-to
-ms.date: 07/03/2025
+ms.date: 05/18/2026
 ms.custom: devx-track-java, build-2023
 appliesto:
   - ✅ NoSQL

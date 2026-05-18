@@ -6,7 +6,7 @@ ms.author: jucocchi
 ms.service: azure-cosmos-db
 ms.custom: build-2023
 ms.topic: concept-article
-ms.date: 5/17/2026
+ms.date: 05/18/2026
 appliesto:
   - ✅ NoSQL
 ---

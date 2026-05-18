@@ -6,7 +6,7 @@ ms.author: mjbrown
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: concept-article
-ms.date: 09/03/2025
+ms.date: 05/18/2026
 ms.custom: cosmos-db-video, build-2023
 ai-usage: ai-assisted
 appliesto:

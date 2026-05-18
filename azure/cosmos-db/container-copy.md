@@ -5,7 +5,7 @@ author: richagaur
 ms.author: richagaur
 ms.service: azure-cosmos-db
 ms.topic: how-to
-ms.date: 06/23/2025
+ms.date: 05/18/2026
 ms.custom: references_regions, build-2023, ignite-2023, ignite-2024
 zone_pivot_groups: azure-cosmos-db-apis-nosql-mongodb-cassandra
 appliesto:

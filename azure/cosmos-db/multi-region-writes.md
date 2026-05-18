@@ -5,7 +5,7 @@ author: TheovanKraay
 ms.author: thvankra
 ms.service: azure-cosmos-db
 ms.topic: concept-article
-ms.date: 09/03/2025
+ms.date: 05/18/2026
 ms.custom:
   - ai-gen-docs-bap
   - ai-gen-title
