@@ -82,7 +82,6 @@ A source can define:
 - An optional custom parser for non-JSON formats.
 
 
-
 ## Batch evaluation versus application usage
 
 The command-line workflow is designed for batch Q&A and evaluation. It reads a predefined question file, runs the retrieval pipeline for each question, and writes outputs to an `out` directory.

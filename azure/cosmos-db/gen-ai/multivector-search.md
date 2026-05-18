@@ -70,6 +70,23 @@ Configure the vector embedding path to point to the property that contains the a
 
 After you configure the vector policy and vector index, insert items whose embedding path contains an array of vectors. Query-time vectors should use the same dimensionality as the vectors stored in the item.
 
+## Query with multi-vector search
+
+Query multi-vector data the same way you query regular vector data: use the [`VectorDistance`](/cosmos-db/query/vectordistance) system function in a query, project the similarity score if you need it, and sort by `VectorDistance` to return the most similar items first.
+
+For multi-vector search, the indexed path contains an array of vectors and the query argument is a vector from the same dimensionality and embedding model. Each nested vector in the query should have the same dimensionality as the vectors in the indexed path.
+
+```nosql
+SELECT TOP 10
+  c.title,
+  VectorDistance(c.embedding, [[0.12, -0.08, 0.44, 0.31], [0.02, 0.19, -0.21, 0.07]]) AS MaxSimScore
+FROM c
+ORDER BY VectorDistance(c.embedding, [[0.12, -0.08, 0.44, 0.31], [0.02, 0.19, -0.21, 0.07]])
+```
+
+> [!IMPORTANT]
+> Always use a `TOP N` clause in the `SELECT` statement. Without `TOP N`, the query can try to return more results than your application needs, which can increase request unit (RU) consumption and latency.
+
 ## When to use multi-vector search
 
 Use multi-vector search for retrieval workloads where a single vector loses too much detail.
