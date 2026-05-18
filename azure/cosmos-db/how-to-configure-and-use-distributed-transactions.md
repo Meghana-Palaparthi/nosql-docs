@@ -7,6 +7,7 @@ ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: how-to
 ms.date: 06/02/2026
+ai-usage: ai-assisted
 appliesto:
   - ✅ NoSQL
 ---
@@ -15,11 +16,11 @@ appliesto:
 
 
 > [!IMPORTANT]
-> Distributed transactions in Azure Cosmos DB for NoSQL are currently in **public preview**. This preview is provided without a service-level agreement (SLA). Behavior, limits, and supported scenarios may change before general availability. Public preview is **gated** — accounts must be explicitly onboarded by the Azure Cosmos DB engineering team.
+> Distributed transactions in Azure Cosmos DB for NoSQL are currently in **public preview**. This preview is provided without a service-level agreement (SLA). Behavior, limits, and supported scenarios may change before general availability.
 
 This article shows you how to enable distributed transactions on an Azure Cosmos DB for NoSQL account and use them from the .NET SDK to commit atomic read and write operations that span multiple logical partitions, containers, and databases within the same account and region.
 
-The examples in this article use a single scenario — a `banking` database with two containers, `accounts` (partitioned by account ID) and `ledger` (partitioned by posting month) — so the same items appear across read, write, conditional, and retry examples.
+The examples in this article use a single scenario — a `banking` database with two containers, `accounts` (partitioned by account ID) and `ledger` (partitioned by posting month) — so the same items appear across the read and write examples.
 
 ## Prerequisites
 
@@ -27,11 +28,11 @@ Before you begin, make sure you have:
 
 - An active **Azure subscription**. If you don't have one, [create a free account](https://azure.microsoft.com/free/).
 - An **Azure Cosmos DB for NoSQL account**. The account must:
-  - Use the **NoSQL (Core SQL) API**. MongoDB, Cassandra, Table, and Gremlin APIs are not supported in preview.
-  - Be a **provisioned throughput** (manual or autoscale) account. Serverless accounts are not supported in preview.
-  - Run on a **public Azure cloud region**. Sovereign, air-gapped, and government clouds are not supported in preview.
-  - Be a **single-write-region** account. Multi-region write (multi-master) accounts aren't supported in preview.
-  - Not have any of the following features enabled:
+  - Use the **NoSQL (Core SQL) API**. MongoDB, Cassandra, Table, and Gremlin APIs aren't supported in preview.
+  - Be a **provisioned throughput** (manual or autoscale) account. Serverless accounts aren't supported in preview.
+  - Run on a **public Azure cloud region**. Sovereign, air-gapped, and government clouds aren't supported in preview.
+  - Be a **single-write-region** account. Multi-region write accounts aren't supported in preview.
+  - Not be configured with any of the following features:
     -  **Customer-Managed Keys (CMK)**
     -  **Per-Partition Automatic Failover (PPAF)**
     -  **Continuous backup**
@@ -43,19 +44,17 @@ Before you begin, make sure you have:
 
 ## Request enrollment for your account
 
-Distributed transactions are a **public preview** feature. Self-service enrollment through the Azure portal, Azure CLI, or PowerShell is **not** available in preview.
+Distributed transactions are a **public preview** feature. Self-service enrollment through the Azure portal, Azure CLI, or PowerShell is currently **not** available.
 
 To request enrollment, submit your onboarding request at [https://aka.ms/cosmosdb/dtx-onboard](https://aka.ms/cosmosdb/dtx-onboard). Requests are typically fulfilled within 1-2 business days. You'll receive a confirmation once your account is ready.
 
 ## Install the required .NET SDK
 
-Add the preview Azure Cosmos DB .NET SDK to your project:
+Add the latest version o Azure Cosmos DB .NET SDK to your project.
 
 ```dotnetcli
-dotnet add package Microsoft.Azure.Cosmos --version <latest-version>
+dotnet add package Microsoft.Azure.Cosmos
 ```
-
-Make sure the installed version supports distributed transactions. The `CreateDistributedWriteTransaction()` method on `CosmosClient` is the indicator that the feature is available in your SDK build.
 
 ## Initialize the client
 
@@ -94,6 +93,9 @@ The .NET v3 SDK adds `CreateDistributedWriteTransaction()` API on `CosmosClient`
 The following example atomically transfers 100 units from `account-A` to `account-B` and records the corresponding entry in the `ledger` container. The two accounts live in different logical partitions of the `accounts` container, and the ledger entry lives in a separate container.
 
 ```csharp
+// Starting state: account-A holds 1000, account-B holds 1000.
+// This transaction debits 100 from account-A and credits 100 to account-B,
+// and writes a matching ledger entry — all atomically.
 var updatedAccountA = new { id = "account-A", pk = "account-A", balance = 900.00 };
 var updatedAccountB = new { id = "account-B", pk = "account-B", balance = 1100.00 };
 var ledgerEntry     = new { id = "txn-1001",  pk = "2026-06",   from = "account-A", to = "account-B", amount = 100.00 };
@@ -153,10 +155,6 @@ Distributed read transactions are most useful when correctness depends on the **
 For single-item reads, or for unrelated items where mutual consistency isn't required, continue to use `ReadItemAsync` — it has lower latency and consumes fewer request units.
 
 
-## Handle errors
-
-The `DistributedTransactionResponse` exposes per-operation results. If the transaction is aborted, the response indicates which sub-operation triggered the abort.
-
 ## Multi-region considerations
 
 In a multi-region account, distributed transactions are **atomic within the write region only**. Multi-region write accounts aren't supported in preview — the account must have a single write region.
@@ -196,13 +194,7 @@ These limits may change before general availability.
 | Python | Coming soon |
 | Node.js | Coming soon |
 
-## Send feedback
-
-Distributed transactions are in public preview, and your feedback shapes the path to general availability. To share feedback, please reach out to the team at [azcosmosdbdtxpreview@microsoft.com](mailto:azcosmosdbdtxpreview@microsoft.com).
-
-
-
-## Next steps
+## Related content
 
 - [Consistency levels in Azure Cosmos DB](consistency-levels.md)
 - [Optimistic concurrency control with ETags](database-transactions-optimistic-concurrency.md)
