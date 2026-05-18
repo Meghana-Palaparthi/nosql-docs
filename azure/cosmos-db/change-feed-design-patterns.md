@@ -89,7 +89,7 @@ The change feed has multiple modes, each with important limitations you should u
 
 In latest version mode, only the most recent change for a specific item is included in the change feed. When processing changes, you read the latest available item version. If there are multiple updates to the same item in a short period of time, it's possible to miss processing intermediate updates. To replay past individual updates to an item, model these updates as a series of writes or use all versions and deletes mode.
 
-#### [All versions and deletes mode)](#tab/all-versions-and-deletes)
+#### [All versions and deletes mode](#tab/all-versions-and-deletes)
 
 All versions and deletes mode provides a full operation log of every item version from all operations. No intermediate updates are missed when they occur within the continuous backup retention period configured for the account.
 
