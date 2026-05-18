@@ -107,7 +107,7 @@ PPAF supports the following consistency levels at GA:
 
 Bounded Staleness support is on the roadmap.
 
-For **Strong consistency** accounts with two regions, PPAF sets `MinimumDurability = 1` during enablement. This allows the dynamic quorum to downshift to the write region if read regions slow or stop responding, preserving write availability without violating ordering guarantees. The full Dynamic Quorum value (majority of read regions) returns automatically when read regions recover. See [Consistency levels](https://learn.microsoft.com/en-us/azure/cosmos-db/consistency-levels) for background on dynamic quorum.
+For **Strong consistency** accounts with two regions, PPAF sets `MinimumDurability = 1` during enablement. This allows the dynamic quorum to downshift to the write region if read regions slow or stop responding, preserving write availability without violating ordering guarantees. The full Dynamic Quorum value (majority of read regions) returns automatically when read regions recover. See [Consistency levels](consistency-levels.md) for background on dynamic quorum.
 
 ## Failback and reconciliation
 
@@ -164,7 +164,7 @@ PPAF is designed to be hands-off. The most common operational pattern is to **le
 
 - **Don't trigger a manual region change** as a first response. PPAF will detect, decide, and redirect writes within ~2 minutes. A manual change initiated in parallel can race with the automated decision and slow recovery.
 - **Watch `PartitionWriteGlobalStatus`** in Azure Monitor to see partitions move and to confirm failback once the original region recovers.
-- **Let the SDK retry.** Application code should already handle transient errors per the [Cosmos DB SDK guidance](https://learn.microsoft.com/en-us/azure/cosmos-db/nosql/conceptual-resilient-sdk-applications). During the failover window the SDK retries automatically against the new write region.
+- **Let the SDK retry.** Application code should already handle transient errors per the [Cosmos DB SDK guidance](conceptual-resilient-sdk-applications.md). During the failover window the SDK retries automatically against the new write region.
 
 ### When to manually change the write region
 
@@ -207,8 +207,8 @@ PPAF is part of the **Business Critical** service tier for Azure Cosmos DB. See 
 ## Next steps
 
 - [Configure and use per-partition automatic failover](how-to-configure-per-partition-automatic-failover.md)
-- [Consistency levels in Azure Cosmos DB](https://learn.microsoft.com/en-us/azure/cosmos-db/consistency-levels)
-- [High availability in Azure Cosmos DB](https://learn.microsoft.com/en-us/azure/cosmos-db/high-availability)
+- [Consistency levels in Azure Cosmos DB](consistency-levels.md)
+- [High availability in Azure Cosmos DB](high-availability.md)
 - Sample app and chaos script: [AzureCosmosDB/ppaf-samples](https://github.com/AzureCosmosDB/ppaf-samples)
 
 For questions and feedback: **cosmosdbppafpreview@microsoft.com**
