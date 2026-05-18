@@ -1,6 +1,6 @@
 ---
 title: "Phrase search and proximity matching in Azure DocumentDB"
-description: Match ordered multi-word phrases in Azure DocumentDB full-text search using the $search phrase operator and the slop parameter for proximity tolerance.
+description: Search for exact phrases and word proximity in Azure DocumentDB, where the order and closeness of terms matter.
 author: khelanmodi
 ms.author: khelanmodi
 ms.topic: how-to
@@ -11,7 +11,10 @@ ms.collection:
 
 # Phrase Search and Proximity Matching in Azure DocumentDB
 
-Phrase search matches query terms that appear together in a specific order, with an optional `slop` tolerance for intervening tokens. It's the right tool when word order is meaningful (multi-word product names, quoted user input, error strings) and when a plain `$search` + `text` query returns too much noise because the tokens are common individually but rare together. Proximity matching was previously listed as **Not available** under the legacy `$text` engine; it's now supported through `$search` + `phrase`. See the [migration table](full-text-search-overview.md#migrating-from-the-legacy-text-engine) for context.
+> [!NOTE]
+> Full-text search is in **Preview** in Azure DocumentDB.
+
+Phrase search matches query terms that appear together in a specific order, with an optional `slop` tolerance for intervening tokens. It's the right tool when word order is meaningful (multi-word product names, quoted user input, error strings) and when a plain `$search` + `text` query returns too much noise because the tokens are common individually but rare together.
 
 ## What is phrase search?
 
@@ -105,7 +108,6 @@ db.products_10M.aggregate([
 - [Fuzzy search (constraint callout)](full-text-search-fuzzy.md#known-constraint)
 - [Hybrid search (BM25 + vector)](full-text-search-hybrid.md)
 - [Full-text search overview and migration table](full-text-search-overview.md)
-
 
 ## Next step
 

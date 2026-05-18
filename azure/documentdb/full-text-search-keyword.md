@@ -1,6 +1,6 @@
 ---
 title: "BM25 keyword search in Azure DocumentDB - ranked text retrieval"
-description: Run BM25-scored keyword search on Azure DocumentDB using the createSearchIndexes command and the $search aggregation stage with the text operator.
+description: Add relevance-ranked keyword search to your Azure DocumentDB application, with results ordered by how well each document matches the query.
 author: khelanmodi
 ms.author: khelanmodi
 ms.topic: how-to
@@ -10,6 +10,9 @@ ms.collection:
 ---
 
 # BM25 Keyword Search in Azure DocumentDB
+
+> [!NOTE]
+> Full-text search is in **Preview** in Azure DocumentDB.
 
 BM25 is the relevance-ranking algorithm at the heart of Azure DocumentDB full-text search. This page shows how to create a search index covering one text field and run a BM25-scored `$search` + `text` query against it. If you're migrating from the legacy `$text` operator or `{ field: "text" }` index type, see the [migration table](full-text-search-overview.md#migrating-from-the-legacy-text-engine) on the overview page.
 
@@ -126,7 +129,6 @@ db.products_10M.aggregate([
 - [Phrase search and proximity matching](full-text-search-phrase-proximity.md)
 - [Hybrid search (BM25 + vector)](full-text-search-hybrid.md)
 - [Full-text search overview and migration table](full-text-search-overview.md)
-
 
 ## Next step
 

@@ -1,6 +1,6 @@
 ---
 title: "Hybrid search in Azure DocumentDB - combining BM25 and vector retrieval"
-description: Combine BM25 keyword search and DiskANN vector search on a single Azure DocumentDB collection, then fuse the result lists with Reciprocal Rank Fusion (RRF) for higher recall and precision than either alone.
+description: Combine keyword and vector search in Azure DocumentDB to deliver higher recall and precision than either approach alone, on a single collection.
 author: khelanmodi
 ms.author: khelanmodi
 ms.topic: how-to
@@ -11,6 +11,9 @@ ms.collection:
 
 # Hybrid Search in Azure DocumentDB
 
+> [!NOTE]
+> Full-text search is in **Preview** in Azure DocumentDB.
+
 Hybrid search runs a BM25 keyword query and a vector similarity query against the same collection and fuses the result lists into a single ranked list. It typically gives higher recall and precision than either mode alone, because each mode covers a failure case of the other. Azure DocumentDB supports both index types on the same cluster (search indexes for BM25 and `cosmosSearch` for vectors), providing native vector indexing alongside document data and enabling RAG and similarity search without introducing a separate vector store.
 
 ## Why hybrid search?
@@ -19,7 +22,7 @@ BM25 keyword search misses paraphrases and synonyms. A query for `water-resistan
 
 Vector search misses exact identifiers and rare terms. Embeddings don't preserve `SKU-4821-A` well, and a user typing the SKU expects the exact product, not the semantically nearest one. BM25 handles that case directly.
 
-Running both arms in parallel and fusing the result lists captures the strengths of each: lexical exactness from BM25, semantic generalization from vectors. Reciprocal Rank Fusion (RRF) is the recommended fusion algorithm because it ignores raw scores (which aren't comparable across different scoring systems) and combines ranks instead.
+Running both queries in parallel and fusing the result lists captures the strengths of each: lexical exactness from BM25, semantic generalization from vectors. Reciprocal Rank Fusion (RRF) is the recommended fusion algorithm because it ignores raw scores (which aren't comparable across different scoring systems) and combines ranks instead.
 
 ## When to use hybrid search
 
@@ -32,7 +35,7 @@ Running both arms in parallel and fusing the result lists captures the strengths
 
 ## Architecture: two indexes, one collection
 
-Both indexes live on the same Azure DocumentDB cluster, on the same collection, against the same documents. There is no replication or synchronization layer to manage. Write a document once and both indexes pick it up.
+Both indexes live on the same Azure DocumentDB cluster, on the same collection, against the same documents. There is no replication or synchronization layer to manage. Write a document once and both indexes pick it up. Both full-text and vector search are included with your cluster at no extra cost.
 
 The two indexes use different commands:
 
@@ -42,7 +45,7 @@ The two indexes use different commands:
 ## Step 1: creating both indexes
 
 ```javascript
-// ✅ BM25 keyword arm: createSearchIndexes (NOT createIndexes with "text").
+// ✅ BM25 query: createSearchIndexes (NOT createIndexes with "text").
 db.runCommand({
   createSearchIndexes: "products",
   indexes: [
@@ -60,7 +63,7 @@ db.runCommand({
   ]
 });
 
-// ✅ Vector arm: DiskANN vector index for the embedding field.
+// ✅ Vector query: DiskANN vector index for the embedding field.
 //    Swap "vector-diskann" for "vector-hnsw" or "vector-ivf" to use the
 //    HNSW or IVF index kinds; cosine, L2, and inner-product similarities
 //    are all supported. See vector-search.md for the full option matrix.
@@ -77,16 +80,16 @@ db.products.createIndex(
 );
 ```
 
-## Step 2: querying both arms
+## Step 2: running both queries
 
-Each arm runs as its own aggregation pipeline. The keyword arm follows the standard `$search` rules from [BM25 keyword search](full-text-search-keyword.md): `index: "<name>"`, `$search` first, `$limit` downstream.
+Each query runs as its own aggregation pipeline. The keyword query follows the standard `$search` rules from [BM25 keyword search](full-text-search-keyword.md): `index: "<name>"`, `$search` first, `$limit` downstream.
 
 ```javascript
 // Assumes db is a connected MongoDB database (from MongoClient.connect().db("..."))
 // and embed() is your embedding function (for example, an OpenAI client call).
 const userQuery = "water-resistant jacket";
 
-// Keyword arm: BM25 hits with searchScore.
+// Keyword query: BM25 hits with searchScore.
 const kwHits = await db.products.aggregate([
   { $search: {
       index: "idx_description_fts",
@@ -96,7 +99,7 @@ const kwHits = await db.products.aggregate([
   { $project: { _id: 1, kw: { $meta: "searchScore" } } }
 ]).toArray();
 
-// Vector arm: DiskANN nearest-neighbor search.
+// Vector query: DiskANN nearest-neighbor search.
 const qv = await embed(userQuery);   // your embedding model of choice
 const vecHits = await db.products.aggregate([
   { $search: { cosmosSearch: { path: "embedding", query: qv, k: 50 } } },
@@ -132,18 +135,18 @@ The same `rrf()` helper fuses any pair of ranked lists: fuzzy + phrase, or the k
 
 ## Server-side RRF with `$unionWith`
 
-When you'd rather keep fusion inside a single aggregation pipeline (no application-layer code, one round trip), combine the keyword and vector arms with `$unionWith`. Each arm computes its own per-rank reciprocal contribution; a final `$group` sums them per document.
+When you'd rather keep fusion inside a single aggregation pipeline (no application-layer code, one round trip), combine the keyword and vector queries with `$unionWith`. Each query computes its own per-rank reciprocal contribution; a final `$group` sums them per document.
 
 ```javascript
 // ✅ End-to-end hybrid search in one aggregation pipeline.
-//    The vector arm runs first; the $unionWith inlines the keyword arm;
-//    the final $group sums the per-arm RRF contributions per document.
+//    The vector query runs first; the $unionWith inlines the keyword query;
+//    the final $group sums the per-query RRF contributions per document.
 //    Reuses the userQuery and qv variables defined in Step 2.
 const k = 60;     // RRF constant; 60 is a common default
 const topN = 10;  // final result depth
 
 db.products.aggregate([
-  // --- Vector arm ----------------------------------------------------------
+  // --- Vector query ----------------------------------------------------------
   { $search: { cosmosSearch: { path: "embedding", query: qv, k: 50 } } },
   { $group: { _id: null, hits: { $push: "$$ROOT" } } },
   { $unwind: { path: "$hits", includeArrayIndex: "rank" } },
@@ -155,7 +158,7 @@ db.products.aggregate([
     }
   },
 
-  // --- Keyword arm (inlined) ----------------------------------------------
+  // --- Keyword query (inlined) ----------------------------------------------
   {
     $unionWith: {
       coll: "products",
@@ -195,17 +198,16 @@ Use the server-side variant when you want a single round-trip and no client-side
 
 ## Tuning hybrid search
 
-- **Keep per-arm depth modest.** Set `$limit` for the keyword arm and `k` for the vector arm to 20–100. RRF doesn't benefit from deep lists; quality plateaus quickly past the top results from each arm.
-- **Weight the more reliable signal.** When one arm consistently outperforms the other for your workload, weight its contribution: `score += w / (k + rank)` with `w` between 1.0 and 2.0 for the favored arm. In the `$unionWith` variant, multiply the per-arm `$divide` expression by the weight before the final `$group`.
-- **Tune the RRF constant per arm.** The `$unionWith` example uses the same `k` for both arms. Using a larger `k` for the keyword arm (for example, `k = 60` for vector and `k = 10` for keyword) penalizes lower-ranked keyword hits more aggressively when the keyword arm is noisier.
+- **Keep per-query depth modest.** Set `$limit` for the keyword query and `k` for the vector query to 20–100. RRF doesn't benefit from deep lists; quality plateaus quickly past the top results from each query.
+- **Weight the more reliable signal.** When one query consistently outperforms the other for your workload, weight its contribution: `score += w / (k + rank)` with `w` between 1.0 and 2.0 for the favored query. In the `$unionWith` variant, multiply the per-query `$divide` expression by the weight before the final `$group`.
+- **Tune the RRF constant per query.** The `$unionWith` example uses the same `k` for both queries. Using a larger `k` for the keyword query (for example, `k = 60` for vector and `k = 10` for keyword) penalizes lower-ranked keyword hits more aggressively when the keyword query is noisier.
 - **Choose the vector index kind for your scale.** DiskANN is the default for production catalogs with millions of vectors. HNSW gives lower-latency lookups at higher memory cost; IVF gives faster builds and lower memory cost at the price of recall. See [Vector search](vector-search.md) for the full matrix.
-- **Cache embeddings for popular queries.** Vector arm latency is dominated by the embedding API call, not the DiskANN lookup. Caching the embeddings for the most common queries cuts hybrid latency to roughly the keyword arm's latency.
+- **Cache embeddings for popular queries.** Vector query latency is dominated by the embedding API call, not the DiskANN lookup. Caching the embeddings for the most common queries cuts hybrid latency to roughly the keyword query's latency.
 
 ## Related pages
 
 - [BM25 keyword search](full-text-search-keyword.md)
 - [Full-text search overview and migration table](full-text-search-overview.md)
-
 
 ## Next step
 

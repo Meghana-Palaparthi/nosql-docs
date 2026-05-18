@@ -1,6 +1,6 @@
 ---
 title: "Fuzzy search in Azure DocumentDB - typo-tolerant text matching"
-description: Match misspelled terms in Azure DocumentDB full-text search using the fuzzy.maxEdits parameter on the $search text operator, with guidance on tuning Levenshtein edit distance.
+description: Add typo tolerance to Azure DocumentDB full-text search so misspelled queries still return the right results.
 author: khelanmodi
 ms.author: khelanmodi
 ms.topic: how-to
@@ -11,7 +11,10 @@ ms.collection:
 
 # Fuzzy Search in Azure DocumentDB
 
-Fuzzy search lets `$search` + `text` match terms that are within a bounded **Levenshtein edit distance** of the user's query. A query for `bracXet` finds documents containing `bracket` because the two strings differ by exactly one character substitution. If you're migrating from the legacy `$text` engine, fuzzy matching was previously listed as **Not available**; it's now supported through the same `$search` operator. See the [migration table](full-text-search-overview.md#migrating-from-the-legacy-text-engine) for context.
+> [!NOTE]
+> Full-text search is in **Preview** in Azure DocumentDB.
+
+Fuzzy search lets `$search` + `text` match terms that are within a bounded **Levenshtein edit distance** of the user's query. A query for `bracXet` finds documents containing `bracket` because the two strings differ by exactly one character substitution.
 
 ## What is fuzzy search?
 
@@ -101,7 +104,6 @@ Combine fuzzy queries with a minimum-score threshold (`$match: { score: { $gte: 
 - [Phrase search and proximity matching](full-text-search-phrase-proximity.md)
 - [Hybrid search (BM25 + vector)](full-text-search-hybrid.md)
 - [Full-text search overview and migration table](full-text-search-overview.md)
-
 
 ## Next step
 

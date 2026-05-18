@@ -1,6 +1,6 @@
 ---
 title: "Full-Text Search in Azure DocumentDB - BM25 keyword search"
-description: Run BM25-scored, analyzer-driven full-text search natively inside Azure DocumentDB using the createSearchIndexes command and the $search aggregation stage.
+description: Use full-text search in Azure DocumentDB to deliver relevance-ranked keyword, fuzzy, phrase, and hybrid search natively, without standing up a separate search service.
 author: khelanmodi
 ms.author: khelanmodi
 ms.topic: concept-article
@@ -10,6 +10,9 @@ ms.collection:
 ---
 
 # Full-Text Search in Azure DocumentDB
+
+> [!NOTE]
+> Full-text search in Azure DocumentDB is in **Preview**.
 
 Azure DocumentDB full-text search is a BM25-scored, analyzer-driven keyword search engine exposed through MongoDB-compatible primitives. It ranks results by relevance and tolerates user typos through fuzzy matching, without standing up a separate search cluster. It supersedes the legacy `$text` operator and `{ field: "text" }` index type that were backed by a PostgreSQL TSVector implementation.
 
@@ -74,7 +77,6 @@ If your application uses the community MongoDB `$text` operator or `{ field: "te
 - [Fuzzy search](full-text-search-fuzzy.md)
 - [Phrase search and proximity matching](full-text-search-phrase-proximity.md)
 - [Hybrid search (BM25 + vector)](full-text-search-hybrid.md)
-
 
 ## Next step
 
