@@ -208,7 +208,7 @@ First, you must prepare a role definition with a list of data actions to grant a
 
 1. Create a new Bicep file to define your role definition. Name the file `data-plane-role-definition.bicep`. Add the following data actions to the definition:
 
-    | | Description |
+    | Data action | Description |
     | --- | --- |
     | `Microsoft.DocumentDB/databaseAccounts/readMetadata` | |
     | `Microsoft.DocumentDB/databaseAccounts/tables/*` | |

@@ -104,7 +104,7 @@ First, you must prepare a role definition with a list of actions to grant access
 
    In this example, the `id` value is `/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourcegroups/msdocs-identity-example`. This example uses fictitious data, and your identifier is distinct from this example. This string is a truncated example of the output.
 
-1. Create a new JSON file named *role-definition.json*. In the file, create this resource definition that specifies the values listed here. For the `AssignableScopes` list, add the `id` property of the resource group recorded in the previous step.
+1. Create a new JSON file named `role-definition.json`. In the file, create this resource definition that specifies the values listed here. For the `AssignableScopes` list, add the `id` property of the resource group recorded in the previous step.
 
     ```json
     {
@@ -268,7 +268,7 @@ First, you must prepare a role definition with a list of actions to grant access
 
    In this example, the `id` value is `/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/providers/Microsoft.Authorization/roleDefinitions/230815da-be43-4aae-9cb4-875f7bd000aa`. This example uses fictitious data, and your identifier is distinct from this example. However, the identifier (`230815da-be43-4aae-9cb4-875f7bd000aa`) is globally unique across all role definitions in Azure.
 
-1. Create a new Bicep file to define your role definition. Name the file *control-plane-role-definition.bicep*. Add these `actions` to the definition:
+1. Create a new Bicep file to define your role definition. Name the file `control-plane-role-definition.bicep`. Add these `actions` to the definition:
 
     | | Description |
     | --- | --- |
@@ -331,7 +331,7 @@ First, you must prepare a role definition with a list of actions to grant access
 
    In this example, the `id` value is `/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourcegroups/msdocs-identity-example/providers/Microsoft.Authorization/roleDefinitions/a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1`. This example uses fictitious data, and your identifier is distinct from this example. This example is a subset of the typical JSON outputted from the deployment for clarity.
 
-1. Create a new Bicep file to define your role assignment. Name the file *control-plane-role-assignment.bicep*.
+1. Create a new Bicep file to define your role assignment. Name the file `control-plane-role-assignment.bicep`.
 
     ```bicep
     metadata description = 'Assign RBAC role for control plane access to Azure Cosmos DB.'
@@ -352,7 +352,7 @@ First, you must prepare a role definition with a list of actions to grant access
     }
     ```
 
-1. Create a new Bicep parameters file named *control-plane-role-assignment.`bicepparam`*. In this parameters file, assign the previously recorded role definition identifiers to the `roleDefinitionId` parameter. Assign the unique identifier for your identity to the `identityId` parameter.
+1. Create a new Bicep parameters file named `control-plane-role-assignment.bicepparam`. In this parameters file, assign the previously recorded role definition identifiers to the `roleDefinitionId` parameter. Assign the unique identifier for your identity to the `identityId` parameter.
 
     ```bicep
     using './control-plane-role-assignment.bicep'
