@@ -38,7 +38,7 @@ Without Integrated Embeddings, you typically need to build and operate separate 
 Before you use Integrated Embeddings, you need the following resources and configuration:
 
 - An existing Azure Cosmos DB for NoSQL account with [vector search enabled](vector-search.md#enable-the-vector-indexing-and-search-feature).
-- [All versions and deletes change feed mode](change-feed-modes.md?tabs=all-versions-and-deletes#all-versions-and-deletes-change-feed-mode-preview) enabled on the account.
+- [All versions and deletes change feed mode](change-feed-modes.md?tabs=all-versions-and-deletes#all-versions-and-deletes-change-feed-mode) enabled on the account.
 - A Microsoft Foundry resource with a deployed [Azure OpenAI embedding model](/azure/foundry-classic/foundry-models/concepts/models-sold-directly-by-azure?tabs=americas%2Caz-global-standard%2Cglobal-standard&pivots=azure-openai#embeddings).
 - A [managed identity](how-to-setup-managed-identity.md) (system-assigned or user-assigned) on the Azure Cosmos DB account, set as the account's [default identity](/cli/azure/cosmosdb#az-cosmosdb-update-optional-parameters). Azure Cosmos DB uses this identity to authenticate to the Microsoft Foundry resource on your behalf.
 - A [role assignment](/azure/foundry-classic/openai/how-to/role-based-access-control#add-role-assignment-to-an-azure-openai-resource) on the Microsoft Foundry resource that grants the Azure Cosmos DB managed identity the [Cognitive Services OpenAI User](/azure/foundry-classic/openai/how-to/role-based-access-control#azure-openai-roles) role, so it can make inference API calls to the embedding model.
