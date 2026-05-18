@@ -237,7 +237,7 @@ Use public connectivity when:
 - Your organization's security policies allow connections over the public internet.
 - You need a simpler setup without virtual network configuration.
 
-:::image type="content" source="media/how-to-migrate-vs-code-extension/migrate-using-public-endpoint.png" alt-text="Shows network architecture for public connectivity." lightbox="media/how-to-migrate-vs-code-extension/migrate-using-public-endpoint.png" :::
+:::image type="content" source="media/how-to-migrate-vs-code-extension/migrate-using-public-endpoint.png" alt-text="Diagram showing network architecture for public connectivity." lightbox="media/how-to-migrate-vs-code-extension/migrate-using-public-endpoint.png" :::
 
 To enable public connectivity:
 
@@ -270,19 +270,19 @@ Use your preferred VPN tools to set up network connectivity between Azure and yo
 
 In this topology, the VPN/ExpressRoute gateway and source workloads are in the same virtual network. DMS peers directly with this virtual network and uses `useRemoteGateways` to reach the on-premises or other-cloud source.
 
-:::image type="content" source="media/how-to-migrate-vs-code-extension/private-endpoint-single-virtual-network.png" alt-text="Shows single virtual network topology for private connectivity from on-premises or other cloud." lightbox="media/how-to-migrate-vs-code-extension/private-endpoint-single-virtual-network.png" :::
+:::image type="content" source="media/how-to-migrate-vs-code-extension/private-endpoint-single-virtual-network.png" alt-text="Diagram showing single virtual network topology for private connectivity from on-premises or other cloud." lightbox="media/how-to-migrate-vs-code-extension/private-endpoint-single-virtual-network.png" :::
 
 ##### Hub-direct
 
 In this topology, the VPN/ExpressRoute gateway is in a dedicated hub virtual network. DMS peers directly with the hub, so it can use the gateway natively via `useRemoteGateways`.
 
-:::image type="content" source="media/how-to-migrate-vs-code-extension/private-endpoint-hub-direct.png" alt-text="Shows hub-direct topology for private connectivity from on-premises or other cloud." lightbox="media/how-to-migrate-vs-code-extension/private-endpoint-hub-direct.png" :::
+:::image type="content" source="media/how-to-migrate-vs-code-extension/private-endpoint-hub-direct.png" alt-text="Diagram showing hub-direct topology for private connectivity from on-premises or other cloud." lightbox="media/how-to-migrate-vs-code-extension/private-endpoint-hub-direct.png" :::
 
 ##### Hub-spoke with TCP proxy
 
 If DMS can only peer to a spoke virtual network and direct hub peering isn't possible, deploy a [MongoDB migration proxy](https://aka.ms/mongodbmigrationproxy) VM in the DMS-peered spoke. The proxy forwards traffic from DMS to the source MongoDB server through the hub's VPN/ExpressRoute gateway.
 
-:::image type="content" source="media/how-to-migrate-vs-code-extension/private-endpoint-hub-spoke-proxy.png" alt-text="Shows hub-spoke topology with TCP proxy for private connectivity from on-premises or other cloud." lightbox="media/how-to-migrate-vs-code-extension/private-endpoint-hub-spoke-proxy.png" :::
+:::image type="content" source="media/how-to-migrate-vs-code-extension/private-endpoint-hub-spoke-proxy.png" alt-text="Diagram showing hub-spoke topology with TCP proxy for private connectivity from on-premises or other cloud." lightbox="media/how-to-migrate-vs-code-extension/private-endpoint-hub-spoke-proxy.png" :::
 
 > [!NOTE]
 > DMS creates an ephemeral virtual network that peers to your networks. In enterprise hub-and-spoke topologies, virtual network peering is **non-transitive**, DMS can't reach a hub VPN gateway through a spoke virtual network automatically. You need a routing mechanism such as direct hub peering or a TCP proxy deployed in the DMS-peered virtual network. For validation steps, see [Review connectivity](#review-connectivity).
@@ -291,7 +291,7 @@ If DMS can only peer to a spoke virtual network and direct hub peering isn't pos
 
 Set up private endpoints for the source and target virtual networks.
 
-:::image type="content" source="media/how-to-migrate-vs-code-extension/private-endpoint-source-in-azure.png" alt-text="Shows network architecture for private connectivity within Azure." lightbox="media/how-to-migrate-vs-code-extension/private-endpoint-source-in-azure.png" :::
+:::image type="content" source="media/how-to-migrate-vs-code-extension/private-endpoint-source-in-azure.png" alt-text="Diagram showing network architecture for private connectivity within Azure." lightbox="media/how-to-migrate-vs-code-extension/private-endpoint-source-in-azure.png" :::
 
 
 To enable private connectivity:
