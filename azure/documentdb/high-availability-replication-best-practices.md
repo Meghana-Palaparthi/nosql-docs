@@ -1,10 +1,11 @@
 ---
 title: High availability (HA) and cross-region replication best practices
 description: Learn about best practices for high availability (HA) and cross-region replication in Azure DocumentDB.
-author: abinav2307
-ms.author: abramees
+author: prashanthmadi
+ms.author: prmadi
 ms.topic: concept-article
-ms.date: 09/09/2025
+ms.date: 05/14/2026
+ai-usage: ai-assisted
 #Customer Intent: As a database adminstrator, I want to understand what is the optimal use of high availability and cross-region replication in Azure DocumentDB in differenct cases.
 ---
 
@@ -45,6 +46,22 @@ Use cross-region replication to offload massive read operations from the primary
 ### Combined HA and DR strategy
 Combine high availability (HA) for in-region availability with cross-region replication for disaster recovery (DR) and global read scalability. The combination of two provides 99.995% SLA. This approach delivers the best balance between local resilience and global redundancy, ensuring continuous availability and optimal performance for your applications.
 
+## Failover mode best practices
+
+Azure DocumentDB supports three [cross-region failover modes](./failover-modes.md). Choose the mode that best matches your recovery objectives.
+
+### Enable service-managed failover for mission-critical workloads
+For workloads that need automatic recovery from regional outages, enable **service-managed failover** on the primary cluster. The service detects regional outages and promotes the replica without operator intervention. Because the failover is unplanned, it might lose any writes that hadn't replicated to the secondary region when the outage began. Pair service-managed failover with [in-region high availability](#use-ha-for-production-clusters) to protect against both shard-level and region-level failures.
+
+### Use graceful promotion for planned region switches
+When you can choose the timing—for example, during scheduled maintenance, a permanent region migration, or a disaster recovery drill—use **graceful promotion**. Graceful promotion waits for replication to drain before switching write roles, so the operation completes with zero data loss. Plan for a short write-availability pause while the replication queue drains.
+
+### Use forced promotion for full control
+Use **forced promotion** when you need explicit control over the timing of an unplanned failover, such as when the primary region is unreachable and service-managed failover isn't enabled. Like service-managed failover, forced promotion might result in data loss because of replication lag.
+
+### Combine failover modes
+Service-managed failover and graceful promotion aren't mutually exclusive. Enabling service-managed failover doesn't prevent you from triggering a graceful promotion for planned maintenance. Use service-managed failover as a safety net for outages and graceful promotion for everything you can schedule.
+
 ## Summary of best practices
 | Scenario                                 | Recommendation                                        |
 |------------------------------------------|-------------------------------------------------------|
@@ -52,14 +69,17 @@ Combine high availability (HA) for in-region availability with cross-region repl
 | Clusters requiring 99.99% SLA            | [Enable high availability](./how-to-scale-cluster.md#enable-or-disable-high-availability)                              |
 | Clusters requiring 99.995% SLA           | [Enable high availability](./how-to-scale-cluster.md#enable-or-disable-high-availability) and [create a replica cluster](./how-to-cluster-replica.md#enable-cross-region-or-same-region-replication) |
 | Non-production clusters                  | [Disable high availability](./how-to-scale-cluster.md#enable-or-disable-high-availability) to reduce costs             |
-| Automatic failover requirement           | [Enable high availability](./how-to-scale-cluster.md#enable-or-disable-high-availability)                              |
+| Automatic failover for shard failures    | [Enable high availability](./how-to-scale-cluster.md#enable-or-disable-high-availability)                              |
+| Automatic failover for regional outages  | [Enable service-managed failover](./how-to-cluster-replica.md#enable-service-managed-failover)                              |
 | Cross-region disaster recovery (DR)      | [Create a replica cluster](./how-to-cluster-replica.md#enable-cross-region-or-same-region-replication)                              |
+| Planned region switch with zero data loss| [Trigger a graceful promotion](./how-to-cluster-replica.md#trigger-a-graceful-promotion)                              |
 | Read scalability across multiple regions | [Create a replica cluster](./how-to-cluster-replica.md#enable-cross-region-or-same-region-replication)                              |
 
 By following these best practices, you can ensure that your Azure DocumentDB clusters remain highly available and resilient against failures and regional outages.
 
 ## Related content
 
+- [Compare cross-region failover modes](./failover-modes.md)
 - [Get insights into how high availability and cross-region replication work](./availability-disaster-recovery-under-hood.md)
 - [Learn more about high availability](./high-availability.md)
 - [Learn about cross-region replication](./cross-region-replication.md)
