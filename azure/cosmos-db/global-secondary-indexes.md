@@ -117,7 +117,7 @@ The RUs provisioned on source and GSI affect the rate of changes propagated. Che
 
 #### I want to monitor write errors on my GSI
 
-GSI propagation runs asynchronously and source writes succeed independently of GSI writes. Set up [alerts](./create-alerts.md) on the GSI for any HTTP status code greater than 400 to catch issues writing items, such as an item exceeding the 2-KB partition key size limit.
+GSI propagation runs asynchronously and source writes succeed independently of GSI writes. Set up [alerts](./create-alerts.md) on the GSI for any HTTP status code 400 or greater to catch issues writing items, such as an item exceeding the 2-KB partition key size limit.
 
 ## Next steps
 
