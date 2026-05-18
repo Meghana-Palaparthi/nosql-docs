@@ -36,7 +36,7 @@ Levenshtein edit distance counts the number of single-character insertions, dele
 > - Tokens of three characters or fewer. Almost everything matches at `maxEdits: 1` on short strings.
 > - The default behavior on every endpoint. Fuzziness broadens the candidate set, hurts precision, and increases latency.
 
-## How to enable fuzzy matching
+## Running a fuzzy query
 
 ```javascript
 // ❌ maxEdits: 3 on short tokens matches almost everything in the corpus.
