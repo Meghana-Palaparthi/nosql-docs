@@ -247,7 +247,7 @@ The `local` profile shown above is a legacy SCRAM connection-string profile. The
 | --- | --- | --- | --- | --- |
 | Local development with Copilot CLI, Claude Code, or VS Code | `stdio` | Unauthenticated (trusted machine) | `connectionString` to local DocumentDB | Single developer. |
 | Self-hosted shared agent | `streamable-http` | Microsoft Entra | Microsoft Entra (managed identity) | Team-shared MCP endpoint behind a reverse proxy. |
-| Azure Container Apps or AKS | `streamable-http` | Microsoft Entra | Microsoft Entra (workload identity) | Production multi-tenant deployment. |
+| Azure Container Apps or AKS | `streamable-http` | Microsoft Entra | Microsoft Entra (workload identity) | Production multitenant deployment. |
 
 In Azure, prefer the `entra` profile mode with a managed identity granted backend access through the cluster's RBAC. This avoids storing database credentials at rest.
 
@@ -269,7 +269,7 @@ Each connection profile uses one of two modes:
 - **`entra`** – the server uses `DefaultAzureCredential` (Azure CLI, managed identity, workload identity, Visual Studio, and so on) to acquire an OAuth 2.0 token for the configured token scope and presents it to the cluster. **No database password on disk.**
 - **`connectionString`** – the server reads the URI from configuration. Suitable for local development.
 
-Each profile's `allowedHosts` allowlist enforces that the resolved endpoint matches an expected host pattern, mitigating misconfigured profiles. Profile structure and configuration variables are in [Configuration reference](#configuration-reference).
+Each profile's `allowedHosts` allow list enforces that the resolved endpoint matches an expected host pattern, mitigating misconfigured profiles. Profile structure and configuration variables are in [Configuration reference](#configuration-reference).
 
 ## Authorization
 
