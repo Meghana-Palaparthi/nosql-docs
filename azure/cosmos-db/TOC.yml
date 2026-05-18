@@ -495,8 +495,6 @@
           href: how-to-configure-global-secondary-indexes.md
     - name: Distributed Transactions (preview)
       items:
-        - name: Overview
-          href: distributed-transactions.md
         - name: Configure distributed transactions (preview)
           href: how-to-configure-and-use-distributed-transactions.md
     - name: Index and query geospatial data
