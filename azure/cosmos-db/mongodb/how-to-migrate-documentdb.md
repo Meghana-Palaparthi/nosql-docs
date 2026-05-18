@@ -7,7 +7,7 @@ ms.author: sandnair
 ms.service: azure-cosmos-db
 ms.subservice: mongodb
 ms.topic: how-to
-ms.date: 10/17/2025
+ms.date: 05/18/2026
 appliesto:
   - MongoDB
 ---

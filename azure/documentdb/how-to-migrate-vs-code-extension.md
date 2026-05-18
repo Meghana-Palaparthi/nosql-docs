@@ -5,7 +5,7 @@ author: sandeepsnairms
 ms.author: sandnair
 ms.custom: ignite-2025
 ms.topic: how-to
-ms.date: 10/22/2025
+ms.date: 05/18/2026
 # CustomerIntent: As a database owner, I want to use the Azure DocumentDB Migration Extension so that I can migrate an existing dataset to Azure DocumentDB.
 ---
 
