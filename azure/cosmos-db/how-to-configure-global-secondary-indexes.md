@@ -15,7 +15,7 @@ appliesto:
 
 # How to configure Azure Cosmos DB for NoSQL global secondary indexes
 
-Global secondary indexes provide a powerful way to optimize query performance and simplify application logic by storing your data with a different partition key and/ or data model. This article describes how to create global secondary indexes and how to use them to avoid cross-partition queries.
+Global secondary indexes provide a powerful way to optimize query performance and simplify application logic by storing your data with a different partition key and/or data model. This article describes how to create global secondary indexes and how to use them to avoid cross-partition queries.
 
 ## Prerequisites
 
