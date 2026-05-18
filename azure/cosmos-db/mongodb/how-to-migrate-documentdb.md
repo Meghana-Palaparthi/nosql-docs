@@ -302,7 +302,8 @@ az rest --method patch \
   --body '{"properties": {"networkBypassMode": "AzureCosmosDB"}}'
 ```
 
-This is an asynchronous operation. Poll the operation URL from the response headers until the cluster returns to **Succeeded** state. This operation typically completes in 5-10 minutes.
+> [!IMPORTANT]
+> This is an asynchronous operation. Poll the operation URL from the response headers until the cluster returns to **Succeeded** state. This operation typically completes in 5-10 minutes. You can confirm the configuration using the [verify the configuration](#verify-the-configuration) step.
 
 #### Verify the configuration
 
