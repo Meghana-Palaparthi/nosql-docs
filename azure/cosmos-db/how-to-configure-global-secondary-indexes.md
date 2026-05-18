@@ -87,7 +87,7 @@ Use the Azure CLI to enable the global secondary index feature either by using a
     $accountId="/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.DocumentDB/databaseAccounts/$accountName"
     ```
 
-1. Enable the preview global secondary index feature for the account by using the REST API and [az rest](/cli/azure/reference-index#az-rest) with an HTTP `PATCH` verb.
+1. Enable the global secondary index feature for the account by using the REST API and [az rest](/cli/azure/reference-index#az-rest) with an HTTP `PATCH` verb.
 
     ```azurecli
     az rest \
