@@ -374,7 +374,7 @@ main().catch(console.error);
 
 Let's understand the change stream output through the example.
 
-### Insert
+### [Insert](#tab/insert)
 
 In this change stream event, we see that a new record was `inserted` into the `exampleCollection` collection within the `cs` database, and the event details include the full content of the newly added document.
 
@@ -395,7 +395,7 @@ In this change stream event, we see that a new record was `inserted` into the `e
 }
 ```
 
-### Update
+### [Update](#tab/update)
 
 In this update event, the `position` & `rating` for John are modified. The change stream reflects an `update` in the `exampleCollection` collection with post update state of the document.
 
@@ -437,7 +437,7 @@ In this update event, the `position` & `rating` for John are modified. The chang
 }
 ```
 
-### Delete
+### [Delete](#tab/delete)
 
 The change stream event indicates that a document was `deleted` from the `exampleCollection` collection in the `cs` database. The event captures the unique identifier of the removed document.
 
@@ -487,11 +487,11 @@ while (stream.hasNext()) {
 ```
 
 > [!IMPORTANT]
-> Change streams support resumability through the `resumeAfter` and `startAtOperationTime` parameter. With point-in-time restore (PITR) log integration, stream recovery can extend up to 35 days or the cluster initialization point, whichever is earlier.
+> Change streams support resumability through the `startAt`, `resumeAfter`, and `startAtOperationTime` parameters. With point-in-time restore (PITR) log integration, stream recovery can extend up to 35 days or the cluster initialization point, whichever is earlier.
 >
 > Processing historical checkpoints is recommended during low-traffic periods to minimize the effect of extra resource consumption. Keep more storage (for clusters with 128 GB or lower storage) depending on the volume of data to be processed from historical point.
 
-## Pre-images in change streams
+## Pre-images in change streams (preview)
 
 By default, a change event shows you the document after a change. Enabling pre-images tells the system to also record the complete document before the change, exposed as `fullDocumentBeforeChange` in each event.
 
