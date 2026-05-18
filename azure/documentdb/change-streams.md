@@ -5,6 +5,7 @@ author: avijitgupta
 ms.author: avijitgupta
 ms.topic: concept-article
 ms.date: 05/18/2026
+ai-usage: ai-generated
 ---
 
 # Change streams in Azure DocumentDB
@@ -453,7 +454,7 @@ The change stream event indicates that a document was `deleted` from the `exampl
 
 ## Resume a change stream
 
-Change streams are resumable by specifying a resume token to resumeAfter when opening the cursor. The `_id` field of each change event serves as the resume token — store it durably and pass it back when reopening the stream.
+Change streams are resumable by specifying a "resume token" to `resumeAfter` when opening the cursor. The `_id` field of each change event serves as the resume token. Store it durably and pass it back when reopening the stream.
 
 ### Resuming from Active Change Logs
 
@@ -470,7 +471,7 @@ while (stream.hasNext()) {
 
 ### Recovering Streams from Historical checkpoints
 
-Standard change streams are limited to events retained within the active 400 MB change log. Once rotated, older entries are archived and become inaccessible. Historical change streams remove this limitation by transparently retrieving archived logs, enabling stream replay or resumption from past timestamps.
+Standard change streams are limited to events retained within the active 400-MB change log. Once rotated, older entries are archived and become inaccessible. Historical change streams remove this limitation by transparently retrieving archived logs, enabling stream replay or resumption from past timestamps.
 
 ```javascript
 // Replay all events since 2026-05-01 00:00:00 UTC, at current timestamp 2026-06-01 00:00:00 UTC
@@ -486,24 +487,24 @@ while (stream.hasNext()) {
 ```
 
 > [!IMPORTANT]
-> Change streams support resumability through the `resumeAfter` and `startAtOperationTime` parameter. With PITR log integration, stream recovery can extend up to 35 days or the cluster initialization point, whichever is earlier.
+> Change streams support resumability through the `resumeAfter` and `startAtOperationTime` parameter. With point-in-time restore (PITR) log integration, stream recovery can extend up to 35 days or the cluster initialization point, whichever is earlier.
 >
-> Processing historical checkpoints is recommended during low-traffic periods to minimize the impact of additional resource consumption. Please keep additional storage (for clusters with 128 GB or lower storage) depending on the volume of data to be processed from historical point.
+> Processing historical checkpoints is recommended during low-traffic periods to minimize the effect of extra resource consumption. Keep more storage (for clusters with 128 GB or lower storage) depending on the volume of data to be processed from historical point.
 
 ## Pre-images in change streams
 
 By default, a change event shows you the document after a change. Enabling pre-images tells the system to also record the complete document before the change, exposed as `fullDocumentBeforeChange` in each event.
 
-| Option | Behaviour | When to use |
+| Option | Behavior | When to use |
 | --- | --- | --- |
 | `"off"` (default) | Pre-image never included | Standard streams |
-| `"whenAvailable"` | Include if available; silently omit otherwise | Audit / CDC scenarios with graceful degradation |
-| `"required"` | Include; throw an error if not available | When missing pre-images must be surfaced explicitly rather than skipped |
+| `"whenAvailable"` | Include if available; silently omit otherwise | Audit / change data capture (CDC) scenarios with graceful degradation |
+| `"required"` | Include; throw an error if not available | Use when missing pre-images must be surfaced explicitly rather than skipped |
 
 > [!IMPORTANT]
 > Pre-images are only available for `update`, `delete`, and `replace` events.
 >
-> Enabling pre-image increases storage and processing overhead, as the previous version of modified documents must be captured and retained for each eligible operation, which results in higher write amplification, additional I/O consumption, and increased change stream processing latency. To minimize long-term resource impact, continuous enablement in production environments is discouraged unless explicitly required by the workload.
+> Enabling pre-image increases storage and processing overhead, as the previous version of modified documents must be captured and retained for each eligible operation, which results in higher write amplification, extra I/O consumption, and increased change stream processing latency. To minimize long-term resource effects, continuous enablement in production environments is discouraged unless explicitly required by the workload.
 >
 
 ### Enable pre-images on the collection
@@ -562,10 +563,10 @@ const stream = db.exampleCollection.watch(pipeline);
 ## Limitations
 
 - Cluster topology transition from single-shard to multi-shard breaks change stream resumability.
-- Multi-shard deployments do not preserve global event ordering.
+- Multi-shard deployments don't preserve global event ordering.
 - Change stream cursors must be reinitialized after failover events, while resume capability remains preserved.
-- UpdateDescription is not supported for `update` events within aggregation pipelines, however update operators are supported.
-- `$changestream` as a nested pipeline of another stage is not supported.
+- UpdateDescription isn't supported for `update` events within aggregation pipelines. However, update operators are supported.
+- `$changestream` as a nested pipeline of another stage isn't supported.
 
 ## Related content
 
