@@ -1,5 +1,5 @@
 ---
-title: Connect by Using Role-based Access Control and Microsoft Entra ID
+title: Connect by Using Role-Based Access Control and Microsoft Entra ID
 titleSuffix: Azure Cosmos DB for Apache Gremlin
 description: Learn how to set up role-based access control for Azure Cosmos DB for Apache Gremlin accounts and data. Enhance security for your applications with step-by-step guidance.
 author: seesharprun
@@ -34,9 +34,9 @@ For more information, see [Role-based access control](/azure/role-based-access-c
 
 ## Prerequisites
 
-- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
-- An existing Azure Cosmos DB for Gremlin account.
-- One or more existing identities in Microsoft Entra ID.
+- Use an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
+- Use an existing Azure Cosmos DB for Gremlin account.
+- Use one or more existing identities in Microsoft Entra ID.
 
 ::: zone pivot="azure-cli,azure-resource-manager-bicep"
 

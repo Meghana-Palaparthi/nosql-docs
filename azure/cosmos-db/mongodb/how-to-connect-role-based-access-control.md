@@ -33,9 +33,9 @@ For more information, see [Role-based access control](/azure/role-based-access-c
 
 ## Prerequisites
 
-- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
-- An existing Azure Cosmos DB for MongoDB account.
-- One or more existing identities in Microsoft Entra ID.
+- Use an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
+- Use an existing Azure Cosmos DB for MongoDB account.
+- Use one or more existing identities in Microsoft Entra ID.
 
 ::: zone pivot="azure-cli,azure-resource-manager-bicep"
 
