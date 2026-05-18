@@ -6,7 +6,7 @@ description: Learn how to use the Relational Migration Assistant to help migrate
 author: sesmyrnov
 ms.author: sesmyrno
 ms.reviewer: sasinnat
-ms.date: 05/12/2026
+ms.date: 05/17/2026
 ms.topic: how-to
 ms.service: azure-cosmos-db
 ms.subservice: nosql
@@ -39,7 +39,7 @@ You can launch and manage migrations using the following commands from the Comma
 1. **Azure Cosmos DB: Open Existing Migration…** — Reopens an existing migration from a `.cosmosdb-migration/` folder or `project.json`.
 1. **Azure Cosmos DB: Remove Migration** — Removes the migration from the workspace view without deleting the on-disk project.
 
-:::image type="content" source="media/migration-assistant/migration-project-setup.png" alt-text="New Migration Assistant configuration panel within an Azure workspace, including sections for project name input and AI model selection.":::
+:::image type="content" source="media/migration-assistant/migration-project-setup.png" alt-text="Screenshot of Azure Cosmos DB Migration Assistant configuration panel in VS Code Studio Azure workspace showing initial dialog with the project name and AI model selection.":::
 
 ## Run Phase 1: Discovery
 
@@ -50,7 +50,7 @@ Discovery analyzes your workspace and collects core migration inputs: schema DDL
 1. In the Migration Assistant panel, allow the assistant to scan the workspace to infer language, framework, ORM, and deployment context.
 1. Provide **Database Schema Files** for the source database containing the DDLs, and optionally **Volumetrics** and **Access patterns** information.
 
-   :::image type="content" source="media/migration-assistant/migration-project-phase-1-discovery.png" alt-text="Cosmos DB Migration Assistant with file explorer showing the 1-discovery folder with schema-ddl, access-patterns, and volumetrics artifacts, and sample markdown files for access patterns and volumetrics.":::
+   :::image type="content" source="media/migration-assistant/migration-project-phase-1-discovery.png" alt-text="Screenshot of phase 1 discovery section showing file explorer folders containing mandatory input schema-ddl files as well as optional access-patterns, volumetrics artifacts and sample markdown template files.":::
 
    - Volumetrics information helps estimate RU/s and choose an optimal partition key. A sample template is provided in *volumetrics.md* (select **Open Volumetrics Template**) and includes estimated rows, average row size, read transactions per second, and write transactions per second. You can provide data in this format or use AI to read your input data and generate it using the template.
    - Access patterns information helps design containers and partitioning strategies. A sample template is in *access-patterns.md* (select **Open Access Patterns Template**) and includes read and write patterns such as order by, list by, create, update, and delete, along with latency requirements. You can use an AI model to format the data in the required template.
@@ -58,15 +58,15 @@ Discovery analyzes your workspace and collects core migration inputs: schema DDL
 
 1. Fill in other repository details (for example, Type, Language, and Database) manually or select **Auto-Detect** to auto-populate them.
 
-   :::image type="content" source="media/migration-assistant/migration-project-phase-1-schema.png" alt-text="Screenshot of database schema upload section with Application information fields for project name, type, language, frameworks, database, and access method, with an Auto-Detect button."
+   :::image type="content" source="media/migration-assistant/migration-project-phase-1-schema.png" alt-text="Screenshot of phase 1 discovery database schema upload section showing Database Schema folder or Files Upload options and Application information fields section with an optional Auto-Detect button.":::
 
    Auto-Detect traverses the project repository and fills in the information. The fields are editable, so you can update them if required.
 
-   :::image type="content" source="media/migration-assistant/migration-project-phase-1-application-detection.png" alt-text="Application information filled via Auto-Detect for the AdventureWorks.Web project, showing Web App type, C# language, ASP.NET Core and Entity Framework Core frameworks, SQL Server database, and Entity Framework Core access method.":::
+   :::image type="content" source="media/migration-assistant/migration-project-phase-1-application-detection.png" alt-text="Screenshot of phase 1 Application information section showing Auto-Detect option to populate project, Application type, programming language, framework, RDBMS database type details.":::
 
 1. Start Discovery by selecting **Generate Discovery Report**.
 
-   :::image type="content" source="media/migration-assistant/migration-project-phase-1-discovery-report.png" alt-text="AI-assisted multi-phase project workflow showing Phase 1 Discovery Report expanded with uploaded schema and volumetrics files and a button to generate the report.":::
+   :::image type="content" source="media/migration-assistant/migration-project-phase-1-discovery-report.png" alt-text="Screenshot of phase 1 Discovery Report showing uploaded schema, volumetrics files and the button to generate the discovery report.":::
 
 1. Review the generated *discovery-report.md* in the migration artifacts folder.
 
@@ -77,7 +77,7 @@ Artifacts you can expect:
 - `phases/1-discovery/access-patterns/`
 - `phases/1-discovery/discovery-report.md`
 
-:::image type="content" source="media/migration-assistant/migration-project-phase-1-artifacts.png" alt-text="Discovery Report marked complete with options to view the discovery report and re-generate it, along with discovery-report.md visible in file explorer.":::
+:::image type="content" source="media/migration-assistant/migration-project-phase-1-artifacts.png" alt-text="Screenshot of phase 1 Discovery showing completion status with options to view the discovery report, option to re-generate it and the link to the discovery report in file explorer.":::
 
 ## Run Phase 2: Assessment
 
@@ -85,7 +85,7 @@ Assessment normalizes the collected access patterns and groups tables into domai
 
 1. Start Assessment by selecting **Run Assessment**.
 
-   :::image type="content" source="media/migration-assistant/migration-project-phase-2-domain-assessment.png" alt-text="Multi-phase project workflow Phase 2 Domain Assessment with a Run Assessment button.":::
+   :::image type="content" source="media/migration-assistant/migration-project-phase-2-domain-assessment.png" alt-text="Screenshot of phase 2 showing Domain Assessment section using generated discovery report with the Run Assessment button.":::
 
 1. Review the extracted and normalized access patterns.
 1. Review the domain grouping output and any domain splitting decisions.
@@ -96,7 +96,7 @@ Artifacts you can expect:
 - `phases/2-assessment/domains/`
 - `phases/2-assessment/assessment-summary.md`
 
-:::image type="content" source="media/migration-assistant/migration-project-phase-2-domain-assessment-report.png" alt-text="Domain Assessment marked complete with a table listing four identified domains including columns for domain names, number of tables, estimated tokens, and code references, along with assessment-summary.md in the folder structure.":::
+:::image type="content" source="media/migration-assistant/migration-project-phase-2-domain-assessment-report.png" alt-text="Screenshot of phase 2 showing Domain Assessment section completed with the table listing four identified domains, tables, code mapping details and the assessment summary document link in the file explorer.":::
 
 ## Run Phase 3: Schema Conversion
 
@@ -114,7 +114,7 @@ Artifacts you can expect:
 - `phases/3-schema-conversion/model.json`
 - `phases/3-schema-conversion/summary.md`
 
-:::image type="content" source="media/migration-assistant/migration-project-phase-3-schema-conversion.png" alt-text="Schema conversion summary showing converted domains and the number of containers each domain maps to.":::
+:::image type="content" source="media/migration-assistant/migration-project-phase-3-schema-conversion.png" alt-text="Screenshot of phase 3 showing Schema conversion summary section showing converted domains to Cosmos DB NoSQL schema and domain-container mapping.":::
 
 ## Run Phase 4: Provisioning
 
@@ -129,7 +129,7 @@ Provisioning signs you into Azure, lets you select or create the target account 
    | Azure Cosmos DB account (existing) | Existing workloads on Cosmos DB | Access to subscription/resource group; permission for creating database/containers; RBAC role if Entra ID is used ([link](../how-to-connect-role-based-access-control.md?pivots=azure-powershell#grant-data-plane-role-based-access)) |
    | Provision new Cosmos DB account | Early validation in Azure, dedicated environment | Active Azure subscription; [Control plane RBAC](../how-to-connect-role-based-access-control.md?pivots=azure-powershell#grant-control-plane-role-based-access) and [Data plane RBAC](../how-to-connect-role-based-access-control.md?pivots=azure-powershell#grant-data-plane-role-based-access) |
 
-   :::image type="content" source="media/migration-assistant/migration-project-phase-4-environment-creation.png" alt-text="Provisioning target Azure Cosmos DB environment with options to select Local Cosmos DB Emulator, an existing Azure Cosmos DB Account, or provisioning a new Azure Cosmos DB account, green checkmarks indicating successful provisioning and verification.":::
+   :::image type="content" source="media/migration-assistant/migration-project-phase-4-environment-creation.png" alt-text="Screenshot of phase 4 showing Provisioning target Azure Cosmos DB environment with options to select Local Cosmos DB Emulator, an existing Azure Cosmos DB Account, or provisioning a new Azure Cosmos DB account, including successful verification checkmark.":::
 
 1. Provision containers based on the generated model.
 1. Optionally generate and load sample data.
@@ -140,7 +140,7 @@ Artifacts you can expect:
 - `phases/4-provisioning/`
 - `phases/4-provisioning/sample-data.json` (if generated)
 
-:::image type="content" source="media/migration-assistant/migration-project-phase-4-environment-creation-validation.png" alt-text="Cosmos Data Explorer interface displaying sample containers created along with sample data.":::
+:::image type="content" source="media/migration-assistant/migration-project-phase-4-environment-creation-validation.png" alt-text="Screenshot of phase 4 showing Azure Cosmos DB Data Explorer interface displaying sample Cosmos DB containers created based on schema design and sample JSON data populated.":::
 
 ## Run Phase 5: Plan or Start Migration
 
@@ -158,7 +158,7 @@ After Phases 1–4 are complete, Migration Assistant can build a context-rich pr
 
 **Plan Migration** generates `code-migration-plan.md` and stops without applying code changes. The file is present in `4-provisioning/` as shown below.
 
-:::image type="content" source="media/migration-assistant/migration-project-phase-5-migration-plan.png" alt-text="After completion of the four phases, Plan Migration generates code-migration-plan.md that lists the changes that would be performed.":::
+:::image type="content" source="media/migration-assistant/migration-project-phase-5-migration-plan.png" alt-text="Screenshot of phase 5 showing Plan Migration section with the button to generate application code migration plan document including Cosmos DB related SDK changes.":::
 
 Once `code-migration-plan.md` is reviewed and validated, you can move on to **Start Migration**. If changes are required, provide special instructions in **Additional Migration Instructions** and rerun the process.
 
@@ -166,7 +166,7 @@ Once `code-migration-plan.md` is reviewed and validated, you can move on to **St
 
 **Start Migration** generates the plan and immediately begins applying the described code changes.
 
-:::image type="content" source="media/migration-assistant/migration-project-phase-5-migration-plan-start.png" alt-text="After completion of the four phases and validation of code-migration-plan.md, Start Migration initiates the repository changes along with Cosmos DB-related SDK changes.":::
+:::image type="content" source="media/migration-assistant/migration-project-phase-5-migration-plan-start.png" alt-text="Screenshot of phase 5 showing Start Migration section with the button to start the application repository refactoring based on generated migration plan.":::
 
 ## Understand the migration artifacts on disk
 
