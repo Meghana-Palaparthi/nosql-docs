@@ -19,8 +19,6 @@ appliesto:
 
 This article shows you how to enable distributed transactions on an Azure Cosmos DB for NoSQL account and use them from the .NET SDK to commit atomic write operations that span multiple logical partitions, containers, and databases within the same account and region.
 
-If you're new to the feature, start with [Distributed transactions in Azure Cosmos DB for NoSQL](distributed-transactions.md) for a conceptual overview.
-
 ## Prerequisites
 
 Before you begin, make sure you have:
@@ -286,7 +284,6 @@ Distributed transactions are in public preview, and your feedback shapes the pat
 
 ## Next steps
 
-- [Distributed transactions in Azure Cosmos DB for NoSQL — concepts](distributed-transactions.md)
 - [Consistency levels in Azure Cosmos DB](consistency-levels.md)
 - [Optimistic concurrency control with ETags](database-transactions-optimistic-concurrency.md)
 - [Azure Cosmos DB .NET SDK v3 reference](/dotnet/api/microsoft.azure.cosmos)
