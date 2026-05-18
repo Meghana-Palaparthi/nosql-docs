@@ -35,7 +35,7 @@ Poor decisions in these areas can lead to performance issues, scalability proble
 
 ## What's included
 
-The Agent Kit includes **111 curated rules** across **12 categories**, each prioritized by real-world impact:
+The Agent Kit includes **111 curated rules** across **12 categories**, each prioritized by real-world effect:
 
 | Category | Priority | Description |
 |----------|----------|-------------|
@@ -246,7 +246,7 @@ Have you discovered a best practice the kit doesn't cover? Share it with the com
 
 1. Fork the [repository](https://github.com/AzureCosmosDB/cosmosdb-agent-kit)
 2. Add your rule to the appropriate category in `/skills/cosmosdb-best-practices/rules/`
-3. Submit a pull request with a description of the scenario and impact
+3. Submit a pull request with a description of the scenario
 4. Help thousands of developers write better Azure Cosmos DB code
 
 For detailed contribution guidelines, see [CONTRIBUTING.md](https://github.com/AzureCosmosDB/cosmosdb-agent-kit/blob/main/CONTRIBUTING.md).
