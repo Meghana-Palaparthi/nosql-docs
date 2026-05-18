@@ -52,7 +52,7 @@ Each range is read in parallel. A range's progress is maintained separately from
 
 ### [.NET](#tab/dotnet)
 
-The change feed processor in .NET is available for [latest version mode](change-feed-modes.md#latest-version-change-feed-mode) and [all versions and deletes mode](change-feed-modes.md#all-versions-and-deletes-change-feed-mode). All versions and deletes mode is supported for the change feed processor beginning in version `3.40.0-preview.0`. The point of entry for both modes is always the monitored container.
+The change feed processor in .NET is available for [latest version mode](change-feed-modes.md#latest-version-change-feed-mode) and [all versions and deletes mode](change-feed-modes.md#all-versions-and-deletes-change-feed-mode). All versions and deletes mode is supported for the change feed processor beginning in version `3.60.0`. The point of entry for both modes is always the monitored container.
 
 To read using latest version mode, in a `Container` instance, you call `GetChangeFeedProcessorBuilder`:
 
@@ -239,7 +239,7 @@ For full working samples, see [this GitHub repository](https://github.com/Azure-
 >
 > This annotation ensures that system metadata fields present in the change feed payload are silently ignored during deserialization.
 
-The delegate implementation for reading the change feed in [all versions and deletes mode](change-feed-modes.md#all-versions-and-deletes-change-feed-mode) is similar, but instead of calling `.handleChanges()`, call `.handleAllVersionsAndDeletesChanges()`. The All versions and deletes mode is available in Java SDK version >= `4.42.0`.
+The delegate implementation for reading the change feed in [all versions and deletes mode](change-feed-modes.md#all-versions-and-deletes-change-feed-mode) is similar, but instead of calling `.handleChanges()`, call `.handleAllVersionsAndDeletesChanges()`. The All versions and deletes mode is available in Java SDK version >= `4.81.0`.
 
 Here's an example:
 

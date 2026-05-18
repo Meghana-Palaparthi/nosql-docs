@@ -63,7 +63,7 @@ FeedIterator<User> InteratorWithPOCOS = container.GetChangeFeedIterator<User>(Ch
 > [!TIP]
 > For versions earlier than `3.34.0`, latest version mode can be used by setting `ChangeFeedMode.Incremental`. Both `Incremental` and `LatestVersion` refer to latest version mode of the change feed, and applications that use either mode see the same behavior.
 
-All versions and deletes mode can be used with preview .NET SDK versions >= `3.32.0-preview`. Here's an example for obtaining `FeedIterator` in all versions and deletes mode that returns `User` objects:
+All versions and deletes mode can be used with .NET SDK versions >= `3.60.0`. Here's an example for obtaining `FeedIterator` in all versions and deletes mode that returns `User` objects:
 
 ```csharp
 FeedIterator<ChangeFeedItem<User>> InteratorWithPOCOS = container.GetChangeFeedIterator<ChangeFeedItem<User>>(ChangeFeedStartFrom.Now(), ChangeFeedMode.AllVersionsAndDeletes);
@@ -245,7 +245,7 @@ When you're using latest version mode, the `FeedIterator` continuation token nev
 
 To process the change feed by using the pull model, create an instance of `Iterator<FeedResponse<JsonNode>> responseIterator`. When you create `CosmosChangeFeedRequestOptions`, you must specify where to start reading the change feed from and pass the `FeedRange` parameter that you want to use. The `FeedRange` is a range of partition key values that specifies the items that can be read from the change feed.
 
-If you want to read the change feed in [all versions and deletes mode](change-feed-modes.md#all-versions-and-deletes-change-feed-mode), you must also specify `allVersionsAndDeletes()` when you create the `CosmosChangeFeedRequestOptions`. All versions and deletes mode doesn't support processing the change feed from the beginning or from a point in time. You must either process changes from now or from a continuation token. All versions and deletes mode is available in Java SDK version >= `4.42.0`.
+If you want to read the change feed in [all versions and deletes mode](change-feed-modes.md#all-versions-and-deletes-change-feed-mode), you must also specify `allVersionsAndDeletes()` when you create the `CosmosChangeFeedRequestOptions`. All versions and deletes mode doesn't support processing the change feed from the beginning or from a point in time. You must either process changes from now or from a continuation token. All versions and deletes mode is available in Java SDK version >= `4.81.0`.
 
 ### Consume the changes for an entire container
 
