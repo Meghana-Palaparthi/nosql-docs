@@ -10,7 +10,7 @@ ms.custom:
   - devx-track-azurecli
   - build-2025
 ms.topic: concept-article
-ms.date: 01/28/2026
+ms.date: 05/17/2026
 appliesto:
   - ✅ NoSQL
 ---
