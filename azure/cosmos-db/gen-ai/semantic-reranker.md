@@ -31,7 +31,7 @@ The Semantic Reranker uses the Microsoft AI Semantic Ranker model, developed int
 
 When evaluating a search or retrieval system, three primary metrics define the end-user experience:
 
-- **Accuracy or recall**: How closely the retrieved results match the ground truth. For example, approximate vector search with DiskANN compared to exact search with a kNN or brute-force searchx.
+- **Accuracy or recall**: How closely the retrieved results match the ground truth. For example, approximate vector search with DiskANN compared to exact search with a kNN or brute-force search.
 - **Latency**: The total time taken to return results from query submission to response.
 - **Relevance**: How well the retrieved documents match the user's intent. For example, for a query like "best surf spots in Hawaii," returning a curated surf guide is more relevant than a general Hawaii travel article.
 
@@ -67,66 +67,93 @@ Use the Azure portal to enable, disable, and configure Semantic Reranker for a s
 
 1. Review the configuration, then save your changes.
 
-## Optional: assign the inference role with Azure CLI
+Next, you want to assign Semantic Reranker roles to the identities that configure the feature or call it at runtime. You can assign roles to a Microsoft Entra user, service principal, user-assigned managed identity, or system-assigned managed identity.
 
-Assign the `Azure.Inference.Executor` app role to the identity that calls Semantic Reranker. You can assign this role from **Access control (IAM)**, from the Semantic Reranker blade in the Azure portal, or by using Azure CLI. Use the CLI option for a user-assigned managed identity, system-assigned managed identity, or Microsoft Entra user.
+## RBAC roles for Semantic Reranker
 
-Before you run these commands, replace `<inference-service-application-id>` with the application ID for the inference service first-party app. You need permissions to read service principals and create app role assignments in Microsoft Entra ID.
+Semantic Reranker uses account-level roles for feature configuration and runtime calls. Grant each identity only the role it needs.
 
-### Assign the role to a managed identity
+| Role name | Role identifier | Description |
+| --- | --- | --- |
+| `Inference Account Operator` | `360cab3d-4340-4c96-816d-682fbd52b3e2` | Enables and disables Semantic Reranker on an Azure Cosmos DB account, but doesn't allow runtime reranker calls. |
+| `Inference Account Owner` | `76315a85-9e6b-4514-9780-868b1977b64e` | Enables and disables Semantic Reranker on an Azure Cosmos DB account and allows runtime reranker calls. |
+| `Semantic Reranker User` | `6c74a7c5-4a87-40f9-bb03-61e49aecbc78` | Allows an application, managed identity, service principal, or user to run Semantic Reranker queries against an Azure Cosmos DB account. |
 
-For a user-assigned or system-assigned managed identity, use the managed identity's object ID as the principal ID.
+These roles control Semantic Reranker access only. If your application uses Microsoft Entra ID to query Azure Cosmos DB before reranking, also assign Azure Cosmos DB data plane permissions that can read items from the source container. Administrators who assign roles need `Owner`, `User Access Administrator`, or equivalent Microsoft Entra permissions.
 
+## Assign Semantic Reranker roles
+
+You can assign Semantic Reranker roles in one of four ways:
+
+- Use the Semantic Reranker portal blade to assign the `Semantic Reranker User` role to identities that already have query or reader roles on the Azure Cosmos DB account and need to call Semantic Reranker.
+- Use **Access control (IAM)** on the Azure Cosmos DB account.
+- Use Azure CLI.
+- Use an Azure Resource Manager (ARM) template deployment with Bicep.
+
+### Assign the role with Azure CLI
+
+Assign the `Semantic Reranker User` role to the identity that calls Semantic Reranker. Use the CLI option when you want to assign the role to a user-assigned managed identity, system-assigned managed identity, service principal, or Microsoft Entra user without using the portal.
+
+Before you run these commands, replace the placeholder values with your Azure subscription, Azure Cosmos DB account, and principal details. The following example assigns the role at the Azure Cosmos DB account scope.
+
+#### Assign the role to a managed identity or service principal
+
+For a user-assigned managed identity, system-assigned managed identity, or service principal, use the object's principal ID.
 
 ```azurecli
 az login
 
-inferenceAppId="<inference-service-application-id>"
-principalId="<managed-identity-object-id>"
+subscriptionId="<subscription-id>"
+resourceGroupName="<resource-group-name>"
+accountName="<azure-cosmos-db-account-name>"
+principalId="<managed-identity-or-service-principal-object-id>"
+roleDefinitionId="6c74a7c5-4a87-40f9-bb03-61e49aecbc78"
+scope="/subscriptions/${subscriptionId}/resourceGroups/${resourceGroupName}/providers/Microsoft.DocumentDB/databaseAccounts/${accountName}"
 
-inferenceServicePrincipalId=$(az ad sp show \
-  --id "$inferenceAppId" \
-  --query id \
-  --output tsv)
-
-appRoleId=$(az ad sp show \
-  --id "$inferenceAppId" \
-  --query "appRoles[?value=='Azure.Inference.Executor'].id | [0]" \
-  --output tsv)
-
-az rest \
-  --method post \
-  --url "https://graph.microsoft.com/v1.0/servicePrincipals/${inferenceServicePrincipalId}/appRoleAssignedTo" \
-  --headers "Content-Type=application/json" \
-  --body "{\"principalId\":\"${principalId}\",\"resourceId\":\"${inferenceServicePrincipalId}\",\"appRoleId\":\"${appRoleId}\"}"
+az role assignment create \
+  --assignee-object-id "$principalId" \
+  --assignee-principal-type ServicePrincipal \
+  --role "$roleDefinitionId" \
+  --scope "$scope"
 ```
 
-### Assign the role to a Microsoft Entra user
+#### Assign the role to a Microsoft Entra user
 
 For a Microsoft Entra user, get the user's object ID and use it as the principal ID.
 
 ```azurecli
 az login
 
-inferenceAppId="<inference-service-application-id>"
+subscriptionId="<subscription-id>"
+resourceGroupName="<resource-group-name>"
+accountName="<azure-cosmos-db-account-name>"
 userObjectId="<user-object-id>"
+roleDefinitionId="6c74a7c5-4a87-40f9-bb03-61e49aecbc78"
+scope="/subscriptions/${subscriptionId}/resourceGroups/${resourceGroupName}/providers/Microsoft.DocumentDB/databaseAccounts/${accountName}"
 
-inferenceServicePrincipalId=$(az ad sp show \
-  --id "$inferenceAppId" \
-  --query id \
-  --output tsv)
-
-appRoleId=$(az ad sp show \
-  --id "$inferenceAppId" \
-  --query "appRoles[?value=='Azure.Inference.Executor'].id | [0]" \
-  --output tsv)
-
-az rest \
-  --method post \
-  --url "https://graph.microsoft.com/v1.0/servicePrincipals/${inferenceServicePrincipalId}/appRoleAssignedTo" \
-  --headers "Content-Type=application/json" \
-  --body "{\"principalId\":\"${userObjectId}\",\"resourceId\":\"${inferenceServicePrincipalId}\",\"appRoleId\":\"${appRoleId}\"}"
+az role assignment create \
+  --assignee-object-id "$userObjectId" \
+  --assignee-principal-type User \
+  --role "$roleDefinitionId" \
+  --scope "$scope"
 ```
+
+### Assign the role with Bicep
+
+You can also create the role assignment by using an ARM template deployment with Bicep. The following resource definition assigns the `Semantic Reranker User` role at the resource group scope:
+
+```bicep
+resource semanticRerankerRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(resourceGroup().id, 'semanticRerankerRoleAssignment')
+  properties: {
+    principalId: '<your principal id>'
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '6c74a7c5-4a87-40f9-bb03-61e49aecbc78')
+    principalType: 'ServicePrincipal'
+  }
+}
+```
+
+Replace `<your principal id>` with the service principal identifier that should receive permissions. Because this resource definition uses the deployment resource group scope, the role assignment applies to the entire resource group where you deploy the template.
 
 ## API parameters
 
