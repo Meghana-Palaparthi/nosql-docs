@@ -7,6 +7,7 @@ ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: concept-article
 ms.date: 03/23/2026
+ms.update-cycle: 180-days
 appliesto:
   - ✅ NoSQL
 ---
@@ -580,9 +581,6 @@ VectorDistance(<vector_expr_1>, <vector_expr_2>, <bool_expr>, <obj_expr>)
 | `searchListSizeMultiplier` | number | Multiplier for the DiskANN search list size. Higher values usually improve recall at the cost of more RU and latency. Typical values: `5`, `10`, `20`. |
 | `quantizedVectorListMultiplier` | number | Multiplier for the quantized vector candidate list. Higher values usually improve recall at the cost of more RU and latency. Typical values: `5`, `10`, `20`. |
 | `filterPriority` | number | Relative priority of the `WHERE` filter versus the vector search in DiskANN. Takes any float between 0.0 and 1.0. With a higher priority the search path will bias more on filter matches. This will trade a small recall hit with fewer RUs consumed. To mitigate the impact of reduced recall, try increasing the searchListSizeMultiplier or quantizedVectorListMultiplier.|
-
-> [!TIP]
-> Keep the embedding vector parameterized, but keep the options object literal explicit in the query text. These options are tuning directives, not user input.
 
 ### Examples
 

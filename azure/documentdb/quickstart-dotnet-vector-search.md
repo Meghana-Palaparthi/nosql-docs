@@ -8,6 +8,7 @@ ms.reviewer: khelanmodi
 ms.devlang: csharp
 ms.topic: quickstart-sdk
 ms.date: 02/20/2026
+ms.update-cycle: 180-days
 ai-usage: ai-assisted
 ms.custom:
   - devx-track-dotnet

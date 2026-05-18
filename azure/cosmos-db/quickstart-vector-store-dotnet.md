@@ -8,6 +8,7 @@ ms.reviewer: khelanmodi
 ms.devlang: csharp
 ms.topic: quickstart-sdk
 ms.date: 02/06/2026
+ms.update-cycle: 180-days
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ai-usage: ai-assisted

@@ -7,6 +7,7 @@ ms.reviewer: sidandrews
 ms.devlang: typescript
 ms.topic: quickstart-sdk
 ms.date: 03/13/2026
+ms.update-cycle: 180-days
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ai-usage: ai-assisted

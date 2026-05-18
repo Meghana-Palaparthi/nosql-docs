@@ -26,7 +26,7 @@ In this tutorial, you:
 - [Node.js 22 or newer](https://nodejs.org/en/download/)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 - [Azure CLI](/cli/azure/install-azure-cli)
-- An Azure subscription. If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account) before you begin.
+- An Azure subscription. If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) before you begin.
 
 ## Start the emulator
 

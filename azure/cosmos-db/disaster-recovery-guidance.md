@@ -5,7 +5,7 @@ description: Learn about disaster recovery guidance when using Azure Cosmos DB, 
 author: sushantrane
 ms.author: srane
 ms.service: azure-cosmos-db
-ms.topic: conceptual
+ms.topic: article
 ms.date: 02/10/2026
 appliesto:
   - ✅ NoSQL

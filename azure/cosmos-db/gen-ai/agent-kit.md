@@ -8,6 +8,7 @@ ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: feature-guide
 ms.date: 01/29/2026
+ms.update-cycle: 180-days
 ms.collection:
   - ce-skilling-ai-copilot
 ai-usage: ai-assisted

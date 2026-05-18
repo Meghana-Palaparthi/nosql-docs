@@ -5,8 +5,9 @@ author: kanshiG
 ms.service: azure-cosmos-db
 ms.custom: build-2023
 ms.topic: how-to
-ms.date: 07/21/2025
+ms.date: 05/13/2026
 ms.author: govindk
+ai-usage: ai-assisted
 appliesto:
   - ✅ NoSQL
   - ✅ MongoDB
@@ -60,6 +61,28 @@ Yes. However, analytical store data isn't included in backups and restores. When
 ### Is periodic backup mode supported for analytical store-enabled containers?
 
 Yes, but only for the regular transactional data. Within an analytical store, backup and restore of your data isn't supported at this time.
+
+### How do I audit backup configuration across my Azure Cosmos DB accounts?
+
+All Azure Cosmos DB accounts always have automatic backups. You can use Azure Resource Graph to audit *which* backup mode each account uses and review backup settings.
+
+> [!NOTE]
+> The concept of "backups not enabled" is a misconception for Azure Cosmos DB accounts. Accounts use periodic backup mode by default unless you configure continuous backup mode.
+
+Run this Azure Resource Graph query to inventory backup configuration across subscriptions:
+
+```kusto
+Resources
+| where type =~ "microsoft.documentdb/databaseaccounts"
+| extend backupMode = tostring(properties.backupPolicy.type)
+| extend periodicBackupIntervalMinutes = toint(properties.backupPolicy.periodicModeProperties.backupIntervalInMinutes)
+| extend periodicBackupRetentionHours = toint(properties.backupPolicy.periodicModeProperties.backupRetentionIntervalInHours)
+| extend continuousBackupTier = tostring(properties.backupPolicy.continuousModeProperties.tier)
+| project subscriptionId, resourceGroup, name, backupMode, periodicBackupIntervalMinutes, periodicBackupRetentionHours, continuousBackupTier
+| order by subscriptionId asc, resourceGroup asc, name asc
+```
+
+When choosing a backup mode, use periodic mode when scheduled backups and support-request restore meet your recovery requirements. Use continuous mode when you need point-in-time restore and self-service restore within your configured retention tier (7 or 30 days).
 
 ## Next steps
 

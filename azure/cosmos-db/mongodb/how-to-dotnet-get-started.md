@@ -26,7 +26,7 @@ This article shows you how to connect to Azure Cosmos DB for MongoDB using .NET 
 
 ## Prerequisites
 
-- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free).
+- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - [.NET 6.0](https://dotnet.microsoft.com/download)
 - [Azure Command-Line Interface (CLI)](/cli/azure/) or [Azure PowerShell](/powershell/azure/)
 - [Azure Cosmos DB for MongoDB resource](../how-to-dotnet-create-database.md)

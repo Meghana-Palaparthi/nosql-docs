@@ -7,6 +7,7 @@ ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: feature-guide
 ms.date: 11/03/2025
+ms.update-cycle: 180-days
 ms.custom: sfi-image-nochange
 ms.collection:
   - ce-skilling-ai-copilot

@@ -57,8 +57,8 @@
       "breadcrumb_path": "~/breadcrumb/azure-nosql/toc.yml",
       "zone_pivot_group_filename": "zone-pivots/zone-pivot-groups.json",
       "feedback_system": "Standard",
-      "feedback_product_url": "https://learn.microsoft.com/answers/tags/187/azure-cosmos-db",
-      "feedback_help_link_url": "https://learn.microsoft.com/answers/tags/187/azure-cosmos-db",
+      "feedback_product_url": "https://feedback.azure.com/d365community/forum/79b1327d-d925-ec11-b6e6-000d3a4f06a4",
+      "feedback_help_link_url": "/answers/tags/133/azure",
       "feedback_help_link_type": "get-help-at-qna"
     },
     "fileMetadata": {
@@ -66,11 +66,11 @@
         "cosmos-db/*": true
       },
       "feedback_product_url": {
-        "documentdb/**/*": "https://feedback.azure.com/d365community/forum/3002b3be-0d25-ec11-b6e6-000d3a4f0858",
+        "documentdb/**/*": "https://feedback.azure.com/d365community/forum/79b1327d-d925-ec11-b6e6-000d3a4f06a4",
         "cosmos-db/**/*.md": "https://feedback.azure.com/d365community/forum/3002b3be-0d25-ec11-b6e6-000d3a4f0858"
       },
       "feedback_help_link_url": {
-        "documentdb/**/*": "/answers/tags/187/azure-cosmos-db/",
+        "documentdb/**/*": "/answers/tags/1589/azure-documentdb/",
         "cosmos-db/**/*": "/answers/tags/187/azure-cosmos-db/"
       },
       "ms.service": {

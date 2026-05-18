@@ -138,7 +138,7 @@ To learn more about Spring and Azure, continue to the Spring on Azure documentat
 For more information about using Azure with Java, see the [Azure for Java Developers] and the [Working with Azure DevOps and Java].
 
 [Azure for Java Developers]: ../index.yml
-[free Azure account]: https://azure.microsoft.com/pricing/free-trial/
+[free Azure account]: https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn
 [Working with Azure DevOps and Java]: /azure/devops/
 [MSDN subscriber benefits]: https://azure.microsoft.com/pricing/member-offers/msdn-benefits-details/
 [Spring Boot]: http://projects.spring.io/spring-boot/

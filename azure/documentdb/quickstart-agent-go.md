@@ -2,6 +2,7 @@
 title: Quickstart - AI Agent with Vector Search in Go
 description: Learn how to build an AI agent using Go with vector search in Azure DocumentDB. Create intelligent hotel recommendation agents that use semantic search with a custom agentic architecture.
 ms.date: 01/29/2026
+ms.update-cycle: 180-days
 ms.topic: quickstart-sdk
 ms.custom: devx-track-go
 ai-usage: ai-assisted

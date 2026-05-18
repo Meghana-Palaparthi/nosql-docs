@@ -6,6 +6,7 @@ ms.author: sasinnat
 ms.reviewer: mjbrown
 ms.service: azure-cosmos-db
 ms.topic: overview
+ms.update-cycle: 180-days
 ms.date: 05/04/2024
 ---
 

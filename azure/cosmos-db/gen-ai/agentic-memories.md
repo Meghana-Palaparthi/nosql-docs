@@ -5,8 +5,11 @@ description: Learn how to implement agent memories in Azure Cosmos DB for NoSQL.
 author: jcodella
 ms.author: jacodel
 ms.service: azure-cosmos-db
+ms.collection:
+  - ce-skilling-ai-copilot
 ms.topic: how-to
 ms.date: 10/20/2025
+ms.update-cycle: 180-days
 appliesto:
   - ✅ NoSQL
 ai-usage: ai-assisted

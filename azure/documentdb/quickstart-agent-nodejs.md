@@ -2,6 +2,7 @@
 title: Quickstart - AI Agent with Vector Search in TypeScript
 description: Learn how to build an AI agent using TypeScript with vector search in Azure DocumentDB. Create intelligent hotel recommendation agents that use semantic search with LangChain.
 ms.date: 03/04/2026
+ms.update-cycle: 180-days
 ms.topic: quickstart-sdk
 ms.custom: devx-track-ai-agent, devx-track-azd, devx-track-typescript
 ai-usage: ai-assisted

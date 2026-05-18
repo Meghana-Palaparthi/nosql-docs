@@ -21,7 +21,7 @@ This article shows you how to connect to Azure Cosmos DB for NoSQL using the .NE
 
 ## Prerequisites
 
-- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free).
+- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - Azure Cosmos DB for NoSQL account. [Create a API for NoSQL account](how-to-create-account.md).
 - [.NET 6.0 or later](https://dotnet.microsoft.com/download)
 - [Azure Command-Line Interface (CLI)](/cli/azure/) or [Azure PowerShell](/powershell/azure/)

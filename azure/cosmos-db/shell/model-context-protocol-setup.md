@@ -5,7 +5,10 @@ author: sajeetharan
 ms.author: sasinnat
 ms.reviewer: mjbrown
 ms.service: azure-cosmos-db
+ms.collection:
+  - ce-skilling-ai-copilot
 ms.topic: how-to
+ms.update-cycle: 180-days
 ms.date: 05/04/2024
 ---
 
@@ -25,7 +28,7 @@ The Model Context Protocol (MCP) is an open standard that enables AI assistants 
 ## Prerequisites
 
 - Azure Cosmos DB Shell installed ([Installation Guide](install.md))
-- VS Code with Cosmos DB Shell extension (recommended)
+- VS Code with Azure Cosmos DB extension (recommended)
 - Basic understanding of MCP concepts
 - Network connectivity to localhost (MCP server runs locally)
 
@@ -147,8 +150,18 @@ If you disabled auto-start, manually start the MCP server:
 ### From command line
 
 ```bash
-cosmosdbshell --mcp --mcp-port 6128
+cosmosdbshell --mcp
 ```
+
+This starts MCP on the default port `6128`.
+
+To use a different port, pass it as a positional argument:
+
+```bash
+cosmosdbshell --mcp 6128
+```
+
+You can also configure `cosmosDB.shell.MCP.port` in VS Code settings.
 
 ## Using MCP with AI assistants
 
