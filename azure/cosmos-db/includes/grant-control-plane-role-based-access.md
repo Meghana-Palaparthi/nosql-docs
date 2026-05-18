@@ -268,9 +268,9 @@ First, you must prepare a role definition with a list of actions to grant access
 
    In this example, the `id` value is `/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/providers/Microsoft.Authorization/roleDefinitions/230815da-be43-4aae-9cb4-875f7bd000aa`. This example uses fictitious data, and your identifier is distinct from this example. However, the identifier (`230815da-be43-4aae-9cb4-875f7bd000aa`) is globally unique across all role definitions in Azure.
 
-1. Create a new Bicep file to define your role definition. Name the file `control-plane-role-definition.bicep`. Add these `actions` to the definition:
+1. Create a new Bicep file to define your role definition. Name the file `control-plane-role-definition.bicep`. Add the following action to the definition:
 
-    | | Description |
+    | Action | Description |
     | --- | --- |
     | `Microsoft.DocumentDb/*` | Enables all possible actions. |
 
