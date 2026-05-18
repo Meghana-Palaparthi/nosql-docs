@@ -557,6 +557,8 @@ const stream = db.exampleCollection.watch(pipeline);
 - Change stream cursors must be reinitialized after failover events, while resume capability remains preserved.
 - UpdateDescription isn't supported for `update` events within aggregation pipelines. However, update operators are supported.
 - `$changestream` as a nested pipeline of another stage isn't supported.
+- Pre-image isn't supported for historical processing of logs, since the additional pre-image information wasn't being tracked prior.
+- Change streams don't support `showExpandedEvents`.
 
 ## Related content
 
