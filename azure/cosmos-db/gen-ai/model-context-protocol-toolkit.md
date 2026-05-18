@@ -7,7 +7,7 @@ ms.author: sasinnat
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: feature-guide
-ms.date: 11/03/2025
+ms.date: 05/18/2026
 ms.update-cycle: 180-days
 ms.collection:
   - ce-skilling-ai-copilot
@@ -75,24 +75,92 @@ Before deploying the Azure Cosmos DB MCP Toolkit:
 - **Azure Subscription** with Contributor or Owner access ([Free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn))
 - **Azure CLI** ([Install](/cli/azure/install-azure-cli)) installed and authenticated
 - **PowerShell 7+** ([Install](/powershell/scripting/install/installing-powershell)) for deployment scripts
+- **Git** ([Install](https://git-scm.com/downloads)) for cloning the repository
+- **Docker Desktop** ([Install](https://www.docker.com/products/docker-desktop/)) running for container operations
+- **.NET 9.0 SDK** ([Install](https://dotnet.microsoft.com/download/dotnet/9.0)) for building the application
 - **Existing Azure Cosmos DB account** with data (the toolkit connects to your existing Cosmos DB)
-- **Azure Entra ID** permissions for app registration  
+- **Azure Entra ID** permissions for app registration
 - **Azure Container Apps** quota in your region
-- **Azure OpenAI** service for enabling vector search capabilities
-- **Optional**: Docker Desktop ([Install](https://www.docker.com/products/docker-desktop/)) for local development
-- **Optional**: .NET 9.0 SDK ([Install](https://dotnet.microsoft.com/download/dotnet/9.0)) for local development
-- **Optional**: Foundry project 
+- **Azure OpenAI** or **Microsoft Foundry project** (required for vector search with embeddings)
+- **Optional**: Azure Developer CLI ([Install](https://aka.ms/azure-dev/install)) for `azd up` deployment method 
 
 ## Deployment Overview
 
 To deploy and use the Azure Cosmos DB MCP Toolkit:
 
-1. **Deploy Infrastructure**: Use the Deploy to Azure button
-2. **Deploy MCP Server**: Run the automated deployment script
-3. **Test**: Access the built-in test UI
-4. **Integrate**: Connect with Foundry or Visual Studio Code
+1. **Clone Repository**: Get the latest main branch
 
-For detailed deployment instructions, testing guides, and configuration options, see the [Azure Cosmos DB MCP Toolkit README](https://github.com/AzureCosmosDB/MCPToolKit#quick-start).
+```bash
+git clone -b main https://github.com/AzureCosmosDB/MCPToolKit.git
+cd MCPToolKit
+```
+
+2. **Deploy Infrastructure**: Choose one method:
+   - **Option A**: Use the "Deploy to Azure" button for one-click deployment
+   - **Option B**: Use Azure Developer CLI with `azd up` for automation
+
+3. **Deploy MCP Server**: Run the automated deployment script
+
+```powershell
+.\scripts\Deploy-Cosmos-MCP-Toolkit.ps1 -ResourceGroup "YOUR-RESOURCE-GROUP"
+```
+
+4. **Test**: Access the built-in test UI at your Container App URL
+5. **Integrate**: Connect with Microsoft Foundry or Visual Studio Code
+
+For detailed deployment instructions, testing guides, and configuration options, see the [Azure Cosmos DB MCP Toolkit README](https://github.com/AzureCosmosDB/MCPToolKit/blob/main/README.md).
+
+## Multi-Resource Group Deployment Support
+
+The MCP Toolkit now supports deploying resources across separate resource groups, enabling enterprise deployments where Cosmos DB, Azure Container Registry (ACR), and Azure Container Apps (ACA) are managed independently.
+
+### When to Use Multiple Resource Groups
+
+- **Enterprise deployments**: Separate resource groups for databases, infrastructure, and applications
+- **Existing infrastructure**: Connecting to Cosmos DB in a different resource group than your deployment
+- **Organizational policies**: Following your company's resource group organization standards
+- **Team ownership**: Different teams owning different resource groups
+- **Cost tracking**: Allocating resources and costs by department or project
+
+### Deployment with Separate Resource Groups
+
+Use the deployment script with explicit resource group parameters:
+
+```powershell
+# Deploy with Cosmos DB in a different resource group
+.\scripts\Deploy-Cosmos-MCP-Toolkit.ps1 `
+  -ResourceGroup "app-infrastructure-rg" `
+  -CosmosAccountName "my-cosmos-account"
+```
+
+### Configuration Parameters
+
+- **`-ResourceGroup`**: Resource group for ACR and Container Apps (required)
+- **`-CosmosAccountName`**: Name of your existing Cosmos DB account
+- **`-ContainerAppName`**: Name for the container app (optional, defaults to mcp-toolkit-app)
+- **`-Location`**: Azure region for deployment (default: eastus)
+- **`-EntraAppName`**: Custom name for the Entra app registration (optional)
+
+### RBAC Role Assignment Across Resource Groups
+
+The deployment script automatically validates and assigns the necessary roles:
+
+- **Cosmos DB Data Reader** role to the Container App's managed identity in the Cosmos DB resource group
+- **AcrPush** role in the application resource group for container operations
+- **Cognitive Services OpenAI User** role for Microsoft Foundry integration
+
+If you lack permissions to assign roles in a resource group, the script provides clear instructions for manual role assignment. You can also use the helper scripts:
+
+```powershell
+# Assign role to current user
+.\scripts\Assign-Role-To-Current-User.ps1
+
+# Assign role to specific users
+.\scripts\Assign-Role-To-Users.ps1 -UserEmails "user1@company.com,user2@company.com"
+
+# Verify role assignments
+.\scripts\Verify-Role-Assignments.ps1
+```
 
 ## Validate the Deployment
 
@@ -209,12 +277,28 @@ To use with GitHub Copilot or other Visual Studio Code MCP clients:
 - **Container Apps quotas** - Subject to Azure Container Apps service limits
 
 ### Best Practices
-- **Deploy close to data** - Use same Azure region as your Azure Cosmos DB
+- **Deploy close to data** - Use same Azure region as your Azure Cosmos DB for best performance
 - **Monitor usage** - Review Container Apps metrics and Azure Cosmos DB RU consumption
 - **Secure endpoints** - Use private endpoints for production deployments
 - **Regular updates** - Keep the toolkit updated for latest features and security
-- **Resource group organization** - Keep all resources in the same resource group for simplified management
+- **Multi-resource group strategy** - Use separate resource groups when appropriate for your organization's governance model
+- **Role-based access** - Leverage Azure RBAC for least-privilege access across resource groups
+- **Credential rotation** - Rotate Azure Entra ID application credentials regularly
+- **Health monitoring** - Enable Container App monitoring and set up alerts for failed health checks
 
+## Recent Updates
+
+**May 2026 - Release** improvements:
+- Multi-resource group deployment support for enterprise scenarios
+- Enhanced error handling and troubleshooting guides  
+- Azure Developer CLI (`azd up`) deployment option
+- Improved role assignment workflows across resource groups
+- Support for existing service principals and Entra apps
+- Better integration with Azure Container Registry and Azure Container Apps
+- Helper scripts for role assignment and verification
+- Support for reusing existing Entra app registrations
+
+For a complete list of changes, see the [CHANGELOG](https://github.com/AzureCosmosDB/MCPToolKit/blob/main/CHANGELOG.md).
 
 ## Related content
 
@@ -223,3 +307,4 @@ To use with GitHub Copilot or other Visual Studio Code MCP clients:
 - [Tokens](tokens.md)
 - [Vector Embeddings](vector-embeddings.md)
 - [Retrieval Augmented Generated (RAG)](rag.md)
+- [MCPToolKit GitHub Repository](https://github.com/AzureCosmosDB/MCPToolKit)
