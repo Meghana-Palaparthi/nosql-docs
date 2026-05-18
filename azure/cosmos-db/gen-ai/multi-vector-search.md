@@ -26,7 +26,7 @@ Use multi-vector search when one item contains multiple semantic units that shou
 
 
 > [!IMPORTANT]
-> As Multi-vector search is gradually rolling out across Azure regions, availability may vary, and the feature might not yet be accessible in your subscription or region. 
+> As multi-vector search is gradually rolling out across Azure regions, availability may vary, and the feature might not yet be accessible in your subscription or region. 
 
 > [!NOTE]
 > Currently only the quantizedFlat vector index type is supported for multi-vector search. Support for DiskANN indexes is planned for the future.
