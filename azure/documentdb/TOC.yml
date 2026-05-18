@@ -135,6 +135,8 @@
       href: high-availability.md
     - name: Cross-region replication
       href: cross-region-replication.md
+    - name: Cross-region failover modes
+      href: failover-modes.md
     - name: High availability and disaster recovery - Behind the scenes
       href: availability-disaster-recovery-under-hood.md
     - name: Best practices for high availability and disaster recovery
