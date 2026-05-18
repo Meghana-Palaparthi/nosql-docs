@@ -52,7 +52,7 @@ Each range is read in parallel. A range's progress is maintained separately from
 
 ### [.NET](#tab/dotnet)
 
-The change feed processor in .NET is available for [latest version mode](change-feed-modes.md#latest-version-change-feed-mode) and [all versions and deletes mode](change-feed-modes.md#all-versions-and-deletes-change-feed-mode-preview). All versions and deletes mode is in preview and is supported for the change feed processor beginning in version `3.40.0-preview.0`. The point of entry for both modes is always the monitored container.
+The change feed processor in .NET is available for [latest version mode](change-feed-modes.md#latest-version-change-feed-mode) and [all versions and deletes mode](change-feed-modes.md#all-versions-and-deletes-change-feed-mode). All versions and deletes mode is supported for the change feed processor beginning in version `3.40.0-preview.0`. The point of entry for both modes is always the monitored container.
 
 To read using latest version mode, in a `Container` instance, you call `GetChangeFeedProcessorBuilder`:
 
@@ -239,7 +239,7 @@ For full working samples, see [this GitHub repository](https://github.com/Azure-
 >
 > This annotation ensures that system metadata fields present in the change feed payload are silently ignored during deserialization.
 
-The delegate implementation for reading the change feed in [all versions and deletes mode](change-feed-modes.md#all-versions-and-deletes-change-feed-mode-preview) is similar, but instead of calling `.handleChanges()`, call `.handleAllVersionsAndDeletesChanges()`. The All versions and deletes mode is in preview and is available in Java SDK version >= `4.42.0`.
+The delegate implementation for reading the change feed in [all versions and deletes mode](change-feed-modes.md#all-versions-and-deletes-change-feed-mode) is similar, but instead of calling `.handleChanges()`, call `.handleAllVersionsAndDeletesChanges()`. The All versions and deletes mode is available in Java SDK version >= `4.42.0`.
 
 Here's an example:
 
@@ -345,7 +345,7 @@ Moreover, the change feed processor can dynamically adjust a container's scale i
 By default, when a change feed processor starts for the first time, it initializes the lease container and starts its [processing life cycle](#processing-life-cycle). Any changes that happened in the monitored container before the change feed processor was initialized for the first time aren't detected.
 
 > [!NOTE]
-> Modifying the starting time of the change feed processor isn't available when you use [all versions and deletes mode](change-feed-modes.md#all-versions-and-deletes-change-feed-mode-preview). Currently, you must use the default start time.
+> Modifying the starting time of the change feed processor isn't available when you use [all versions and deletes mode](change-feed-modes.md#all-versions-and-deletes-change-feed-mode). Currently, you must use the default start time.
 
 ### Reading from a previous date and time
 
