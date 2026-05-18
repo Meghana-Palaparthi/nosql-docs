@@ -209,11 +209,6 @@ public static class DataConsumerApp
             foreach (var change in cursor.Current)
             {
                 var operationType = change.OperationType;
-                if (operationType == ChangeStreamOperationType.Invalidate)
-                {
-                    Console.WriteLine("Change stream invalidated. Stopping consumer.");
-                    return;
-                }
 
                 var collectionName = change.CollectionNamespace?.CollectionName ?? context.Collection.CollectionNamespace.CollectionName;
                 var fullDoc = change.FullDocument?.ToJson() ?? "{}";
@@ -326,11 +321,6 @@ async function main() {
     while (true) {
       const change = await changeStream.next();
       const operationType = change.operationType;
-
-      if (operationType === 'invalidate') {
-        console.log('Change stream invalidated. Stopping consumer.');
-        break;
-      }
 
       if ('ns' in change && change.ns) {
         const ns = change.ns as { db: string; coll?: string };
