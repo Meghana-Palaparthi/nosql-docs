@@ -79,7 +79,7 @@ db.products.createIndex(
 
 ## Step 2: querying both arms
 
-Each arm runs as its own aggregation pipeline. The keyword arm follows the standard `$search` rules from [BM25 keyword search](full-text-search-bm25-keyword.md): `index: "<name>"`, `$search` first, `$limit` downstream.
+Each arm runs as its own aggregation pipeline. The keyword arm follows the standard `$search` rules from [BM25 keyword search](full-text-search-keyword.md): `index: "<name>"`, `$search` first, `$limit` downstream.
 
 ```javascript
 // Assumes db is a connected MongoDB database (from MongoClient.connect().db("..."))
@@ -203,7 +203,7 @@ Use the server-side variant when you want a single round-trip and no client-side
 
 ## Related pages
 
-- [BM25 keyword search](full-text-search-bm25-keyword.md)
+- [BM25 keyword search](full-text-search-keyword.md)
 - [Full-text search overview and migration table](full-text-search-overview.md)
 
 

@@ -76,7 +76,7 @@ db.products_10M.aggregate([
 ]);
 ```
 
-The same rules from [BM25 keyword search](full-text-search-bm25-keyword.md) apply: `$search` is the first stage, `index: "<name>"` is set explicitly, and `$limit` lives downstream of `$search`.
+The same rules from [BM25 keyword search](full-text-search-keyword.md) apply: `$search` is the first stage, `index: "<name>"` is set explicitly, and `$limit` lives downstream of `$search`.
 
 ## Tuning `maxEdits`
 
@@ -97,7 +97,7 @@ Combine fuzzy queries with a minimum-score threshold (`$match: { score: { $gte: 
 
 ## Related pages
 
-- [BM25 keyword search](full-text-search-bm25-keyword.md)
+- [BM25 keyword search](full-text-search-keyword.md)
 - [Phrase search and proximity matching](full-text-search-phrase-proximity.md)
 - [Hybrid search (BM25 + vector)](full-text-search-hybrid.md)
 - [Full-text search overview and migration table](full-text-search-overview.md)

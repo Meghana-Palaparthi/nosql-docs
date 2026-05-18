@@ -62,15 +62,15 @@ If your application uses the community MongoDB `$text` operator or `{ field: "te
 
 | Legacy feature | Legacy operator | New equivalent | Reference |
 | --- | --- | --- | --- |
-| Term-based search | `$text: { $search: "..." }` | `$search` + `text` (BM25-ranked) | [BM25 keyword search](full-text-search-bm25-keyword.md) |
+| Term-based search | `$text: { $search: "..." }` | `$search` + `text` (BM25-ranked) | [BM25 keyword search](full-text-search-keyword.md) |
 | Phrase search | `$text: { $search: "\"a b\"" }` | `$search` + `phrase` with `slop` | [Phrase search](full-text-search-phrase-proximity.md) |
 | Fuzzy search | *Not available* | `$search` + `text` + `fuzzy.maxEdits` | [Fuzzy search](full-text-search-fuzzy.md) |
 | Proximity search | *Not available* | `$search` + `phrase` + `slop` | [Phrase search](full-text-search-phrase-proximity.md) |
-| Wildcard / regex | `$regex` | `$regex` still works for substring patterns but is unranked and forces a `COLLSCAN` on text fields; prefer `$search` | [BM25 keyword search](full-text-search-bm25-keyword.md) |
+| Wildcard / regex | `$regex` | `$regex` still works for substring patterns but is unranked and forces a `COLLSCAN` on text fields; prefer `$search` | [BM25 keyword search](full-text-search-keyword.md) |
 
 ## Related pages
 
-- [BM25 keyword search](full-text-search-bm25-keyword.md)
+- [BM25 keyword search](full-text-search-keyword.md)
 - [Fuzzy search](full-text-search-fuzzy.md)
 - [Phrase search and proximity matching](full-text-search-phrase-proximity.md)
 - [Hybrid search (BM25 + vector)](full-text-search-hybrid.md)

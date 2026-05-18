@@ -67,7 +67,7 @@
             - name: Overview
               href: full-text-search-overview.md
             - name: BM25 keyword search
-              href: full-text-search-bm25-keyword.md
+              href: full-text-search-keyword.md
             - name: Fuzzy search
               href: full-text-search-fuzzy.md
             - name: Phrase search and proximity matching

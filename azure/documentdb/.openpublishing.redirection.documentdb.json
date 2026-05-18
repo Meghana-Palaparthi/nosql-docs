@@ -6,6 +6,11 @@
       "redirect_document_id": false
     },
     {
+      "source_path_from_root": "/azure/documentdb/full-text-search-bm25-keyword.md",
+      "redirect_url": "/azure/documentdb/full-text-search-keyword",
+      "redirect_document_id": false
+    },
+    {
       "source_path_from_root": "/azure/documentdb/full-text-search.md",
       "redirect_url": "/azure/documentdb/full-text-search-overview",
       "redirect_document_id": false

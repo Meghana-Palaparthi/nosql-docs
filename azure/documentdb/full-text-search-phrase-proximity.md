@@ -76,7 +76,7 @@ db.products_10M.aggregate([
 ]);
 ```
 
-The same rules from [BM25 keyword search](full-text-search-bm25-keyword.md) apply: `$search` is the first stage, `index: "<name>"` is set explicitly, and `$limit` is downstream.
+The same rules from [BM25 keyword search](full-text-search-keyword.md) apply: `$search` is the first stage, `index: "<name>"` is set explicitly, and `$limit` is downstream.
 
 ## Phrase search with downstream filters
 
@@ -101,7 +101,7 @@ db.products_10M.aggregate([
 
 ## Related pages
 
-- [BM25 keyword search](full-text-search-bm25-keyword.md)
+- [BM25 keyword search](full-text-search-keyword.md)
 - [Fuzzy search (constraint callout)](full-text-search-fuzzy.md#known-constraint)
 - [Hybrid search (BM25 + vector)](full-text-search-hybrid.md)
 - [Full-text search overview and migration table](full-text-search-overview.md)
