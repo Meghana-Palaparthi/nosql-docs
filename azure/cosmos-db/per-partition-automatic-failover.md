@@ -1,11 +1,11 @@
 ---
-title: Per-partition automatic failover in Azure Cosmos DB
-description: Learn how per-partition automatic failover (PPAF) delivers sub-3-minute RTO and partition-scoped recovery for single-write-region Azure Cosmos DB for NoSQL accounts.
+title: Per-partition automatic failover
+description: Learn how per-partition automatic failover (PPAF) delivers sub-3-minute RTO and partition-scoped recovery for single-write-region Azure Cosmos DB accounts.
 author: sushantrane
 ms.author: srane
 ms.service: azure-cosmos-db
 ms.subservice: nosql
-ms.topic: conceptual
+ms.topic: concept-article
 ms.date: 05/15/2026
 appliesto:
   - ✅ NoSQL
@@ -154,36 +154,41 @@ PPAF is designed to be hands-off. The most common operational pattern is to **le
 
 ### Frequently asked questions
 
-**Do all my partitions fail over together?**
+#### Do all my partitions fail over together?
+
 No. Each partition decides independently. A partial regional outage typically moves only the subset of partitions actually affected; healthy partitions stay in the original region.
 
-**Will my application see errors during failover?**
+#### Will my application see errors during failover?
+
 Writes to affected partitions may see transient errors until the new region is elected and the SDK refreshes its routing — usually under three minutes. The SDK retries automatically. Reads to other regions and writes to unaffected partitions continue normally.
 
-**Can I lose data?**
+#### Can I lose data?
+
 For **Strong** consistency, no — RPO is 0 through PPAF failovers. For other consistency levels, PPAF picks the replica with the most recent committed state to minimize loss, and reconciles any divergent writes on failback using last-writer-wins.
 
-**Do I need to do anything on failback?**
+#### Do I need to do anything on failback?
+
 No. Failback is automatic, uses incremental catch-up rather than a full rebuild, and reconciles divergent writes in the background.
 
-**Does PPAF replace multi-write?**
+#### Does PPAF replace multi-write?
+
 PPAF is for single-write-region accounts that want fast, automatic recovery without conflict-resolution complexity. Multi-write (multi-region writes) remains the right choice for workloads that need active-active write capability across regions at all times.
 
 ## Pricing
 
-PPAF is part of the **Business Critical** service tier for Azure Cosmos DB. See [Azure Cosmos DB pricing](https://azure.microsoft.com/pricing/details/cosmos-db/) for current rates.
+PPAF is part of the **Business Critical** service tier for Azure Cosmos DB. For more information and current rates, see [Azure Cosmos DB pricing](https://azure.microsoft.com/pricing/details/cosmos-db/).
 
 ## Prerequisites at a glance
 
 | Requirement | Value |
-|---|---|
+| --- | --- |
 | API | NoSQL (Core SQL API) |
 | Account topology | Single write region with at least one read region |
 | Throughput | Provisioned (manual or autoscale) |
 | Consistency | Strong, Session, Consistent Prefix, or Eventual |
 | Cloud | Azure public cloud regions |
 | Connection mode | Direct |
-| SDK | <ul><li>.NET v3 ≥ 3.59.0</li><li>Java v4 ≥ 4.79.0</li><li>Python ≥ 4.16.0</li><li>Node.js ≥ 4.7.0</li> |
+| SDK | .NET v3 ≥ 3.59.0 - Java v4 ≥ 4.79.0 - Python ≥ 4.16.0 - Node.js ≥ 4.7.0 |
 
 ## Related content
 

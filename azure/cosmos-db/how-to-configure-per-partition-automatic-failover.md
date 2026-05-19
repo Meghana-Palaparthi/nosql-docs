@@ -1,6 +1,6 @@
 ---
 title: Configure per-partition automatic failover
-description: Configure per-partition automatic failover (PPAF) for an Azure Cosmos DB for NoSQL account to improve availability with partition-level failover.
+description: Configure per-partition automatic failover (PPAF) for an Azure Cosmos DB account to improve availability with partition-level failover.
 author: sushantrane
 ms.author: srane
 ms.service: azure-cosmos-db

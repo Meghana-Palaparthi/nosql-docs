@@ -493,7 +493,7 @@
           href: global-secondary-indexes.md
         - name: Configure global secondary indexes (preview)
           href: how-to-configure-global-secondary-indexes.md
-    - name: Distributed Transactions (preview)
+    - name: Distributed transactions (preview)
       items:
         - name: Configure distributed transactions (preview)
           href: how-to-configure-and-use-distributed-transactions.md
@@ -776,11 +776,11 @@
               href: how-to-manage-conflicts.md
         - name: Convert session token format
           href: how-to-convert-session-token.md
-    - name: Per Partition Automatic Failover
+    - name: Per-partition automatic failover
       items:
         - name: Overview
           href: per-partition-automatic-failover.md
-        - name: Configure Per Partition Automatic Failover
+        - name: Configure per-partition automatic failover
           href: how-to-configure-per-partition-automatic-failover.md
 - name: Manage your account
   items:
