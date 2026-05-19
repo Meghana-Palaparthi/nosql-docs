@@ -28,7 +28,7 @@ Before enabling PPAF, ensure your environment meets the following **prerequisite
 - **Multi-region account:** Single-write region account with **at least one** other **read region** configured.
 - **Consistency model:** **Strong**, **Session**, **Consistent prefix**, or **Eventual** consistency are currently supported. **Bounded staleness** will be supported in a future release.
 - **API type:** The account must use the **Core (SQL) API** (NoSQL API).
-- **Azure region:** The account must be in an **Azure public cloud region** (Global Azure). Accounts in sovereign clouds aren't supported.
+- **Azure region:** The account must be in a **global Azure region**
 - **SDK version:** Your application must use a supported Azure Cosmos DB SDK that implements PPAF logic. The preview currently supports:
   - **.NET SDK v3** : v3.59.0 or later
   - **Java SDK**: v4.79.0 or later

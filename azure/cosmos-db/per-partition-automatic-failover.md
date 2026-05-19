@@ -77,7 +77,7 @@ What you **cannot do** while PPAF is enabled (these are deliberate guardrails so
 - Run on a **serverless** account — provisioned throughput (manual or autoscale) is required.
 - Use **Synapse Link**.
 - Use **in-account restore**.
-- Use sovereign-cloud regions *(public Azure regions only — sovereign cloud support is on the roadmap).*
+- Use Azure regions other than global Azure regions
 - Execute **Partition Merge** or **Region offline** on a PPAF-enabled account. Disable PPAF first, perform the operation, then re-enable.
 
 ## Consistency support
@@ -113,9 +113,9 @@ Auto-reconciliation is **enabled by default**. If your application needs custom 
 
 ### Brief pause during failback
 
-Failback completes a graceful handoff to restore the preferred write region. During the handoff there is a short window — typically a few seconds — when writes to the affected partition may experience elevated latency or transient retries. The Cosmos DB SDKs retry these automatically; applications do not need to handle them explicitly.
+Failback completes a graceful handoff to restore the preferred write region. During the handoff there is a short window — typically a few seconds — when writes to the affected partition could experience elevated latency or transient retries. The Cosmos DB SDKs retry these automatically; applications do not need to handle them explicitly.
 
-## Application impact
+## Application changes
 
 For most applications, the only requirement is to upgrade to a supported SDK version. Once PPAF is enabled on the account, the SDK:
 
@@ -160,7 +160,7 @@ No. Each partition decides independently. A partial regional outage typically mo
 
 #### Will my application see errors during failover?
 
-Writes to affected partitions may see transient errors until the new region is elected and the SDK refreshes its routing — usually under three minutes. The SDK retries automatically. Reads to other regions and writes to unaffected partitions continue normally.
+Writes to affected partitions might see transient errors until the new region is elected and the SDK refreshes its routing — usually under three minutes. The SDK retries automatically. Reads to other regions and writes to unaffected partitions continue normally.
 
 #### Can I lose data?
 
