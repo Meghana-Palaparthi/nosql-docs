@@ -6,7 +6,7 @@ ms.author: mjbrown
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: concept-article
-ms.date: 09/03/2025
+ms.date: 05/18/2026
 ms.custom: cosmos-db-video, build-2023
 ai-usage: ai-assisted
 appliesto:
@@ -81,7 +81,7 @@ Azure Cosmos DB is an excellent central append-only persistent data store in the
 
 ## Current limitations
 
-The change feed has multiple modes, each with important limitations you should understand. There are several areas to consider when you design an application that uses the change feed in either [latest version mode](change-feed-modes.md#latest-version-change-feed-mode) or [all versions and deletes mode](change-feed-modes.md#all-versions-and-deletes-change-feed-mode-preview).
+The change feed has multiple modes, each with important limitations you should understand. There are several areas to consider when you design an application that uses the change feed in either [latest version mode](change-feed-modes.md#latest-version-change-feed-mode) or [all versions and deletes mode](change-feed-modes.md#all-versions-and-deletes-change-feed-mode).
 
 ### Intermediate updates
 
@@ -89,7 +89,7 @@ The change feed has multiple modes, each with important limitations you should u
 
 In latest version mode, only the most recent change for a specific item is included in the change feed. When processing changes, you read the latest available item version. If there are multiple updates to the same item in a short period of time, it's possible to miss processing intermediate updates. To replay past individual updates to an item, model these updates as a series of writes or use all versions and deletes mode.
 
-#### [All versions and deletes mode (preview)](#tab/all-versions-and-deletes)
+#### [All versions and deletes mode](#tab/all-versions-and-deletes)
 
 All versions and deletes mode provides a full operation log of every item version from all operations. No intermediate updates are missed when they occur within the continuous backup retention period configured for the account.
 
@@ -101,7 +101,7 @@ All versions and deletes mode provides a full operation log of every item versio
 
 The change feed latest version mode doesn't capture deletes. When you delete an item from your container, the item is removed from the change feed. The most common method to handle delete operations is to add a soft marker to the items being deleted. You can add a property called `deleted` and set it to `true` at the time of deletion. This document update shows up in the change feed. You can set a Time to Live (TTL) on this item so that it can be automatically deleted later.
 
-#### [All versions and deletes mode (preview)](#tab/all-versions-and-deletes)
+#### [All versions and deletes mode](#tab/all-versions-and-deletes)
 
 Deletes are captured in all versions and deletes mode without needing to set a soft delete marker. You also get metadata that indicates whether the delete was from a TTL expiration.
 
@@ -113,7 +113,7 @@ Deletes are captured in all versions and deletes mode without needing to set a s
 
 The change feed in latest version mode has an unlimited retention. As long as an item exists in your container, it's available in the change feed.
 
-#### [All versions and deletes mode (preview)](#tab/all-versions-and-deletes)
+#### [All versions and deletes mode](#tab/all-versions-and-deletes)
 
 All versions and deletes mode lets you read changes that occur within the continuous backup retention period configured for the account. With a seven-day retention period, you can't read changes from eight days ago. If your application needs to track all updates from the beginning of the container, latest version mode might be a better fit.
 
