@@ -6,7 +6,7 @@ ms.author: jucocchi
 ms.service: azure-cosmos-db
 ms.custom: build-2023
 ms.topic: concept-article
-ms.date: 4/8/2025
+ms.date: 05/18/2026
 appliesto:
   - ✅ NoSQL
 ---
@@ -22,9 +22,9 @@ Azure Cosmos DB offers two change feed modes. Each mode offers the same core fun
 
 Latest version mode is a persistent record of changes made to items from creates and updates. You get the latest version of each item in the container. For example, if an item is created and then updated before you read the change feed, only the updated version appears in the change feed. Deletes aren't captured as changes, and when an item is deleted, it's no longer be available in the feed. Latest version change feed mode is enabled by default and is compatible with all Azure Cosmos DB accounts except the API for Table and the API for PostgreSQL. This mode was previously the default way to consume the change feed.
 
-## All versions and deletes change feed mode (preview)
+## All versions and deletes change feed mode
 
-All versions and deletes mode (preview) is a persistent record of all changes to items from create, update, and delete operations. You get a record of each change to items in the order that it occurred, including intermediate changes to an item between change feed reads. For example, if an item is created and then updated before you read the change feed, both the create and the update versions of the item appear in the change feed. To read from the change feed in all versions and deletes mode, you must have [continuous backups](continuous-backup-restore-introduction.md) configured for your Azure Cosmos DB account. Turning on continuous backups creates the all versions and deletes change feed. You can only read changes that occurred within the continuous backup period when using this change feed mode. This mode is only compatible with Azure Cosmos DB for NoSQL accounts. Learn more about how to [sign up for the preview](?tabs=all-versions-and-deletes#get-started).
+All versions and deletes mode is a persistent record of all changes to items from create, update, and delete operations. You get a record of each change to items in the order that it occurred, including intermediate changes to an item between change feed reads. For example, if an item is created and then updated before you read the change feed, both the create and the update versions of the item appear in the change feed. To read from the change feed in all versions and deletes mode, you must have [continuous backups](continuous-backup-restore-introduction.md) configured for your Azure Cosmos DB account. Turning on continuous backups creates the all versions and deletes change feed. You can only read changes that occurred within the continuous backup period when using this change feed mode. This mode is only compatible with Azure Cosmos DB for NoSQL accounts. Learn more about how to [enable your account](?tabs=all-versions-and-deletes#get-started).
 
 ## Change feed use cases
 
@@ -42,7 +42,7 @@ The following are scenarios well-suited to this mode:
 
 * Workloads that don't need to capture deletes or intermediate changes between reads.
 
-### [All versions and deletes mode (preview)](#tab/all-versions-and-deletes)
+### [All versions and deletes mode](#tab/all-versions-and-deletes)
 
 The all versions and deletes change feed mode enables new scenarios for change feed, and simplifies others. You can read every change that occurred to items (even in cases in which multiple changes occurred between change feed reads), identify the operation type of changes being processed, and get changes that result from deletes.
 
@@ -78,7 +78,7 @@ In addition to the [common features across all change feed modes](change-feed.md
 
 * The starting point to read change feed can be from the beginning of the container, from a point in time, from "now," or from a specific checkpoint. The precision of the start time is approximately five seconds.
 
-### [All versions and deletes mode (preview)](#tab/all-versions-and-deletes)
+### [All versions and deletes mode](#tab/all-versions-and-deletes)
 
 * The change feed includes insert, update, and delete operations made to items within the container. Deletes from TTL expirations are also captured.
 
@@ -114,14 +114,14 @@ The `_etag` format is internal and you shouldn't take dependency on it because i
 
 `ETag` on `FeedResponse` is different from the `_etag` you see on the item. `_etag` is an internal identifier, and it's used for concurrency control. The `_etag` property represents the version of the item, whereas the `ETag` property is used to sequence the feed.
 
-### [All versions and deletes mode (preview)](#tab/all-versions-and-deletes)
+### [All versions and deletes mode](#tab/all-versions-and-deletes)
 
-During the preview, the following methods to read the change feed are available for each client SDK:
+The following methods to read the change feed are available for each client SDK:
 
 | **Method to read change feed** | **.NET** | **Java** | **Python** | **Node.js** | **Spark** |
 | --- | --- | --- | --- | --- | --- |
-| [Change feed pull model](change-feed-pull-model.md) | [>= 3.32.0-preview](https://www.nuget.org/packages/Microsoft.Azure.Cosmos/3.32.0-preview) | [>= 4.63.3](https://mvnrepository.com/artifact/com.azure/azure-cosmos/4.37.0) | [>= 4.9.1b1](https://pypi.org/project/azure-cosmos/4.9.1b1/) |  [>= 4.1.0](https://www.npmjs.com/package/@azure/cosmos?activeTab=versions) | [>= 4.40.0 for all Spark Runtimes](https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/cosmos/azure-cosmos-spark_3-3_2-12/README.md) |
-| [Change feed processor](change-feed-processor.md) | [>= 3.40.0-preview.0](https://www.nuget.org/packages/Microsoft.Azure.Cosmos/3.40.0-preview.0) | [>= 4.63.3](https://mvnrepository.com/artifact/com.azure/azure-cosmos/4.42.0) | No | No | No |
+| [Change feed pull model](change-feed-pull-model.md) | [>= 3.60.0](https://www.nuget.org/packages/Microsoft.Azure.Cosmos/3.60.0) | [>= 4.81.0](https://mvnrepository.com/artifact/com.azure/azure-cosmos) | [>= 4.9.1b1](https://pypi.org/project/azure-cosmos/4.9.1b1/) |  [>= 4.1.0](https://www.npmjs.com/package/@azure/cosmos?activeTab=versions) | [>= 4.40.0 for all Spark Runtimes](https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/cosmos/azure-cosmos-spark_3-3_2-12/README.md) |
+| [Change feed processor](change-feed-processor.md) | [>= 3.60.0](https://www.nuget.org/packages/Microsoft.Azure.Cosmos/3.60.0) | [>= 4.81.0](https://mvnrepository.com/artifact/com.azure/azure-cosmos) | No | No | No |
 | Azure Functions trigger | No | No | No | No | No |
 
 > [!NOTE]
@@ -129,11 +129,11 @@ During the preview, the following methods to read the change feed are available 
 
 ### Get started
 
-To get started using all versions and deletes change feed mode, navigate to the **Features** page in your Azure Cosmos DB account. Select and enable the **All versions and deletes change feed mode (preview)** feature. You must have [continuous backups](continuous-backup-restore-introduction.md) configured for your Azure Cosmos DB account before enabling the feature. The enablement process can take up to 30 minutes to be complete and no other changes can be made to the account during this time. 
+To get started using all versions and deletes change feed mode, navigate to the **Features** page in your Azure Cosmos DB account. Select and enable the **All versions and deletes change feed mode** feature. You must have [continuous backups](continuous-backup-restore-introduction.md) configured for your Azure Cosmos DB account before enabling the feature. The enablement process can take up to 30 minutes to be complete and no other changes can be made to the account during this time. 
 
-:::image type="content" source="media/change-feed-modes/enroll-in-preview.png" alt-text="Screenshot of All versions and deletes change feed mode feature in Features page in the Azure portal.":::
+:::image type="content" source="media/change-feed-modes/enroll-account.png" alt-text="Screenshot of All versions and deletes change feed mode feature in Features page in the Azure portal." lightbox="media/change-feed-modes/enroll-account.png":::
 
-Alternately, enable all versions and deletes mode on a pre-existing account with the REST API by adding `"enableAllVersionsAndDeletesChangeFeed" : true` to the `properties` of your account. This property is available in preview API version `2024-12-01-preview` or later. Enabling this feature during account creation isn't supported.
+Alternately, enable all versions and deletes mode on a preexisting account with the REST API by adding `"enableAllVersionsAndDeletesChangeFeed" : true` to the `properties` of your account. This property is available in preview API version `2024-12-01-preview` or later preview version. Enabling this feature during account creation isn't supported.
 
 ### Parse the response object
 
@@ -191,11 +191,11 @@ The response object is an array of items that represent each change. Different p
 
 * Continuous backups are required to use this change feed mode. Refer to the [limitations of using continuous backups](continuous-backup-restore-introduction.md#current-limitations).
 
+* Accounts that have ever merged a partition, or currently have enabled [partition merge](merge.md) aren't supported.
+
 * The ability to start reading the change feed from the beginning or to select a start time based on a past time stamp isn't currently supported. You can either start from "now" or from a previous [lease](change-feed-processor.md#components-of-the-change-feed-processor) or [continuation token](change-feed-pull-model.md#save-continuation-tokens).
 
 * Receiving the previous version of items that were deleted or updated isn't currently available.
-
-* Accounts that enabled [merging partitions](merge.md) aren't supported.
 
 ---
 

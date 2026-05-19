@@ -5,7 +5,7 @@ author: TheovanKraay
 ms.author: thvankra
 ms.service: azure-cosmos-db
 ms.topic: concept-article
-ms.date: 09/03/2025
+ms.date: 05/18/2026
 ms.custom:
   - ai-gen-docs-bap
   - ai-gen-title
@@ -36,7 +36,7 @@ A multi-region-write account uses two server timestamp values for each entity. T
 | Timestamp | Meaning | When exposed |
 | --- | --- | --- |
 | `_ts` | The server epoch time at which the entity was written | Always exposed by all read and query APIs. |
-| `crts` | The epoch time when a multi-write conflict is fixed, or the absence of a conflict is confirmed. For multi-write region configuration, this timestamp sets the order of changes for Change Feed: Finds the start time for Change Feed requests, Sets the sort order in Change Feed responses. | Shown in Change Feed responses only when the request enables "New Wire Model." This behavior is the default for ["all versions and deletes"](change-feed.md#all-versions-and-deletes-mode-preview) Change Feed mode. |
+| `crts` | The epoch time when a multi-write conflict is fixed, or the absence of a conflict is confirmed. For multi-write region configuration, this timestamp sets the order of changes for Change Feed: Finds the start time for Change Feed requests, Sets the sort order in Change Feed responses. | Shown in Change Feed responses only when the request enables "New Wire Model." This behavior is the default for ["all versions and deletes"](change-feed.md#all-versions-and-deletes-mode) Change Feed mode. |
 
 ## Best practices for multi-region writes
 

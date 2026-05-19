@@ -5,7 +5,7 @@ author: jcocchi
 ms.author: jucocchi
 ms.service: azure-cosmos-db
 ms.topic: concept-article
-ms.date: 06/23/2025
+ms.date: 05/18/2026
 ms.custom: build-2023
 appliesto:
   - ✅ NoSQL
@@ -55,7 +55,7 @@ Change feed is available for partition key ranges of an Azure Cosmos DB containe
 
 * You can use your [provisioned throughput](request-units.md) to read from the change feed, just like any other Azure Cosmos DB operation, in any of the regions associated with your Azure Cosmos DB account.
 
-* The change feed includes insert and update operations made to items within the container. If you're using [all versions and deletes mode (preview)](#all-versions-and-deletes-mode-preview), you also get changes from delete operations and TTL expirations.
+* The change feed includes insert and update operations made to items within the container. If you're using [all versions and deletes mode](#all-versions-and-deletes-mode), you also get changes from delete operations and TTL expirations.
 
 * Each change appears exactly once in the change feed, and the clients must manage the checkpointing logic. If you want to avoid the complexity of managing checkpoints, the change feed processor provides automatic checkpointing and "at least once" semantics. For more information, see [Change feed processor in Azure Cosmos DB](change-feed-processor.md).
 
@@ -88,9 +88,9 @@ There are two [change feed modes](change-feed-modes.md) available: *latest versi
 
 In latest version change feed mode, you see the latest change from an insert or update for all items in the feed, and the feed is available for the life of the container. There's no indication whether a given change is from an insert or an update operation, and deletes aren't captured. Changes can be read from any point in time as far back as the origin of your container. However, if an item is deleted, it's removed from the change feed. To learn more, see the [latest version change feed mode](change-feed-modes.md#latest-version-change-feed-mode).
 
-### All versions and deletes mode (preview)
+### All versions and deletes mode
 
-All versions and deletes mode allows you to see all changes to items from creates, updates, and deletes. You get a record of each change to items in the order that it occurred, including intermediate changes to an item between change feed reads. To read from the change feed in all versions and deletes mode, you must have [continuous backups](continuous-backup-restore-introduction.md) configured for your Azure Cosmos DB account, which creates Azure Cosmos DBs all versions and deletes change feed. In this mode, you can only read changes that occurred within the continuous backup period configured for the account. See the [all versions and deletes change feed mode](change-feed-modes.md#all-versions-and-deletes-change-feed-mode-preview) article to learn more, including how to enroll in the preview.
+All versions and deletes mode allows you to see all changes to items from creates, updates, and deletes. You get a record of each change to items in the order that it occurred, including intermediate changes to an item between change feed reads. To read from the change feed in all versions and deletes mode, you must have [continuous backups](continuous-backup-restore-introduction.md) configured for your Azure Cosmos DB account, which creates Azure Cosmos DBs all versions and deletes change feed. In this mode, you can only read changes that occurred within the continuous backup period configured for the account. See the [all versions and deletes change feed mode](change-feed-modes.md#all-versions-and-deletes-change-feed-mode) article to learn more, including how to enroll your account.
 
 ## Change feed in APIs for Cassandra and MongoDB
 
