@@ -7,7 +7,7 @@ ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.devlang: csharp
 ms.topic: how-to
-ms.date: 07/03/2025
+ms.date: 05/18/2026
 ms.custom: devx-track-java, build-2023
 appliesto:
   - ✅ NoSQL
@@ -50,7 +50,7 @@ Here are some key differences between the change feed processor and the change f
 
 ### [.NET](#tab/dotnet)
 
-To process the change feed by using the pull model, create an instance of `FeedIterator`. When you initially create `FeedIterator`, you must specify a required `ChangeFeedStartFrom` value, which consists of both the starting position for reading changes and the value you want to use for `FeedRange`. The `FeedRange` is a range of partition key values and specifies the items that can be read from the change feed by using that specific `FeedIterator`. You must also specify a required `ChangeFeedMode` value for the mode in which you want to process changes: [latest version](change-feed-modes.md#latest-version-change-feed-mode) or [all versions and deletes](change-feed-modes.md#all-versions-and-deletes-change-feed-mode-preview). Use either `ChangeFeedMode.LatestVersion` or `ChangeFeedMode.AllVersionsAndDeletes` to indicate which mode you want to use to read the change feed. When you use all versions and deletes mode, you must select a change feed start from value of either `Now()` or from a specific continuation token.
+To process the change feed by using the pull model, create an instance of `FeedIterator`. When you initially create `FeedIterator`, you must specify a required `ChangeFeedStartFrom` value, which consists of both the starting position for reading changes and the value you want to use for `FeedRange`. The `FeedRange` is a range of partition key values and specifies the items that can be read from the change feed by using that specific `FeedIterator`. You must also specify a required `ChangeFeedMode` value for the mode in which you want to process changes: [latest version](change-feed-modes.md#latest-version-change-feed-mode) or [all versions and deletes](change-feed-modes.md#all-versions-and-deletes-change-feed-mode). Use either `ChangeFeedMode.LatestVersion` or `ChangeFeedMode.AllVersionsAndDeletes` to indicate which mode you want to use to read the change feed. When you use all versions and deletes mode, you must select a change feed start from value of either `Now()` or from a specific continuation token.
 
 You can optionally specify `ChangeFeedRequestOptions` to set a `PageSizeHint`. When set, this property sets the maximum number of items received per page. If operations in the monitored collection are performed through stored procedures, transaction scope is preserved when reading items from the change feed. As a result, the number of items received might be higher than the specified value so that the items changed by the same transaction are returned as part of one atomic batch.
 
@@ -63,7 +63,7 @@ FeedIterator<User> InteratorWithPOCOS = container.GetChangeFeedIterator<User>(Ch
 > [!TIP]
 > For versions earlier than `3.34.0`, latest version mode can be used by setting `ChangeFeedMode.Incremental`. Both `Incremental` and `LatestVersion` refer to latest version mode of the change feed, and applications that use either mode see the same behavior.
 
-All versions and deletes mode is in preview and can be used with preview .NET SDK versions >= `3.32.0-preview`. Here's an example for obtaining `FeedIterator` in all versions and deletes mode that returns `User` objects:
+All versions and deletes mode can be used with .NET SDK versions >= `3.60.0`. Here's an example for obtaining `FeedIterator` in all versions and deletes mode that returns `User` objects:
 
 ```csharp
 FeedIterator<ChangeFeedItem<User>> InteratorWithPOCOS = container.GetChangeFeedIterator<ChangeFeedItem<User>>(ChangeFeedStartFrom.Now(), ChangeFeedMode.AllVersionsAndDeletes);
@@ -245,7 +245,7 @@ When you're using latest version mode, the `FeedIterator` continuation token nev
 
 To process the change feed by using the pull model, create an instance of `Iterator<FeedResponse<JsonNode>> responseIterator`. When you create `CosmosChangeFeedRequestOptions`, you must specify where to start reading the change feed from and pass the `FeedRange` parameter that you want to use. The `FeedRange` is a range of partition key values that specifies the items that can be read from the change feed.
 
-If you want to read the change feed in [all versions and deletes mode](change-feed-modes.md#all-versions-and-deletes-change-feed-mode-preview), you must also specify `allVersionsAndDeletes()` when you create the `CosmosChangeFeedRequestOptions`. All versions and deletes mode doesn't support processing the change feed from the beginning or from a point in time. You must either process changes from now or from a continuation token. All versions and deletes mode is in preview and is available in Java SDK version >= `4.42.0`.
+If you want to read the change feed in [all versions and deletes mode](change-feed-modes.md#all-versions-and-deletes-change-feed-mode), you must also specify `allVersionsAndDeletes()` when you create the `CosmosChangeFeedRequestOptions`. All versions and deletes mode doesn't support processing the change feed from the beginning or from a point in time. You must either process changes from now or from a continuation token. All versions and deletes mode is available in Java SDK version >= `4.81.0`.
 
 ### Consume the changes for an entire container
 
@@ -305,14 +305,14 @@ To process the change feed by using the pull model, create an instance of respon
 When you call change feed API, you must specify where to start reading the change feed from and pass the `feed_range` parameter that you want to use.
 The `feed_range` is a range of partition key values that specifies the items that can be read from the change feed.
 
-You can also specify `mode` parameter for the change feed mode in which you want to process changes: [LatestVersion](change-feed-modes.md#latest-version-change-feed-mode) or [AllVersionsAndDeletes](change-feed-modes.md#all-versions-and-deletes-change-feed-mode-preview). The default value is `LatestVersion`.
+You can also specify `mode` parameter for the change feed mode in which you want to process changes: [LatestVersion](change-feed-modes.md#latest-version-change-feed-mode) or [AllVersionsAndDeletes](change-feed-modes.md#all-versions-and-deletes-change-feed-mode). The default value is `LatestVersion`.
 Use either `LatestVersion` or `AllVersionsAndDeletes` to indicate which mode you want to use to read the change feed.
 When you use `AllVersionsAndDeletes` mode, you can either start processing changes from now or from a `continuation` token.
 Reading the change feed from the beginning or from a point in time using `start_time` isn't supported.
 
 > [!NOTE]
 > 
-> `AllVersionsAndDeletes` mode is in preview and is available in [Python SDK version 4.9.1b1](https://pypi.org/project/azure-cosmos/4.9.1b1/) or later.
+> `AllVersionsAndDeletes` mode is available in [Python SDK version 4.9.1b1](https://pypi.org/project/azure-cosmos/4.9.1b1/) or later.
 
 ### Consume the changes for an entire container
 

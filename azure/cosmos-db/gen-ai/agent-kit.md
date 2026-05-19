@@ -7,7 +7,7 @@ ms.author: sasinnat
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: feature-guide
-ms.date: 01/29/2026
+ms.date: 05/18/2026
 ms.update-cycle: 180-days
 ms.collection:
   - ce-skilling-ai-copilot
@@ -35,7 +35,7 @@ Poor decisions in these areas can lead to performance issues, scalability proble
 
 ## What's included
 
-The Agent Kit includes **45+ curated rules** across **eight categories**, each prioritized by real-world impact:
+The Agent Kit includes **111 curated rules** across **12 categories**, each prioritized by real-world effect:
 
 | Category | Priority | Description |
 |----------|----------|-------------|
@@ -43,9 +43,13 @@ The Agent Kit includes **45+ curated rules** across **eight categories**, each p
 | **Partition Key Design** | Critical | Guidelines for choosing effective partition keys |
 | **Query Optimization** | High | Techniques to reduce RU consumption and improve performance |
 | **SDK Best Practices** | High | Proper client initialization, retry logic, and error handling |
+| **Design Patterns** | High | LangGraph routing, change-feed materialized views, efficient ranking |
+| **Vector Search** | High | Vector embedding policies, index types, and similarity queries |
+| **Full-Text Search** | High | Full-text indexing, BM25 ranking, and hybrid search patterns |
 | **Indexing Strategies** | Medium-High | Efficient index policies for your workloads |
 | **Throughput & Scaling** | Medium | Autoscale, provisioned throughput, and capacity planning |
 | **Global Distribution** | Medium | Multi-region writes and consistency level selection |
+| **Developer Tooling** | Medium | Build validation, version currency, and emulator configuration |
 | **Monitoring & Diagnostics** | Low-Medium | Logging, metrics, and troubleshooting patterns |
 
 ## Prerequisites
@@ -190,18 +194,42 @@ skills/cosmosdb-best-practices/
 │   ├── data-modeling.md
 │   ├── partition-keys.md
 │   ├── query-optimization.md
+│   ├── vector-search/
+│   ├── full-text-search/
+│   ├── design-patterns/
 │   └── ...
 └── metadata.json     # Version and metadata
 ```
 
-When you work on Azure Cosmos DB code, the AI agent automatically loads the relevant rules and applies them to your context.
+When you work on Azure Cosmos DB code, the AI agent automatically loads the relevant rules and applies them to your context. The skill is regularly updated with new rules based on testing iterations and community contributions.
+
+## Project website
+
+The Agent Kit includes an interactive website at `docs/` designed for GitHub Pages publishing:
+
+- **Main page**: `docs/index.html` with skill overview and categories
+- **Feedback survey**: Built-in survey flow that opens prefilled GitHub issues for suggestions
+- **Integrations**: Documentation for MCP Server and Claude/Cursor plugin installations
+
+To preview locally:
+
+```bash
+# Option 1: VS Code Live Server
+# Open docs/index.html with Live Server
+
+# Option 2: Python static server
+python -m http.server 8080 --directory docs
+```
+
+Then open `http://localhost:8080`.
 
 ## Compatibility
 
 The Azure Cosmos DB Agent Kit works with:
 
 - **GitHub Copilot** - Visual Studio Code, Visual Studio, JetBrains IDEs
-- **Claude Code** - Anthropic's coding assistant
+- **Claude Code** - Anthropic's coding assistant with Claude plugin support
+- **Cursor** - Built on Claude with marketplace plugin installation
 - **Gemini CLI** - Google's command-line AI assistant
 - **Any Agent Skills-compatible tool**
 
@@ -218,10 +246,21 @@ Have you discovered a best practice the kit doesn't cover? Share it with the com
 
 1. Fork the [repository](https://github.com/AzureCosmosDB/cosmosdb-agent-kit)
 2. Add your rule to the appropriate category in `/skills/cosmosdb-best-practices/rules/`
-3. Submit a pull request with a description of the scenario and impact
+3. Submit a pull request with a description of the scenario
 4. Help thousands of developers write better Azure Cosmos DB code
 
 For detailed contribution guidelines, see [CONTRIBUTING.md](https://github.com/AzureCosmosDB/cosmosdb-agent-kit/blob/main/CONTRIBUTING.md).
+
+## Recent updates
+
+The Agent Kit is actively maintained with regular updates based on real-world usage and testing iterations. Recent enhancements include:
+
+- **LangGraph patterns** (May 2026) - Rules for wrapping Cosmos DB sync calls in `asyncio.to_thread` for LangGraph async routing and multi-agent workflows
+- **Full-Text Search** (April 2026) - New category with 6 rules covering capability flags, indexing policies, BM25 ranking, and hybrid search patterns
+- **Vector Search** (January 2026) - Dedicated category with rules for embedding policies, index types, distance queries, and repository patterns
+- **Testing framework v2** (March 2026) - Automated CI harness with machine-readable API contracts, batch testing, and statistical evaluation
+
+For a complete history of updates, see the [CHANGELOG.md](https://github.com/AzureCosmosDB/cosmosdb-agent-kit/blob/main/CHANGELOG.md).
 
 ## Considerations
 
