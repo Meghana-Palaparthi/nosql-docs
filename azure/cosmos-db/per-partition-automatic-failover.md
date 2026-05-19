@@ -6,7 +6,7 @@ ms.author: srane
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: concept-article
-ms.date: 05/15/2026
+ms.date: 05/19/2026
 appliesto:
   - ✅ NoSQL
 ai-usage: ai-generated
@@ -20,7 +20,7 @@ PPAF is designed for single-write-region accounts on the API for NoSQL that want
 
 ## Why per-partition automatic failover
 
-In the traditional model, when a write region experiences an outage Azure Cosmos DB has to fail over **every partition** in the account to the next region. That orchestration is heavy, and recovery can take significant time — even when only a small portion of the region is actually affected.
+In the traditional model, when a write region experiences an outage Azure Cosmos DB has to fail over **every partition** in the account to the next region. That orchestration is heavy, and recovery can take significant time—even when only a small portion of the region is affected.
 
 PPAF changes that in three ways:
 
@@ -28,7 +28,7 @@ PPAF changes that in three ways:
 |---|---|---|
 | Granularity | All partitions in the account move regions together | Only impacted partitions move; healthy partitions stay in place |
 | Trigger | Manually initiated, or service-managed at the account level | Detected and triggered automatically for each affected partition |
-| Operator action | Often requires manual initiation | Fully automatic — detection and failover |
+| Operator action | Often requires manual initiation | Fully automatic—detection and failover |
 | Typical RTO | 15–30 minutes or more, depending on how the outage progresses | **Less than 3 minutes at P99** |
 | Failback | Manual; requires a full region sync | Automatic detection, automatic reconciliation |
 | Blast radius | Entire account | Scoped to the affected partition set |
@@ -37,11 +37,11 @@ The net effect: smaller blast radius, faster recovery, and no waiting for manual
 
 ## How it works
 
-Every partition in Azure Cosmos DB is replicated across the regions configured on your account. With PPAF, each partition independently detects that its current write region is unhealthy and promotes a new write region on its own — without affecting any other partition in the account.
+Every partition in Azure Cosmos DB is replicated across the regions configured on your account. With PPAF, each partition independently detects that its current write region is unhealthy and promotes a new write region on its own—without affecting any other partition in the account.
 
 ### 1. Continuous health monitoring
 
-The write replica for each partition is continuously monitored. If it stops responding — whether due to a node fault, a network problem, or a full regional outage — the issue is detected within tens of seconds.
+The write replica for each partition is continuously monitored. If it stops responding—whether due to a node fault, a network problem, or a full regional outage—the issue is detected within tens of seconds.
 
 ### 2. Failover decision
 
@@ -54,7 +54,7 @@ The decision is **scoped to that one partition**. Other partitions in the same a
 
 ### 3. Transparent client redirect
 
-Once a new write region is chosen, the partition's routing information is updated. The Azure Cosmos DB SDK caches routing at the partition-key-range level and, on the next write to the affected partition, transparently sends the request to the new write region — no application code change, no restart, no reconnection required. Healthy partitions keep routing to the original region.
+Once a new write region is chosen, the partition's routing information is updated. The Azure Cosmos DB SDK caches routing at the partition-key-range level and, on the next write to the affected partition, transparently sends the request to the new write region—no application code change, no restart, no reconnection required. Healthy partitions keep routing to the original region.
 
 ### 4. Automatic failback
 
@@ -63,10 +63,10 @@ When the original region recovers, PPAF automatically returns the affected parti
 
 ## Considerations and limitations
 
-PPAF is a resilience feature, not a consistency or data-model change. The following remain in your control and **are not modified** by enabling PPAF:
+PPAF is a resilience feature, not a consistency, or data-model change. The following remain in your control and **are not modified** by enabling PPAF:
 
 - **Your consistency level.** PPAF honors the consistency level configured on your account. The failover algorithm only completes a region promotion when the consistency guarantees can be preserved.
-- **Your account topology.** PPAF does not add or remove regions. Your existing failover priority order is what PPAF uses to choose the next write region.
+- **Your account topology.** PPAF doesn't add or remove regions. Your existing failover priority order is what PPAF uses to choose the next write region.
 - **Your data model and partitioning.** Containers, partition keys, indexing policies, and stored procedures are unaffected.
 - **Your endpoint and connection string.** Applications continue to use the account endpoint. The SDK handles regional routing internally.
 - **Your RPO for Global Strong.** Strong-consistency accounts continue to guarantee **RPO = 0** through PPAF failovers.
@@ -75,7 +75,7 @@ What you **cannot do** while PPAF is enabled (these are deliberate guardrails so
 
 - Change account consistency between Strong and non-Strong while PPAF is enabled.
 - Use **Bounded Staleness** consistency *(support is on the roadmap).*
-- Run on a **serverless** account — provisioned throughput (manual or autoscale) is required.
+- Run on a **serverless** account—provisioned throughput (manual or autoscale) is required.
 - Use **Synapse Link**.
 - Use **in-account restore**.
 - Use Azure regions other than global Azure regions
@@ -96,25 +96,25 @@ For **Strong consistency** accounts with two regions, PPAF can temporarily downs
 
 ## Failback and reconciliation
 
-Failback — returning a partition to its preferred write region after recovery — is fully automated. Two design choices make it fast and safe.
+Failback—returning a partition to its preferred write region after recovery—is fully automated. Two design choices make it fast and safe.
 
 ### Partition reuse with incremental catch-up
 
-When the original write region comes back online, PPAF does **not** discard the existing replicas or rebuild them from scratch. Instead, it brings the recovered replicas current using **incremental catch-up** — only the writes that occurred during the failover window are replayed. This is dramatically faster than a full partition rebuild (often seconds to minutes instead of hours) and means failback adds little load to the recovered region.
+When the original write region comes back online, PPAF does **not** discard the existing replicas or rebuild them from scratch. Instead, it brings the recovered replicas current using **incremental catch-up—only the writes that occurred during the failover window are replayed. This is dramatically faster than a full partition rebuild (often seconds to minutes instead of hours) and means failback adds little load to the recovered region.
 
 ### Reconciling divergent writes
 
 **Strong consistency accounts don't require reconciliation.** Because every acknowledged write is committed by a quorum before it's confirmed to the client, no divergent writes can exist when the original region rejoins. Failback is a straightforward incremental catch-up.
 
-For **Session**, **Consistent Prefix**, and **Eventual** consistency, divergence is possible. During an outage, the original write region might have accepted and acknowledged a small number of writes that didn't replicate to other regions before the failure. When the original region rejoins, those writes can conflict with newer writes that were accepted in the new write region during the outage.
+For **Session**, **Consistent Prefix**, and **Eventual** consistency, divergence is possible. During an outage, the original write region might have accepted and acknowledged a few writes that didn't replicate to other regions before the failure. When the original region rejoins, those writes can conflict with newer writes that were accepted in the new write region during the outage.
 
 PPAF reconciles these automatically using a **last-writer-wins** policy based on the system timestamp on each write. Reconciliation runs in the background; reconciled data becomes visible to readers progressively as the work completes. No client involvement is required.
 
-Auto-reconciliation is **enabled by default**. If your application needs custom reconciliation semantics — for example, application-level conflict resolution on counters or sets — you can opt out via a support request and reconcile divergent writes yourself by reading them from the conflict feed and applying your own resolution logic. For details, see [Read from conflict feed](how-to-manage-conflicts.md#read-from-conflict-feed).
+Autoreconciliation is **enabled by default**. If your application needs custom reconciliation semantics—for example, application-level conflict resolution on counters or sets—you can opt out via a support request and reconcile divergent writes yourself by reading them from the conflict feed and applying your own resolution logic. For details, see [Read from conflict feed](how-to-manage-conflicts.md#read-from-conflict-feed).
 
 ### Brief pause during failback
 
-Failback completes a graceful handoff to restore the preferred write region. During the handoff there is a short window — typically a few seconds — when writes to the affected partition could experience elevated latency or transient retries. The Cosmos DB SDKs retry these automatically; applications do not need to handle them explicitly.
+Failback completes a graceful handoff to restore the preferred write region. During the handoff there's a short window—typically a few seconds—when writes to the affected partition could experience elevated latency or transient retries. The Azure Cosmos DB software development kits (SDKs) retry these automatically; applications don't need to handle them explicitly.
 
 ## Application changes
 
@@ -130,9 +130,9 @@ No application code changes are required beyond the SDK upgrade.
 
 ## Benefits summary
 
-- **RTO < 3 minutes at P99** for partition-level failover, compared with 15–30 minutes for account-level failover.
-- **RPO = 0** for Global Strong consistency through failover.
-- **Reduced blast radius** — only the impacted partition set moves regions; everything else stays in place.
+- **Recovery time objective (RTO)   < 3 minutes at P99** for partition-level failover, compared with 15–30 minutes for account-level failover.
+- **Recovery point objective (RPO) = 0** for Global Strong consistency through failover.
+- **Reduced blast radius—only the impacted partition set moves regions; everything else stays in place.
 - **Active-active behavior with a single writer.** You get a level of resiliency previously reserved for multi-write accounts, without the cost and complexity of conflict resolution.
 - **No application changes** beyond an SDK upgrade.
 - **Transparent failback** with optional automatic reconciliation.
@@ -149,23 +149,23 @@ PPAF is designed to be hands-off. The most common operational pattern is to **le
 
 ### What to do during a failover
 
-- **Manual change write region is still available.** PPAF and the account-level *change write region* operation work together. Use it when you want to consolidate writes in one region for an extended period — for example, when `PartitionWriteGlobalStatus` shows that a large portion of your partitions have already failed over to the secondary, or during a prolonged regional outage where you want to align with a capacity decision or free the original region for maintenance. For typical outages of minutes to hours, PPAF's automatic failback is the correct path.
+- **Manual change write region is still available.** PPAF and the account-level *change write region* operation work together. Use it when you want to consolidate writes in one region for an extended period—for example, when `PartitionWriteGlobalStatus` shows that a large portion of your partitions has already failed over to the secondary, or during a prolonged regional outage where you want to align with a capacity decision or free the original region for maintenance. For typical outages of minutes to hours, PPAF's automatic failback is the correct path.
 - **Watch `PartitionWriteGlobalStatus`** in Azure Monitor to see partitions move and to confirm failback once the original region recovers.
-- **Let the SDK retry.** Application code should already handle transient errors per the [Azure Cosmos DB SDK guidance](conceptual-resilient-sdk-applications.md). During the failover window the SDK retries automatically against the new write region.
+- **Let the SDK retry.** Application code should already handle transient errors per the [Azure Cosmos DB SDK guidance](conceptual-resilient-sdk-applications.md). During the failover window, the SDK retries automatically against the new write region.
 
 ### Frequently asked questions
 
 #### Do all my partitions fail over together?
 
-No. Each partition decides independently. A partial regional outage typically moves only the subset of partitions actually affected; healthy partitions stay in the original region.
+No. Each partition decides independently. A partial regional outage typically moves only the subset of partitions affected; healthy partitions stay in the original region.
 
 #### Will my application see errors during failover?
 
-Writes to affected partitions might see transient errors until the new region is elected and the SDK refreshes its routing — usually under three minutes. The SDK retries automatically. Reads to other regions and writes to unaffected partitions continue normally.
+Writes to affected partitions might see transient errors until the new region is elected and the SDK refreshes its routing—usually under three minutes. The SDK retries automatically. Reads to other regions and writes to unaffected partitions continue normally.
 
 #### Can I lose data?
 
-For **Strong** consistency, no — RPO is 0 through PPAF failovers. For other consistency levels, PPAF picks the replica with the most recent committed state to minimize loss, and reconciles any divergent writes on failback using last-writer-wins.
+For **Strong** consistency, no—RPO is 0 through PPAF failovers. For other consistency levels, PPAF picks the replica with the most recent committed state to minimize loss, and reconciles any divergent writes on failback using last-writer-wins.
 
 #### Do I need to do anything on failback?
 
@@ -173,7 +173,7 @@ No. Failback is automatic, uses incremental catch-up rather than a full rebuild,
 
 #### Does PPAF replace multi-write?
 
-PPAF is for single-write-region accounts that want fast, automatic recovery without conflict-resolution complexity. Multi-write (multi-region writes) remains the right choice for workloads that need active-active write capability across regions at all times.
+PPAF is for single-write-region accounts that want fast, automatic recovery without conflict-resolution complexity. Multi-write (multi-region writes) remains the right choice for workloads that need active-active write capability across regions always.
 
 ## Pricing
 
