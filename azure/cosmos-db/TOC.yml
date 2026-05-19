@@ -74,7 +74,7 @@
   items:
     - name: Why use for AI apps?
       href: gen-ai/why-cosmos-ai.md
-    - name: Semantic Reranker (Preview)
+    - name: Semantic Reranker
       href: gen-ai/semantic-reranker.md
     - name: Use vector search
       items:
@@ -86,6 +86,8 @@
           href: gen-ai/sharded-diskann.md
         - name: Tips for vector search performance
           href: gen-ai/vector-search-performance-tips.md
+        - name: Multi-vector search with MaxSim
+          href: gen-ai/multi-vector-search.md
     - name: Full text indexing and search
       items:
         - name: Full text search overview
@@ -96,10 +98,16 @@
           href: gen-ai/full-text-search-faq.yml?context=/azure/cosmos-db/context/context
     - name: Implement hybrid search
       href: gen-ai/hybrid-search.md?context=/azure/cosmos-db/context/context
+    - name: Implement agentic retrieval
+      href: gen-ai/agentic-retrieval.md?context=/azure/cosmos-db/context/context
     - name: Integrate with AI tools
       href: gen-ai/integrations.md?context=/azure/cosmos-db/context/context
-    - name: Manage agent memories
-      href: gen-ai/agentic-memories.md
+    - name: Agent Memories
+      items:
+        - name: Manage agent memories
+          href: gen-ai/agentic-memories.md
+        - name: Agent Memory Toolkit
+          href: gen-ai/agent-memory-toolkit.md
     - name: Build a RAG chatbot
       href: gen-ai/rag-chatbot.md?context=/azure/cosmos-db/context/context
     - name: Index documents for search
