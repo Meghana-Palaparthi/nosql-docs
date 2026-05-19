@@ -1,5 +1,6 @@
 ---
-title: "Hybrid search in Azure DocumentDB - combining BM25 and vector retrieval"
+title: "Hybrid Search - Combining BM25 and Vector Retrieval"
+titleSufix: Azure DocumentDB 
 description: Combine keyword and vector search in Azure DocumentDB to deliver higher recall and precision than either approach alone, on a single collection.
 author: khelanmodi
 ms.author: khelanmodi
@@ -9,7 +10,7 @@ ms.collection:
   - ce-skilling-ai-copilot
 ---
 
-# Hybrid Search in Azure DocumentDB
+# Hybrid search in Azure DocumentDB
 
 > [!NOTE]
 > Full-text search is in **Preview** in Azure DocumentDB.

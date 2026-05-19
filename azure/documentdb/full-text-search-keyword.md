@@ -1,5 +1,6 @@
 ---
-title: "BM25 keyword search in Azure DocumentDB - ranked text retrieval"
+title: "BM25 Keyword Search - Ranked Text Retrieval"
+titleSuffix: Azure DocumentDB
 description: Add relevance-ranked keyword search to your Azure DocumentDB application, with results ordered by how well each document matches the query.
 author: khelanmodi
 ms.author: khelanmodi
@@ -9,7 +10,7 @@ ms.collection:
   - ce-skilling-ai-copilot
 ---
 
-# BM25 Keyword Search in Azure DocumentDB
+# BM25 keyword search in Azure DocumentDB
 
 > [!NOTE]
 > Full-text search is in **Preview** in Azure DocumentDB.

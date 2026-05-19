@@ -1,5 +1,6 @@
 ---
-title: "Phrase search and proximity matching in Azure DocumentDB"
+title: Phrase Search and Proximity Matching
+titleSuffix: Azure DocumentDB
 description: Search for exact phrases and word proximity in Azure DocumentDB, where the order and closeness of terms matter.
 author: khelanmodi
 ms.author: khelanmodi
@@ -9,7 +10,7 @@ ms.collection:
   - ce-skilling-ai-copilot
 ---
 
-# Phrase Search and Proximity Matching in Azure DocumentDB
+# Phrase search and proximity matching in Azure DocumentDB
 
 > [!NOTE]
 > Full-text search is in **Preview** in Azure DocumentDB.

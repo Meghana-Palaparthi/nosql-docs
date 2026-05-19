@@ -1,5 +1,6 @@
 ---
-title: "Fuzzy search in Azure DocumentDB - typo-tolerant text matching"
+title: "Fuzzy Search - Typo-Tolerant Text Matching"
+titleSuffix: Azure DocumentDB
 description: Add typo tolerance to Azure DocumentDB full-text search so misspelled queries still return the right results.
 author: khelanmodi
 ms.author: khelanmodi
@@ -9,7 +10,7 @@ ms.collection:
   - ce-skilling-ai-copilot
 ---
 
-# Fuzzy Search in Azure DocumentDB
+# Fuzzy search in Azure DocumentDB
 
 > [!NOTE]
 > Full-text search is in **Preview** in Azure DocumentDB.

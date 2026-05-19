@@ -1,5 +1,6 @@
 ---
-title: "Full-Text Search in Azure DocumentDB - BM25 keyword search"
+title: "Full-Text Search - BM25 Keyword Search"
+titleSuffix: Azure DocumentDB
 description: Use full-text search in Azure DocumentDB to deliver relevance-ranked keyword, fuzzy, phrase, and hybrid search natively, without standing up a separate search service.
 author: khelanmodi
 ms.author: khelanmodi
@@ -9,7 +10,7 @@ ms.collection:
   - ce-skilling-ai-copilot
 ---
 
-# Full-Text Search in Azure DocumentDB
+# Full-text search in Azure DocumentDB
 
 > [!NOTE]
 > Full-text search in Azure DocumentDB is in **Preview**.
@@ -53,7 +54,7 @@ Set `dynamic: false` on every index definition and enumerate fields explicitly. 
 
 | Mode | Best for | Requires search index | Ranked by BM25 |
 | --- | --- | :---: | :---: |
-| `$regex` | Cheap exact-substring match on a single field with a pre-existing B-tree index. | No | No |
+| `$regex` | Cheap exact-substring match on a single field with a preexisting B-tree index. | No | No |
 | `$search` + `text` | Standard keyword search on prose, descriptions, titles. | Yes | Yes |
 | `$search` + `text` + `fuzzy` | Search-as-you-type, user-facing catalog or log search where typos are common. | Yes | Yes |
 | `$search` + `phrase` | Multi-word product names, quoted user input, error strings where word order matters. | Yes | Yes |
