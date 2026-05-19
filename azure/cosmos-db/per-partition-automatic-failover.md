@@ -109,7 +109,7 @@ For **Session**, **Consistent Prefix**, and **Eventual** consistency, divergence
 
 PPAF reconciles these automatically using a **last-writer-wins** policy based on the system timestamp on each write. Reconciliation runs in the background; reconciled data becomes visible to readers progressively as the work completes. No client involvement is required.
 
-Auto-reconciliation is **enabled by default**. If your application needs custom reconciliation semantics — for example, application-level conflict resolution on counters or sets — you can opt out and reconcile divergent writes yourself by reading them from the conflict feed and applying your own resolution logic. For details, see [Read from conflict feed](how-to-manage-conflicts.md#read-from-conflict-feed).
+Auto-reconciliation is **enabled by default**. If your application needs custom reconciliation semantics — for example, application-level conflict resolution on counters or sets — you can opt out via a support request and reconcile divergent writes yourself by reading them from the conflict feed and applying your own resolution logic. For details, see [Read from conflict feed](how-to-manage-conflicts.md#read-from-conflict-feed).
 
 ### Brief pause during failback
 
