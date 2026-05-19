@@ -135,4 +135,3 @@ With the account and client configured, validate that everything works as expect
 - [High availability in Azure Cosmos DB](high-availability.md)
 - [Consistency levels in Azure Cosmos DB](consistency-levels.md)
 - [Distribute your data globally with Azure Cosmos DB](distribute-data-globally.md)
-

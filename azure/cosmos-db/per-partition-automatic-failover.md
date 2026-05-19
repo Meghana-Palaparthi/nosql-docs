@@ -192,4 +192,3 @@ PPAF is part of the **Business Critical** service tier for Azure Cosmos DB. See 
 - [High availability in Azure Cosmos DB](high-availability.md)
 - [Sample app and chaos script (AzureCosmosDB/ppaf-samples)](https://github.com/AzureCosmosDB/ppaf-samples)
 - [Implementing decentralized per-partition automatic failover in Azure Cosmos DB](https://arxiv.org/pdf/2505.14900)
-

@@ -780,7 +780,7 @@
           href: how-to-convert-session-token.md
     - name: Per Partition Automatic Failover
       items:
-        - name: Overview of Per Partition Automatic Failover
+        - name: Overview
           href: per-partition-automatic-failover.md
         - name: Configure Per Partition Automatic Failover
           href: how-to-configure-per-partition-automatic-failover.md
