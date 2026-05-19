@@ -30,12 +30,16 @@ Azure DocumentDB is available across the following Azure regions:
 | **Asia Pacific** | Australia Central | ✅ Yes |
 | **Asia Pacific** | Australia Central 2 | ✅ Yes |
 | **Asia Pacific** | Australia East | ✅ Yes |
+| **Asia Pacific** | Australia Southeast | ✅ Yes |
 | **Asia Pacific** | Central India | ✅ Yes |
 | **Asia Pacific** | East Asia | ✅ Yes |
+| **Asia Pacific** | Indonesia Central | ✅ Yes |
 | **Asia Pacific** | Japan East | ✅ Yes |
 | **Asia Pacific** | Japan West | ✅ Yes |
 | **Asia Pacific** | Korea Central | ✅ Yes |
 | **Asia Pacific** | Korea South | ✅ Yes |
+| **Asia Pacific** | Malaysia West | ✅ Yes |
+| **Asia Pacific** | New Zealand North | ✅ Yes |
 | **Asia Pacific** | South East Asia | ✅ Yes |
 | **Asia Pacific** | South India | ✅ Yes |
 | **Canada** | Canada Central | ✅ Yes |
@@ -49,6 +53,7 @@ Azure DocumentDB is available across the following Azure regions:
 | **Europe** | Norway East | ✅ Yes |
 | **Europe** | Norway West | ✅ Yes |
 | **Europe** | Poland Central | ✅ Yes |
+| **Europe** | Spain Central | ✅ Yes |
 | **Europe** | Sweden Central | ✅ Yes |
 | **Europe** | Switzerland North | ✅ Yes |
 | **Europe** | Switzerland West | ✅ Yes |
