@@ -1,6 +1,6 @@
 ---
 title: Per-partition automatic failover in Azure Cosmos DB
-description: Learn how per-partition automatic failover (PPAF) delivers sub-2-minute RTO and partition-scoped recovery for single-write-region Azure Cosmos DB for NoSQL accounts.
+description: Learn how per-partition automatic failover (PPAF) delivers sub-3-minute RTO and partition-scoped recovery for single-write-region Azure Cosmos DB for NoSQL accounts.
 author: sushantrane
 ms.author: srane
 ms.service: azure-cosmos-db
