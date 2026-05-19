@@ -14,7 +14,7 @@ dev_langs:
   - java
 ---
 
-Validate that you correctly granted access using application code and the Azure Management SDK.
+Validate that you correctly granted access by using application code and the Azure Management SDK.
 
 ```csharp
 using Azure.Identity;
