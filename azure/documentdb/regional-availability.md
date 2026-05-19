@@ -4,7 +4,7 @@ description: Discover Azure DocumentDB region availability across 40+ Azure regi
 author: suvishodcitus
 ms.author: suvishod
 ms.topic: concept-article
-ms.date: 11/20/2025
+ms.date: 05/19/2026
 ms.custom:
   - references_regions
 ---
