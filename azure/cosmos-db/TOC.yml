@@ -934,11 +934,11 @@
       href: network-bandwidth.md?context=/azure/cosmos-db/context/context
 - name: Tools & Extensions
   items:
-    - name: Azure Cosmos DB Shell
+    - name: Azure Cosmos DB Shell (preview)
       displayName: CLI, Command-line, Shell, Tools, Extensions, MCP
       items:
-        - name: Overview
-          href: shell/overview.md?context=/azure/cosmos-db/context/context
+        - name: Overview (preview)
+          href: shell/index.md?context=/azure/cosmos-db/context/context
         - name: Installation guide
           href: shell/install.md?context=/azure/cosmos-db/context/context
         - name: Get started
@@ -953,6 +953,8 @@
           href: shell/security.md?context=/azure/cosmos-db/context/context
         - name: Troubleshooting guide
           href: shell/troubleshooting.md?context=/azure/cosmos-db/context/context
+    - name: Visual Studio Code extension
+      href: vscode-extension/TOC.yml
 - name: Analytics with Microsoft Fabric
   items:
     - name: Overview
