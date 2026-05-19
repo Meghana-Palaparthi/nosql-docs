@@ -9,6 +9,7 @@ ms.topic: concept-article
 ms.date: 05/15/2026
 appliesto:
   - ✅ NoSQL
+ai-usage: ai-generated
 ---
 
 # Per-partition automatic failover in Azure Cosmos DB
