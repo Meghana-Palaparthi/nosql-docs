@@ -14,7 +14,6 @@ appliesto:
 
 # Use distributed transactions in Azure Cosmos DB
 
-
 > [!IMPORTANT]
 > Distributed transactions in Azure Cosmos DB are currently in **public preview**. This preview is provided without a service-level agreement (SLA). Behavior, limits, and supported scenarios may change before general availability.
 

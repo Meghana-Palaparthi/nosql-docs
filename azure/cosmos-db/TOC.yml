@@ -80,6 +80,8 @@
       items:
         - name: Vector indexing and search
           href: vector-search.md
+        - name: Integrated Embeddings
+          href: integrated-embeddings.md
         - name: Sharded DiskANN for focused search
           href: gen-ai/sharded-diskann.md
         - name: Tips for vector search performance
@@ -487,11 +489,11 @@
           href: how-to-migrate-from-change-feed-library.md
         - name: Async Java sample with change feed
           href: how-to-java-change-feed.md
-    - name: Global secondary indexes (preview)
+    - name: Global secondary indexes
       items:
         - name: Overview
           href: global-secondary-indexes.md
-        - name: Configure global secondary indexes (preview)
+        - name: Configure global secondary indexes
           href: how-to-configure-global-secondary-indexes.md
     - name: Distributed transactions (preview)
       items:
@@ -603,6 +605,8 @@
               href: performance-tips-java-sdk-v4.md
             - name: Connection Configurations for Java SDK v4
               href: tune-connection-configurations-java-sdk-v4.md
+            - name: Throughput control groups
+              href: throughput-control-java.md
             - name: Async Java SDK v2
               href: performance-tips-async-java.md
             - name: Sync Java SDK v2
@@ -647,7 +651,7 @@
       items:
         - name: Emulator
           href: emulator.md?context=/azure/cosmos-db/context/context
-        - name: Linux emulator (preview)
+        - name: Linux emulator
           href: emulator-linux.md?context=/azure/cosmos-db/context/context
         - name: Release notes
           href: emulator-release-notes.md
@@ -938,11 +942,11 @@
       href: network-bandwidth.md?context=/azure/cosmos-db/context/context
 - name: Tools & Extensions
   items:
-    - name: Azure Cosmos DB Shell
+    - name: Azure Cosmos DB Shell (preview)
       displayName: CLI, Command-line, Shell, Tools, Extensions, MCP
       items:
-        - name: Overview
-          href: shell/overview.md?context=/azure/cosmos-db/context/context
+        - name: Overview (preview)
+          href: shell/index.md?context=/azure/cosmos-db/context/context
         - name: Installation guide
           href: shell/install.md?context=/azure/cosmos-db/context/context
         - name: Get started
@@ -957,6 +961,8 @@
           href: shell/security.md?context=/azure/cosmos-db/context/context
         - name: Troubleshooting guide
           href: shell/troubleshooting.md?context=/azure/cosmos-db/context/context
+    - name: Visual Studio Code extension
+      href: vscode-extension/TOC.yml
 - name: Analytics with Microsoft Fabric
   items:
     - name: Overview

@@ -26,7 +26,7 @@ The Azure Cosmos DB Shell Visual Studio Code extension provides a seamless, inte
 
 3. **Search for Cosmos DB**
    - Type "Cosmos DB" in the search box
-   - Look for "Azure Cosmos DB Shell" by Microsoft
+   - Look for the "Azure Cosmos DB" extension by Microsoft
 
 4. **Install the Extension**
    - Click the Install button
@@ -112,7 +112,7 @@ Seamlessly integrate with your Azure accounts.
 - Automatic authentication with Azure account
 - Support for multiple subscriptions
 - Managed identity integration
-- Azure Entra ID support
+- Microsoft Entra ID support
 
 **Configuration:**
 1. Sign in with your Azure account (prompted on first use)
@@ -315,7 +315,7 @@ query "SELECT * FROM c" | jq '.[]'
 2. Check extension is installed:
    - Go to Extensions (Ctrl+Shift+X)
    - Search "Cosmos DB"
-   - Verify "Azure Cosmos DB Shell" by Microsoft is installed
+   - Verify the "Azure Cosmos DB" extension by Microsoft is installed
 
 3. Restart VS Code
 4. Clear extension cache:

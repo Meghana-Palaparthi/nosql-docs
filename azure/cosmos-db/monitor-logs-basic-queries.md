@@ -423,6 +423,31 @@ CDBControlPlaneRequests
 
 ---
 
+### Monitor failover activity
+
+View recent failover operations in control plane logs.
+
+#### [Azure Diagnostics](#tab/azure-diagnostics)
+
+```kusto
+AzureDiagnostics
+| where ResourceProvider == "MICROSOFT.DOCUMENTDB" and Category == "ControlPlaneRequests"
+| where OperationName contains "Failover"
+| project TimeGenerated, OperationName, regionName_s, activityId_g, httpstatusCode_s, statusCode_s
+| order by TimeGenerated desc
+```
+
+#### [Resource-specific](#tab/resource-specific)
+
+```kusto
+CDBControlPlaneRequests
+| where OperationName contains "Failover"
+| project TimeGenerated, OperationName, RegionName, ActivityId, HttpStatusCode
+| order by TimeGenerated desc
+```
+
+---
+
 ## Next steps
 
 - For more information on how to create diagnostic settings for Azure Cosmos DB, see [Creating Diagnostics settings](monitor-resource-logs.md).

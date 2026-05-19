@@ -130,6 +130,10 @@ Key subdirectories:
 - For alignment: `| :-- |` (left), `| :--: |` (center), `| --: |` (right)
 - Empty first column headers are allowed when first column values are bolded
 
+#### File endings
+
+- All Markdown files must end with a trailing newline
+
 ### Writing Style
 
 #### Word choice
@@ -156,6 +160,69 @@ Use verbs that work for all input methods (mouse, keyboard, touch):
 - Use people-first language: "users who are blind" not "blind users"
 - Use gender-neutral terms: "sales representative" not "salesman"
 - Show diverse perspectives in examples
+
+### Pull request and issue naming
+
+When creating pull requests or issues, follow this naming convention.
+
+#### PR title format
+
+```text
+<Service prefix> | <Short description>
+```
+
+Prepend a 🤖 emoji to the PR title when the pull request is created by an AI agent (such as Copilot cloud agent). The robot emoji is specific to PR titles to distinguish AI-generated PRs at a glance; issue titles use a descriptive emoji instead (see [Issue title format](#issue-title-format)). The emoji goes before the service prefix:
+
+```text
+🤖 <Service prefix> | <Short description>
+```
+
+Choose the service prefix based on which files the PR changes:
+
+| Prefix | When to use |
+| --- | --- |
+| `Cosmos DB` | Changes to `azure/cosmos-db/` or `cosmos-db/` files |
+| `DocumentDB` | Changes to `azure/documentdb/` or `documentdb/` files |
+| `NoSQL` | Changes that span both services, touch `nosql/` files, or affect cross-cutting configuration |
+
+Examples (AI-generated):
+
+- `🤖 Cosmos DB | Update query language TOC`
+- `🤖 DocumentDB | Fix broken links`
+- `🤖 NoSQL | Enable public contributions`
+
+Examples (human-created):
+
+- `Cosmos DB | Add Python example for spatial queries`
+- `DocumentDB | Clarify indexing policy syntax`
+- `NoSQL | Add contributing guidelines`
+
+#### PR title suffixes
+
+Append a bracketed suffix when the PR has a special status:
+
+| Suffix | Meaning |
+| --- | --- |
+| `[WIP]` | Work in progress, not ready for review |
+| `[BULK]` | Bulk mechanical change across many files |
+| `[DO NOT MERGE]` | Experimental or test PR that must not be merged |
+
+Examples:
+
+- `Cosmos DB | Update branding to drop "for NoSQL" in articles [BULK]`
+- `DocumentDB | Test manual content sync [DO NOT MERGE]`
+
+#### Issue title format
+
+AI-generated issues must include an emoji prefix. Unlike PR titles, which use the 🤖 robot emoji, issue titles use a descriptive emoji that reflects the nature of the issue (for example, 🔧 for fixes, 📝 for documentation tasks). The presence of any emoji prefix indicates AI authorship. Use a `[TODO]` suffix for future items or placeholder issues. Do not include a service prefix in issue titles.
+
+Examples:
+
+- `🔧 Add MongoDB delete examples to Python quickstart`
+- `📊 AI Response Quality pilot — Cosmos DB retrievability improvements`
+- `🟡 Items to fix — Partially incorrect`
+- `🔗 Fix broken cross-reference links in partition key articles`
+- `📝 Document RU charge behavior for cross-partition queries`
 
 ### Review Style
 

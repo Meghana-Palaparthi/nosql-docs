@@ -1,6 +1,6 @@
 ---
 title: Create and Manage With Bicep
-description: Use Bicep to create and configure Azure Cosmos DB for API for NoSQL
+description: Use Bicep as infrastructure as code to automate the creation, deployment, and management of Azure Cosmos DB resources.
 author: markjbrown
 ms.service: azure-cosmos-db
 ms.subservice: nosql
@@ -14,7 +14,7 @@ appliesto:
 
 # Manage Azure Cosmos DB for NoSQL resources with Bicep
 
-In this article, you learn how to use Bicep to deploy and manage your Azure Cosmos DB accounts, databases, and containers.
+In this article, you learn how to use Bicep as infrastructure as code to automate the creation, deployment, and management of your Azure Cosmos DB accounts, databases, and containers.
 
 This article shows Bicep samples for API for NoSQL accounts. You can also find Bicep samples for [Cassandra](cassandra/manage-with-bicep.md), [Gremlin](graph/manage-with-bicep.md), [MongoDB](mongodb/manage-with-bicep.md), and [Table](table/manage-with-bicep.md) APIs.
 
