@@ -285,7 +285,7 @@ class Program
     Console.WriteLine($"Reranker results count: {rerankedResults.RerankScores.Count}");
     Console.WriteLine($"Reranking context: {rerankingContext}");
     Console.WriteLine($"Latency details: Data preprocess time: {rerankedResults.Latency["data_preprocess_time"]}, Inference time: {rerankedResults.Latency["inference_time"]}, Postprocess time: {rerankedResults.Latency["postprocess_time"]}");
-    Console.WriteLine($"Token usage details: {rerankedResults.TokenUseage["total_tokens"]}");
+    Console.WriteLine($"Token usage details: {rerankedResults.TokenUsage["total_tokens"]}");
     Console.WriteLine($"Token usage details: {rerankedResults.TokenUsage["total_tokens"]}");
     Console.WriteLine($"{"DocumentId",-36}|{"Reranked order",-14}|{"FTS order",-9}|{"Reranking score",-15}");
     Console.WriteLine(new string('-', 77));
