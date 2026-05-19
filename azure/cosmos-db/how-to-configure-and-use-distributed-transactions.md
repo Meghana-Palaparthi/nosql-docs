@@ -1,12 +1,13 @@
 ---
 title: Use distributed transactions in Azure Cosmos DB for NoSQL
-description: Step-by-step guide to enable distributed transactions on an Azure Cosmos DB for NoSQL account and use them from the .NET SDK to perform atomic, multi-partition writes.
+description: Guide to enable distributed transactions on an Azure Cosmos DB for NoSQL account and use them from the .NET SDK to perform atomic, multi-partition reads and writes.
 author: sushantrane
 ms.author: srane
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: how-to
 ms.date: 06/02/2026
+ai-usage: ai-assisted
 appliesto:
   - ✅ NoSQL
 ---
@@ -15,11 +16,11 @@ appliesto:
 
 
 > [!IMPORTANT]
-> Distributed transactions in Azure Cosmos DB for NoSQL are currently in **public preview**. This preview is provided without a service-level agreement (SLA). Behavior, limits, and supported scenarios may change before general availability. Public preview is **gated** — accounts must be explicitly onboarded by the Azure Cosmos DB engineering team.
+> Distributed transactions in Azure Cosmos DB for NoSQL are currently in **public preview**. This preview is provided without a service-level agreement (SLA). Behavior, limits, and supported scenarios may change before general availability.
 
-This article shows you how to enable distributed transactions on an Azure Cosmos DB for NoSQL account and use them from the .NET SDK to commit atomic write operations that span multiple logical partitions, containers, and databases within the same account and region.
+This article shows you how to enable distributed transactions on an Azure Cosmos DB for NoSQL account and use them from the .NET SDK to commit atomic read and write operations that span multiple logical partitions, containers, and databases within the same account and region.
 
-If you're new to the feature, start with [Distributed transactions in Azure Cosmos DB for NoSQL](distributed-transactions.md) for a conceptual overview.
+The examples in this article use a single scenario — a `banking` database with two containers, `accounts` (partitioned by account ID) and `ledger` (partitioned by posting month) — so the same items appear across the read and write examples.
 
 ## Prerequisites
 
@@ -27,42 +28,35 @@ Before you begin, make sure you have:
 
 - An active **Azure subscription**. If you don't have one, [create a free account](https://azure.microsoft.com/free/).
 - An **Azure Cosmos DB for NoSQL account**. The account must:
-  - Use the **NoSQL (Core SQL) API**. MongoDB, Cassandra, Table, and Gremlin APIs are not supported in preview.
-  - Be a **provisioned throughput** (manual or autoscale) account. Serverless accounts are not supported in preview.
-  - Run on a **public Azure cloud region**. Sovereign, air-gapped, and government clouds are not supported in preview.
-  - Be a **single-write-region** account. Multi-region write (multi-master) accounts aren't supported in preview.
-  - Not have any of the following features enabled: **Customer-Managed Keys (CMK)**, **Per-Partition Automatic Failover (PPAF)**, **Partition Reuse**, **Continuous backup / Point-in-Time Restore (PITR)**, **Long-Term Retention (LTR)**, **Merge**, **Hierarchical Partition Keys (HPK)**, **16 MB document support**, or **Fabric Native databases**.
-- The **Azure Cosmos DB .NET v3 SDK** that includes the `CreateDistributedWriteTransaction` API. Use the latest preview package from NuGet (search for `Microsoft.Azure.Cosmos` preview versions tagged for distributed transactions).
-- A **database named `dts-log-db` must not already exist** on the account. Enabling distributed transactions creates a system database with this name. Enrollment fails if the name is already in use.
+  - Use the **NoSQL (Core SQL) API**. MongoDB, Cassandra, Table, and Gremlin APIs aren't supported in preview.
+  - Be a **provisioned throughput** (manual or autoscale) account. Serverless accounts aren't supported in preview.
+  - Run on a **public Azure cloud region**. Sovereign, air-gapped, and government clouds aren't supported in preview.
+  - Be a **single-write-region** account. Multi-region write accounts aren't supported in preview.
+  - Not be configured with any of the following features:
+    -  **Customer-Managed Keys (CMK)**
+    -  **Per-Partition Automatic Failover (PPAF)**
+    -  **Continuous backup**
+    -  **Long-Term Retention**
+    -  **Partition Merge**
+    -  **Hierarchical Partition Keys (HPK)**
+    -  **Fabric Native databases**
+- The latest version of the **Azure Cosmos DB .NET v3 SDK** (`Microsoft.Azure.Cosmos`) from NuGet.
 
-## Step 1: Request enrollment for your account
+## Request enrollment for your account
 
-Distributed transactions are a **public preview** feature. Self-service enrollment through the Azure portal, Azure CLI, or PowerShell is **not** available in preview.
+Distributed transactions are a **public preview** feature. Self-service enrollment through the Azure portal, Azure CLI, or PowerShell is currently **not** available.
 
-To request enrollment, submit your onboarding request at [https://aka.ms/cosmosdb/dtx-onboard](https://aka.ms/cosmosdb/dtx-onboard). Requests are typically fulfilled within 1-2 business days.
+To request enrollment, submit your onboarding request at [https://aka.ms/cosmosdb/dtx-onboard](https://aka.ms/cosmosdb/dtx-onboard). Requests are typically fulfilled within 1-2 business days. You'll receive a confirmation once your account is ready.
 
-Enrollment runs a backend workflow that:
+## Install the required .NET SDK
 
-1. Validates that none of the blocked features listed in the prerequisites are enabled.
-2. Creates a system database `dts-log-db` and a system container `dts-log-coll` on the account. These store the coordinator transaction log and are readable and writable only by the system.
-3. Sets an account-level capability that allows new distributed transactions to be initiated.
-
-You'll receive a confirmation once your account is ready.
-
-> [!NOTE]
-> Do not create a database named `dts-log-db` on your account. This name is reserved for the distributed transactions system database.
-
-## Step 2: Install the required .NET SDK
-
-Add the preview Azure Cosmos DB .NET SDK to your project:
+Add the latest version o Azure Cosmos DB .NET SDK to your project.
 
 ```dotnetcli
-dotnet add package Microsoft.Azure.Cosmos --version <latest-version>
+dotnet add package Microsoft.Azure.Cosmos
 ```
 
-Make sure the installed version supports distributed transactions. The `CreateDistributedWriteTransaction()` method on `CosmosClient` is the indicator that the feature is available in your SDK build.
-
-## Step 3: Initialize the client
+## Initialize the client
 
 Initialize a `CosmosClient` against your enrolled account using either an account key or Microsoft Entra ID (formerly Azure AD).
 
@@ -92,27 +86,30 @@ CosmosClient client = new CosmosClient(
 
 The identity used must have data-plane write permissions (for example, the **Cosmos DB Built-in Data Contributor** role) on **every** container that participates in a transaction. Role checks occur per individual operation inside the transaction batch.
 
-## Step 4: Commit a multi-partition transaction
+## Commit a multi-partition write transaction
 
-The .NET v3 preview SDK adds a fluent `CreateDistributedWriteTransaction()` API on `CosmosClient`. Chain one operation per item, then call `CommitTransactionAsync` to submit the entire batch as a single atomic unit.
+The .NET v3 SDK adds `CreateDistributedWriteTransaction()` API on `CosmosClient`. Chain one operation per item, then call `CommitTransactionAsync` to submit the entire batch as a single atomic unit.
 
-The following example atomically creates three items: two in one container (with different partition key values) and one in a container in a different database.
+The following example atomically transfers 100 units from `account-A` to `account-B` and records the corresponding entry in the `ledger` container. The two accounts live in different logical partitions of the `accounts` container, and the ledger entry lives in a separate container.
 
 ```csharp
-var doc1 = new { id = "order-1001", pk = "customerA", total = 250.00 };
-var doc2 = new { id = "order-1002", pk = "customerB", total = 175.00 };
-var doc3 = new { id = "audit-1001", pk = "audit-2026-06", action = "order-create" };
+// Starting state: account-A holds 1000, account-B holds 1000.
+// This transaction debits 100 from account-A and credits 100 to account-B,
+// and writes a matching ledger entry — all atomically.
+var updatedAccountA = new { id = "account-A", pk = "account-A", balance = 900.00 };
+var updatedAccountB = new { id = "account-B", pk = "account-B", balance = 1100.00 };
+var ledgerEntry     = new { id = "txn-1001",  pk = "2026-06",   from = "account-A", to = "account-B", amount = 100.00 };
 
 DistributedTransactionResponse response = await client
     .CreateDistributedWriteTransaction()
-    .CreateItem(databaseId: "orders-db",   containerId: "orders",  new PartitionKey(doc1.pk), doc1)
-    .CreateItem(databaseId: "orders-db",   containerId: "orders",  new PartitionKey(doc2.pk), doc2)
-    .CreateItem(databaseId: "audit-db",    containerId: "audit",   new PartitionKey(doc3.pk), doc3)
+    .ReplaceItem("banking", "accounts", new PartitionKey("account-A"), updatedAccountA)
+    .ReplaceItem("banking", "accounts", new PartitionKey("account-B"), updatedAccountB)
+    .CreateItem ("banking", "ledger",   new PartitionKey("2026-06"),   ledgerEntry)
     .CommitTransactionAsync(CancellationToken.None);
 
 if (response.IsSuccessStatusCode)
 {
-    Console.WriteLine($"Transaction committed.");
+    Console.WriteLine("Transaction committed.");
 }
 ```
 
@@ -125,99 +122,40 @@ You can mix `CreateItem`, `UpsertItem`, `ReplaceItem`, `PatchItem`, and `DeleteI
 ```csharp
 await client
     .CreateDistributedWriteTransaction()
-    .UpsertItem("inventory-db", "inventory", new PartitionKey("sku-A100"), updatedSkuA)
-    .UpsertItem("inventory-db", "inventory", new PartitionKey("sku-B200"), updatedSkuB)
-    .CreateItem ("ledger-db",   "ledger",    new PartitionKey("2026-06"),  ledgerEntry)
+    .UpsertItem("banking", "accounts", new PartitionKey("account-A"), updatedAccountA)
+    .UpsertItem("banking", "accounts", new PartitionKey("account-B"), updatedAccountB)
+    .CreateItem("banking", "ledger",   new PartitionKey("2026-06"),   ledgerEntry)
     .CommitTransactionAsync(CancellationToken.None);
 ```
 
-## Step 5: Use conditional checks for read-modify-write
+## Commit a multi-partition read transaction
 
-Distributed transactions use a single-request batch model. All operations must be known up front — there is no `BEGIN`/`COMMIT` session that lets you read and then conditionally write within one transaction.
+Use `CreateDistributedReadTransaction()` when you need a **point-in-time consistent snapshot** of items that live in different logical partitions, containers, or databases. Unlike issuing several independent `ReadItemAsync` calls, a distributed read transaction returns all items as they existed at a single committed instant, so the reader never observes a partially applied write transaction.
 
-To safely implement a read-modify-write pattern (for example, debit one account and credit another), use the two-step optimistic pattern:
-
-1. **Read** the items you intend to modify, capturing each item's `ETag`.
-2. **Submit** a write transaction that includes a `DocumentConditionCheck` against the captured `ETag` for every item you read. If any item has been modified by another process in between, the transaction is aborted with HTTP `412 Precondition Failed`, and your application should retry from step 1.
+Chain one `ReadItem` call per item, then call `CommitTransactionAsync` to fetch the snapshot:
 
 ```csharp
-// Step 1: Read both account documents
-ItemResponse<Account> bobRead    = await accountsContainer.ReadItemAsync<Account>("bob",   new PartitionKey("bob"));
-ItemResponse<Account> aliceRead  = await accountsContainer.ReadItemAsync<Account>("alice", new PartitionKey("alice"));
+DistributedReadTransaction txn = client.CreateDistributedReadTransaction();
 
-Account bob   = bobRead.Resource;
-Account alice = aliceRead.Resource;
+txn.ReadItem("banking", "accounts", new PartitionKey("account-A"), "account-A")
+   .ReadItem("banking", "accounts", new PartitionKey("account-B"), "account-B");
 
-if (bob.Balance < 100) throw new InvalidOperationException("Insufficient funds");
-
-bob.Balance   -= 100;
-alice.Balance += 100;
-
-// Step 2: Conditional write transaction
-DistributedTransactionResponse response = await client
-    .CreateDistributedWriteTransaction()
-    .CheckCondition("bank-db", "accounts", new PartitionKey("bob"),   "bob",   bobRead.ETag)
-    .CheckCondition("bank-db", "accounts", new PartitionKey("alice"), "alice", aliceRead.ETag)
-    .ReplaceItem  ("bank-db", "accounts", new PartitionKey("bob"),   bob)
-    .ReplaceItem  ("bank-db", "accounts", new PartitionKey("alice"), alice)
-    .CommitTransactionAsync(CancellationToken.None);
+DistributedTransactionResponse response = await txn.CommitTransactionAsync();
 ```
 
-If a `412 Precondition Failed` is returned, re-read the items and retry the transaction with a **new** idempotency token.
+### When to use a distributed read transaction
 
-## Step 6: Retry safely using the idempotency token
+Distributed read transactions are most useful when correctness depends on the **mutual consistency** of items spread across partitions. Common scenarios include:
 
-Each transaction is identified by a client-side idempotency token (a UUID v4 the SDK generates by default). If the SDK times out or the network drops before you receive a response, retrying with the **same** token is safe — the system de-duplicates and returns the original outcome:
+- **Cross-account balance reconciliation.** Read every account balance involved in a multi-leg funds transfer to confirm that debits and credits sum to zero, without the risk of reading one leg before and the other after a concurrent transfer commits.
+- **Inventory and order validation.** Read a stock item and the corresponding pending-orders record together before deciding whether to accept a new order, so the available quantity and reserved quantity always reflect the same instant.
+- **Audit and compliance snapshots.** Capture a coherent view of related records (for example, an order, its line items, and the customer profile that live in different containers) for reporting, exports, or regulatory evidence.
+- **Cache or read-model rebuilds.** Hydrate a denormalized view or materialized projection from several source containers without seeing torn writes from in-flight distributed write transactions.
 
-- If the original transaction is still running, you receive an *in-progress, retry later* status.
-- If it has already committed or aborted, you receive the original committed or aborted result.
-- If it failed non-retriably, you receive the original error.
+For single-item reads, or for unrelated items where mutual consistency isn't required, continue to use `ReadItemAsync` — it has lower latency and consumes fewer request units.
 
-Use the same `idempotencyToken` on retry:
 
-```csharp
-string token = Guid.NewGuid().ToString();
-
-try
-{
-    var response = await client
-        .CreateDistributedWriteTransaction(idempotencyToken: token)
-        .UpsertItem(/* ... */)
-        .UpsertItem(/* ... */)
-        .CommitTransactionAsync();
-}
-catch (CosmosException ex) when (ex.IsRetriable())
-{
-    // Retry with the SAME token
-    var response = await client
-        .CreateDistributedWriteTransaction(idempotencyToken: token)
-        .UpsertItem(/* ... */)
-        .UpsertItem(/* ... */)
-        .CommitTransactionAsync();
-}
-```
-
-Only generate a **new** token when you intend to submit a new logical attempt (for example, after re-reading items to resolve a `412` conflict).
-
-## Step 7: Handle errors
-
-The `DistributedTransactionResponse` exposes per-operation results. If the transaction is aborted, the response indicates which sub-operation triggered the abort.
-
-Common error codes:
-
-| HTTP status | Meaning | Recommended action |
-|---|---|---|
-| 200 / 201 | Transaction committed successfully. | — |
-| 412 | Precondition failed (ETag mismatch). | Re-read items; retry with a new idempotency token. |
-| 429 | Throughput exceeded on one or more participant partitions. | Back off and retry. Consider increasing RU/s or enabling autoscale. |
-| 409 | Write conflict (for example, document already exists, or two transactions targeted the same item). | Application-level: handle conflict or retry. |
-| 404 | Item not found. | Verify the item exists; check for concurrent deletes. |
-| 403 | Authorization failure. | Verify the identity has data-plane write permission on **every** container in the transaction. |
-| 408 / SDK timeout | Ambiguous outcome. | Safe to retry with the **same** idempotency token. |
-
-For diagnostics, capture the full `CosmosException.Diagnostics` string — it contains the per-operation timeline, the transaction ID, and activity IDs you can share with support.
-
-## Step 8: Multi-region considerations
+## Multi-region considerations
 
 In a multi-region account, distributed transactions are **atomic within the write region only**. Multi-region write accounts aren't supported in preview — the account must have a single write region.
 
@@ -234,10 +172,8 @@ For applications that require global read-after-write of transactional data, eit
 | Limit | Value |
 |---|---|
 | Maximum operations per transaction | 100 |
-| Maximum payload size per transaction | 4 MB |
-| Maximum transaction lifetime | 60 seconds |
-| Maximum document size | 2 MB (standard Cosmos DB limit; 16 MB documents not supported) |
-| Maximum scope | One Cosmos DB account, one region (write region) |
+| Maximum payload size per transaction | 2 MB |
+
 
 These limits may change before general availability.
 
@@ -253,40 +189,13 @@ These limits may change before general availability.
 
 | SDK | Status |
 |---|---|
-| .NET (C#) v3 preview | Available |
+| .NET (C#) v3 | Available |
 | Java | Coming soon |
 | Python | Coming soon |
-| JavaScript / TypeScript | Coming soon |
+| Node.js | Coming soon |
 
-## Verify the feature is enabled
+## Related content
 
-After enrollment, you can verify the feature is enabled by listing the system database on your account:
-
-```csharp
-try
-{
-    DatabaseResponse db = await client
-        .GetDatabase("dts-log-db")
-        .ReadAsync();
-    Console.WriteLine("Distributed transactions are enabled on this account.");
-}
-catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
-{
-    Console.WriteLine("Distributed transactions are NOT enabled. Contact the engineering team to enroll.");
-}
-```
-
-Do not delete or modify `dts-log-db` or `dts-log-coll`. They are managed by the system.
-
-## Send feedback
-
-Distributed transactions are in public preview, and your feedback shapes the path to general availability. To share feedback, please reach out to the team at [azcosmosdbdtxpreview@microsoft.com](mailto:azcosmosdbdtxpreview@microsoft.com).
-
-
-
-## Next steps
-
-- [Distributed transactions in Azure Cosmos DB for NoSQL — concepts](distributed-transactions.md)
 - [Consistency levels in Azure Cosmos DB](consistency-levels.md)
 - [Optimistic concurrency control with ETags](database-transactions-optimistic-concurrency.md)
 - [Azure Cosmos DB .NET SDK v3 reference](/dotnet/api/microsoft.azure.cosmos)
