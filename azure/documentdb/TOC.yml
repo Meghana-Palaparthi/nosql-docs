@@ -82,6 +82,9 @@
               href: half-precision.md
     - name: Integrate with AI Tools
       items:
+        - name: MCP Toolkit
+          displayName: Model Context Protocol, MCP, AI agents, Copilot
+          href: mcp-toolkit.md
         - name: AI Frameworks
           items:
             - name: Overview
