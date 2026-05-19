@@ -18,7 +18,7 @@ ai-usage: ai-assisted
 
 # Agentic Retrieval Toolkit for Azure Cosmos DB (Public Preview)
 
-[The Agentic Retrieval Toolkit](https://aka.ms/agenticretrieval) is a reference implementation for building multi-step retrieval-augmented generation (RAG) applications on Azure. It combines Azure Cosmos DB for NoSQL vector search, full-text search, Azure OpenAI embeddings, and large language model reasoning to retrieve diverse evidence and generate grounded answers.
+The Agentic Retrieval Toolkit (<https://aka.ms/AgenticRetrieval>) is a reference implementation for building multi-step retrieval-augmented generation (RAG) applications on Azure. It combines Azure Cosmos DB for NoSQL vector search, full-text search, Azure OpenAI embeddings, and large language model reasoning to retrieve diverse evidence and generate grounded answers.
 
 Unlike a basic one-shot RAG pipeline, this toolkit performs iterative retrieval. It first retrieves relevant documents, generates a preliminary answer, identifies information gaps, creates follow-up sub-questions, retrieves additional evidence, and synthesizes a final answer. Use this toolkit when you need a reference architecture for RAG scenarios that require more than a single retrieval pass. It is useful for complex questions, multi-document synthesis, scientific or technical corpora, and workloads where retrieved context should be diversified before answer generation.
 
@@ -99,7 +99,7 @@ For app integration, initialize the retriever and pipeline once at startup, then
 
 
 ## Related content
-- [The Agentic Retrieval Toolkit](https://aka.ms/agenticretrieval)
+- [Agentic Retrieval Toolkit](https://aka.ms/AgenticRetrieval)
 - [Hybrid search in Azure Cosmos DB for NoSQL](hybrid-search.md)
 - [Vector search in Azure Cosmos DB for NoSQL](../vector-search.md)
 - [Full-text search in Azure Cosmos DB for NoSQL](full-text-search.md)
