@@ -13,7 +13,7 @@ ms.collection:
 # Phrase search and proximity matching in Azure DocumentDB
 
 > [!NOTE]
-> Full-text search is in **Preview** in Azure DocumentDB.
+> Full-text search in Azure DocumentDB is in **Gated Preview**. To enable it on your cluster, contact us at [mongodb-feedback@microsoft.com](mailto:mongodb-feedback@microsoft.com).
 
 Phrase search matches query terms that appear together in a specific order, with an optional `slop` tolerance for intervening tokens. It's the right tool when word order is meaningful (multi-word product names, quoted user input, error strings) and when a plain `$search` + `text` query returns too much noise because the tokens are common individually but rare together.
 

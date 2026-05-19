@@ -13,7 +13,7 @@ ms.collection:
 # Fuzzy search in Azure DocumentDB
 
 > [!NOTE]
-> Full-text search is in **Preview** in Azure DocumentDB.
+> Full-text search in Azure DocumentDB is in **Gated Preview**. To enable it on your cluster, contact us at [mongodb-feedback@microsoft.com](mailto:mongodb-feedback@microsoft.com).
 
 Fuzzy search lets `$search` + `text` match terms that are within a bounded **Levenshtein edit distance** of the user's query. A query for `bracXet` finds documents containing `bracket` because the two strings differ by exactly one character substitution.
 

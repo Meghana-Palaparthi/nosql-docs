@@ -13,7 +13,7 @@ ms.collection:
 # Hybrid search in Azure DocumentDB
 
 > [!NOTE]
-> Full-text search is in **Preview** in Azure DocumentDB.
+> Full-text search in Azure DocumentDB is in **Gated Preview**. To enable it on your cluster, contact us at [mongodb-feedback@microsoft.com](mailto:mongodb-feedback@microsoft.com).
 
 Hybrid search runs a BM25 keyword query and a vector similarity query against the same collection and fuses the result lists into a single ranked list. It typically gives higher recall and precision than either mode alone, because each mode covers a failure case of the other. Azure DocumentDB supports both index types on the same cluster (search indexes for BM25 and `cosmosSearch` for vectors), providing native vector indexing alongside document data and enabling RAG and similarity search without introducing a separate vector store.
 

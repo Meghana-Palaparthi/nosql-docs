@@ -13,7 +13,7 @@ ms.collection:
 # Full-text search in Azure DocumentDB
 
 > [!NOTE]
-> Full-text search in Azure DocumentDB is in **Preview**.
+> Full-text search in Azure DocumentDB is in **Gated Preview**. To enable it on your cluster, contact us at [mongodb-feedback@microsoft.com](mailto:mongodb-feedback@microsoft.com).
 
 Azure DocumentDB full-text search is a BM25-scored, analyzer-driven keyword search engine exposed through MongoDB-compatible primitives. It ranks results by relevance and tolerates user typos through fuzzy matching, without standing up a separate search cluster. It supersedes the legacy `$text` operator and `{ field: "text" }` index type that were backed by a PostgreSQL TSVector implementation.
 

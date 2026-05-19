@@ -13,7 +13,7 @@ ms.collection:
 # BM25 keyword search in Azure DocumentDB
 
 > [!NOTE]
-> Full-text search is in **Preview** in Azure DocumentDB.
+> Full-text search in Azure DocumentDB is in **Gated Preview**. To enable it on your cluster, contact us at [mongodb-feedback@microsoft.com](mailto:mongodb-feedback@microsoft.com).
 
 BM25 is the relevance-ranking algorithm at the heart of Azure DocumentDB full-text search. This page shows how to create a search index covering one text field and run a BM25-scored `$search` + `text` query against it. If you're migrating from the legacy `$text` operator or `{ field: "text" }` index type, see the [migration table](full-text-search-overview.md#migrating-from-the-legacy-text-engine) on the overview page.
 
@@ -56,7 +56,25 @@ db.runCommand({
 });
 ```
 
-Name the index after the field and intent so it's easy to reference from `$search`. The index builds asynchronously. Confirm it appears in `db.products_10M.getIndexes()` before issuing `$search` queries against it.
+Name the index after the field and intent so it's easy to reference from `$search`. The index builds asynchronously. Confirm it's ready with the `$listSearchIndexes` stage shown below before issuing `$search` queries against it.
+
+## Listing and inspecting search indexes
+
+Search indexes don't appear in the output of `db.collection.getIndexes()`, which only lists regular indexes. Use the `$listSearchIndexes` aggregation stage to inspect them:
+
+```javascript
+// ✅ List all search indexes on the collection.
+db.products_10M.aggregate([
+  { $listSearchIndexes: {} }
+]);
+
+// Inspect a specific search index by name.
+db.products_10M.aggregate([
+  { $listSearchIndexes: { name: "idx_title_fts" } }
+]);
+```
+
+Each result includes the index `name`, its `definition`, and a `status` you can use to confirm the build has finished before issuing `$search` queries.
 
 ## Running a `$search` + `text` query
 
