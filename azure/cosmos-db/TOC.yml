@@ -98,8 +98,6 @@
       href: gen-ai/hybrid-search.md?context=/azure/cosmos-db/context/context
     - name: Integrate with AI tools
       href: gen-ai/integrations.md?context=/azure/cosmos-db/context/context
-    - name: Manage agent memories
-      href: gen-ai/agentic-memories.md
     - name: Build a RAG chatbot
       href: gen-ai/rag-chatbot.md?context=/azure/cosmos-db/context/context
     - name: Index documents for search
@@ -495,7 +493,7 @@
           href: global-secondary-indexes.md
         - name: Configure global secondary indexes
           href: how-to-configure-global-secondary-indexes.md
-    - name: Distributed Transactions (preview)
+    - name: Distributed transactions (preview)
       items:
         - name: Configure distributed transactions (preview)
           href: how-to-configure-and-use-distributed-transactions.md
@@ -780,6 +778,12 @@
               href: how-to-manage-conflicts.md
         - name: Convert session token format
           href: how-to-convert-session-token.md
+    - name: Per-partition automatic failover
+      items:
+        - name: Overview
+          href: per-partition-automatic-failover.md
+        - name: Configure per-partition automatic failover
+          href: how-to-configure-per-partition-automatic-failover.md
 - name: Manage your account
   items:
     - name: Overview of resource model
@@ -822,8 +826,6 @@
           href: /azure/operational-excellence/relocation-cosmos-db?context=/azure/cosmos-db/context/context
         - name: Prevent changes or deletion
           href: resource-locks.md?context=/azure/cosmos-db/context/context
-        - name: Enable Per Partition Automatic Failover
-          href: how-to-configure-per-partition-automatic-failover.md
     - name: Back up and restore
       items:
         - name: Back up and restore introduction
