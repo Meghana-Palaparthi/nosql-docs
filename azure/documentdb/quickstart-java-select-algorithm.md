@@ -19,7 +19,7 @@ This quickstart compares vector index algorithms (DiskANN, HNSW, IVF) in Azure D
 
 ## Prerequisites
 
-[!INCLUDE[Prerequisites](includes/prerequisite-quickstart-vector-index.md)]
+[!INCLUDE[Prerequisites](includes/prerequisite-quickstart-select-algorithm.md)]
 
 - [Java 17 or higher](/java/openjdk/download)
 

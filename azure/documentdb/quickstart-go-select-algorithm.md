@@ -21,7 +21,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 ## Prerequisites
 
-[!INCLUDE[Prerequisites](includes/prerequisite-quickstart-vector-index.md)]
+[!INCLUDE[Prerequisites](includes/prerequisite-quickstart-select-algorithm.md)]
 
 - [Go](https://go.dev/doc/install) 1.22 or greater
 

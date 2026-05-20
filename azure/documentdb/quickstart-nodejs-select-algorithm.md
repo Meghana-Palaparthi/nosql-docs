@@ -21,7 +21,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 ## Prerequisites
 
-[!INCLUDE[Prerequisites](includes/prerequisite-quickstart-vector-index.md)]
+[!INCLUDE[Prerequisites](includes/prerequisite-quickstart-select-algorithm.md)]
 
 - [Node.js LTS](https://nodejs.org/download/)
 - [TypeScript](https://www.typescriptlang.org/download) 5.x or greater

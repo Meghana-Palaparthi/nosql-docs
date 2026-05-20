@@ -21,7 +21,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 ## Prerequisites
 
-[!INCLUDE[Prerequisites](includes/prerequisite-quickstart-vector-index.md)]
+[!INCLUDE[Prerequisites](includes/prerequisite-quickstart-select-algorithm.md)]
 
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) or later.
 
