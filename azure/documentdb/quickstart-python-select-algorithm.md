@@ -241,59 +241,9 @@ Execute the comparison script to run all 9 combinations:
 python src/compare_all.py
 ```
 
-The output matches `output/compare_all.txt`:
+Expected output:
 
-```
-======================================================================
-  Compare All Algorithms — 9 Combinations
-  (3 Algorithms × 3 Similarity Metrics)
-======================================================================
-
-  Query:  "luxury hotel near the beach"
-  Top K:  5
-
-Dropped existing 'hotels' collection (if any)
-Loaded 50 documents with embeddings
-Inserted 50/50 documents
-
-Generating embedding for query...
-Running 9 vector searches...
-
-  Created index 'vector_ivf_cos'
-  Created index 'vector_ivf_l2'
-  Created index 'vector_ivf_ip'
-  Created index 'vector_hnsw_cos'
-  Created index 'vector_hnsw_l2'
-  Created index 'vector_hnsw_ip'
-  Created index 'vector_diskann_cos'
-  Created index 'vector_diskann_l2'
-  Created index 'vector_diskann_ip'
-+-------------+----------+--------------------------+---------+-------------------+---------+--------+
-| Algorithm   | Metric   | Top 1 Result             |   Score | Top 2 Result      |   Score |   Diff |
-+=============+==========+==========================+=========+===================+=========+========+
-| IVF         | COS      | Ocean Water Resort & Spa |  0.6184 | Windy Ocean Motel |  0.5057 | 0.1128 |
-+-------------+----------+--------------------------+---------+-------------------+---------+--------+
-| IVF         | L2       | Ocean Water Resort & Spa |  0.8735 | Windy Ocean Motel |  0.9942 | 0.1207 |
-+-------------+----------+--------------------------+---------+-------------------+---------+--------+
-| IVF         | IP       | Ocean Water Resort & Spa |  0.6183 | Windy Ocean Motel |  0.5056 | 0.1127 |
-+-------------+----------+--------------------------+---------+-------------------+---------+--------+
-| HNSW        | COS      | Ocean Water Resort & Spa |  0.6184 | Windy Ocean Motel |  0.5057 | 0.1128 |
-+-------------+----------+--------------------------+---------+-------------------+---------+--------+
-| HNSW        | L2       | Ocean Water Resort & Spa |  0.8735 | Windy Ocean Motel |  0.9942 | 0.1207 |
-+-------------+----------+--------------------------+---------+-------------------+---------+--------+
-| HNSW        | IP       | Ocean Water Resort & Spa |  0.6183 | Windy Ocean Motel |  0.5056 | 0.1127 |
-+-------------+----------+--------------------------+---------+-------------------+---------+--------+
-| DiskANN     | COS      | Ocean Water Resort & Spa |  0.6184 | Windy Ocean Motel |  0.5057 | 0.1128 |
-+-------------+----------+--------------------------+---------+-------------------+---------+--------+
-| DiskANN     | L2       | Ocean Water Resort & Spa |  0.8735 | Windy Ocean Motel |  0.9942 | 0.1207 |
-+-------------+----------+--------------------------+---------+-------------------+---------+--------+
-| DiskANN     | IP       | Ocean Water Resort & Spa |  0.6183 | Windy Ocean Motel |  0.5056 | 0.1127 |
-+-------------+----------+--------------------------+---------+-------------------+---------+--------+
-
-Summary: 9 succeeded, 0 failed
-
-Cleanup: dropped collection 'hotels'
-```
+:::code language="text" source="~/../documentdb-samples/ai/select-algorithm-python/output/compare_all.txt" :::
 
 The **Diff** column shows the score gap between the top-1 and top-2 results. A smaller diff indicates the algorithm found results with more similar relevance scores.
 
