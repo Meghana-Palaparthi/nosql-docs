@@ -19,7 +19,7 @@ ms.custom:
 
 # Quickstart: Vector search with .NET in Azure DocumentDB
 
-Learn to use vector search in Azure DocumentDB with the .NET MongoDB driver to store and query vector data efficiently.
+Use vector search in Azure DocumentDB with the .NET MongoDB driver to store and query vector data efficiently.
 
 This quickstart provides a guided tour of key vector search techniques by using a [.NET sample app](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/vector-search-dotnet) on GitHub.
 
