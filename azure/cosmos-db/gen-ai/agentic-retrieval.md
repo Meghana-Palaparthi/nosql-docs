@@ -1,5 +1,5 @@
 ---
-title: Agentic Retrieval Toolkit
+title: Agentic Retrieval Toolkit (Preview)
 titleSuffix: Azure Cosmos DB for NoSQL
 description: Learn how the Agentic Retrieval Toolkit helps AI agents retrieve, rank, and ground responses by using Azure Cosmos DB search capabilities.
 author: jcodella
@@ -7,7 +7,7 @@ ms.author: jacodel
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: feature-guide
-ms.date: 05/15/2026
+ms.date: 05/20/2026
 ms.update-cycle: 180-days
 ms.collection:
   - ce-skilling-ai-copilot
@@ -16,7 +16,9 @@ appliesto:
 ai-usage: ai-assisted 
 ---
 
-# Agentic Retrieval Toolkit for Azure Cosmos DB (Public Preview)
+# Agentic Retrieval Toolkit for Azure Cosmos DB (preview)
+
+[!INCLUDE[Preview](../includes/notice-preview.md)]
 
 The Agentic Retrieval Toolkit (<https://aka.ms/AgenticRetrieval>) is a reference implementation for building multi-step retrieval-augmented generation (RAG) applications on Azure. It combines Azure Cosmos DB for NoSQL vector search, full-text search, Azure OpenAI embeddings, and large language model reasoning to retrieve diverse evidence and generate grounded answers.
 

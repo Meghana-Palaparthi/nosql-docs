@@ -1,5 +1,5 @@
 ---
-title: Semantic Reranker
+title: Semantic Reranker (Preview)
 titleSuffix: Azure Cosmos DB for NoSQL
 description: Improve relevancy of search results using AI-powered Semantic Reranker.
 author: jcodella
@@ -9,7 +9,7 @@ ms.subservice: nosql
 ms.custom:
   - ignite-2025
 ms.topic: concept-article
-ms.date: 10/30/2025
+ms.date: 05/20/2026
 ms.update-cycle: 180-days
 ms.collection:
   - ce-skilling-ai-copilot
@@ -17,7 +17,9 @@ appliesto:
   - ✅ NoSQL
 ---
 
-# Semantic Reranker in Azure Cosmos DB for NoSQL (Preview)
+# Semantic Reranker in Azure Cosmos DB for NoSQL (preview)
+
+[!INCLUDE[Preview](../includes/notice-preview.md)]
 
  The Semantic Reranker uses an AI model to score and reorder the results from a query (vector search, hybrid search, or other type of query) based on *relevancy* to the provided user search phrase or context. By integrating the reranker directly with Azure Cosmos DB, developers can apply reranking on any query results retrieved from any container (for example, using [vector](../vector-search.md), [full-text](full-text-search.md), or [hybrid](hybrid-search.md) search), while using the latest Azure Cosmos DB SDKs (Python & .NET) with minimal code changes.
 
@@ -31,7 +33,7 @@ When evaluating a search or retrieval system, four primary metrics define the en
 - **Latency**: The total time taken to return results from query submission to response
 - **Relevancy**: How well the retrieved documents match the user's intent. For example, a query for "best surf spots in Hawaii", a curated surf guide is more relevant than a general Hawaii travel article
 
-The goal of the Semantic Reranker is to improve *relevancy* of the ordering of search results compared to the user's question or other context. The AI-powered semantic understanding can provide higher quality results near the top of your search, enhancing end-user experience and enriching agents with more relevant data in [Retrieval Augmented Generation (RAG)](rag.md). However, it may not provide benefits across all workloads. Calling the semantic reranker also increases the overall latency of the search by introducing another network call and inference time for the model to generate relevancy scores. It's important to evaluate relevance both before and after applying the Semantic Reranker to determine whether it delivers measurable improvements to your search and retrieval scenarios given the increase in latency.
+The goal of the Semantic Reranker is to improve *relevancy* of the ordering of search results compared to the user's question or other context. The AI-powered semantic understanding can provide higher quality results near the top of your search, enhancing end-user experience and enriching agents with more relevant data in [Retrieval Augmented Generation (RAG)](rag.md). However, it may not provide benefits across all workloads. Calling the Semantic Reranker also increases the overall latency of the search by introducing another network call and inference time for the model to generate relevancy scores. It's important to evaluate relevance both before and after applying the Semantic Reranker to determine whether it delivers measurable improvements to your search and retrieval scenarios given the increase in latency.
 
 - **Enhanced result quality**: AI-powered semantic understanding can provide higher quality results near the top of your search, enhancing end-user experience and enriching agents with more relevant data in [Retrieval Augmented Generation (RAG)](rag.md)
 - **Seamless integration in Cosmos DB SDKs**: Works with existing vector, full-text, and hybrid search queries
@@ -50,13 +52,13 @@ When you call Semantic Reranker, the response can contain multiple fields, inclu
 ## Set up Semantic Reranker in the Azure portal
 
 > [!IMPORTANT]
->  Semantic Reranker is in Public Preview. After enabling it in the Azure portal, allow up to 1 hour for activation.
+>  Semantic Reranker is in preview. After enabling it in the Azure portal, allow up to 1 hour for activation.
 
 Use the Azure portal to enable, disable, and configure Semantic Reranker for a specific Azure Cosmos DB resource.
 
 1. Go to your Azure Cosmos DB account in the Azure portal.
 2. In the resource menu, find the Semantic Reranker setup experience.
-3. Review the public preview information and enable the feature for your resource. You can return to this experience later to disable Semantic Reranker for the same resource.
+3. Review the preview information and enable the feature for your resource. You can return to this experience later to disable Semantic Reranker for the same resource.
 
 :::image type="content" source="media/semantic-reranker/portal-disabled.png" lightbox="media/semantic-reranker/portal-disabled.png" alt-text="Screenshot placeholder showing where to enable Semantic Reranker in the Azure portal.":::
 
@@ -65,7 +67,6 @@ Use the Azure portal to enable, disable, and configure Semantic Reranker for a s
 :::image type="content" source="media/semantic-reranker/portal-configure.png" lightbox="media/semantic-reranker/portal-configure.png" alt-text="Screenshot placeholder showing Semantic Reranker configuration in the Azure portal.":::
 
 5. Review the configuration, then save your changes.
-
 
 Next, you want to assign Semantic Reranker roles to the identities that configure the feature or call it at runtime. You can assign roles to a Microsoft Entra user, service principal, user-assigned managed identity, or system-assigned managed identity.
 

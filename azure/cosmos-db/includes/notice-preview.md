@@ -2,9 +2,7 @@
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: include
-ms.date: 05/07/2025
-ms.custom:
-  - build-2025
+ms.date: 05/20/2026
 ---
 
 > [!IMPORTANT]
