@@ -34,17 +34,19 @@ Levenshtein edit distance counts the number of single-character insertions, dele
 > Avoid fuzzy search for:
 >
 > - Programmatic queries where precision matters more than recall.
-> - Tokens of three characters or fewer. Almost everything matches at `maxEdits: 1` on short strings.
+> - Tokens of three characters or fewer. Almost everything matches at the default `maxEdits: 2` on short strings. Use `maxEdits: 1` or skip fuzzy entirely for very short tokens.
 > - The default behavior on every endpoint. Fuzziness broadens the candidate set, hurts precision, and increases latency.
 
 ## Running a fuzzy query
 
+`fuzzy.maxEdits` accepts only `1` or `2`. If omitted, it defaults to `2`. Any other value is rejected with `'fuzzy.maxEdits' must be 1 or 2`.
+
 ```javascript
-// ❌ maxEdits: 3 on short tokens matches almost everything in the corpus.
+// ❌ Fuzzy on a short token at the default maxEdits: 2. Almost the whole corpus matches.
 db.products_10M.aggregate([
   { $search: {
       index: "idx_title_standard",
-      text: { query: "bracXet", path: "title", fuzzy: { maxEdits: 3 } }
+      text: { query: "cat", path: "title", fuzzy: {} }
   }},
   { $limit: 20 }
 ]);
@@ -86,9 +88,10 @@ The same rules from [BM25 keyword search](full-text-search-keyword.md) apply: `$
 
 | `maxEdits` | When to use |
 | :---: | --- |
-| `1` | Default for short and medium-length user queries. High precision and good recall on single-character typos. |
-| `2` | Better recall on longer words at the cost of more noise. Avoid on tokens of four characters or fewer. |
-| `≥ 3` | Avoid. Almost everything in the corpus matches and BM25 ranking can no longer separate signal from noise. |
+| `1` | Stricter typo tolerance. Use for short or medium-length user queries where you want high precision and only single-character typos. |
+| `2` (default) | Broader recall on longer words. Used when `maxEdits` is omitted. Avoid on tokens of four characters or fewer; noise dominates. |
+
+> `maxEdits` accepts only `1` or `2`. Any other value is rejected at query time with `'fuzzy.maxEdits' must be 1 or 2`. There is no `0` (use a non-fuzzy `text` query for exact match) and no `≥ 3`.
 
 ## Fuzzy with downstream filters
 
