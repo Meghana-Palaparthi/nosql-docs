@@ -24,7 +24,7 @@ Unlike a basic one-shot RAG pipeline, this toolkit performs iterative retrieval.
 
 The repository includes scripts for document ingestion, Cosmos DB container setup, embedding generation, retrieval, answer generation, timing analysis, and sample evaluation workflows.
 
-:::image type="content" source="../media/agentic-retrieval/info-graphic.png" lightbox="../media/agentic-retrieval/info-graphic.png" alt-text="Infographic showing the Agentic Retrieval Toolkit workflow.":::
+:::image type="content" source="media/agentic-retrieval/infographic.png" lightbox="media/agentic-retrieval/infographic.png" alt-text="Infographic showing the Agentic Retrieval Toolkit workflow.":::
 
 ## What the toolkit does
 
@@ -57,7 +57,7 @@ The retrieval stage answers user questions by combining several retrieval and re
 5. Retrieve additional context for those sub-questions.
 6. Regenerate or synthesize a final answer grounded in the retrieved evidence.
 
-:::image type="content" source="../media/agentic-retrieval/overview.png" lightbox="../media/agentic-retrieval/overview.png" alt-text="Diagram showing the Agentic Retrieval Toolkit overview.":::
+:::image type="content" source="media/agentic-retrieval/overview.png" lightbox="media/agentic-retrieval/overview.png" alt-text="Diagram showing the Agentic Retrieval Toolkit overview.":::
 
 
 

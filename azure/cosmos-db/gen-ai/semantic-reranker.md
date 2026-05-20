@@ -58,11 +58,11 @@ Use the Azure portal to enable, disable, and configure Semantic Reranker for a s
 2. In the resource menu, find the Semantic Reranker setup experience.
 3. Review the public preview information and enable the feature for your resource. You can return to this experience later to disable Semantic Reranker for the same resource.
 
-:::image type="content" source="../media/gen-ai/semantic-reranker/semantic-reranker-portal-disabled.png" lightbox="../media/gen-ai/semantic-reranker/semantic-reranker-portal-disabled.png" alt-text="Screenshot placeholder showing where to enable Semantic Reranker in the Azure portal.":::
+:::image type="content" source="media/semantic-reranker/portal-disabled.png" lightbox="media/semantic-reranker/portal-disabled.png" alt-text="Screenshot placeholder showing where to enable Semantic Reranker in the Azure portal.":::
 
 4. Configure the reranker settings for your account and workload. You can assign roles in this Semantic Reranker portal experience, or assign roles from **Access control (IAM)** for the Azure Cosmos DB resource.
 
-:::image type="content" source="../media/gen-ai/semantic-reranker/semantic-reranker-portal-configure.png" lightbox="../media/gen-ai/semantic-reranker/semantic-reranker-portal-configure.png" alt-text="Screenshot placeholder showing Semantic Reranker configuration in the Azure portal.":::
+:::image type="content" source="media/semantic-reranker/portal-configure.png" lightbox="media/semantic-reranker/portal-configure.png" alt-text="Screenshot placeholder showing Semantic Reranker configuration in the Azure portal.":::
 
 5. Review the configuration, then save your changes.
 
