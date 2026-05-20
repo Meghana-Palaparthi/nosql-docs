@@ -34,7 +34,7 @@ This **November 18, 2025** release renames the service from **Azure Cosmos DB fo
 
 - Reserved instances support: Save on costs over one-year or three-year terms. For more information, see [Azure DocumentDB pricing](https://azure.microsoft.com/pricing/details/document-db/).
 
-- Advanced full-text search: fuzzy search and proximity matching supported. For more information, see [hybrid search](hybrid-search.md)
+- Advanced full-text search: fuzzy search and proximity matching supported. For more information, see [hybrid search](full-text-search-hybrid.md)
 
 - Azure Cosmos DB for MongoDB to Azure DocumentDB migration: Integrated path for users moving from Azure Cosmos DB for MongoDB to Azure DocumentDB.
 
