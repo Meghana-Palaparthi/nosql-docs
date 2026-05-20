@@ -39,8 +39,6 @@ Levenshtein edit distance counts the number of single-character insertions, dele
 
 ## Running a fuzzy query
 
-`fuzzy.maxEdits` accepts only `1` or `2`. If omitted, it defaults to `2`. Any other value is rejected with `'fuzzy.maxEdits' must be 1 or 2`.
-
 ```javascript
 // ❌ Fuzzy on a short token at the default maxEdits: 2. Almost the whole corpus matches.
 db.products_10M.aggregate([
