@@ -1,7 +1,7 @@
 ---
 title: Semantic Reranker
 titleSuffix: Azure Cosmos DB for NoSQL
-description: Improve relevancy of search results using AI-powered Semantic Reranker in Public Preview.
+description: Improve relevancy of search results using AI-powered Semantic Reranker.
 author: jcodella
 ms.author: jacodel
 ms.service: azure-cosmos-db
@@ -9,40 +9,34 @@ ms.subservice: nosql
 ms.custom:
   - ignite-2025
 ms.topic: concept-article
-ms.date: 05/15/2026
+ms.date: 10/30/2025
 ms.update-cycle: 180-days
 ms.collection:
   - ce-skilling-ai-copilot
 appliesto:
   - ✅ NoSQL
-ai-usage: ai-assisted
 ---
 
-# Semantic reranker in Azure Cosmos DB for NoSQL (Public preview)
+# Semantic Reranker in Azure Cosmos DB for NoSQL (Preview)
 
-[!INCLUDE[Preview](../includes//notice-preview.md)]
+ The Semantic Reranker uses an AI model to score and reorder the results from a query (vector search, hybrid search, or other type of query) based on *relevancy* to the provided user search phrase or context. By integrating the reranker directly with Azure Cosmos DB, developers can apply reranking on any query results retrieved from any container (for example, using [vector](../vector-search.md), [full-text](full-text-search.md), or [hybrid](hybrid-search.md) search), while using the latest Azure Cosmos DB SDKs (Python & .NET) with minimal code changes.
 
-Semantic Reranker uses an AI model to both score and reorder the results from a query, including vector search,  full-text search, hybrid search, or another query type, based on relevance to the provided user search phrase or context. By integrating the reranker directly with Azure Cosmos DB, developers can apply reranking on query results retrieved from any container while using supported Azure Cosmos DB SDKs with minimal code changes.
-
-The Semantic Reranker uses the Microsoft AI Semantic Ranker model, developed internally by Microsoft [Azure AI Search](/azure/search/semantic-search-overview).
-
-:::image type="content" source="../media/gen-ai/semantic-reranker/overview.png" lightbox="../media/gen-ai/semantic-reranker/overview.png" alt-text="Diagram showing an overview of Semantic Reranker in Azure Cosmos DB.":::
-
+The Semantic Reranker service uses the Microsoft AI Semantic Ranker model, developed internally by Microsoft and available today in [Azure AI Search's Semantic Ranker](/azure/search/semantic-search-overview).
 
 ## Why use Semantic Reranker?
 
-When evaluating a search or retrieval system, three primary metrics define the end-user experience:
+When evaluating a search or retrieval system, four primary metrics define the end-user experience:
 
-- **Accuracy or recall**: How closely the retrieved results match the ground truth. For example, approximate vector search with DiskANN compared to exact search with a kNN or brute-force search.
-- **Latency**: The total time taken to return results from query submission to response.
-- **Relevance**: How well the retrieved documents match the user's intent. For example, for a query like "best surf spots in Hawaii," returning a curated surf guide is more relevant than a general Hawaii travel article.
+- **Accuracy / Recall**: How closely the retrieved results match the ground truth. For example, approximate vector search (DiskANN) vs exact search (flat)
+- **Latency**: The total time taken to return results from query submission to response
+- **Relevancy**: How well the retrieved documents match the user's intent. For example, a query for "best surf spots in Hawaii", a curated surf guide is more relevant than a general Hawaii travel article
 
-The goal of Semantic Reranker is to improve the relevance of search result ordering compared to the user's question or other context. AI-powered semantic understanding can provide higher quality results near the top of your search, enhancing the user experience and enriching agents with more relevant data in [retrieval-augmented generation (RAG)](rag.md). However, it might not provide benefits across all workloads. Calling Semantic Reranker also increases the overall latency of the search by introducing another network call and inference time for the model to generate relevance scores. Evaluate relevance before and after applying Semantic Reranker to determine whether it delivers measurable improvements to your search and retrieval scenarios.
+The goal of the Semantic Reranker is to improve *relevancy* of the ordering of search results compared to the user's question or other context. The AI-powered semantic understanding can provide higher quality results near the top of your search, enhancing end-user experience and enriching agents with more relevant data in [Retrieval Augmented Generation (RAG)](rag.md). However, it may not provide benefits across all workloads. Calling the semantic reranker also increases the overall latency of the search by introducing another network call and inference time for the model to generate relevancy scores. It's important to evaluate relevance both before and after applying the Semantic Reranker to determine whether it delivers measurable improvements to your search and retrieval scenarios given the increase in latency.
 
-- **Enhanced result quality**: AI-powered semantic understanding can provide higher quality results near the top of your search, enhancing the user experience and enriching agents with more relevant data in RAG applications.
-- **SDK integration**: Apply reranking to existing vector, full-text, and hybrid search query results by using supported Azure Cosmos DB SDKs for .NET (Preview), Python, and JavaScript.
-- **Minimal code changes**: Add reranking to existing retrieval flows without moving data into a separate search service.
-- **Flexible application**: Apply reranking to query results from any container.
+- **Enhanced result quality**: AI-powered semantic understanding can provide higher quality results near the top of your search, enhancing end-user experience and enriching agents with more relevant data in [Retrieval Augmented Generation (RAG)](rag.md)
+- **Seamless integration in Cosmos DB SDKs**: Works with existing vector, full-text, and hybrid search queries
+- **Minimal code changes**: Easy to implement with the latest Azure Cosmos DB SDKs
+- **Flexible application**: Can be applied to any query results from any container
 
 ## Semantic Reranker output
 
@@ -502,6 +496,6 @@ Semantic Reranker is supported in the Azure Cosmos DB .NET, Python, and Java SDK
 
 ## Related content
 
-- [Vector search in Azure Cosmos DB for NoSQL](../vector-search.md)
+- [Vector Search in Azure Cosmos DB for NoSQL](../vector-search.md)
 - [Full-text search in Azure Cosmos DB for NoSQL](full-text-search.md)
 - [Hybrid search in Azure Cosmos DB for NoSQL](hybrid-search.md)
