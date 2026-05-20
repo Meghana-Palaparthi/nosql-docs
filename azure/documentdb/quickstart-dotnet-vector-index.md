@@ -13,7 +13,7 @@ ms.service: azure-documentdb
 
 # Quickstart: Vector index with .NET in Azure DocumentDB
 
-This article shows you how to compare all three vector search algorithms (DiskANN, HNSW, and IVF) in Azure DocumentDB using the .NET client library. The sample demonstrates how each algorithm performs with different similarity functions (COS, L2, IP) and helps you choose the right configuration for your workload. This quickstart uses a sample hotel dataset in a JSON file with pre-calculated vectors from the `text-embedding-3-small` model.
+This article explains how to compare all three vector search algorithms (DiskANN, HNSW, and IVF) in Azure DocumentDB using the .NET client library. The sample demonstrates how each algorithm performs with different similarity functions (COS, L2, IP) and helps you choose the right configuration for your workload. This quickstart uses a sample hotel dataset in a JSON file with precalculated vectors from the `text-embedding-3-small` model.
 
 
 
@@ -142,7 +142,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    dotnet list package
    ```
 
-3. Create environment variables for authentication and configuration overrides. The sample uses `DefaultAzureCredential` for passwordless authentication, and .NET maps environment variables to `appsettings.json` keys by using the `Section__Key` format:
+3. Create environment variables for authentication and configuration overrides. The sample uses `DefaultAzureCredential` for passwordless authentication, and .NET maps environment variables to `appsettings.json` keys with the `Section__Key` format:
 
    ### [Bash](#tab/bash)
 
@@ -173,7 +173,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    These environment variables override the matching values in `appsettings.json`. For example, `MongoDB__ClusterName` overrides `MongoDB:ClusterName` and `AzureOpenAI__Endpoint` overrides `AzureOpenAI:Endpoint`.
 
-   You should always prefer passwordless authentication. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate .NET apps to Azure services by using the Azure SDK for .NET](/dotnet/azure/sdk/authentication).
+   Prefer passwordless authentication. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate .NET apps to Azure services by using the Azure SDK for .NET](/dotnet/azure/sdk/authentication).
 
 4. Sign in with Azure CLI for passwordless authentication:
 
@@ -230,7 +230,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 ## Create code files
 
-Continue the project by creating code files for vector search comparison. When you are done, the project structure should look like this:
+Continue the project by creating code files for vector search comparison. When you're done, the project structure should look like this:
 
 ```
 select-algorithm-dotnet/

@@ -13,7 +13,7 @@ ms.service: azure-documentdb
 
 # Quickstart: Vector index with Python in Azure DocumentDB
 
-In this quickstart, you compare three vector index algorithms (DiskANN, HNSW, and IVF) and three similarity functions (cosine, L2, and inner product) to find the optimal configuration for your search workload. This quickstart uses a sample hotel dataset with pre-calculated embeddings from the `text-embedding-3-small` model.
+In this quickstart, you compare three vector index algorithms (DiskANN, HNSW, and IVF) and three similarity functions (cosine, L2, and inner product) to find the optimal configuration for your search workload. This quickstart uses a sample hotel dataset with precalculated embeddings from the `text-embedding-3-small` model.
 
 
 
@@ -161,14 +161,14 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-   For the passwordless authentication used in this article, replace the placeholder values with your own information:
+   For the passwordless authentication in this article, replace the placeholder values with your own information:
 
    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
    - `DOCUMENTDB_CLUSTER_NAME`: Your Azure DocumentDB cluster name
 
    The compare-all mode always runs all 9 combinations (3 algorithms × 3 metrics). The `ALGORITHM` and `SIMILARITY` environment variables are used only by the single-algorithm mode.
 
-   You should always prefer passwordless authentication, but it requires additional setup. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Python apps to Azure services by using the Azure SDK for Python](/azure/developer/python/sdk/authentication/overview).
+   Prefer passwordless authentication, but it requires additional setup. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Python apps to Azure services by using the Azure SDK for Python](/azure/developer/python/sdk/authentication/overview).
 
 ## Create code files
 
@@ -215,7 +215,7 @@ This script orchestrates the algorithm comparison by:
 
 - Loading configuration from environment variables
 - Initializing MongoDB and Azure OpenAI clients with passwordless authentication
-- Loading hotel data with pre-calculated embeddings
+- Loading hotel data with precalculated embeddings
 - Testing each algorithm/similarity combination by creating a collection, inserting data, creating an index, and executing a search
 - Measuring and comparing search performance across all configurations
 - Displaying results in a comparison table

@@ -13,7 +13,7 @@ ms.service: azure-documentdb
 
 # Quickstart: Vector index with Go in Azure DocumentDB
 
-This quickstart walks you through building a Go application that compares all three vector index algorithms (DiskANN, HNSW, and IVF) side by side with different similarity functions to help you choose the best configuration for your workload. The sample uses a hotels dataset with pre-calculated embeddings from the `text-embedding-3-small` model.
+This quickstart walks you through building a Go application that compares all three vector index algorithms (DiskANN, HNSW, and IVF) side by side with different similarity functions to help you choose the best configuration for your workload. The sample uses a hotels dataset with precalculated embeddings from the `text-embedding-3-small` model.
 
 
 
@@ -176,7 +176,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    AZURE_DOCUMENTDB_DATABASENAME=Hotels
    ```
 
-   For the passwordless authentication used in this article, replace the placeholder values in the `.env` file with your own information:
+   For the passwordless authentication in this article, replace the placeholder values in the `.env` file with your own information:
 
    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
    - `DOCUMENTDB_CLUSTER_NAME`: Your Azure DocumentDB cluster name (not the full connection string, just the name)
@@ -197,7 +197,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-   You should always prefer passwordless authentication. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Go apps to Azure services by using the Azure SDK for Go](/azure/developer/go/azure-sdk-authentication).
+   Prefer passwordless authentication. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Go apps to Azure services by using the Azure SDK for Go](/azure/developer/go/azure-sdk-authentication).
 
 ## Create code files
 
@@ -253,7 +253,7 @@ Create the following source files in the `src` directory.
 
 :::code language="go" source="~/../documentdb-samples/ai/select-algorithm-go/src/utils.go" :::
 
-This code provides a complete vector algorithm comparison application with these key features:
+This code provides a vector algorithm comparison application with these key features:
 
 - **Passwordless authentication**: Uses `DefaultAzureCredential` for both Azure OpenAI and DocumentDB via OIDC
 - **Three vector algorithms**: Implements DiskANN, HNSW, and IVF with algorithm-specific tuning parameters
@@ -291,7 +291,7 @@ After sourcing the environment variables, run the application:
 go run ./src/
 ```
 
-The application will:
+The application does the following:
 
 1. Connect to Azure DocumentDB and Azure OpenAI using passwordless authentication
 2. Load the hotel data and insert it into the `hotels` collection

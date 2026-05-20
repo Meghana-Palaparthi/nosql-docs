@@ -13,7 +13,7 @@ ms.service: azure-documentdb
 
 # Quickstart: Vector index with Java in Azure DocumentDB
 
-This quickstart compares vector index algorithms (DiskANN, HNSW, IVF) in Azure DocumentDB using Java to help you select the best configuration for your vector search workload. The sample uses the same hotel dataset with pre-calculated vectors as the other quickstarts to demonstrate performance differences across algorithms and similarity functions.
+This quickstart compares vector index algorithms (DiskANN, HNSW, IVF) in Azure DocumentDB using Java to help you select the best configuration for your vector search workload. The sample uses the same hotel dataset with precalculated vectors as the other quickstarts to demonstrate performance differences across algorithms and similarity functions.
 
 
 
@@ -59,7 +59,7 @@ This quickstart compares vector index algorithms (DiskANN, HNSW, IVF) in Azure D
 
    ---
 
-   Verify: Confirm the file exists and is valid JSON:
+   Verify that the file exists and is valid JSON:
 
    ### [Bash](#tab/bash)
 
@@ -196,7 +196,7 @@ This quickstart compares vector index algorithms (DiskANN, HNSW, IVF) in Azure D
    </project>
    ```
 
-   Verify: Run `mvn dependency:resolve` to confirm all dependencies resolve without errors.
+   Verify that all dependencies resolve without errors by running `mvn dependency:resolve`.
 
 4. Set environment variables in your shell before running the sample:
 
@@ -240,7 +240,7 @@ This quickstart compares vector index algorithms (DiskANN, HNSW, IVF) in Azure D
 
 ## Create code files
 
-When you are done, the project structure should look like this:
+When you're done, the project structure should look like this:
 
 ```text
 select-algorithm-java/
@@ -268,7 +268,7 @@ Create `src/main/java/com/azure/documentdb/selectalgorithm/Utils.java` and paste
 
 This utility class provides:
 
-- **Environment variable management**: Reads configuration from environment variables by using `System.getenv()`
+- **Environment variable management**: Reads configuration from environment variables with `System.getenv()`
 - **Passwordless authentication**: Uses `DefaultAzureCredential` for both MongoDB and Azure OpenAI
 - **MongoDB client creation**: Configures OIDC authentication for DocumentDB
 - **Azure OpenAI client creation**: Sets up the OpenAI client for embedding generation
@@ -308,7 +308,7 @@ This main comparison logic provides:
    mvn clean compile
    ```
 
-   Verify: The build output ends with `BUILD SUCCESS`.
+   Verify that the build output ends with `BUILD SUCCESS`.
 
 2. Run the comparison entry point. `Main.java` calls `CompareAll.run()` and always executes all 9 combinations (3 algorithms × 3 metrics):
 
