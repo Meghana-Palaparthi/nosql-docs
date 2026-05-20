@@ -23,22 +23,24 @@ Secure your Azure Cosmos DB Shell deployments with these comprehensive security 
 - Most secure authentication method
 - No credentials stored locally
 - Automatic token refresh
-- Supports multi-factor authentication (MFA)
+- Supports multifactor authentication (MFA)
 - Full audit trail in Azure
 
 **Implementation:**
 
-When you launch Cosmos DB Shell, you're prompted for authentication:
+When launched without connection arguments, Cosmos DB Shell starts disconnected.
+Authenticate by connecting to your account endpoint with Microsoft Entra ID:
 
 ```bash
 cosmosdbshell
+CS > connect https://<account-name>.documents.azure.com:443/ --auth-method entra-id
 ```
 
-Browser opens automatically for Azure sign-in. Complete the authentication flow, and the shell uses your Entra ID credentials.
+The browser opens for Azure sign-in after you run `connect`. Complete the flow and the shell uses your Microsoft Entra ID credentials.
 
 **Configuration:**
 ```bash
-cosmosdbshell --auth-method entra-id
+connect <account_endpoint> --auth-method entra-id
 ```
 
 **Security Benefits:**
@@ -329,7 +331,7 @@ az cosmosdb update --resource-group myResourceGroup \
 **Benefits:**
 - No internet exposure
 - Restricted network access
-- Compliant with enterprise policies
+- Supports enterprise network isolation policies
 
 ## MCP server security
 
@@ -350,7 +352,7 @@ az cosmosdb update --resource-group myResourceGroup \
 
 ### 2. Authentication for MCP
 
-**Entra ID Authentication:**
+**Microsoft Entra ID authentication:**
 ```json
 {
   "cosmosDB.shell.MCP.enabled": true,
@@ -438,17 +440,10 @@ az cosmosdb create --resource-group myResourceGroup \
 
 ### 2. Compliance standards
 
-**Supported Compliance:**
-- SOC 2 Type II
-- ISO 27001
-- GDPR
-- HIPAA
-- PCI DSS
+Azure Cosmos DB maintains a broad set of compliance certifications.
 
-**Verify Compliance:**
-1. Azure portal > Compliance
-2. Download compliance reports
-3. Share with auditors
+- For the latest certifications and audit reports, see [Microsoft Azure Compliance offerings](https://servicetrust.microsoft.com/DocumentPage/7adf2d9e-d7b5-4e71-bad8-713e6a183cf3).
+- For compliance information specific to this service, see [compliance in Azure Cosmos DB](../compliance.md).
 
 ### 3. Data retention
 
@@ -462,7 +457,7 @@ This deletes documents after 30 days.
 
 ## Security checklist
 
-- [ ] Use Entra ID for authentication
+- [ ] Use Microsoft Entra ID for authentication
 - [ ] Enable MFA on Azure account
 - [ ] Implement least-privilege RBAC
 - [ ] Enable IP firewall

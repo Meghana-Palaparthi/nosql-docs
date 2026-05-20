@@ -166,6 +166,61 @@ database.delete_container(created_container.id)
 
 ```
 
+### [Java](#tab/java)
+
+To assign all requests from a client to a specific bucket, create a `ThroughputControlGroupConfig` with a `throughputBucket` and enable server-side throughput control on the container.
+
+```java
+import com.azure.cosmos.CosmosAsyncClient;
+import com.azure.cosmos.CosmosAsyncContainer;
+import com.azure.cosmos.CosmosClientBuilder;
+import com.azure.cosmos.ThroughputControlGroupConfig;
+import com.azure.cosmos.ThroughputControlGroupConfigBuilder;
+import com.azure.identity.DefaultAzureCredentialBuilder;
+
+CosmosAsyncClient client = new CosmosClientBuilder()
+    .endpoint("<endpointUri>")
+    .credential(new DefaultAzureCredentialBuilder().build())
+    .buildAsyncClient();
+
+CosmosAsyncContainer container = client
+    .getDatabase("<DatabaseId>")
+    .getContainer("<ContainerId>");
+
+// Assign all requests on this container to throughput bucket 1
+ThroughputControlGroupConfig groupConfig =
+    new ThroughputControlGroupConfigBuilder()
+        .groupName("bucket1Group")
+        .throughputBucket(1)
+        .defaultControlGroup(true)
+        .build();
+
+container.enableServerThroughputControlGroup(groupConfig);
+```
+
+To assign individual requests to a different bucket, create a separate control group for that bucket and reference it in the request options.
+
+```java
+import com.azure.cosmos.models.CosmosItemRequestOptions;
+import com.azure.cosmos.models.PartitionKey;
+
+// Create a second control group for bucket 2
+ThroughputControlGroupConfig bucket2Group =
+    new ThroughputControlGroupConfigBuilder()
+        .groupName("bucket2Group")
+        .throughputBucket(2)
+        .build();
+
+container.enableServerThroughputControlGroup(bucket2Group);
+
+// Assign a specific read request to bucket 2
+CosmosItemRequestOptions requestOptions = new CosmosItemRequestOptions();
+requestOptions.setThroughputControlGroupName("bucket2Group");
+
+container.readItem("<itemId>", new PartitionKey("<partitionKey>"), requestOptions, Object.class)
+    .block();
+```
+
 ---
 
 > [!Note]

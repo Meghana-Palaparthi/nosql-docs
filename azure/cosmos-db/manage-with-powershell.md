@@ -1,11 +1,11 @@
 ---
-title: Manage Resources Using Powershell
-description: Manage Azure Cosmos DB for NoSQL resources using PowerShell.
+title: Manage Resources Using PowerShell
+description: Manage and automate the creation and deployment of Azure Cosmos DB resources using PowerShell and infrastructure as code.
 author: markjbrown
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: how-to
-ms.date: 02/18/2022
+ms.date: 05/14/2026
 ms.author: mjbrown
 ms.custom: devx-track-azurepowershell
 appliesto:
@@ -14,7 +14,7 @@ appliesto:
 
 # Manage Azure Cosmos DB for NoSQL resources using PowerShell
 
-The following guide describes how to use PowerShell to script and automate management of Azure Cosmos DB for NoSQL resources, including the Azure Cosmos DB account, database, container, and throughput. For PowerShell cmdlets for other APIs see [PowerShell Samples for Cassandra](cassandra/powershell-samples.md), [PowerShell Samples for API for MongoDB](mongodb/powershell-samples.md), [PowerShell Samples for Gremlin](graph/powershell-samples.md), [PowerShell Samples for Table](table/powershell-samples.md)
+The following guide describes how to use PowerShell as an infrastructure as code approach to script and automate the creation, deployment, and management of Azure Cosmos DB resources, including the Azure Cosmos DB account, database, container, and throughput. For PowerShell cmdlets for other APIs see [PowerShell Samples for Cassandra](cassandra/powershell-samples.md), [PowerShell Samples for API for MongoDB](mongodb/powershell-samples.md), [PowerShell Samples for Gremlin](graph/powershell-samples.md), [PowerShell Samples for Table](table/powershell-samples.md)
 
 > [!NOTE]
 > Samples in this article use [Az.CosmosDB](/powershell/module/az.cosmosdb) management cmdlets. See the [Az.CosmosDB](/powershell/module/az.cosmosdb) API reference page for the latest changes.
@@ -28,7 +28,7 @@ For cross-platform management of Azure Cosmos DB, you can use the `Az` and `Az.C
 Follow the instructions in [How to install and configure Azure PowerShell][powershell-install-configure] to install and sign in to your Azure account in PowerShell.
 
 > [!IMPORTANT]
-> Azure Cosmos DB resources can't be renamed as this violates how Azure Resource Manager works with resource URIs.
+> Azure Cosmos DB resources can't be renamed as this violates how Azure Resource Manager works with resource-specific Uniform Resource Identifiers (URIs).
 
 ## Azure Cosmos DB accounts
 
@@ -113,8 +113,8 @@ This command allows you to update your Azure Cosmos DB database account properti
 
 > [!NOTE]
 > You can't simultaneously add or remove regions (`locations`) and change other properties for an Azure Cosmos DB account. Modifying regions must be performed as a separate operation from any other change to the account.
-> [!NOTE]
-> This command allows you to add and remove regions but does not allow you to modify failover priorities or trigger a manual failover. See [Modify failover priority](#modify-failover-priority) and [Trigger manual failover](#trigger-manual-failover).
+> 
+> This command allows you to add and remove regions but doesn't allow you to modify failover priorities or trigger a manual failover. See [Modify failover priority](#modify-failover-priority) and [Trigger manual failover](#trigger-manual-failover).
 > [!TIP]
 > When a new region is added, all data must be fully replicated and committed into the new region before the region is marked as available. The amount of time this operation takes will depend upon how much data is stored within the account. If an [asynchronous throughput scaling operation](scaling-provisioned-throughput-best-practices.md#background-on-scaling-rus) is in progress, the throughput scale-up operation will be paused and will resume automatically when the add/remove region operation is complete. 
 
@@ -222,7 +222,7 @@ Update-AzCosmosDBAccount `
 
 ### <a id="enable-automatic-failover"></a> Enable service-managed failover
 
-The following command sets an Azure Cosmos DB account to perform a service-managed fail over to its secondary region should the primary region become unavailable.
+The following command sets an Azure Cosmos DB account to perform a service-managed failover to its secondary region should the primary region become unavailable.
 
 ```azurepowershell-interactive
 $resourceGroupName = "myResourceGroup"
@@ -246,12 +246,12 @@ Update-AzCosmosDBAccount `
 
 ### <a id="modify-failover-priority"></a> Modify Failover Priority
 
-For accounts configured with Service-Managed Failover, you can change the order in which Azure Cosmos DB will promote secondary replicas to primary should the primary become unavailable.
+For accounts configured with service-managed failover, you can change the order in which Azure Cosmos DB promotes secondary replicas to primary should the primary become unavailable.
 
-For the example below, assume the current failover priority is `West US = 0`, `East US = 1`, `South Central US = 2`. The command will change this to `West US = 0`, `South Central US = 1`, `East US = 2`.
+For the example here, assume the current failover priority is `West US = 0`, `East US = 1`, `South Central US = 2`. The command changes this to `West US = 0`, `South Central US = 1`, `East US = 2`.
 
 > [!CAUTION]
-> Changing the location for `failoverPriority=0` will trigger a manual failover for an Azure Cosmos DB account. Any other priority changes will not trigger a failover.
+> Changing the location for `failoverPriority=0` triggers a manual failover for an Azure Cosmos DB account. Any other priority changes won't trigger a failover.
 
 ```azurepowershell-interactive
 $resourceGroupName = "myResourceGroup"
@@ -268,13 +268,13 @@ Update-AzCosmosDBAccountFailoverPriority `
 
 For accounts configured with Manual Failover, you can fail over and promote any secondary replica to primary by modifying to `failoverPriority=0`. This operation can be used to initiate a disaster recovery drill to test disaster recovery planning.
 
-For the example below, assume the account has a current failover priority of `West US = 0` and `East US = 1` and flip the regions.
+For the example here, assume the account has a current failover priority of `West US = 0` and `East US = 1` and flip the regions.
 
 > [!CAUTION]
-> Changing `locationName` for `failoverPriority=0` will trigger a manual failover for an Azure Cosmos DB account. Any other priority change will not trigger a failover.
+> Changing `locationName` for `failoverPriority=0` triggers a manual failover for an Azure Cosmos DB account. Any other priority change won't trigger a failover.
 
 > [!NOTE]
-> If you perform a manual failover operation while an [asynchronous throughput scaling operation](scaling-provisioned-throughput-best-practices.md#background-on-scaling-rus) is in progress, the throughput scale-up operation will be paused. It will resume automatically when the failover operation is complete.
+> If you perform a manual failover operation while an [asynchronous throughput scaling operation](scaling-provisioned-throughput-best-practices.md#background-on-scaling-rus) is in progress, the throughput scale-up operation will be paused. It resumes automatically when the failover operation is complete.
 
 ```azurepowershell-interactive
 $resourceGroupName = "myResourceGroup"
@@ -455,7 +455,7 @@ The following sections demonstrate how to manage the Azure Cosmos DB container, 
 * [Migrate container throughput to autoscale](#migrate-container-ru)
 * [Create an Azure Cosmos DB container with custom indexing](#create-container-custom-index)
 * [Create an Azure Cosmos DB container with indexing turned off](#create-container-no-index)
-* [Create an Azure Cosmos DB container with unique key and TTL](#create-container-unique-key-ttl)
+* [Create an Azure Cosmos DB container with unique key and time-to-live (TTL)](#create-container-unique-key-ttl)
 * [Create an Azure Cosmos DB container with conflict resolution](#create-container-lww)
 * [List all Azure Cosmos DB containers in a database](#list-containers)
 * [Get a single Azure Cosmos DB container in a database](#get-container)

@@ -28,7 +28,7 @@ The VS Code extension provides seamless integration with the code editor.
 
 3. **Search for Cosmos DB**
    - Type "Cosmos DB" in the search box
-   - Look for "Azure Cosmos DB Shell" by Microsoft
+   - Look for the "Azure Cosmos DB" extension by Microsoft
 
 4. **Install the Extension**
    - Click the Install button
@@ -192,7 +192,7 @@ Download and extract a self-contained binary for your platform.
 
 - Ensure VS Code version is 1.85 or later
 - Restart VS Code
-- Check the Extensions marketplace for "Azure Cosmos DB Shell"
+- Check the Extensions marketplace for the "Azure Cosmos DB" extension
 
 ## Next steps
 

@@ -599,6 +599,8 @@
               href: performance-tips-java-sdk-v4.md
             - name: Connection Configurations for Java SDK v4
               href: tune-connection-configurations-java-sdk-v4.md
+            - name: Throughput control groups
+              href: throughput-control-java.md
             - name: Async Java SDK v2
               href: performance-tips-async-java.md
             - name: Sync Java SDK v2
