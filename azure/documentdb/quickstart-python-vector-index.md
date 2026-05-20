@@ -33,14 +33,14 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ```bash
    mkdir -p data
-   curl -o data/Hotels_Vector.json https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/main/data/Hotels_Vector.json
+   curl -o data/Hotels_Vector.json https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json
    ```
 
    ### [PowerShell](#tab/powershell)
 
    ```powershell
    New-Item -ItemType Directory -Force -Path data
-   Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/main/data/Hotels_Vector.json" -OutFile "data/Hotels_Vector.json"
+   Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json" -OutFile "data/Hotels_Vector.json"
    ```
 
    ---
@@ -104,13 +104,12 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 3. Install the required packages:
 
    ```bash
-   pip install "pymongo>=4.7" openai==1.55.3 azure-identity==1.15.0 python-dotenv==1.0.0
+   pip install "pymongo>=4.7" openai==1.55.3 azure-identity==1.15.0
    ```
 
    - `pymongo`: MongoDB driver for Python (≥4.7 required for OIDC authentication)
    - `openai`: OpenAI client library to create vectors
    - `azure-identity`: Azure Identity library for passwordless authentication
-   - `python-dotenv`: Environment variable management from .env files
 
    Verify the packages are installed:
 
@@ -130,71 +129,64 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    You should see `pymongo` with a version of 4.7 or greater.
 
-4. Create a `.env` file for environment variables in the project root:
-
-   ```bash
-   # Azure OpenAI Embedding Settings
-   AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
-   AZURE_OPENAI_EMBEDDING_API_VERSION=2024-10-21
-   AZURE_OPENAI_EMBEDDING_ENDPOINT=https://<RESOURCE-NAME>.openai.azure.com
-   
-   # Data File Paths and Vector Configuration
-   DATA_FILE_WITH_VECTORS=../data/Hotels_Vector.json
-   EMBEDDED_FIELD=DescriptionVector
-   EMBEDDING_DIMENSIONS=1536
-   LOAD_SIZE_BATCH=100
-   
-   # Azure DocumentDB Connection Settings
-   MONGO_CLUSTER_NAME=<CLUSTER-NAME>
-   
-   # Azure DocumentDB Database Name
-   AZURE_DOCUMENTDB_DATABASENAME=Hotels
-   
-   # Algorithm Selection (used by select_algorithm.py)
-   # ALGORITHM: "all" | "diskann" | "hnsw" | "ivf"
-   ALGORITHM=all
-   
-   # SIMILARITY: "all" | "COS" | "L2" | "IP"
-   SIMILARITY=COS
-   ```
-
-   For the passwordless authentication used in this article, replace the placeholder values in the `.env` file with your own information:
-
-   - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
-   - `MONGO_CLUSTER_NAME`: Your Azure DocumentDB cluster name
-
-   You should always prefer passwordless authentication, but it requires additional setup. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Python apps to Azure services by using the Azure SDK for Python](/azure/developer/python/sdk/authentication/overview).
-
-   Verify the `.env` file was created:
+4. Set the required environment variables in your current shell session before you run the sample:
 
    ### [Bash](#tab/bash)
 
    ```bash
-   cat .env
+   export AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+   export AZURE_OPENAI_EMBEDDING_API_VERSION=2024-10-21
+   export AZURE_OPENAI_EMBEDDING_ENDPOINT=https://<RESOURCE-NAME>.openai.azure.com
+   export DATA_FILE_WITH_VECTORS=data/Hotels_Vector.json
+   export EMBEDDED_FIELD=DescriptionVector
+   export EMBEDDING_DIMENSIONS=1536
+   export LOAD_SIZE_BATCH=100
+   export DOCUMENTDB_CLUSTER_NAME=<CLUSTER-NAME>
+   export AZURE_DOCUMENTDB_DATABASENAME=Hotels
    ```
 
    ### [PowerShell](#tab/powershell)
 
    ```powershell
-   Get-Content .env
+   $env:AZURE_OPENAI_EMBEDDING_MODEL = "text-embedding-3-small"
+   $env:AZURE_OPENAI_EMBEDDING_API_VERSION = "2024-10-21"
+   $env:AZURE_OPENAI_EMBEDDING_ENDPOINT = "https://<RESOURCE-NAME>.openai.azure.com"
+   $env:DATA_FILE_WITH_VECTORS = "data/Hotels_Vector.json"
+   $env:EMBEDDED_FIELD = "DescriptionVector"
+   $env:EMBEDDING_DIMENSIONS = "1536"
+   $env:LOAD_SIZE_BATCH = "100"
+   $env:DOCUMENTDB_CLUSTER_NAME = "<CLUSTER-NAME>"
+   $env:AZURE_DOCUMENTDB_DATABASENAME = "Hotels"
    ```
 
    ---
 
-   You should see your connection string and Azure OpenAI endpoint values.
+   For the passwordless authentication used in this article, replace the placeholder values with your own information:
+
+   - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
+   - `DOCUMENTDB_CLUSTER_NAME`: Your Azure DocumentDB cluster name
+
+   The compare-all mode always runs all 9 combinations (3 algorithms × 3 metrics). The `ALGORITHM` and `SIMILARITY` environment variables are used only by the single-algorithm mode.
+
+   You should always prefer passwordless authentication, but it requires additional setup. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Python apps to Azure services by using the Azure SDK for Python](/azure/developer/python/sdk/authentication/overview).
 
 ## Create code files
 
 Create the following project structure:
 
 ```
+select-algorithm-python/
 ├── data/
-│   └── Hotels_Vector.json       # Hotel data with vector embeddings
-└── select-algorithm/
-    ├── src/
-    │   ├── select_algorithm.py  # Main comparison script
-    │   └── utils.py             # Shared utility functions
-    └── .env                     # Environment variables
+│   └── README.md
+├── output/
+│   └── compare_all.txt
+├── src/
+│   ├── compare_all.py
+│   └── utils.py
+├── .gitignore
+├── quickstart.md
+├── README.md
+└── requirements.txt
 ```
 
 Create the `src` directory:
@@ -243,139 +235,85 @@ The utilities provide essential functions for:
 
 ## Run the code
 
-Execute the comparison script to test all algorithms with cosine similarity:
+Execute the comparison script to run all 9 combinations:
 
 ```bash
-python src/select_algorithm.py
+python src/compare_all.py
 ```
 
-The output shows the comparison across all three algorithms:
+The output matches `output/compare_all.txt`:
 
 ```
-Vector Algorithm Comparison
-   Database: Hotels
-   Algorithms: all
-   Similarity: COS
-   Collections to query: hotels_diskann_cos, hotels_hnsw_cos, hotels_ivf_cos
-   Search query: "quintessential lodging near running trails, eateries, retail"
+======================================================================
+  Compare All Algorithms — 9 Combinations
+  (3 Algorithms × 3 Similarity Metrics)
+======================================================================
 
-Initializing MongoDB and Azure OpenAI clients...
+  Query:  "luxury hotel near the beach"
+  Top K:  5
 
-Loading data from ../data/Hotels_Vector.json...
-Loaded 50 documents
-Generating query embedding...
-Query embedding: 1536 dimensions
+Dropped existing 'hotels' collection (if any)
+Loaded 50 documents with embeddings
+Inserted 50/50 documents
 
---- DiskANN / COS ---
-Collection: hotels_diskann_cos
-Created collection: hotels_diskann_cos
-Inserting 50 documents in batches of 100...
-Batch 1 completed: 50 documents inserted
-Inserted: 50/50
-Created vector index: vectorIndex_diskann_cos
-Executing vector search...
-Success: 5 results, 145ms
+Generating embedding for query...
+Running 9 vector searches...
 
---- HNSW / COS ---
-Collection: hotels_hnsw_cos
-Created collection: hotels_hnsw_cos
-Inserting 50 documents in batches of 100...
-Batch 1 completed: 50 documents inserted
-Inserted: 50/50
-Created vector index: vectorIndex_hnsw_cos
-Executing vector search...
-Success: 5 results, 132ms
+  Created index 'vector_ivf_cos'
+  Created index 'vector_ivf_l2'
+  Created index 'vector_ivf_ip'
+  Created index 'vector_hnsw_cos'
+  Created index 'vector_hnsw_l2'
+  Created index 'vector_hnsw_ip'
+  Created index 'vector_diskann_cos'
+  Created index 'vector_diskann_l2'
+  Created index 'vector_diskann_ip'
++-------------+----------+--------------------------+---------+-------------------+---------+--------+
+| Algorithm   | Metric   | Top 1 Result             |   Score | Top 2 Result      |   Score |   Diff |
++=============+==========+==========================+=========+===================+=========+========+
+| IVF         | COS      | Ocean Water Resort & Spa |  0.6184 | Windy Ocean Motel |  0.5057 | 0.1128 |
++-------------+----------+--------------------------+---------+-------------------+---------+--------+
+| IVF         | L2       | Ocean Water Resort & Spa |  0.8735 | Windy Ocean Motel |  0.9942 | 0.1207 |
++-------------+----------+--------------------------+---------+-------------------+---------+--------+
+| IVF         | IP       | Ocean Water Resort & Spa |  0.6183 | Windy Ocean Motel |  0.5056 | 0.1127 |
++-------------+----------+--------------------------+---------+-------------------+---------+--------+
+| HNSW        | COS      | Ocean Water Resort & Spa |  0.6184 | Windy Ocean Motel |  0.5057 | 0.1128 |
++-------------+----------+--------------------------+---------+-------------------+---------+--------+
+| HNSW        | L2       | Ocean Water Resort & Spa |  0.8735 | Windy Ocean Motel |  0.9942 | 0.1207 |
++-------------+----------+--------------------------+---------+-------------------+---------+--------+
+| HNSW        | IP       | Ocean Water Resort & Spa |  0.6183 | Windy Ocean Motel |  0.5056 | 0.1127 |
++-------------+----------+--------------------------+---------+-------------------+---------+--------+
+| DiskANN     | COS      | Ocean Water Resort & Spa |  0.6184 | Windy Ocean Motel |  0.5057 | 0.1128 |
++-------------+----------+--------------------------+---------+-------------------+---------+--------+
+| DiskANN     | L2       | Ocean Water Resort & Spa |  0.8735 | Windy Ocean Motel |  0.9942 | 0.1207 |
++-------------+----------+--------------------------+---------+-------------------+---------+--------+
+| DiskANN     | IP       | Ocean Water Resort & Spa |  0.6183 | Windy Ocean Motel |  0.5056 | 0.1127 |
++-------------+----------+--------------------------+---------+-------------------+---------+--------+
 
---- IVF / COS ---
-Collection: hotels_ivf_cos
-Created collection: hotels_ivf_cos
-Inserting 50 documents in batches of 100...
-Batch 1 completed: 50 documents inserted
-Inserted: 50/50
-Created vector index: vectorIndex_ivf_cos
-Executing vector search...
-Success: 5 results, 128ms
+Summary: 9 succeeded, 0 failed
 
-==========================================================================================
-                    Vector Algorithm Comparison Results
-==========================================================================================
-Algorithm    Similarity     Top Result               Score        Latency(ms)   
-------------------------------------------------------------------------------------------
-DiskANN      COS            Twin Dome Motel          0.8947       145           
-HNSW         COS            Twin Dome Motel          0.8947       132           
-IVF          COS            Twin Dome Motel          0.8947       128           
-==========================================================================================
-
---- DiskANN / COS (hotels_diskann_cos) ---
-  1. Twin Dome Motel, Score: 0.8947
-  2. Triple Landscape Hotel, Score: 0.8898
-  3. Smile Hotel, Score: 0.8855
-  4. Gastronomic Landscape Hotel, Score: 0.8797
-  5. Twin Landscape Resort, Score: 0.8772
-  Latency: 145ms
-
---- HNSW / COS (hotels_hnsw_cos) ---
-  1. Twin Dome Motel, Score: 0.8947
-  2. Triple Landscape Hotel, Score: 0.8898
-  3. Smile Hotel, Score: 0.8855
-  4. Gastronomic Landscape Hotel, Score: 0.8797
-  5. Twin Landscape Resort, Score: 0.8772
-  Latency: 132ms
-
---- IVF / COS (hotels_ivf_cos) ---
-  1. Twin Dome Motel, Score: 0.8947
-  2. Triple Landscape Hotel, Score: 0.8898
-  3. Smile Hotel, Score: 0.8855
-  4. Gastronomic Landscape Hotel, Score: 0.8797
-  5. Twin Landscape Resort, Score: 0.8772
-  Latency: 128ms
-
-Closing database connection...
-Database connection closed
+Cleanup: dropped collection 'hotels'
 ```
 
-### Test specific combinations
+The **Diff** column shows the score gap between the top-1 and top-2 results. A smaller diff indicates the algorithm found results with more similar relevance scores.
 
-To override environment variables at the command line:
+### Run all combinations
+
+The compare-all mode always runs all 9 combinations (3 algorithms × 3 metrics). The `ALGORITHM` and `SIMILARITY` environment variables are used only by the single-algorithm mode.
 
 ### [Bash](#tab/bash)
 
 ```bash
-# Test only DiskANN across all similarity functions
-ALGORITHM=diskann SIMILARITY=all python src/select_algorithm.py
-```
-
-```bash
-# Test all algorithms with L2 distance
-ALGORITHM=all SIMILARITY=L2 python src/select_algorithm.py
-```
-
-```bash
-# Test HNSW with inner product
-ALGORITHM=hnsw SIMILARITY=IP python src/select_algorithm.py
+python src/compare_all.py
 ```
 
 ### [PowerShell](#tab/powershell)
 
 ```powershell
-# Test only DiskANN across all similarity functions
-$env:ALGORITHM="diskann"; $env:SIMILARITY="all"; python src/select_algorithm.py
-```
-
-```powershell
-# Test all algorithms with L2 distance
-$env:ALGORITHM="all"; $env:SIMILARITY="L2"; python src/select_algorithm.py
-```
-
-```powershell
-# Test HNSW with inner product
-$env:ALGORITHM="hnsw"; $env:SIMILARITY="IP"; python src/select_algorithm.py
+python src/compare_all.py
 ```
 
 ---
-
-> [!NOTE]
-> When using `SIMILARITY=all`, the script tests all three similarity functions (COS, L2, IP) for each selected algorithm. Combined with `ALGORITHM=all`, this runs all 9 combinations (3 algorithms × 3 similarity functions). Each combination creates a separate collection, so the full run takes longer.
 
 ### Understanding the results
 
@@ -385,39 +323,13 @@ The comparison table helps you choose the best configuration for your workload:
 - **Score**: Similarity score using the selected function. Higher scores indicate better matches.
 - **Top Result**: The highest-scoring hotel for the query. Consistency across algorithms indicates stable results.
 
-Algorithm selection guidelines:
-
-- **DiskANN**: Best for large datasets where memory is limited. Stores index on disk while maintaining good performance.
-- **HNSW**: Best for high-accuracy requirements and fast search. Requires more memory but provides excellent recall.
-- **IVF**: Best for very large datasets where some recall can be traded for speed. Uses clustering for efficient search.
-
-Similarity function selection:
-
-- **COS (Cosine)**: Best for text embeddings. Normalizes vectors and measures angle between them.
-- **L2 (Euclidean)**: Measures straight-line distance. Sensitive to vector magnitude.
-- **IP (Inner Product)**: Dot product similarity. Useful when vector magnitude is meaningful.
-
-Tuning parameters:
-
-DiskANN tuning:
-- `maxDegree`: Higher values improve accuracy but increase memory usage (default: 32)
-- `lBuild`: Higher values improve index quality but slow down index creation (default: 50)
-- `lSearch`: Higher values improve recall but slow down queries (default: 100)
-
-HNSW tuning:
-- `m`: Number of connections per layer. Higher improves recall (default: 16)
-- `efConstruction`: Candidates during build. Higher improves quality (default: 64)
-- `efSearch`: Candidates during search. Higher improves recall (default: 80)
-
-IVF tuning:
-- `numLists`: Number of clusters. Higher speeds up search but may reduce recall (default: 1)
-- `nProbes`: Clusters searched at query time. Higher improves recall but slows queries (default: 1)
+[!INCLUDE[Choosing the right algorithm](includes/choosing-algorithm.md)]
 
 ## Troubleshooting
 
 | Issue | Solution |
 |-------|----------|
-| `ServerSelectionTimeoutError` | Verify your connection string in `.env`. Ensure your IP is in the DocumentDB firewall rules. |
+| `ServerSelectionTimeoutError` | Verify that your environment variables are set in the current shell. Ensure your IP is in the DocumentDB firewall rules. |
 | `AuthenticationFailed` | Check that your connection string includes the correct username and password, or that your Microsoft Entra token is valid. |
 | `pymongo.errors.OperationFailure` | Ensure the database and collection exist. Check that the vector index was created successfully. |
 | `ModuleNotFoundError: No module named 'pymongo'` | Activate your virtual environment and run `pip install "pymongo>=4.7"`. |
@@ -425,14 +337,14 @@ IVF tuning:
 
 ## Clean up resources
 
-When you're done, you can remove the database using mongosh or the Azure portal.
+When you're done, you can remove the database using mongosh or the DocumentDB for VS Code extension.
 
 ### [mongosh](#tab/mongosh)
 
 Connect to your DocumentDB cluster and drop the database:
 
 ```bash
-mongosh "mongodb+srv://<your-cluster-name>.mongocluster.cosmos.azure.com/" --tls --authenticationMechanism MONGODB-OIDC
+mongosh "mongodb+srv://<your-cluster-name>.global.mongocluster.cosmos.azure.com/" --tls --authenticationMechanism MONGODB-OIDC
 ```
 
 ```javascript
@@ -440,11 +352,11 @@ use Hotels
 db.dropDatabase()
 ```
 
-### [Azure portal](#tab/portal)
+### [VS Code extension](#tab/vscode)
 
-1. Navigate to your DocumentDB resource in the Azure portal.
-2. Select **Data Explorer**.
-3. Right-click the **Hotels** database and select **Delete Database**.
+1. Install the [DocumentDB for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) extension.
+2. Connect to your Azure DocumentDB cluster.
+3. Expand the cluster, right-click the **Hotels** database, and select **Drop Database**.
 
 ---
 
@@ -455,3 +367,4 @@ If you created an Azure DocumentDB cluster specifically for this quickstart, you
 - [Vector search overview](./vector-search.md)
 - [ENN vector search](./enn-vector-search.md)
 - [Product quantization](./product-quantization.md)
+
