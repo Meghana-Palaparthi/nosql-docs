@@ -62,7 +62,7 @@ Review the following considerations before you use this feature:
 >
 > The lifetime of an access token issued by Microsoft Entra ID represents the maximum potential attack window if the token is compromised. If a malicious actor obtains a valid access token, they can establish a connection. The system continues to accept requests using that token until it expires. This scenario occurs even if the associated refresh token is revoked or the user account is disabled.
 >
-> We recommend following the guidelines as described [Revoke access token within Microsoft Entra](/entra/identity/users/users-revoke-access#on-premises-active-directory-environment)
+> Follow the guidelines in [Revoke access token within Microsoft Entra](/entra/identity/users/users-revoke-access#on-premises-active-directory-environment).
 >
 
 ## Prerequisites
