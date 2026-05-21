@@ -80,7 +80,7 @@ To enable this feature for Azure Cosmos DB for NoSQL, follow these steps:
 The registration request is autoapproved, but it might take 15 minutes to take effect.
 
 > [!NOTE]
-> If you want to use vector search on collections with [hierarchical partition keys](hierarchical-partition-keys.md), please reach out to team at: cosmossearch@microsoft.com to configure your account to optimally leverage the partitioning scheme during search. 
+> If you want to use vector search on collections with [hierarchical partition keys](hierarchical-partition-keys.md), please reach out our to team at: cosmossearch@microsoft.com to configure your account to optimally leverage the partitioning scheme during search. 
 
 ## Container vector policies
 
