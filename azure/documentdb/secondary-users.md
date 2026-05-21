@@ -59,7 +59,7 @@ Creates a new user on the cluster where you run the command. The `createUser` co
 
 1. Create a data plane administrative user.
 
-    ```mongo
+    ```javascript
     db.runCommand(
       {
         createUser:"yourUserName",
@@ -74,7 +74,7 @@ Creates a new user on the cluster where you run the command. The `createUser` co
 
 1. Create a read-only user.
 
-    ```mongo
+    ```javascript
     db.runCommand(
       {
         createUser:"yourUserName",
@@ -88,7 +88,7 @@ Creates a new user on the cluster where you run the command. The `createUser` co
 
 1. Update a user on the database by running the `updateUser` command.
 
-    ```mongo
+    ```javascript
     use admin
     
     db.runCommand(
@@ -104,7 +104,7 @@ Creates a new user on the cluster where you run the command. The `createUser` co
 
 1. Remove a user from the cluster.
 
-    ```mongo
+    ```javascript
     use admin
     
     db.runCommand(
@@ -116,7 +116,7 @@ Creates a new user on the cluster where you run the command. The `createUser` co
 
 1. Retrieve details about all native users on the cluster or specify a single user to get information about their roles and other attributes.
 
-    ```mongo
+    ```javascript
     use admin
     
     db.runCommand(

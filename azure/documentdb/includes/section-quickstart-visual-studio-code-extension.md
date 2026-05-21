@@ -28,7 +28,7 @@ Use the **DocumentDB** extension in Visual Studio Code to perform core database 
 
 1. Enter the following MongoDB Query Language (MQL) commands and then select **Run All**. Observe the output from the commands.
 
-    ```mongo
+    ```javascript
     db.products.find({
       price: { $gt: 200 },
       sale: true
