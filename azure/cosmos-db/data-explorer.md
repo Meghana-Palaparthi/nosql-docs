@@ -167,7 +167,7 @@ In the Data Explorer, you can configure a limit to the request units per second 
 ## Use with Microsoft Entra authentication
 
    > [!NOTE]
-   > Microsoft Entra authentication for data operations is currently only supported for NoSQL API.
+   > Microsoft Entra authentication for data operations is currently only supported with Azure Cosmos DB for NoSQL.
 
 You can use Microsoft Entra-based authentication within the explorer by enabling it via configuration. For more information about role-based access control, see the [security guide](security.md).
 
