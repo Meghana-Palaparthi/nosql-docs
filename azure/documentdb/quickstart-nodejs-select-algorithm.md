@@ -21,9 +21,6 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 [!INCLUDE[Prerequisites - Vector Search Quickstart](includes/prerequisite-quickstart-vector-search-model.md)]
 
-> [!TIP]
-> To customize Azure OpenAI model parameters before deployment, see [Customize Azure OpenAI deployment](#customize-azure-openai-deployment-optional) below.
-
 - [Node.js LTS](https://nodejs.org/download/)
 
 - [TypeScript](https://www.typescriptlang.org/download): Install TypeScript globally:
