@@ -1298,7 +1298,7 @@ Sign in to the cluster with an administrative Microsoft Entra ID identity to per
 
 1. Add a nonadministrative Microsoft Entra ID identity with **read-write** permissions on the cluster using the `createUser` command:
     
-    ```mongo
+    ```javascript
     db.runCommand(
       {
         createUser: "<entra-id-unique-identifier>",
@@ -1313,7 +1313,7 @@ Sign in to the cluster with an administrative Microsoft Entra ID identity to per
 
 1. Add a nonadministrative Microsoft Entra ID identity with **read-only** permissions on the cluster with `createUser` and a different set of roles.
 
-    ```mongo
+    ```javascript
     db.runCommand(
       {
         createUser: "<entra-id-unique-identifier>",
@@ -1327,7 +1327,7 @@ Sign in to the cluster with an administrative Microsoft Entra ID identity to per
 
 1. Remove a nonadministrative Microsoft Entra ID identity from the cluster with the `dropUser` command.
 
-    ```mongo
+    ```javascript
     db.runCommand(
       {
         dropUser: "<entra-id-unique-identifier>"
@@ -1337,7 +1337,7 @@ Sign in to the cluster with an administrative Microsoft Entra ID identity to per
 
 1. List all Microsoft Entra ID and native DocumentDB users on the cluster using `userInfo`.
 
-    ```mongo
+    ```javascript
     db.runCommand(
       {
         usersInfo: 1
