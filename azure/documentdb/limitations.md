@@ -25,7 +25,7 @@ The following limits apply to query operations and command execution in Azure Do
 
 #### Example
 
-```mongodb
+```javascript
 db.collection.find({ field: "value" }).maxTimeMS(5000)
 ```
 
