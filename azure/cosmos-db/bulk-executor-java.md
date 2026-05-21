@@ -7,17 +7,18 @@ ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.devlang: java
 ms.topic: how-to
-ms.date: 03/07/2022
+ms.date: 05/21/2026
 ms.custom: devx-track-java, devx-track-extended-java
+ai-usage: ai-assisted
 appliesto:
   - ✅ NoSQL
 ---
 
 # Perform bulk operations on Azure Cosmos DB data
 
-This tutorial provides instructions on performing bulk operations in the [Azure Cosmos DB Java V4 SDK](sdk-java-v4.md). This version of the SDK comes with the bulk executor library built-in. If you're using an older version of Java SDK, it's recommended to [migrate to the latest version](migrate-java-v4-sdk.md). Azure Cosmos DB Java V4 SDK is the current recommended solution for Java bulk support. 
+This tutorial shows how to perform bulk operations in the [Azure Cosmos DB Java V4 SDK](sdk-java-v4.md). This version of the SDK includes the bulk executor library. If you're using an older version of the Java SDK, migrate to [the latest version](migrate-java-v4-sdk.md). The Azure Cosmos DB Java V4 SDK is the current recommended solution for Java bulk support.
 
-Currently, the bulk executor library is supported only by Azure Cosmos DB for NoSQL and API for Gremlin accounts. To learn about using bulk executor .NET library with API for Gremlin, see [perform bulk operations in Azure Cosmos DB for Gremlin](gremlin/bulk-executor-dotnet.md).
+Currently, the bulk executor library is supported only by Azure Cosmos DB for NoSQL and API for Gremlin accounts. To learn about using the bulk executor .NET library with API for Gremlin, see [perform bulk operations in Azure Cosmos DB for Gremlin](gremlin/bulk-executor-dotnet.md).
 
 
 ## Prerequisites
@@ -37,13 +38,13 @@ Currently, the bulk executor library is supported only by Azure Cosmos DB for No
 
 ## Clone the sample application
 
-Now let's switch to working with code by downloading a generic samples repository for Java V4 SDK for Azure Cosmos DB from GitHub. These sample applications perform CRUD operations and other common operations on Azure Cosmos DB. To clone the repository, open a command prompt, navigate to the directory where you want to copy the application and run the following command:
+Download a sample repository for the Java V4 SDK from GitHub. These sample applications perform CRUD operations and other common operations on Azure Cosmos DB. To clone the repository, open a command prompt, go to the directory where you want to copy the application, and run the following command:
 
 ```bash
  git clone https://github.com/Azure-Samples/azure-cosmos-java-sql-api-samples 
 ```
 
-The cloned repository contains a sample `SampleBulkQuickStartAsync.java` in the `/azure-cosmos-java-sql-api-samples/tree/main/src/main/java/com/azure/cosmos/examples/bulk/async` folder. The application generates documents and executes operations to bulk create, upsert, replace, and delete items in Azure Cosmos DB. In the next sections, we will review the code in the sample app. 
+The cloned repository contains a sample `SampleBulkQuickStartAsync.java` in the `azure-cosmos-java-sql-api-samples/src/main/java/com/azure/cosmos/examples/bulk/async` folder. The application generates documents and executes operations to bulk create, upsert, replace, and delete items in Azure Cosmos DB. The following sections review the code in the sample app.
 
 ## Bulk execution in Azure Cosmos DB
 
@@ -74,29 +75,84 @@ com.azure.cosmos.examples.bulk.async.SampleBulkQuickStartAsync
   [!code-java[](~/../azure-cosmos-java-sql-api-samples/src/main/java/com/azure/cosmos/examples/bulk/async/SampleBulkQuickStartAsync.java?name=BulkCreateItems)]
 
 
-5. There's also a class `BulkWriter.java` in the same directory as the sample application. This class demonstrates how to handle rate limiting (429) and timeout (408) errors that may occur during bulk execution, and retrying those operations effectively. It is implemented in the below methods, also showing how to implement local and global throughput control.
+5. The `BulkWriter.java` class in the same directory as the sample application demonstrates how to handle rate limiting (429) and timeout (408) errors that occur during bulk execution and how to retry those operations. The following methods also show how to implement local and global throughput control.
 
   [!code-java[](~/../azure-cosmos-java-sql-api-samples/src/main/java/com/azure/cosmos/examples/bulk/async/SampleBulkQuickStartAsync.java?name=BulkWriterAbstraction)]
 
 
-6. Additionally, there are bulk create methods in the sample, which illustrate how to add response processing, and set execution options:
+6. The sample also includes bulk create methods that illustrate how to add response processing and set execution options:
 
   [!code-java[](~/../azure-cosmos-java-sql-api-samples/src/main/java/com/azure/cosmos/examples/bulk/async/SampleBulkQuickStartAsync.java?name=BulkCreateItemsWithResponseProcessingAndExecutionOptions)]
 
-## Performance tips 
+## Large-scale ingestion strategy
 
-Consider the following points for better performance when using bulk executor library:
+For large-scale data ingestion, **throughput control and retry policy are the primary levers** for avoiding throttling — not batch size or concurrency alone. Focusing on batch size and concurrency without addressing throughput limits and retries won't reliably prevent 429 (rate limited) responses at scale.
 
-* For best performance, run your application from an Azure VM in the same region as your Azure Cosmos DB account write region.  
-* For achieving higher throughput:  
+### Choose an ingestion approach
 
-   * Set the JVM's heap size to a large enough number to avoid any memory issue in handling large number of documents. Suggested heap size: max(3 GB, 3 * sizeof(all documents passed to bulk import API in one batch)).  
-   * There's a preprocessing time, due to which you'll get higher throughput when performing bulk operations with a large number of documents. So, if you want to import 10,000,000 documents, running bulk import 10 times on 10 bulk of documents each of size 1,000,000 is preferable than running bulk import 100 times on 100 bulk of documents each of size 100,000 documents.  
+| Scenario | Recommended approach |
+| --- | --- |
+| Large-scale distributed ingestion across multiple machines | [Apache Spark connector](tutorial-spark-connector.md) |
+| Single-machine ingestion requiring fine-grained control | Java SDK bulk executor with throughput control |
 
-* It is recommended to instantiate a single CosmosAsyncClient object for the entire application within a single virtual machine that corresponds to a specific Azure Cosmos DB container.  
+For large-scale ingestion, the [Apache Spark connector](tutorial-spark-connector.md) is the preferred choice. It handles distributed computation, automatic retry and backoff, and load balancing across worker nodes without requiring manual tuning of concurrency or batch sizes.
 
-* Since a single bulk operation API execution consumes a large chunk of the client machine's CPU and network IO. This happens by spawning multiple tasks internally, avoid spawning multiple concurrent tasks within your application process each executing bulk operation API calls. If a single bulk operation API calls running on a single virtual machine is unable to consume your entire container's throughput (if your container's throughput > 1 million RU/s), it's preferable to create separate virtual machines to concurrently execute bulk operation API calls.
+### Java SDK bulk executor with throughput control
 
-    
-## Next steps
-* For an overview of bulk executor functionality, see [bulk executor overview](bulk-executor-overview.md).
+If your scenario requires the Java SDK directly, the [azure-cosmos-distributed-bulk-sample](https://github.com/Azure/azure-cosmos-distributed-bulk-sample) provides a reference implementation for production-scale ingestion. It demonstrates the following key settings:
+
+- **Auto-tuned micro-batch sizes**: The sample dynamically adjusts batch sizes from 1 to 100 documents per physical partition to saturate throughput while keeping throttling manageable.
+- **Configurable retry count**: Default is 20 retries per batch. Adjust based on your tolerance for transient failures and downstream latency requirements.
+- **Concurrent batches per machine**: Default is 8 concurrent batches. The recommended range is 25–100% of available CPU cores on the ingestion machine.
+
+> [!TIP]
+> Start with the defaults and monitor 429 (rate limited) response rates. Reduce concurrent batches or add throughput control if excessive throttling occurs.
+
+### Throughput control for shared containers
+
+If multiple workloads share the same container, use [throughput control groups](throughput-control-java.md) to cap the RU/s consumed by bulk ingestion and prevent it from starving other workloads:
+
+> [!NOTE]
+> Throughput control requires a supported minimum Azure Cosmos DB Java SDK v4 version. The throughput control APIs are also annotated with `@Beta` and are subject to change. Verify the current version requirements and API status in the [throughput control documentation](throughput-control-java.md) before using the following sample.
+
+```java
+ThroughputControlGroupConfig groupConfig =
+    new ThroughputControlGroupConfigBuilder()
+        .groupName("bulkIngestionGroup")
+        .targetThroughputThreshold(0.75) // limit ingestion to 75% of provisioned throughput
+        .defaultControlGroup(true)
+        .build();
+
+container.enableLocalThroughputControlGroup(groupConfig);
+```
+
+To coordinate throughput limits across multiple ingestion machines, use [global throughput control](throughput-control-java.md#global-throughput-control) instead.
+
+### Reference implementations
+
+| Sample | Description |
+| --- | --- |
+| [azure-cosmos-distributed-bulk-sample](https://github.com/Azure/azure-cosmos-distributed-bulk-sample) | End-to-end distributed ingestion with job tracking, restartable batches, auto-tuned micro-batch sizes, and configurable retry and concurrency settings. |
+| [ThroughputControlQuickstartAsync.java](https://github.com/Azure-Samples/azure-cosmos-java-sql-api-samples/blob/main/src/main/java/com/azure/cosmos/examples/throughputcontrol/async/ThroughputControlQuickstartAsync.java) | Local throughput control, global throughput control with a shared RU limit via a metadata container, and priority-based throttling. |
+
+## Performance tips
+
+Consider the following points for better performance when using the bulk executor library:
+
+* For best performance, run your application from an Azure VM in the same region as your Azure Cosmos DB account write region.
+* To achieve higher throughput:
+
+   * Set the JVM heap size large enough to avoid memory issues when handling large numbers of documents. Suggested heap size: `max(3 GB, 3 * sizeof(all documents passed to bulk import API in one batch))`.
+   * Bulk operations have a preprocessing phase, so you get higher throughput when processing large document sets. For example, importing 10,000,000 documents by running bulk import 10 times with 1,000,000 documents each is more efficient than running it 100 times with 100,000 documents each.
+
+* Instantiate a single `CosmosAsyncClient` object for the entire application within a single virtual machine that corresponds to a specific Azure Cosmos DB container.
+
+* A single bulk operation API execution consumes a large chunk of the client machine's CPU and network I/O by spawning multiple tasks internally. Avoid spawning multiple concurrent tasks within your application process, where each task executes bulk operation API calls. If a single bulk operation API call running on a single virtual machine can't consume your entire container's throughput (if your container's throughput > 1 million RU/s), create separate virtual machines to execute bulk operation API calls concurrently.
+
+## Related content
+
+- [Bulk executor overview](bulk-executor-overview.md)
+- [Throughput control groups in Azure Cosmos DB Java SDK v4](throughput-control-java.md)
+- [Tutorial: Connect to Azure Cosmos DB for NoSQL by using Spark](tutorial-spark-connector.md)
+- [Performance tips for Azure Cosmos DB Java SDK v4](performance-tips-java-sdk-v4.md)
+- [Best practices for Azure Cosmos DB Java SDK](best-practice-java.md)
