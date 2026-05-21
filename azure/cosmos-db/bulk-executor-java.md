@@ -7,8 +7,9 @@ ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.devlang: java
 ms.topic: how-to
-ms.date: 03/07/2022
+ms.date: 05/21/2026
 ms.custom: devx-track-java, devx-track-extended-java
+ai-usage: ai-assisted
 appliesto:
   - ✅ NoSQL
 ---
@@ -83,7 +84,55 @@ com.azure.cosmos.examples.bulk.async.SampleBulkQuickStartAsync
 
   [!code-java[](~/../azure-cosmos-java-sql-api-samples/src/main/java/com/azure/cosmos/examples/bulk/async/SampleBulkQuickStartAsync.java?name=BulkCreateItemsWithResponseProcessingAndExecutionOptions)]
 
-## Performance tips 
+## Large-scale ingestion strategy
+
+For large-scale data ingestion, **throughput control and retry policy are the primary levers** for avoiding throttling — not batch size or concurrency alone. Focusing on batch size and concurrency without addressing throughput limits and retries won't reliably prevent 429 (rate limited) responses at scale.
+
+### Choose an ingestion approach
+
+| Scenario | Recommended approach |
+| --- | --- |
+| Large-scale distributed ingestion across multiple machines | [Apache Spark connector](tutorial-spark-connector.md) |
+| Single-machine ingestion requiring fine-grained control | Java SDK bulk executor with throughput control |
+
+For large-scale ingestion, the [Apache Spark connector](tutorial-spark-connector.md) is the preferred choice. It handles distributed computation, automatic retry and backoff, and load balancing across worker nodes without requiring manual tuning of concurrency or batch sizes.
+
+### Java SDK bulk executor with throughput control
+
+If your scenario requires the Java SDK directly, the [azure-cosmos-distributed-bulk-sample](https://github.com/Azure/azure-cosmos-distributed-bulk-sample) provides a reference implementation for production-scale ingestion. It demonstrates the following key settings:
+
+- **Auto-tuned micro-batch sizes**: The sample dynamically adjusts batch sizes from 1 to 100 documents per physical partition to saturate throughput while keeping throttling manageable.
+- **Configurable retry count**: Default is 20 retries per batch. Adjust based on your tolerance for transient failures and downstream latency requirements.
+- **Concurrent batches per machine**: Default is 8 concurrent batches. The recommended range is 25–100% of available CPU cores on the ingestion machine.
+
+> [!TIP]
+> Start with the defaults and monitor 429 (rate limited) response rates. Reduce concurrent batches or add throughput control if excessive throttling occurs.
+
+### Throughput control for shared containers
+
+If multiple workloads share the same container, use [throughput control groups](throughput-control-java.md) to cap the RU/s consumed by bulk ingestion and prevent it from starving other workloads:
+
+```java
+ThroughputControlGroupConfig groupConfig =
+    new ThroughputControlGroupConfigBuilder()
+        .groupName("bulkIngestionGroup")
+        .targetThroughputThreshold(0.75) // limit ingestion to 75% of provisioned throughput
+        .defaultControlGroup(true)
+        .build();
+
+container.enableLocalThroughputControlGroup(groupConfig);
+```
+
+To coordinate throughput limits across multiple ingestion machines, use [global throughput control](throughput-control-java.md#global-throughput-control) instead.
+
+### Reference implementations
+
+| Sample | Description |
+| --- | --- |
+| [azure-cosmos-distributed-bulk-sample](https://github.com/Azure/azure-cosmos-distributed-bulk-sample) | End-to-end distributed ingestion with job tracking, restartable batches, auto-tuned micro-batch sizes, and configurable retry and concurrency settings. |
+| [ThroughputControlQuickstartAsync.java](https://github.com/Azure-Samples/azure-cosmos-java-sql-api-samples/blob/main/src/main/java/com/azure/cosmos/examples/throughputcontrol/async/ThroughputControlQuickstartAsync.java) | Local throughput control, global throughput control with a shared RU limit via a metadata container, and priority-based throttling. |
+
+## Performance tips
 
 Consider the following points for better performance when using bulk executor library:
 
@@ -98,5 +147,10 @@ Consider the following points for better performance when using bulk executor li
 * Since a single bulk operation API execution consumes a large chunk of the client machine's CPU and network IO. This happens by spawning multiple tasks internally, avoid spawning multiple concurrent tasks within your application process each executing bulk operation API calls. If a single bulk operation API calls running on a single virtual machine is unable to consume your entire container's throughput (if your container's throughput > 1 million RU/s), it's preferable to create separate virtual machines to concurrently execute bulk operation API calls.
 
     
-## Next steps
-* For an overview of bulk executor functionality, see [bulk executor overview](bulk-executor-overview.md).
+## Related content
+
+- [Bulk executor overview](bulk-executor-overview.md)
+- [Throughput control groups in Azure Cosmos DB Java SDK v4](throughput-control-java.md)
+- [Tutorial: Connect to Azure Cosmos DB for NoSQL by using Spark](tutorial-spark-connector.md)
+- [Performance tips for Azure Cosmos DB Java SDK v4](performance-tips-java-sdk-v4.md)
+- [Best practices for Azure Cosmos DB Java SDK](best-practice-java.md)
