@@ -1266,7 +1266,7 @@ Connect to your Azure DocumentDB cluster using a Microsoft Entra ID identity dir
 
 1. Within MongoDB Compass, Select **+** in the **Connections** menu to add a new connection. While using the shell, get the **name** of your Azure DocumentDB cluster and the **client ID** for the target identity.
 
-   :::image source="media/how-to-connect-role-based-access-control/review-client-id.png" alt-text="Screenshot to review clientid needed for constructing the Microsoft Entra connection string from portal on the Azure DocumentDB.":::
+   :::image source="media/how-to-connect-role-based-access-control/review-client-id.png" alt-text="Screenshot to review client identifier needed for constructing the Microsoft Entra connection string from portal on the Azure DocumentDB.":::
 
 1. Enter the following credential into the **URI** input box.
 
