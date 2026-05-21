@@ -112,6 +112,9 @@ If your scenario requires the Java SDK directly, the [azure-cosmos-distributed-b
 
 If multiple workloads share the same container, use [throughput control groups](throughput-control-java.md) to cap the RU/s consumed by bulk ingestion and prevent it from starving other workloads:
 
+> [!NOTE]
+> Throughput control requires a supported minimum Azure Cosmos DB Java SDK v4 version. The throughput control APIs are also annotated with `@Beta` and are subject to change. Verify the current version requirements and API status in the [throughput control documentation](throughput-control-java.md) before using the following sample.
+
 ```java
 ThroughputControlGroupConfig groupConfig =
     new ThroughputControlGroupConfigBuilder()
