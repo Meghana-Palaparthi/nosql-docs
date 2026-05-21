@@ -44,7 +44,7 @@ Download a sample repository for the Java V4 SDK from GitHub. These sample appli
  git clone https://github.com/Azure-Samples/azure-cosmos-java-sql-api-samples 
 ```
 
-The cloned repository contains a sample `SampleBulkQuickStartAsync.java` in the `/azure-cosmos-java-sql-api-samples/tree/main/src/main/java/com/azure/cosmos/examples/bulk/async` folder. The application generates documents and executes operations to bulk create, upsert, replace, and delete items in Azure Cosmos DB. The following sections review the code in the sample app.
+The cloned repository contains a sample `SampleBulkQuickStartAsync.java` in the `azure-cosmos-java-sql-api-samples/src/main/java/com/azure/cosmos/examples/bulk/async` folder. The application generates documents and executes operations to bulk create, upsert, replace, and delete items in Azure Cosmos DB. The following sections review the code in the sample app.
 
 ## Bulk execution in Azure Cosmos DB
 
