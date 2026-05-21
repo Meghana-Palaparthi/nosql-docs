@@ -21,7 +21,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 ## Prerequisites
 
-[!INCLUDE[Prerequisites](includes/prerequisite-quickstart-select-algorithm.md)]
+[!INCLUDE[Prerequisites - Vector Search Quickstart](includes/prerequisite-quickstart-vector-search-model.md)]
 
 - [Python](https://www.python.org/downloads/) 3.10 or greater
 
@@ -107,9 +107,8 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    pip install "pymongo>=4.7" openai==1.55.3 azure-identity==1.15.0
    ```
 
-   - `pymongo`: MongoDB driver for Python (≥4.7 required for OIDC authentication)
-   - `openai`: OpenAI client library to create vectors
-   - `azure-identity`: Azure Identity library for passwordless authentication
+   - `pymongo`: MongoDB driver for Python (≥4.7 required for OIDC authentication)..   - `openai`: OpenAI client library to create vectors.
+   - `azure-identity`: Azure Identity library for passwordless authentication.
 
    Verify the packages are installed:
 
@@ -129,7 +128,23 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    You should see `pymongo` with a version of 4.7 or greater.
 
-4. Set the required environment variables in your current shell session before you run the sample:
+4. Create the `src` directory:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   mkdir -p src
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   New-Item -ItemType Directory -Force -Path src
+   ```
+
+   ---
+
+5. Set the required environment variables in your current shell session before you run the sample:
 
    ### [Bash](#tab/bash)
 
@@ -166,8 +181,6 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
    - `DOCUMENTDB_CLUSTER_NAME`: Your Azure DocumentDB cluster name
 
-   The compare-all mode always runs all 9 combinations (3 algorithms × 3 metrics). The `ALGORITHM` and `SIMILARITY` environment variables are used only by the single-algorithm mode.
-
    Prefer passwordless authentication, but it requires additional setup. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Python apps to Azure services by using the Azure SDK for Python](/azure/developer/python/sdk/authentication/overview).
 
 ## Create code files
@@ -184,26 +197,9 @@ select-algorithm-python/
 │   ├── compare_all.py
 │   └── utils.py
 ├── .gitignore
-├── quickstart.md
 ├── README.md
 └── requirements.txt
 ```
-
-Create the `src` directory:
-
-### [Bash](#tab/bash)
-
-```bash
-mkdir -p src
-```
-
-### [PowerShell](#tab/powershell)
-
-```powershell
-New-Item -ItemType Directory -Force -Path src
-```
-
----
 
 ## Create the algorithm comparison code
 
@@ -213,12 +209,12 @@ Create the `src/compare_all.py` file with the following code:
 
 This script orchestrates the algorithm comparison by:
 
-- Loading configuration from environment variables
-- Initializing MongoDB and Azure OpenAI clients with passwordless authentication
-- Loading hotel data with precalculated embeddings
-- Testing each algorithm/similarity combination by creating a collection, inserting data, creating an index, and executing a search
-- Measuring and comparing search performance across all configurations
-- Displaying results in a comparison table
+- Loading configuration from environment variables.
+- Initializing MongoDB and Azure OpenAI clients with passwordless authentication.
+- Loading hotel data with precalculated embeddings.
+- Testing each algorithm/similarity combination by creating a collection, inserting data, creating an index, and executing a search.
+- Measuring and comparing search performance across all configurations.
+- Displaying results in a comparison table.
 
 ## Create utility functions
 
@@ -228,10 +224,10 @@ Create the `src/utils.py` file with the following code:
 
 The utilities provide essential functions for:
 
-- Passwordless authentication to DocumentDB and Azure OpenAI using DefaultAzureCredential
-- Reading JSON data files with error handling
-- Batch insertion of documents with DocumentDB's 16 MB payload limit in mind
-- Formatted display of comparison results showing algorithm performance
+- Passwordless authentication to DocumentDB and Azure OpenAI using DefaultAzureCredential.
+- Reading JSON data files with error handling.
+- Batch insertion of documents with DocumentDB's 16 MB payload limit in mind.
+- Formatted display of comparison results showing algorithm performance.
 
 ## Run the code
 
@@ -247,23 +243,6 @@ Expected output:
 
 The **Diff** column shows the score gap between the top-1 and top-2 results. A smaller diff indicates the algorithm found results with more similar relevance scores.
 
-### Run all combinations
-
-The compare-all mode always runs all 9 combinations (3 algorithms × 3 metrics). The `ALGORITHM` and `SIMILARITY` environment variables are used only by the single-algorithm mode.
-
-### [Bash](#tab/bash)
-
-```bash
-python src/compare_all.py
-```
-
-### [PowerShell](#tab/powershell)
-
-```powershell
-python src/compare_all.py
-```
-
----
 
 ### Understanding the results
 

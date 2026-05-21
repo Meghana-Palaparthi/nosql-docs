@@ -21,7 +21,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 ## Prerequisites
 
-[!INCLUDE[Prerequisites](includes/prerequisite-quickstart-select-algorithm.md)]
+[!INCLUDE[Prerequisites - Vector Search Quickstart](includes/prerequisite-quickstart-vector-search-model.md)]
 
 - [Go](https://go.dev/doc/install) 1.22 or greater
 
@@ -131,10 +131,10 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    go mod tidy
    ```
 
-   - `azcore`: Core Azure SDK functionality for Go
-   - `azidentity`: Azure Identity library for passwordless authentication with DefaultAzureCredential
-   - `openai-go/v3`: OpenAI client library with Azure support to generate embeddings
-   - `mongo-driver`: Official MongoDB driver for Go to work with DocumentDB
+   - `azcore`: Core Azure SDK functionality for Go.
+   - `azidentity`: Azure Identity library for passwordless authentication with DefaultAzureCredential.
+   - `openai-go/v3`: OpenAI client library with Azure support to generate embeddings.
+   - `mongo-driver`: Official MongoDB driver for Go to work with DocumentDB.
 
    Verify the packages are installed:
 
@@ -169,9 +169,6 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    # DocumentDB Configuration
    DOCUMENTDB_CLUSTER_NAME=your-cluster-name
 
-   # The compare-all mode always runs all 9 combinations (3 algorithms × 3 metrics).
-   # The ALGORITHM and SIMILARITY environment variables are used only by the single-algorithm mode.
-
    # Database name
    AZURE_DOCUMENTDB_DATABASENAME=Hotels
    ```
@@ -199,21 +196,35 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    Prefer passwordless authentication. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Go apps to Azure services by using the Azure SDK for Go](/azure/developer/go/azure-sdk-authentication).
 
+5. Create a `src` directory:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   mkdir src
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   New-Item -ItemType Directory -Name src
+   ```
+
+   ---
+
 ## Create code files
 
-Create a `src` directory and add the main application file:
+Create the main application file:
 
 ### [Bash](#tab/bash)
 
 ```bash
-mkdir src
 touch src/main.go
 ```
 
 ### [PowerShell](#tab/powershell)
 
 ```powershell
-New-Item -ItemType Directory -Name src
 New-Item -ItemType File -Path src/main.go
 ```
 
@@ -233,7 +244,6 @@ select-algorithm-go/
 │   └── utils.go
 ├── .gitignore
 ├── go.mod
-├── quickstart.md
 └── README.md
 ```
 
@@ -255,13 +265,13 @@ Create the following source files in the `src` directory.
 
 This code provides a vector algorithm comparison application with these key features:
 
-- **Passwordless authentication**: Uses `DefaultAzureCredential` for both Azure OpenAI and DocumentDB via OIDC
-- **Three vector algorithms**: Implements DiskANN, HNSW, and IVF with algorithm-specific tuning parameters
-- **Three similarity functions**: Supports COS (cosine), L2 (Euclidean), and IP (inner product)
-- **Single compare-all entry point**: Always runs all 9 algorithm × similarity combinations in one pass
-- **Index lifecycle automation**: Creates, queries, and drops each vector index in sequence
-- **Comparison output**: Generates a formatted table showing the top two results and score gap for each combination
-- **Production-ready patterns**: Includes batched insertion, error handling, and connection pooling
+- **Passwordless authentication**: Uses `DefaultAzureCredential` for both Azure OpenAI and DocumentDB via OIDC.
+- **Three vector algorithms**: Implements DiskANN, HNSW, and IVF with algorithm-specific tuning parameters.
+- **Three similarity functions**: Supports COS (cosine), L2 (Euclidean), and IP (inner product).
+- **Single compare-all entry point**: Always runs all 9 algorithm × similarity combinations in one pass.
+- **Index lifecycle automation**: Creates, queries, and drops each vector index in sequence.
+- **Comparison output**: Generates a formatted table showing the top two results and score gap for each combination.
+- **Production-ready patterns**: Includes batched insertion, error handling, and connection pooling.
 
 ## Run the code
 
@@ -318,10 +328,6 @@ The comparison table shows how different algorithms perform on the same dataset 
 - **Diff**: The score gap between the top two results
 
 [!INCLUDE[Choosing the right algorithm](includes/choosing-algorithm.md)]
-
-## Run all combinations
-
-The compare-all mode always runs all 9 combinations (3 algorithms × 3 metrics). The `ALGORITHM` and `SIMILARITY` environment variables are used only by the single-algorithm mode.
 
 ## Troubleshooting
 

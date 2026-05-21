@@ -15,11 +15,11 @@ ms.service: azure-documentdb
 
 This quickstart compares vector index algorithms (DiskANN, HNSW, IVF) in Azure DocumentDB using Java to help you select the best configuration for your vector search workload. The sample uses the same hotel dataset with precalculated vectors as the other quickstarts to demonstrate performance differences across algorithms and similarity functions.
 
-
+Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-java) on GitHub.
 
 ## Prerequisites
 
-[!INCLUDE[Prerequisites](includes/prerequisite-quickstart-select-algorithm.md)]
+[!INCLUDE[Prerequisites - Vector Search Quickstart](includes/prerequisite-quickstart-vector-search-model.md)]
 
 - [Java 17 or higher](/java/openjdk/download)
 
@@ -234,8 +234,6 @@ This quickstart compares vector index algorithms (DiskANN, HNSW, IVF) in Azure D
    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
    - `AZURE_OPENAI_EMBEDDING_MODEL`: Your Azure OpenAI embedding deployment name
 
-   The compare-all mode always runs all 9 combinations (3 algorithms × 3 metrics). The `ALGORITHM` and `SIMILARITY` environment variables are used only by the single-algorithm mode.
-
    This sample uses passwordless authentication with `DefaultAzureCredential`, which requires your identity to have proper RBAC roles assigned. For more information on authentication options, see [Authenticate Java apps to Azure services by using the Azure SDK for Java](/azure/developer/java/sdk/authentication/overview).
 
 ## Create code files
@@ -254,11 +252,12 @@ select-algorithm-java/
 │   └── Utils.java
 ├── .gitignore
 ├── pom.xml
-├── quickstart.md
 └── README.md
 ```
 
 ## Create the algorithm comparison code
+
+Create the following source files to implement the vector search comparison.
 
 ### Create utility functions
 
@@ -268,15 +267,15 @@ Create `src/main/java/com/azure/documentdb/selectalgorithm/Utils.java` and paste
 
 This utility class provides:
 
-- **Environment variable management**: Reads configuration from environment variables with `System.getenv()`
-- **Passwordless authentication**: Uses `DefaultAzureCredential` for both MongoDB and Azure OpenAI
-- **MongoDB client creation**: Configures OIDC authentication for DocumentDB
-- **Azure OpenAI client creation**: Sets up the OpenAI client for embedding generation
-- **Data loading**: Reads hotel data from JSON file
-- **Embedding generation**: Creates vector embeddings for text queries
-- **Index configuration**: Generates algorithm-specific vector index options
-- **Search configuration**: Generates algorithm-specific search parameters
-- **Results formatting**: Prints comparison table of algorithm performance
+- **Environment variable management**: Reads configuration from environment variables with `System.getenv()`.
+- **Passwordless authentication**: Uses `DefaultAzureCredential` for both MongoDB and Azure OpenAI.
+- **MongoDB client creation**: Configures OIDC authentication for DocumentDB.
+- **Azure OpenAI client creation**: Sets up the OpenAI client for embedding generation.
+- **Data loading**: Reads hotel data from JSON file.
+- **Embedding generation**: Creates vector embeddings for text queries.
+- **Index configuration**: Generates algorithm-specific vector index options.
+- **Search configuration**: Generates algorithm-specific search parameters.
+- **Results formatting**: Prints comparison table of algorithm performance.
 
 ### Create main comparison logic
 
@@ -293,12 +292,12 @@ Create the following source files in `src/main/java/com/azure/documentdb/selecta
 
 This main comparison logic provides:
 
-- **Algorithm comparison logic**: Tests all combinations of algorithms and similarity functions
-- **Collection management**: Creates separate collections for each configuration
-- **Data loading**: Inserts hotel data in batches
-- **Index creation**: Creates vector indexes for each algorithm and metric combination
-- **Performance measurement**: Measures average query latency
-- **Results display**: Outputs comparison table
+- **Algorithm comparison logic**: Tests all combinations of algorithms and similarity functions.
+- **Collection management**: Creates separate collections for each configuration.
+- **Data loading**: Inserts hotel data in batches.
+- **Index creation**: Creates vector indexes for each algorithm and metric combination.
+- **Performance measurement**: Measures average query latency.
+- **Results display**: Outputs comparison table.
 
 ## Run the code
 
@@ -325,8 +324,6 @@ This main comparison logic provides:
    ```
 
    ---
-
-   The compare-all mode always runs all 9 combinations (3 algorithms × 3 metrics). The `ALGORITHM` and `SIMILARITY` environment variables are used only by the single-algorithm mode.
 
 The program prints output similar to the following:
 

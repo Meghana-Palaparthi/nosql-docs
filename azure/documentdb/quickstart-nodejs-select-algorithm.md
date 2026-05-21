@@ -23,6 +23,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 > [!TIP]
 > To customize Azure OpenAI model parameters before deployment, see [Customize Azure OpenAI deployment](#customize-azure-openai-deployment-optional) below.
+
 - [Node.js LTS](https://nodejs.org/download/)
 
 - [TypeScript](https://www.typescriptlang.org/download): Install TypeScript globally:
@@ -31,59 +32,25 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
     npm install -g typescript
     ```
 
-## Create data file with vectors
-
-1. Create a new data directory for the hotels data file:
-
-   ### [Bash](#tab/bash)
-
-   ```bash
-   mkdir data
-   ```
-
-   ### [PowerShell](#tab/powershell)
-
-   ```powershell
-   New-Item -ItemType Directory -Name data
-   ```
-
-   ---
-
-2. Download the `Hotels_Vector.json` data file with vectors to your `data` directory:
-
-   ### [Bash](#tab/bash)
-
-   ```bash
-   curl -o data/Hotels_Vector.json https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json
-   ```
-
-   ### [PowerShell](#tab/powershell)
-
-   ```powershell
-   Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json" -OutFile "data/Hotels_Vector.json"
-   ```
-
-   ---
-
-   Verify the file was downloaded:
-
-   ### [Bash](#tab/bash)
-
-   ```bash
-   ls data/Hotels_Vector.json
-   ```
-
-   ### [PowerShell](#tab/powershell)
-
-   ```powershell
-   Get-ChildItem data\Hotels_Vector.json
-   ```
-
-   ---
-
-   You should see `Hotels_Vector.json` in the `data` directory.
 
 ## Create a Node.js project
+
+You should end up with the following project structure:
+
+```
+select-algorithm-typescript/
+├── data/
+│   └── Hotels_Vector.json
+├── src/
+│   ├── compare-all.ts
+│   └── utils.ts
+├── .gitignore
+├── package.json
+├── package-lock.json
+├── README.md
+└── tsconfig.json
+```
+
 
 1. Create a new directory for your project and open it in Visual Studio Code:
 
@@ -135,10 +102,10 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    npm install --save-dev typescript @types/node
    ```
 
-   - `mongodb`: MongoDB driver for Node.js
-   - `openai`: OpenAI client library to create vectors
-   - `@azure/identity`: Azure Identity library for passwordless authentication
-   - `typescript`: TypeScript compiler
+   - `mongodb`: MongoDB driver for Node.js.
+   - `openai`: OpenAI client library to create vectors.
+   - `@azure/identity`: Azure Identity library for passwordless authentication.
+   - `typescript`: TypeScript compiler.
 
    Verify that `npm list` shows all installed packages without errors.
 
@@ -210,43 +177,75 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    Prefer passwordless authentication, but it requires additional setup. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate JavaScript apps to Azure services using the Azure SDK for JavaScript](/azure/developer/javascript/sdk/authentication/overview).
 
-## The project structure
+   ---
 
-In this procedure, you will create the following code files:
-- ./src/compare-all.ts
-- ./src/utils.ts
+7. Create the `src` directory:
 
-You should end up with the following project structure:
+   ### [Bash](#tab/bash)
 
-```
-select-algorithm-typescript/
-├── data/
-├── src/
-│   ├── compare-all.ts
-│   └── utils.ts
-├── .gitignore
-├── package.json
-├── package-lock.json
-├── quickstart.md
-├── README.md
-└── tsconfig.json
-```
+   ```bash
+   mkdir src
+   ```
 
-Create the `src` directory:
+   ### [PowerShell](#tab/powershell)
 
-### [Bash](#tab/bash)
+   ```powershell
+   New-Item -ItemType Directory -Name src
+   ```
 
-```bash
-mkdir src
-```
+   ---
 
-### [PowerShell](#tab/powershell)
+## Create data file with vectors
 
-```powershell
-New-Item -ItemType Directory -Name src
-```
+1. Create a new data directory for the hotels data file:
 
----
+   ### [Bash](#tab/bash)
+
+   ```bash
+   mkdir data
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   New-Item -ItemType Directory -Name data
+   ```
+
+   ---
+
+2. Download the `Hotels_Vector.json` data file with vectors to your `data` directory:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   curl -o data/Hotels_Vector.json https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json" -OutFile "data/Hotels_Vector.json"
+   ```
+
+   ---
+
+   Verify the file was downloaded:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   ls data/Hotels_Vector.json
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Get-ChildItem data\Hotels_Vector.json
+   ```
+
+   ---
+
+   You should see `Hotels_Vector.json` in the `data` directory.
 
 ## Create the algorithm comparison code
 
@@ -256,12 +255,12 @@ Create the `src/compare-all.ts` file with the following code:
 
 This script orchestrates the algorithm comparison by:
 
-- Loading configuration from environment variables
-- Initializing MongoDB and Azure OpenAI clients with passwordless authentication
-- Loading hotel data with precalculated embeddings
-- Testing each algorithm/similarity combination by creating a collection, inserting data, creating an index, and executing a search
-- Measuring and comparing search performance across all configurations
-- Displaying results in a comparison table
+- Loading configuration from environment variables.
+- Initializing MongoDB and Azure OpenAI clients with passwordless authentication.
+- Loading hotel data with precalculated embeddings.
+- Testing each algorithm/similarity combination by creating a collection, inserting data, creating an index, and executing a search.
+- Measuring and comparing search performance across all configurations.
+- Displaying results in a comparison table.
 
 ## Create utility functions
 
@@ -271,10 +270,10 @@ Create the `src/utils.ts` file with the following code:
 
 The utilities provide essential functions for:
 
-- Passwordless authentication to DocumentDB and Azure OpenAI using DefaultAzureCredential
-- Reading JSON data files
-- Batch insertion of documents with DocumentDB's 16 MB payload limit in mind
-- Formatted display of comparison results showing algorithm performance
+- Passwordless authentication to DocumentDB and Azure OpenAI using DefaultAzureCredential.
+- Reading JSON data files.
+- Batch insertion of documents with DocumentDB's 16 MB payload limit in mind.
+- Formatted display of comparison results showing algorithm performance.
 
 ## Run the code
 
@@ -293,13 +292,6 @@ The **Diff** column shows the score gap between the top-1 and top-2 results. A s
 
 > [!NOTE]
 > Latency values are approximate and vary by environment. Scores may differ slightly depending on your Azure OpenAI embedding deployment.
-
-### Run all combinations
-
-```bash
-npm run build
-npm start
-```
 
 ### Understanding the results
 

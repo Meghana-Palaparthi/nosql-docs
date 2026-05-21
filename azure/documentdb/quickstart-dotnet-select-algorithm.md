@@ -21,7 +21,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 ## Prerequisites
 
-[!INCLUDE[Prerequisites](includes/prerequisite-quickstart-select-algorithm.md)]
+[!INCLUDE[Prerequisites - Vector Search Quickstart](includes/prerequisite-quickstart-vector-search-model.md)]
 
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) or later.
 
@@ -131,10 +131,10 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    ```
 
    These packages provide:
-   - `Azure.AI.OpenAI`: Azure OpenAI client library to create vector embeddings
-   - `Azure.Identity`: Azure Identity library for passwordless authentication with DefaultAzureCredential
-   - `MongoDB.Driver`: MongoDB driver for .NET to interact with DocumentDB
-   - `Microsoft.Extensions.*`: Configuration, dependency injection, and logging infrastructure
+   - `Azure.AI.OpenAI`: Azure OpenAI client library to create vector embeddings.
+   - `Azure.Identity`: Azure Identity library for passwordless authentication with DefaultAzureCredential.
+   - `MongoDB.Driver`: MongoDB driver for .NET to interact with DocumentDB.
+   - `Microsoft.Extensions.*`: Configuration, dependency injection, and logging infrastructure.
 
    Verify installed packages:
 
@@ -249,7 +249,6 @@ select-algorithm-dotnet/
 ├── appsettings.json
 ├── CompareAll.cs
 ├── Program.cs
-├── quickstart.md
 ├── README.md
 ├── SelectAlgorithm.csproj
 └── Utils.cs
@@ -299,6 +298,8 @@ select-algorithm-dotnet/
 
 ## Create the algorithm comparison code
 
+Create the following source files to implement the vector search comparison.
+
 ### Program.cs
 
 Replace the contents of `Program.cs` with this code:
@@ -306,11 +307,11 @@ Replace the contents of `Program.cs` with this code:
 :::code language="csharp" source="~/../documentdb-samples/ai/select-algorithm-dotnet/Program.cs" :::
 
 This main entry point:
-- Loads configuration from appsettings.json and environment variables
-- Sets up dependency injection with logging infrastructure
-- Initializes Azure OpenAI and DocumentDB clients using passwordless authentication
-- Calls `CompareAll.Run()` to execute the flat project entry point
-- Runs the comparison and prints results in a table format
+- Loads configuration from appsettings.json and environment variables.
+- Sets up dependency injection with logging infrastructure.
+- Initializes Azure OpenAI and DocumentDB clients using passwordless authentication.
+- Calls `CompareAll.Run()` to execute the flat project entry point.
+- Runs the comparison and prints results in a table format.
 
 ### CompareAll.cs
 
@@ -346,11 +347,11 @@ Create the following supporting files in the project:
 :::code language="csharp" source="~/../documentdb-samples/ai/select-algorithm-dotnet/Models/HotelData.cs" :::
 
 These supporting files provide:
-- Passwordless authentication setup for Azure OpenAI and DocumentDB
-- OIDC token handler for automatic token refresh
-- JSON file reading and deserialization
-- Batch data insertion with error handling
-- Results formatting and display
+- Passwordless authentication setup for Azure OpenAI and DocumentDB.
+- OIDC token handler for automatic token refresh.
+- JSON file reading and deserialization.
+- Batch data insertion with error handling.
+- Results formatting and display.
 
 ## Run the code
 
@@ -368,24 +369,6 @@ These supporting files provide:
 
    The application loads the sample data once, then creates and tests all 9 algorithm × similarity combinations sequentially.
 
-3. The compare-all mode always runs all 9 combinations (3 algorithms × 3 metrics). The `ALGORITHM` and `SIMILARITY` environment variables are used only by the single-algorithm mode.
-
-4. Repeat `dotnet run` whenever you want to rerun the flat `SelectAlgorithm.csproj` entry point:
-
-   ### [Bash](#tab/bash)
-
-   ```bash
-   dotnet run
-   ```
-
-   ### [PowerShell](#tab/powershell)
-
-   ```powershell
-   dotnet run
-   ```
-
-   ---
-
 ### Expected output
 
 The application displays progress logs and a comparison table:
@@ -393,6 +376,7 @@ The application displays progress logs and a comparison table:
 :::code language="text" source="~/../documentdb-samples/ai/select-algorithm-dotnet/output/compare_all.txt" :::
 
 The **Diff** column shows the score gap between the top-1 and top-2 results. A smaller diff indicates the algorithm found results with more similar relevance scores.
+
 
 [!INCLUDE[Choosing the right algorithm](includes/choosing-algorithm.md)]
 
