@@ -60,9 +60,9 @@ Review the following considerations before you use this feature:
 > [!IMPORTANT]
 > Access Token Validity and Security Consideration:
 >
-> The lifetime of an access token issued by Microsoft Entra ID represents the maximum potential attack window if the token is compromised. If a malicious actor obtains a valid access token and establishes a connection, the system may continue to accept requests using that token until it expires, even if the associated refresh token is revoked or the user account is disabled.
+> The lifetime of an access token issued by Microsoft Entra ID represents the maximum potential attack window if the token is compromised. If a malicious actor obtains a valid access token, they can establish a connection. The system continues to accept requests using that token until it expires. This scenario occurs even if the associated refresh token is revoked or the user account is disabled.
 >
-> We recommend following the guidelines as described [Revoke access token within Entra](/entra/identity/users/users-revoke-access#on-premises-active-directory-environment)
+> Follow the guidelines in [Revoke access token within Microsoft Entra](/entra/identity/users/users-revoke-access#on-premises-active-directory-environment).
 >
 
 ## Prerequisites
@@ -819,7 +819,7 @@ When you create an Azure DocumentDB cluster, the cluster is configured to solely
 
 When Microsoft Entra ID authentication is enabled on an Azure DocumentDB cluster, you can add one or more Microsoft Entra ID principals as *administrator users* to that cluster. The Microsoft Entra ID administrator can be a Microsoft Entra ID user, a service principal, or a managed identity. Multiple Microsoft Entra ID administrators can be configured at any time.
 
-Administrative Entra ID users are created as Azure entities under `Microsoft.DocumentDB/mongoClusters/users` and are replicated to the database.
+Administrative Microsoft Entra ID users are created as Azure entities under `Microsoft.DocumentDB/mongoClusters/users` and are replicated to the database.
 
 Additionally, one or more nonadministrative Microsoft Entra ID users can be added to a cluster at any time once Microsoft Entra ID authentication is enabled. Nonadministrative users are often used for ongoing production tasks that don't require administrative privileges.
 
@@ -1266,7 +1266,7 @@ Connect to your Azure DocumentDB cluster using a Microsoft Entra ID identity dir
 
 1. Within MongoDB Compass, Select **+** in the **Connections** menu to add a new connection. While using the shell, get the **name** of your Azure DocumentDB cluster and the **client ID** for the target identity.
 
-   :::image source="media/how-to-connect-role-based-access-control/review-client-id.png" alt-text="Screenshot to review clientid needed for constructing the Entra connection string from portal on the Azure DocumentDB.":::
+   :::image source="media/how-to-connect-role-based-access-control/review-client-id.png" alt-text="Screenshot to review client identifier needed for constructing the Microsoft Entra connection string from portal on the Azure DocumentDB.":::
 
 1. Enter the following credential into the **URI** input box.
 
@@ -1298,7 +1298,7 @@ Sign in to the cluster with an administrative Microsoft Entra ID identity to per
 
 1. Add a nonadministrative Microsoft Entra ID identity with **read-write** permissions on the cluster using the `createUser` command:
     
-    ```mongo
+    ```javascript
     db.runCommand(
       {
         createUser: "<entra-id-unique-identifier>",
@@ -1313,7 +1313,7 @@ Sign in to the cluster with an administrative Microsoft Entra ID identity to per
 
 1. Add a nonadministrative Microsoft Entra ID identity with **read-only** permissions on the cluster with `createUser` and a different set of roles.
 
-    ```mongo
+    ```javascript
     db.runCommand(
       {
         createUser: "<entra-id-unique-identifier>",
@@ -1327,7 +1327,7 @@ Sign in to the cluster with an administrative Microsoft Entra ID identity to per
 
 1. Remove a nonadministrative Microsoft Entra ID identity from the cluster with the `dropUser` command.
 
-    ```mongo
+    ```javascript
     db.runCommand(
       {
         dropUser: "<entra-id-unique-identifier>"
@@ -1337,7 +1337,7 @@ Sign in to the cluster with an administrative Microsoft Entra ID identity to per
 
 1. List all Microsoft Entra ID and native DocumentDB users on the cluster using `userInfo`.
 
-    ```mongo
+    ```javascript
     db.runCommand(
       {
         usersInfo: 1
