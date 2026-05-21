@@ -15,16 +15,21 @@ ms.service: azure-documentdb
 
 In this quickstart, you compare three vector index algorithms (DiskANN, HNSW, and IVF) and three similarity functions (cosine, L2, and inner product) to find the optimal configuration for your search workload. This quickstart uses a sample hotel dataset with precalculated embeddings from the `text-embedding-3-small` model.
 
-
-
-Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-typescript) on GitHub.
+Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-typescript) on GitHub with deployment from Azure Developer CLI included.
 
 ## Prerequisites
 
-[!INCLUDE[Prerequisites](includes/prerequisite-quickstart-select-algorithm.md)]
+[!INCLUDE[Prerequisites - Vector Search Quickstart](includes/prerequisite-quickstart-vector-search-model.md)]
 
+> [!TIP]
+> To customize Azure OpenAI model parameters before deployment, see [Customize Azure OpenAI deployment](#customize-azure-openai-deployment-optional) below.
 - [Node.js LTS](https://nodejs.org/download/)
-- [TypeScript](https://www.typescriptlang.org/download) 5.x or greater
+
+- [TypeScript](https://www.typescriptlang.org/download): Install TypeScript globally:
+
+    ```bash
+    npm install -g typescript
+    ```
 
 ## Create data file with vectors
 
@@ -104,6 +109,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ```bash
    npm init -y
+   npm pkg set type="module"
    ```
 
    Verify the project was initialized:
@@ -202,23 +208,21 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
    - `DOCUMENTDB_CLUSTER_NAME`: Your Azure DocumentDB cluster name
 
-   The compare-all mode always runs all 9 combinations (3 algorithms × 3 metrics). The `ALGORITHM` and `SIMILARITY` environment variables are used only by the single-algorithm mode.
-
    Prefer passwordless authentication, but it requires additional setup. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate JavaScript apps to Azure services using the Azure SDK for JavaScript](/azure/developer/javascript/sdk/authentication/overview).
 
-## Create code files
+## The project structure
 
-Create the following project structure:
+In this procedure, you will create the following code files:
+- ./src/compare-all.ts
+- ./src/utils.ts
+
+You should end up with the following project structure:
 
 ```
 select-algorithm-typescript/
 ├── data/
-│   └── README.md
-├── output/
-│   └── compare_all.txt
 ├── src/
 │   ├── compare-all.ts
-│   ├── select-algorithm.ts
 │   └── utils.ts
 ├── .gitignore
 ├── package.json
@@ -291,8 +295,6 @@ The **Diff** column shows the score gap between the top-1 and top-2 results. A s
 > Latency values are approximate and vary by environment. Scores may differ slightly depending on your Azure OpenAI embedding deployment.
 
 ### Run all combinations
-
-The compare-all mode always runs all 9 combinations (3 algorithms × 3 metrics). The `ALGORITHM` and `SIMILARITY` environment variables are used only by the single-algorithm mode.
 
 ```bash
 npm run build
