@@ -252,7 +252,7 @@ Use the `find` filter to perform queries against your data using the MongoDB Que
 
 1. In the **Documents** view, update the query from the default `{  }` value to the following query:
 
-    ```mongo
+    ```javascript
     {
       "sale": true,
       "price": {
@@ -376,7 +376,7 @@ Finally, open a scrapbook to run MQL commands directly against a collection in a
 
 1. Enter the following MongoDB Query Language (MQL) commands to find products that are on sale, have a price between 100 and 1000, and a quantity greater than 50. The results only include the name, price, and quantity fields, and are sorted by price in descending order.
 
-    ```mongo
+    ```javascript
     db.products.aggregate([
       {
         $match: {
