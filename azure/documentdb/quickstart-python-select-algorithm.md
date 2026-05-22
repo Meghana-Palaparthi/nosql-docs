@@ -70,7 +70,16 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    source venv/bin/activate
    ```
 
-3. Install the required packages:
+3. Create a `requirements.txt` file with the following content:
+
+   ```text
+   pymongo>=4.7.0
+   openai>=1.0.0,<2.0.0
+   azure-identity>=1.15.0
+   tabulate>=0.9.0
+   ```
+
+4. Install the required packages:
 
    ```bash
    pip install -r requirements.txt

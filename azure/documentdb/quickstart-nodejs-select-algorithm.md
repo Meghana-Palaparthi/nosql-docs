@@ -22,7 +22,7 @@ ms.service: azure-documentdb
 
 In this quickstart, you compare three vector index algorithms (DiskANN, HNSW, and IVF) and three similarity functions (cosine, L2, and inner product) to find the optimal configuration for your search workload. This quickstart uses a sample hotel dataset with precalculated embeddings from the `text-embedding-3-small` model.
 
-Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-typescript) on GitHub with deployment from Azure Developer CLI included.
+Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/select-algorithm-typescript) on GitHub.
 
 ## Prerequisites
 
