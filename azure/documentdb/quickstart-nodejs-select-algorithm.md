@@ -36,7 +36,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
     ```
 
 
-## Create a Node.js project
+## Create the Node.js project
 
 You should end up with the following project structure:
 
@@ -328,8 +328,6 @@ Remove the database using the DocumentDB for VS Code extension:
 1. Install the [DocumentDB for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) extension.
 2. Connect to your Azure DocumentDB cluster.
 3. Expand the cluster, right-click the **Hotels** database, and select **Drop Database**.
-
-If you created an Azure DocumentDB cluster specifically for this quickstart, you can also delete the entire resource group in the Azure portal to remove all associated resources.
 
 ## Related content
 

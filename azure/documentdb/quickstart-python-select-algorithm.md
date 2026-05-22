@@ -113,45 +113,6 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-5. Set the required environment variables in your current shell session before you run the sample:
-
-   ### [Bash](#tab/bash)
-
-   ```bash
-   export AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
-   export AZURE_OPENAI_EMBEDDING_API_VERSION=2024-10-21
-   export AZURE_OPENAI_EMBEDDING_ENDPOINT=https://<RESOURCE-NAME>.openai.azure.com
-   export DATA_FILE_WITH_VECTORS=data/Hotels_Vector.json
-   export EMBEDDED_FIELD=DescriptionVector
-   export EMBEDDING_DIMENSIONS=1536
-   export LOAD_SIZE_BATCH=100
-   export DOCUMENTDB_CLUSTER_NAME=<CLUSTER-NAME>
-   export AZURE_DOCUMENTDB_DATABASENAME=Hotels
-   ```
-
-   ### [PowerShell](#tab/powershell)
-
-   ```powershell
-   $env:AZURE_OPENAI_EMBEDDING_MODEL = "text-embedding-3-small"
-   $env:AZURE_OPENAI_EMBEDDING_API_VERSION = "2024-10-21"
-   $env:AZURE_OPENAI_EMBEDDING_ENDPOINT = "https://<RESOURCE-NAME>.openai.azure.com"
-   $env:DATA_FILE_WITH_VECTORS = "data/Hotels_Vector.json"
-   $env:EMBEDDED_FIELD = "DescriptionVector"
-   $env:EMBEDDING_DIMENSIONS = "1536"
-   $env:LOAD_SIZE_BATCH = "100"
-   $env:DOCUMENTDB_CLUSTER_NAME = "<CLUSTER-NAME>"
-   $env:AZURE_DOCUMENTDB_DATABASENAME = "Hotels"
-   ```
-
-   ---
-
-   For the passwordless authentication in this article, replace the placeholder values with your own information:
-
-   - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
-   - `DOCUMENTDB_CLUSTER_NAME`: Your Azure DocumentDB cluster name
-
-   Prefer passwordless authentication, but it requires additional setup. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Python apps to Azure services by using the Azure SDK for Python](/azure/developer/python/sdk/authentication/overview).
-
 ## Create data file with vectors
 
 1. Create a new data directory and download the hotels data file with vectors:
@@ -189,6 +150,47 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    ---
 
    You should see `Hotels_Vector.json` in the `data` directory.
+
+## Configure environment variables
+
+Set the required environment variables in your current shell session before you run the sample:
+
+### [Bash](#tab/bash)
+
+```bash
+export AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+export AZURE_OPENAI_EMBEDDING_API_VERSION=2024-10-21
+export AZURE_OPENAI_EMBEDDING_ENDPOINT=https://<RESOURCE-NAME>.openai.azure.com
+export DATA_FILE_WITH_VECTORS=data/Hotels_Vector.json
+export EMBEDDED_FIELD=DescriptionVector
+export EMBEDDING_DIMENSIONS=1536
+export LOAD_SIZE_BATCH=100
+export DOCUMENTDB_CLUSTER_NAME=<CLUSTER-NAME>
+export AZURE_DOCUMENTDB_DATABASENAME=Hotels
+```
+
+### [PowerShell](#tab/powershell)
+
+```powershell
+$env:AZURE_OPENAI_EMBEDDING_MODEL = "text-embedding-3-small"
+$env:AZURE_OPENAI_EMBEDDING_API_VERSION = "2024-10-21"
+$env:AZURE_OPENAI_EMBEDDING_ENDPOINT = "https://<RESOURCE-NAME>.openai.azure.com"
+$env:DATA_FILE_WITH_VECTORS = "data/Hotels_Vector.json"
+$env:EMBEDDED_FIELD = "DescriptionVector"
+$env:EMBEDDING_DIMENSIONS = "1536"
+$env:LOAD_SIZE_BATCH = "100"
+$env:DOCUMENTDB_CLUSTER_NAME = "<CLUSTER-NAME>"
+$env:AZURE_DOCUMENTDB_DATABASENAME = "Hotels"
+```
+
+---
+
+For the passwordless authentication in this article, replace the placeholder values with your own information:
+
+- `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
+- `DOCUMENTDB_CLUSTER_NAME`: Your Azure DocumentDB cluster name
+
+Prefer passwordless authentication, but it requires additional setup. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Python apps to Azure services by using the Azure SDK for Python](/azure/developer/python/sdk/authentication/overview).
 
 ## Create code files
 
@@ -238,11 +240,29 @@ The utilities provide essential functions for:
 
 ## Run the code
 
-Execute the comparison script to run all 9 combinations:
+### Sign in to Azure
+
+```azurecli
+az login
+```
+
+Create the output directory, then execute the comparison script to run all 9 combinations:
+
+### [Bash](#tab/bash)
 
 ```bash
+mkdir -p output
 python src/compare_all.py
 ```
+
+### [PowerShell](#tab/powershell)
+
+```powershell
+New-Item -ItemType Directory -Force -Path output
+python src/compare_all.py
+```
+
+---
 
 Expected output:
 
@@ -278,8 +298,6 @@ Remove the database using the DocumentDB for VS Code extension:
 1. Install the [DocumentDB for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) extension.
 2. Connect to your Azure DocumentDB cluster.
 3. Expand the cluster, right-click the **Hotels** database, and select **Drop Database**.
-
-If you created an Azure DocumentDB cluster specifically for this quickstart, you can also delete the entire resource group in the Azure portal to remove all associated resources.
 
 ## Related content
 

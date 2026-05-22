@@ -106,50 +106,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-4. Create a `.env` file for environment variables in `select-algorithm-go`:
-
-   ```bash
-   # Azure OpenAI Embedding Configuration
-   AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
-   AZURE_OPENAI_EMBEDDING_ENDPOINT=https://your-openai-resource.openai.azure.com/
-
-   # Data File Configuration
-   DATA_FILE_WITH_VECTORS=data/Hotels_Vector.json
-   EMBEDDED_FIELD=DescriptionVector
-   EMBEDDING_DIMENSIONS=1536
-   LOAD_SIZE_BATCH=100
-
-   # DocumentDB Configuration
-   DOCUMENTDB_CLUSTER_NAME=your-cluster-name
-
-   # Database name
-   AZURE_DOCUMENTDB_DATABASENAME=Hotels
-   ```
-
-   For the passwordless authentication in this article, replace the placeholder values in the `.env` file with your own information:
-
-   - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
-   - `DOCUMENTDB_CLUSTER_NAME`: Your Azure DocumentDB cluster name
-
-   Verify the `.env` file was created:
-
-   ### [Bash](#tab/bash)
-
-   ```bash
-   cat .env
-   ```
-
-   ### [PowerShell](#tab/powershell)
-
-   ```powershell
-   Get-Content .env
-   ```
-
-   ---
-
-   Prefer passwordless authentication. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Go apps to Azure services by using the Azure SDK for Go](/azure/developer/go/azure-sdk-authentication).
-
-5. Create a `src` directory:
+4. Create a `src` directory:
 
    ### [Bash](#tab/bash)
 
@@ -216,6 +173,51 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    ---
 
    You should see `Hotels_Vector.json` in the `data` directory.
+
+## Configure environment variables
+
+Create a `.env` file for environment variables in `select-algorithm-go`:
+
+```bash
+# Azure OpenAI Embedding Configuration
+AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+AZURE_OPENAI_EMBEDDING_ENDPOINT=https://your-openai-resource.openai.azure.com
+
+# Data File Configuration
+DATA_FILE_WITH_VECTORS=data/Hotels_Vector.json
+EMBEDDED_FIELD=DescriptionVector
+EMBEDDING_DIMENSIONS=1536
+LOAD_SIZE_BATCH=100
+
+# DocumentDB Configuration
+DOCUMENTDB_CLUSTER_NAME=your-cluster-name
+
+# Database name
+AZURE_DOCUMENTDB_DATABASENAME=Hotels
+```
+
+For the passwordless authentication in this article, replace the placeholder values in the `.env` file with your own information:
+
+- `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
+- `DOCUMENTDB_CLUSTER_NAME`: Your Azure DocumentDB cluster name
+
+Verify the `.env` file was created:
+
+### [Bash](#tab/bash)
+
+```bash
+cat .env
+```
+
+### [PowerShell](#tab/powershell)
+
+```powershell
+Get-Content .env
+```
+
+---
+
+Prefer passwordless authentication. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Go apps to Azure services by using the Azure SDK for Go](/azure/developer/go/azure-sdk-authentication).
 
 ## Create code files
 
@@ -321,7 +323,7 @@ Expected output:
 
 The **Diff** column shows the score gap between the top-1 and top-2 results. A smaller diff indicates the algorithm found results with more similar relevance scores.
 
-## Understanding the results
+### Understanding the results
 
 The comparison table shows how different algorithms perform on the same dataset with the same query:
 
@@ -351,8 +353,6 @@ Remove the database using the DocumentDB for VS Code extension:
 1. Install the [DocumentDB for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) extension.
 2. Connect to your Azure DocumentDB cluster.
 3. Expand the cluster, right-click the **Hotels** database, and select **Drop Database**.
-
-If you created an Azure DocumentDB cluster specifically for this quickstart, you can also delete the entire resource group in the Azure portal to remove all associated resources.
 
 ## Related content
 

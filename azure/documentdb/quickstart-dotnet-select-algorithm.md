@@ -104,7 +104,10 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    export AzureOpenAI__Endpoint="https://<your-resource>.openai.azure.com"
    export AzureOpenAI__EmbeddingModel="text-embedding-3-small"
    export DocumentDB__ClusterName="<your-cluster-name>"
+   export DocumentDB__DatabaseName="Hotels"
    export DataFiles__WithVectors="data/Hotels_Vector.json"
+   export Embedding__EmbeddedField="DescriptionVector"
+   export Embedding__Dimensions="1536"
    export AZURE_TENANT_ID="<your-tenant-id>"
    ```
 
@@ -114,7 +117,10 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    $env:AzureOpenAI__Endpoint="https://<your-resource>.openai.azure.com"
    $env:AzureOpenAI__EmbeddingModel="text-embedding-3-small"
    $env:DocumentDB__ClusterName="<your-cluster-name>"
+   $env:DocumentDB__DatabaseName="Hotels"
    $env:DataFiles__WithVectors="data/Hotels_Vector.json"
+   $env:Embedding__EmbeddedField="DescriptionVector"
+   $env:Embedding__Dimensions="1536"
    $env:AZURE_TENANT_ID="<your-tenant-id>"
    ```
 
@@ -125,7 +131,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    - `<your-cluster-name>`: Your Azure DocumentDB cluster name
    - `<your-tenant-id>`: Your Microsoft Entra tenant ID
 
-   These environment variables override the matching values in `appsettings.json`. For example, `DocumentDB__ClusterName` overrides `DocumentDB:ClusterName` and `AzureOpenAI__Endpoint` overrides `AzureOpenAI:Endpoint`.
+   These environment variables override the matching values in `appsettings.json`. For example, `DocumentDB__ClusterName` overrides `DocumentDB:ClusterName`, `DocumentDB__DatabaseName` overrides `DocumentDB:DatabaseName`, and `AzureOpenAI__Endpoint` overrides `AzureOpenAI:Endpoint`.
 
    Prefer passwordless authentication. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate .NET apps to Azure services by using the Azure SDK for .NET](/dotnet/azure/sdk/authentication).
 
@@ -180,7 +186,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    }
    ```
 
-   You can keep placeholder values in `appsettings.json` and override them at runtime with environment variables such as `AzureOpenAI__Endpoint` and `DocumentDB__ClusterName`.
+   You can keep placeholder values in `appsettings.json` and override them at runtime with environment variables such as `AzureOpenAI__Endpoint`, `DocumentDB__ClusterName`, and `DocumentDB__DatabaseName`.
 
 ## Create data file with vectors
 
@@ -367,7 +373,23 @@ These supporting files provide:
    dotnet build
    ```
 
-2. Run the flat `SelectAlgorithm.csproj` entry point to compare all 9 algorithm × similarity combinations:
+2. Create the output directory:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   mkdir output
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   New-Item -ItemType Directory -Force -Path output
+   ```
+
+   ---
+
+3. Run the flat `SelectAlgorithm.csproj` entry point to compare all 9 algorithm × similarity combinations:
 
    ```bash
    dotnet run
@@ -404,8 +426,6 @@ Remove the database using the DocumentDB for VS Code extension:
 1. Install the [DocumentDB for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) extension.
 2. Connect to your Azure DocumentDB cluster.
 3. Expand the cluster, right-click the **Hotels** database, and select **Drop Database**.
-
-If you created an Azure DocumentDB cluster specifically for this quickstart, you can also delete the entire resource group in the Azure portal to remove all associated resources.
 
 ## Related content
 

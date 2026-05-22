@@ -160,7 +160,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ```bash
    export DOCUMENTDB_CLUSTER_NAME=<your-cluster-name>
-   export AZURE_OPENAI_EMBEDDING_ENDPOINT=https://<your-openai-resource>.openai.azure.com/
+   export AZURE_OPENAI_EMBEDDING_ENDPOINT=https://<your-openai-resource>.openai.azure.com
    export AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
    export AZURE_DOCUMENTDB_DATABASENAME=Hotels
    export DATA_FILE_WITH_VECTORS=data/Hotels_Vector.json
@@ -173,7 +173,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ```powershell
    $env:DOCUMENTDB_CLUSTER_NAME="<your-cluster-name>"
-   $env:AZURE_OPENAI_EMBEDDING_ENDPOINT="https://<your-openai-resource>.openai.azure.com/"
+   $env:AZURE_OPENAI_EMBEDDING_ENDPOINT="https://<your-openai-resource>.openai.azure.com"
    $env:AZURE_OPENAI_EMBEDDING_MODEL="text-embedding-3-small"
    $env:AZURE_DOCUMENTDB_DATABASENAME="Hotels"
    $env:DATA_FILE_WITH_VECTORS="data/Hotels_Vector.json"
@@ -337,7 +337,7 @@ The program prints output similar to the following:
 
 The **Diff** column shows the score gap between the top-1 and top-2 results. A smaller diff indicates the algorithm found results with more similar relevance scores.
 
-## Understanding the results
+### Understanding the results
 
 [!INCLUDE[Choosing the right algorithm](includes/choosing-algorithm.md)]
 
@@ -349,6 +349,7 @@ The **Diff** column shows the score gap between the top-1 and top-2 results. A s
 | `MongoSecurityException` | Verify your Microsoft Entra token is valid. Run `az login` to refresh your credentials. |
 | Maven build failures | Run `mvn dependency:resolve` to check for missing dependencies. Ensure Java 17 or later is installed. |
 | `No plugin found for prefix 'exec'` | Add `exec-maven-plugin` to your `pom.xml` as shown in this article. |
+| Empty search results | Index may not be ready. The sample waits 5 seconds after index creation. Increase wait time or verify index status with the DocumentDB for VS Code extension. |
 
 ## Clean up resources
 
@@ -357,8 +358,6 @@ Remove the database using the DocumentDB for VS Code extension:
 1. Install the [DocumentDB for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) extension.
 2. Connect to your Azure DocumentDB cluster.
 3. Expand the cluster, right-click the **Hotels** database, and select **Drop Database**.
-
-If you created an Azure DocumentDB cluster specifically for this quickstart, you can also delete the entire resource group in the Azure portal to remove all associated resources.
 
 ## Related content
 
