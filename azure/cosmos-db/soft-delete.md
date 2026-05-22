@@ -53,9 +53,9 @@ Once a resource (account, database, or container) is soft-deleted, it enters a r
 
 - Internally, however, Azure Cosmos DB retains all the data and metadata for the resource. The deletion is logical – the underlying data files and configurations are preserved during the retention period. The soft-deleted resource is hidden from the user's perspective but still present in the system.
 
-## Minimum minutes before permanent delete
+## Retention
 
-**Retention Period**: Soft-deleted resources remain recoverable for a configured Retention Period. By default, the retention period is 14 days (plans to be reduced to one day in public preview), but administrators can adjust this setting per account. You might choose a shorter retention (minimum 3 day) for lower storage overhead or a longer period (for example, 30 days) for extra safety. During this retention window, the resource can be restored at any time. Once the retention period elapses, or if the resource is explicitly purged earlier, the service permanently removes it and it can no longer be restored through soft delete.
+**Retention Period**: Soft-deleted resources remain recoverable for a configured retention period. By default, the retention period is 14 days, but administrators can adjust this setting per account from 1 to 30 days. You might choose a shorter retention, such as 1 day, for lower storage overhead or a longer period, such as 30 days, for extra safety. During this retention window, the resource can be restored at any time. Once the retention period elapses, or if the resource is explicitly purged earlier, the service permanently removes it and it can no longer be restored through soft delete.
 
 - Example: If the retention is set to 14 days and a container is deleted on May 1, it will be kept until May 15. On or shortly after May 15, if not recovered, Azure Cosmos DB will purge that container and its data permanently. Between May 1 and May 15, the container can be recovered with all its content intact, or if an authorized user explicitly purges it earlier, the resource is permanently deleted.
 
@@ -63,7 +63,7 @@ Once a resource (account, database, or container) is soft-deleted, it enters a r
 
 ## Minimum retention before purge
 
-**MinMinutesBeforePermanentDeletionAllowed** - Defines the minimum retention period (in minutes) before a soft-deleted resource can be permanently purged. The minimum allowed is 0 minutes.
+`MinMinutesBeforePermanentDeletionAllowed` - Defines the minimum retention period (in minutes) before a soft-deleted resource can be permanently purged. The minimum allowed is 0 minutes.
 
 - Enforces a safety window—Purge attempts before this time elapses are rejected
 - Recovery is always allowed—Resources can be recovered at any time during retention
@@ -158,9 +158,9 @@ If a soft-deleted resource isn't recovered within the retention period, it's aut
 
 No. Resource names are reserved during the retention period. You must purge the soft-deleted resource before reusing its name.
 
-### Is soft delete available for all APIs?
+### Is soft delete available for all compatibility APIs in Azure Cosmos DB?
 
-**Yes**. Soft delete supports SQL, MongoDB, Cassandra, Gremlin, and Table APIs.
+**Yes**. Soft delete supports Azure Cosmos DB for NoSQL, MongoDB, Apache Cassandra, Apache Gremlin, and Table.
 
 ### Is soft delete available in the Azure portal?
 
