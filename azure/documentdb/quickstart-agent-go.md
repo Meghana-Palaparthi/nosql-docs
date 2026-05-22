@@ -1,8 +1,10 @@
 ---
 title: Quickstart - AI Agent with Vector Search in Go
 description: Learn how to build an AI agent using Go with vector search in Azure DocumentDB. Create intelligent hotel recommendation agents that use semantic search with a custom agentic architecture.
-ms.date: 01/29/2026
+ms.date: 05/22/2026
 ms.update-cycle: 180-days
+ms.collection:
+  - ce-skilling-ai-copilot
 ms.topic: quickstart-sdk
 ms.custom: devx-track-go
 ai-usage: ai-assisted
@@ -22,7 +24,7 @@ You can use the Azure Developer CLI to create the required Azure resources by ru
 
 ### Azure resources
 
-- **Azure OpenAI resource** with the following model deployments in Microsoft Foundry:
+- **Azure OpenAI resource** with the following model deployments in Azure AI Foundry:
   - `gpt-4.1` deployment (Synthesizer Agent) - Recommended: **50,000 tokens per minute (TPM)** capacity
   - `gpt-4.1-mini` deployment (Planner Agent) - Recommended: **30,000 tokens per minute (TPM)** capacity
   - `text-embedding-3-small` deployment (Embeddings) - Recommended: **10,000 tokens per minute (TPM)** capacity
@@ -336,4 +338,3 @@ Use the cleanup command to delete the test database when you're done. Run the fo
 go run cmd/cleanup/main.go
 ```
 Delete the resource group, DocumentDB account, and Azure OpenAI resource when you don't need them to avoid extra costs.
-
