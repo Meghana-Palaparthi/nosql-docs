@@ -227,3 +227,4 @@ Delete the resource group, Azure DocumentDB cluster, and Azure OpenAI resource w
 
 - [Vector store in Azure DocumentDB](vector-search.md)
 - [Support for geospatial queries](geospatial-support.md)
+- [Indexing in Azure DocumentDB](indexing.md)
