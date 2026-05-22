@@ -1,6 +1,6 @@
 ---
-title: Long-term retention backup for Azure Cosmos DB
-description: Learn about long-term retention (LTR) backup in Azure Cosmos DB, including prerequisites, supported configurations, and how to troubleshoot common errors.
+title: Azure Backup for Azure Cosmos DB
+description: Learn about Azure Backup for Azure Cosmos DB, including prerequisites, supported configurations, and how to troubleshoot common errors.
 author: mansinahar
 ms.service: azure-cosmos-db
 ms.topic: concept-article
@@ -11,13 +11,13 @@ appliesto:
   - ✅ MongoDB
 ---
 
-# Long-term retention backup in Azure Cosmos DB
+# Azure Backup for Azure Cosmos DB
 
-Long-term retention (LTR) backup in Azure Cosmos DB enables you to take backups of your data and store them in an Azure Backup Vault for extended retention periods. LTR works alongside continuous backup (point-in-time restore) and allows you to protect your data for compliance, auditing, or disaster recovery scenarios that require retention beyond the standard continuous backup window.
+Azure Backup for Azure Cosmos DB enables you to take backups of your data and store them in an Azure Backup Vault for extended retention periods. It works alongside continuous backup (point-in-time restore) and allows you to protect your data for compliance, auditing, or disaster recovery scenarios that require retention beyond the standard continuous backup window.
 
 ## Prerequisites
 
-Before you can use long-term retention features, make sure the following prerequisites are met:
+Before you can use Azure Backup for Cosmos DB, make sure the following prerequisites are met:
 
 - The account must have [continuous backup (PITR)](continuous-backup-restore-introduction.md) enabled.
 
@@ -44,7 +44,7 @@ For restoration, the target Azure Cosmos DB account must meet the following crit
 
 ## Troubleshoot common errors
 
-When you work with long-term retention backup, the service validates your requests against several prerequisites. If a validation check fails, the service returns an HTTP 409 (Conflict) response with a substatus code that identifies the specific issue.
+When you work with Azure Backup for Cosmos DB, the service validates your requests against several prerequisites. If a validation check fails, the service returns an HTTP 409 (Conflict) response with a substatus code that identifies the specific issue.
 
 The following table lists the common errors you might encounter, grouped by which operations they apply to.
 
@@ -53,11 +53,11 @@ The following table lists the common errors you might encounter, grouped by whic
 | Substatus code | Applies to | Description | Resolution |
 |---|---|---|---|
 | `RequestNotSupportedOnOfflineCosmosDBAccountUserError` | E, B, R | The Azure Cosmos DB account isn't in the Online state. The account might be in a transitional state such as deleting or disabled. | Wait for the account to return to the Online state before retrying. |
-| `LongTermProtectionNotEnabledUserError` | D, B | Long-term protection hasn't been enabled on this account. Backup operations require LTP to be enabled. | Contact Azure Support to enable long-term protection on your account. For disablement, no action is needed because LTP is already off. |
+| `LongTermProtectionNotEnabledUserError` | D, B | Long-term protection (LTP) hasn't been enabled on this account. Backup operations require LTP to be enabled. | Contact Azure Support to enable long-term protection on your account. For disablement, no action is needed because LTP is already off. |
 | `CrossRegionExternalBackupNotAllowedUserError` | B | The Azure Cosmos DB account's write region doesn't match the account's ARM location and cross-region backups aren't supported at this time. This issue can occur if the write region was changed after the account was originally created. | Ensure the Azure Cosmos DB write region matches the ARM location before retrying. |
 | `CrossRegionLongTermProtectionNotAllowedUserError` | E | The account's ARM location doesn't match its write region. LTP can only be enabled when these match. | Ensure the account's write region matches the ARM location before enabling LTP. |
 | `RequestNotSupportedOnEmptyCosmosDBAccountUserError` | B | No databases or collections were found in the account at the specified backup timestamp. | Verify that your account contains at least one database and collection before retrying. |
-| `PartitionLimitExceededUserError` | E, B | Long-term backups are only supported for accounts with fewer than 2,500 partitions. Your account exceeds this limit. | Contact Azure Support for assistance. |
+| `PartitionLimitExceededUserError` | E, B | Backups are only supported for accounts with fewer than 2,500 partitions. Your account exceeds this limit. | Contact Azure Support for assistance. |
 | `IncorrectApiTypeForCosmosDBAccountUserError` | E, R | For enablement: LTP is only supported on NoSQL and MongoDB API accounts. For restore: the target account's API type doesn't match the backup source. | For enablement, use a NoSQL or MongoDB account. For restore, ensure the target account uses the same API type as the source. |
 | `RequestNotSupportedOnPeriodicBackupModeCosmosDBAccountUserError` | E | The account uses periodic backup mode. LTP requires continuous backup (PITR) to be enabled. | Migrate the account to continuous backup mode (PITR) before enabling LTP. |
 | `RequestNotSupportedOnPPAFEnabledCosmosDBAccountUserError` | E | The account has per-partition automatic failover (PPAF) enabled, which isn't compatible with LTP. | Disable per-partition automatic failover before enabling LTP. |
