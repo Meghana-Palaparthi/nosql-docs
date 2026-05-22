@@ -6,7 +6,7 @@ author: balaksms
 ms.author: balaks
 ms.service: azure-cosmos-db
 ms.topic: concept-article
-ms.date: 05/21/2026
+ms.date: 05/22/2026
 ai-usage: ai-assisted
 appliesto:
   - ✅ NoSQL
