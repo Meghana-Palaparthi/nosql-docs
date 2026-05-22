@@ -21,7 +21,7 @@ Before you can use long-term retention features, make sure the following prerequ
 
 - The account must have [continuous backup (PITR)](continuous-backup-restore-introduction.md) enabled.
 
-- The account's write region, ARM location, and Azure Backup Vault location should all be the same.
+- The account's write region and ARM location must be the same.
 
 - The account must not have any of the following features enabled:
 
@@ -55,7 +55,7 @@ The following table lists the common errors you might encounter, grouped by whic
 |---|---|---|---|
 | `RequestNotSupportedOnOfflineCosmosDBAccountUserError` | E, B, R | The Azure Cosmos DB account isn't in the Online state. The account might be in a transitional state such as deleting or disabled. | Wait for the account to return to the Online state before retrying. |
 | `LongTermProtectionNotEnabledUserError` | D, B | Long-term protection hasn't been enabled on this account. Backup operations require LTP to be enabled. | Contact Azure Support to enable long-term protection on your account. For disablement, no action is needed because LTP is already off. |
-| `CrossRegionExternalBackupNotAllowedUserError` | B | The Azure Cosmos DB account's write region doesn't match the Azure Backup Vault region and cross-region backups aren't supported at this time. This issue can occur if the write region was changed after the account was originally created. | Ensure the Azure Cosmos DB write region matches the Azure Backup Vault region before retrying. |
+| `CrossRegionExternalBackupNotAllowedUserError` | B | The Azure Cosmos DB account's write region doesn't match the account's ARM location and cross-region backups aren't supported at this time. This issue can occur if the write region was changed after the account was originally created. | Ensure the Azure Cosmos DB write region matches the ARM location before retrying. |
 | `CrossRegionLongTermProtectionNotAllowedUserError` | E | The account's ARM location doesn't match its write region. LTP can only be enabled when these match. | Ensure the account's write region matches the ARM location before enabling LTP. |
 | `RequestNotSupportedOnEmptyCosmosDBAccountUserError` | B | No databases or collections were found in the account at the specified backup timestamp. | Verify that your account contains at least one database and collection before retrying. |
 | `PartitionLimitExceededUserError` | E, B | Long-term backups are only supported for accounts with fewer than 2,500 partitions. Your account exceeds this limit. | Contact Azure Support for assistance. |
