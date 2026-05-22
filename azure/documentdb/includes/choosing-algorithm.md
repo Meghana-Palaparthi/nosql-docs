@@ -7,13 +7,13 @@ Use this quick-reference table to select the right algorithm for your workload:
 
 | Scenario | Algorithm | Cluster tier | Max dimensions |
 |----------|-----------|--------------|----------------|
-| Dev/test, demos, small datasets | **IVF** | Any (free tier OK) | 2,000 |
+| Dev/test, demos, small datasets | **IVF** | M10+ | 2,000 |
 | Production (default) | **DiskANN** | M30+ | 16,000 |
 | Production (max recall priority) | **HNSW** | M30+ | 8,000 |
 
 **IVF** (inverted file index):
 - Best for: Test environments, demos, and small clusters
-- Pros: Fast to build, low resource requirements, works on any cluster tier
+- Pros: Fast to build, low resource requirements
 - Cons: Lower recall compared to graph-based algorithms at scale
 - Tune: Increase `numLists` for larger datasets, increase `nProbes` for better recall
 
