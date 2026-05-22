@@ -73,12 +73,14 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 3. Install the required packages:
 
    ```bash
-   pip install "pymongo>=4.7" openai==1.55.3 azure-identity==1.15.0
+   pip install -r requirements.txt
    ```
 
+   The requirements include:
    - `pymongo`: MongoDB driver for Python (≥4.7 required for OIDC authentication).
    - `openai`: OpenAI client library to create vectors.
    - `azure-identity`: Azure Identity library for passwordless authentication.
+   - `tabulate`: Formatted table output for comparison results.
 
    Verify the packages are installed:
 
