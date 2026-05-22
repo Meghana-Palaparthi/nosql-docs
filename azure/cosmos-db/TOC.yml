@@ -836,6 +836,8 @@
           href: /azure/operational-excellence/relocation-cosmos-db?context=/azure/cosmos-db/context/context
         - name: Prevent changes or deletion
           href: resource-locks.md?context=/azure/cosmos-db/context/context
+        - name: Soft delete (preview)
+          href: soft-delete.md
     - name: Back up and restore
       items:
         - name: Back up and restore introduction
