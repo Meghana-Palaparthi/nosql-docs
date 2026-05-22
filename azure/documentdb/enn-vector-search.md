@@ -4,7 +4,10 @@ description: ENN Vector Search performs an exhaustive distance calculation acros
 author: khelanmodi
 ms.author: khelanmodi
 ms.topic: concept-article
-ms.date: 03/27/2025
+ms.date: 05/22/2026
+ms.collection:
+  - ce-skilling-ai-copilot
+ms.update-cycle: 180-days
 ---
 
 # Exact Nearest Neighbor (ENN) Vector search for precise retrieval
