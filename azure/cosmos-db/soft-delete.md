@@ -142,7 +142,7 @@ Register your subscription for access to the preview soft delete feature in Azur
 
 1. Select the **Register** button.
 
-  [![Screenshot of the soft-delete feature, resource enumeration, and activation/deactivation in the Azure portal.](media/soft-delete/configuration.png)](media/soft-delete/configuration-full.png#lightbox)
+    [![Screenshot of the soft-delete feature, resource enumeration, and activation/deactivation in the Azure portal.](media/soft-delete/configuration.png)](media/soft-delete/configuration-full.png#lightbox)
 
 ## Frequently asked questions
 
