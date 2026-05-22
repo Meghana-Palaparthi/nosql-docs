@@ -91,25 +91,8 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    - `azure-identity`: Azure Identity library for passwordless authentication.
    - `tabulate`: Formatted table output for comparison results.
 
-   Verify the packages are installed:
-
-   ### [Bash](#tab/bash)
-
-   ```bash
-   pip list | grep pymongo
-   ```
-
-   ### [PowerShell](#tab/powershell)
-
-   ```powershell
-   pip list | Select-String pymongo
-   ```
-
-   ---
-
-   You should see `pymongo` with a version of 4.7 or greater.
-
-1. Create the `src` directory:
+ 
+1.  Create the `src` directory:
 
    ### [Bash](#tab/bash)
 
