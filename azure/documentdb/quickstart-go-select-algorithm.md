@@ -54,7 +54,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-2. Initialize a new Go module:
+1. Initialize a new Go module:
 
    ```console
    go mod init documentdb-vector-samples
@@ -76,7 +76,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-3. Install the required packages:
+1. Install the required packages:
 
    ```console
    go get github.com/Azure/azure-sdk-for-go/sdk/azcore@v1.20.0
@@ -107,7 +107,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-4. Create a `src` directory:
+1. Create a `src` directory:
 
    ### [Bash](#tab/bash)
 
@@ -141,7 +141,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-2. Download the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory:
+1. Download the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory:
 
    ### [Bash](#tab/bash)
 
@@ -287,11 +287,11 @@ go run ./src/
 The application does the following:
 
 1. Connect to Azure DocumentDB and Azure OpenAI using passwordless authentication
-2. Load the hotel data and insert it into the `hotels` collection
-3. Generate an embedding for the search query
-4. Run all 9 vector index comparisons by creating, querying, and dropping each index in sequence
-5. Display a comparison table with the top two results and score gap for each combination
-6. Drop the `hotels` collection during cleanup
+1. Load the hotel data and insert it into the `hotels` collection
+1. Generate an embedding for the search query
+1. Run all 9 vector index comparisons by creating, querying, and dropping each index in sequence
+1. Display a comparison table with the top two results and score gap for each combination
+1. Drop the `hotels` collection during cleanup
 
 Expected output:
 
@@ -327,8 +327,8 @@ The comparison table shows how different algorithms perform on the same dataset 
 Remove the database using the DocumentDB for VS Code extension:
 
 1. Install the [DocumentDB for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) extension.
-2. Connect to your Azure DocumentDB cluster.
-3. Expand the cluster, right-click the **Hotels** database, and select **Drop Database**.
+1. Connect to your Azure DocumentDB cluster.
+1. Expand the cluster, right-click the **Hotels** database, and select **Drop Database**.
 
 ## Related content
 

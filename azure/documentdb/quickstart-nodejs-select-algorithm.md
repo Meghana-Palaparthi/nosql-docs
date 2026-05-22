@@ -76,7 +76,7 @@ select-algorithm-typescript/
 
    ---
 
-2. Initialize a TypeScript Node.js project:
+1. Initialize a TypeScript Node.js project:
 
    ```console
    npm init -y
@@ -99,7 +99,7 @@ select-algorithm-typescript/
 
    ---
 
-3. Install the required packages:
+1. Install the required packages:
 
    ```console
    npm install mongodb openai @azure/identity
@@ -113,7 +113,7 @@ select-algorithm-typescript/
 
    Verify that `npm list` shows all installed packages without errors.
 
-4. Create a `tsconfig.json` file in the project root:
+1. Create a `tsconfig.json` file in the project root:
 
    ```json
    {
@@ -134,7 +134,7 @@ select-algorithm-typescript/
    }
    ```
 
-5. Update your `package.json` to include:
+1. Update your `package.json` to include:
 
    ```json
    {
@@ -146,7 +146,7 @@ select-algorithm-typescript/
    }
    ```
 
-6. Create the `src` directory:
+1. Create the `src` directory:
 
    ### [Bash](#tab/bash)
 
@@ -180,7 +180,7 @@ select-algorithm-typescript/
 
    ---
 
-2. Download the `Hotels_Vector.json` data file with vectors to your `data` directory:
+1. Download the `Hotels_Vector.json` data file with vectors to your `data` directory:
 
    ### [Bash](#tab/bash)
 
@@ -290,7 +290,7 @@ The utilities provide essential functions for:
    az login
    ```
 
-2. Execute the comparison script to test all 9 algorithm × similarity combinations:
+1. Execute the comparison script to test all 9 algorithm × similarity combinations:
 
    ```console
    npm run build
@@ -333,8 +333,8 @@ The comparison table demonstrates key behaviors of vector search in DocumentDB:
 Remove the database using the DocumentDB for VS Code extension:
 
 1. Install the [DocumentDB for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) extension.
-2. Connect to your Azure DocumentDB cluster.
-3. Expand the cluster, right-click the **Hotels** database, and select **Drop Database**.
+1. Connect to your Azure DocumentDB cluster.
+1. Expand the cluster, right-click the **Hotels** database, and select **Drop Database**.
 
 ## Related content
 

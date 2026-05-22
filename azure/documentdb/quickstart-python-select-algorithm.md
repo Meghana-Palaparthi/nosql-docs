@@ -54,7 +54,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-2. In the terminal, create and activate a virtual environment:
+1. In the terminal, create and activate a virtual environment:
 
    For Windows:
 
@@ -70,7 +70,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    source venv/bin/activate
    ```
 
-3. Create a `requirements.txt` file with the following content:
+1. Create a `requirements.txt` file with the following content:
 
    ```text
    pymongo>=4.7.0
@@ -79,7 +79,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    tabulate>=0.9.0
    ```
 
-4. Install the required packages:
+1. Install the required packages:
 
    ```console
    pip install -r requirements.txt
@@ -109,7 +109,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    You should see `pymongo` with a version of 4.7 or greater.
 
-4. Create the `src` directory:
+1. Create the `src` directory:
 
    ### [Bash](#tab/bash)
 
@@ -309,8 +309,8 @@ The comparison table helps you choose the best configuration for your workload:
 Remove the database using the DocumentDB for VS Code extension:
 
 1. Install the [DocumentDB for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) extension.
-2. Connect to your Azure DocumentDB cluster.
-3. Expand the cluster, right-click the **Hotels** database, and select **Drop Database**.
+1. Connect to your Azure DocumentDB cluster.
+1. Expand the cluster, right-click the **Hotels** database, and select **Drop Database**.
 
 ## Related content
 

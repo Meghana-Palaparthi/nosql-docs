@@ -70,7 +70,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-2. Install the required NuGet packages:
+1. Install the required NuGet packages:
 
    ```console
    dotnet add package Azure.AI.OpenAI --version 2.1.0
@@ -112,7 +112,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-2. Download the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory:
+1. Download the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory:
 
    ### [Bash](#tab/bash)
 
@@ -167,7 +167,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-2. Add this content to `appsettings.json`:
+1. Add this content to `appsettings.json`:
 
    ```json
    {
@@ -195,7 +195,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    }
    ```
 
-3. Set any environment variable overrides in your current shell session. The sample uses `DefaultAzureCredential` for passwordless authentication, and .NET maps environment variables to `appsettings.json` keys with the `Section__Key` format:
+1. Set any environment variable overrides in your current shell session. The sample uses `DefaultAzureCredential` for passwordless authentication, and .NET maps environment variables to `appsettings.json` keys with the `Section__Key` format:
 
    ### [Bash](#tab/bash)
 
@@ -278,7 +278,7 @@ select-algorithm-dotnet/
 
    ---
 
-2. Create the code files:
+1. Create the code files:
 
    ### [Bash](#tab/bash)
 
@@ -370,13 +370,13 @@ These supporting files provide:
    az login
    ```
 
-2. Build the project:
+1. Build the project:
 
    ```console
    dotnet build
    ```
 
-3. Create the output directory:
+1. Create the output directory:
 
    ### [Bash](#tab/bash)
 
@@ -392,7 +392,7 @@ These supporting files provide:
 
    ---
 
-4. Run the flat `SelectAlgorithm.csproj` entry point to compare all 9 algorithm × similarity combinations:
+1. Run the flat `SelectAlgorithm.csproj` entry point to compare all 9 algorithm × similarity combinations:
 
    ```console
    dotnet run
@@ -427,8 +427,8 @@ The **Diff** column shows the score gap between the top-1 and top-2 results. A s
 Remove the database using the DocumentDB for VS Code extension:
 
 1. Install the [DocumentDB for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) extension.
-2. Connect to your Azure DocumentDB cluster.
-3. Expand the cluster, right-click the **Hotels** database, and select **Drop Database**.
+1. Connect to your Azure DocumentDB cluster.
+1. Expand the cluster, right-click the **Hotels** database, and select **Drop Database**.
 
 ## Related content
 
