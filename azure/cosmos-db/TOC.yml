@@ -943,7 +943,7 @@
           href: shell/get-started.md?context=/azure/cosmos-db/context/context
         - name: Command reference
           href: shell/command-reference.md?context=/azure/cosmos-db/context/context
-        - name: VS Code extension
+        - name: Visual Studio Code extension
           href: shell/visual-studio-code.md?context=/azure/cosmos-db/context/context
         - name: MCP server setup
           href: shell/model-context-protocol-setup.md?context=/azure/cosmos-db/context/context
@@ -1001,7 +1001,7 @@
       items:
         - name: Overview
           href: synapse-link.md?context=/azure/cosmos-db/context/context
-        - name: Configure Synapse Link
+        - name: Configure Azure Synapse Link
           href: configure-synapse-link.md?context=/azure/cosmos-db/context/context
         - name: Analytical Store Introduction
           href: analytical-store-introduction.md?context=/azure/cosmos-db/context/context
@@ -1009,7 +1009,7 @@
           href: analytical-store-change-data-capture.md?context=/azure/cosmos-db/context/context
         - name: Change Data Capture Getting Started
           href: get-started-change-data-capture.md?context=/azure/cosmos-db/context/context
-        - name: Power BI with Synapse Link
+        - name: Power BI with Azure Synapse Link
           href: integrated-power-bi-synapse-link.md?context=/azure/cosmos-db/context/context
         - name: Configure Private Endpoints
           href: analytical-store-private-endpoints.md?context=/azure/cosmos-db/context/context
