@@ -7,7 +7,8 @@ ms.author: sidandrews
 ms.reviewer: khelanmodi
 ms.devlang: csharp
 ms.topic: quickstart-sdk
-ms.date: 02/20/2026
+ms.date: 05/22/2026
+ms.collection: ce-skilling-ai-copilot
 ms.update-cycle: 180-days
 ai-usage: ai-assisted
 ms.custom:
@@ -270,11 +271,11 @@ In the preceding code, the `MongoDbService` performs the following tasks:
 
 ## View and manage data in Visual Studio Code
 
-1. Install the [DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) and [C# extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp) in Visual Studio Code.
-1. Connect to your Azure DocumentDB account using the DocumentDB extension.
+1. Install the [Azure DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) and [C# extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp) in Visual Studio Code.
+1. Connect to your Azure DocumentDB account using the Azure DocumentDB extension.
 1. View the data and indexes in the Hotels database.
 
-    :::image type="content" source="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" lightbox="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" alt-text="Screenshot of DocumentDB extension showing the DocumentDB collection.":::
+    :::image type="content" source="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" lightbox="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" alt-text="Screenshot of Azure DocumentDB extension showing the Azure DocumentDB collection.":::
 
 [!INCLUDE[Customize OpenAI deployment](./includes/section-quickstart-openai-configuration-vector-search.md)]
 
@@ -286,4 +287,3 @@ Delete the resource group, Azure DocumentDB cluster, and Azure OpenAI resource w
 
 - [Vector store in Azure DocumentDB](vector-search.md)
 - [Support for geospatial queries](geospatial-support.md)
-

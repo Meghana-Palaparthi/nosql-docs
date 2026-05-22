@@ -7,7 +7,8 @@ ms.author: sidandrews
 ms.reviewer: khelanmodi
 ms.devlang: python
 ms.topic: quickstart-sdk
-ms.date: 02/20/2026
+ms.date: 05/22/2026
+ms.collection: ce-skilling-ai-copilot
 ms.update-cycle: 180-days
 ai-usage: ai-assisted
 ms.custom:
@@ -160,7 +161,7 @@ touch src/utils.py
 ----
 
 > [!TIP]
-> Unlike some databases, DocumentDB allows you to create and drop vector indexes at any time after container creation. You don't need to define the vector indexing policy at container creation time.
+> Unlike some databases, Azure DocumentDB allows you to create and drop vector indexes at any time after container creation. You don't need to define the vector indexing policy at container creation time.
 
 ## Create code for vector search
 
@@ -252,10 +253,10 @@ You see the top five hotels that match the vector search query and their similar
 
 ## View and manage data in Visual Studio Code
 
-1. Select the [DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) in Visual Studio Code to connect to your Azure DocumentDB account.
+1. Select the [Azure DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) in Visual Studio Code to connect to your Azure DocumentDB account.
 1. View the data and indexes in the Hotels database.
 
-    :::image type="content" source="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" lightbox="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" alt-text="Screenshot of DocumentDB extension showing the Azure DocumentDB collection.":::
+    :::image type="content" source="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" lightbox="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" alt-text="Screenshot of Azure DocumentDB extension showing the Azure DocumentDB collection.":::
 
 [!INCLUDE[Customize OpenAI deployment](./includes/section-quickstart-openai-configuration-vector-search.md)]
 
