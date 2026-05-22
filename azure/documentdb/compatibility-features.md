@@ -50,5 +50,5 @@ This table outlines the compatibility of collection features in Azure DocumentDB
 ## Related content
 
 - [MongoDB Query Language (MQL) compatibility](compatibility-query-language.md)
-- [MongoDB Query Language (MQL) commands](commands/index.md)
-- [MongoDB Query Language (MQL) operators](operators/index.md)
+- [MongoDB Query Language (MQL) commands](/documentdb/query/commands/index?context=/azure/documentdb/context/context)
+- [MongoDB Query Language (MQL) operators](/documentdb/query/operators/index?context=/azure/documentdb/context/context)

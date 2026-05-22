@@ -159,13 +159,13 @@ Save my_script.js file in a folder accessible to the MongoDB shell session.
 
 Run the script from the MongoDB shell connected to the primary MongoDB cluster.
 
-```mongodb
+```javascript
 load(my_script.js);
 ```
 
 In the MongoDB shell connected to the primary MongoDB cluster, read data from the database.
 
-```mongodb
+```javascript
 db.dogs.find();
 db.cats.find();
 ```
@@ -212,7 +212,7 @@ Get the connection string for the replica cluster.
 
 In the MongoDB shell connected to the replica cluster, read data from the database.
 
-```mongodb
+```javascript
 db.dogs.find();
 db.cats.find();
 ```
@@ -245,7 +245,7 @@ mongosh "mongodb+srv://<user>@<promoted_replica_cluster_name>.mongocluster.cosmo
 
 In the MongoDB shell session, perform a write operation.
 
-```mongodb
+```javascript
 db.createCollection('foxes')
 ```
 
@@ -257,7 +257,7 @@ mongosh "mongodb+srv://<user>@<new_replica_cluster_name>.mongocluster.cosmos.azu
 
 In the MongoDB shell, confirm that writes are now disabled on the new replica (former primary cluster).
 
-```mongodb
+```javascript
 db.createCollection('bears')
 ```
 
