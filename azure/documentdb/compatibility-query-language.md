@@ -555,6 +555,6 @@ Azure DocumentDB supports the following index properties:
 
 ## Related content
 
-- [MongoDB Query Language (MQL) commands](commands/index.md)
-- [MongoDB Query Language (MQL) operators](operators/index.md)
+- [MongoDB Query Language (MQL) commands](/documentdb/query/commands/index?context=/azure/documentdb/context/context)
+- [MongoDB Query Language (MQL) operators](/documentdb/query/operators/index?context=/azure/documentdb/context/context)
 - [MongoDB feature compatibility](compatibility-features.md)
