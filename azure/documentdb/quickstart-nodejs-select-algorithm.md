@@ -28,7 +28,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 [!INCLUDE[Prerequisites - Vector Search Quickstart](includes/prerequisite-quickstart-vector-search-model.md)]
 
-- [Node.js LTS](https://nodejs.org/download/)
+- [Node.js 20 or later](https://nodejs.org/download/)
 
 - [TypeScript](https://www.typescriptlang.org/download): Install TypeScript globally:
 
@@ -277,6 +277,9 @@ The utilities provide essential functions for:
 - Batch insertion of documents with DocumentDB's 16 MB payload limit in mind.
 - Formatted display of comparison results showing algorithm performance.
 
+> [!NOTE]
+> The Node.js sample configures the DocumentDB connection with `retryWrites=false`, which is required for DocumentDB vector search operations.
+
 ## Run the code
 
 1. Sign in with Azure CLI for passwordless authentication:
@@ -297,9 +300,6 @@ Expected output:
 :::code language="text" source="~/../documentdb-samples/ai/select-algorithm-typescript/output/compare_all.txt" :::
 
 The **Diff** column shows the score gap between the top-1 and top-2 results. A smaller diff indicates the algorithm found results with more similar relevance scores.
-
-> [!NOTE]
-> Latency values are approximate and vary by environment. Scores may differ slightly depending on your Azure OpenAI embedding deployment.
 
 ### Understanding the results
 

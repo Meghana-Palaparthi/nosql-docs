@@ -30,7 +30,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 - [Java 17 or later](/java/openjdk/download)
 
-- [Maven 3.6 or higher](https://maven.apache.org/download.cgi)
+- [Maven 3.8 or higher](https://maven.apache.org/download.cgi)
 
 ## Create a Java project
 
@@ -285,6 +285,9 @@ This utility class provides:
 - **Search configuration**: Generates algorithm-specific search parameters.
 - **Results formatting**: Prints comparison table of algorithm performance.
 
+> [!NOTE]
+> The Java sample configures the DocumentDB connection with `retryWrites=false`, which is required for DocumentDB vector search operations.
+
 ### Create main comparison logic
 
 Create the following source files in `src/main/java/com/azure/documentdb/selectalgorithm/`:
@@ -357,7 +360,7 @@ The **Diff** column shows the score gap between the top-1 and top-2 results. A s
 | `MongoSecurityException` | Verify your Microsoft Entra token is valid. Run `az login` to refresh your credentials. |
 | Maven build failures | Run `mvn dependency:resolve` to check for missing dependencies. Ensure Java 17 or later is installed. |
 | `No plugin found for prefix 'exec'` | Add `exec-maven-plugin` to your `pom.xml` as shown in this article. |
-| Empty search results | Index may not be ready. The sample waits 5 seconds after index creation. Increase wait time or verify index status with the DocumentDB for VS Code extension. |
+| Empty search results | Index may not be ready. The sample retries up to 5 times with 2-second intervals after index creation. If results are still empty, increase the wait time or verify index status with the DocumentDB for VS Code extension. |
 
 ## Clean up resources
 

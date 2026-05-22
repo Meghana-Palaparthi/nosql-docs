@@ -235,6 +235,9 @@ The utilities provide essential functions for:
 - Batch insertion of documents with DocumentDB's 16 MB payload limit in mind.
 - Formatted display of comparison results showing algorithm performance.
 
+> [!NOTE]
+> The Python sample configures the DocumentDB connection with `retryWrites=false`, which is required for DocumentDB vector search operations.
+
 ## Run the code
 
 ### Sign in to Azure
@@ -272,9 +275,11 @@ The **Diff** column shows the score gap between the top-1 and top-2 results. A s
 
 The comparison table helps you choose the best configuration for your workload:
 
-- **Latency**: Query execution time in milliseconds. Lower is better for user-facing search.
-- **Score**: Similarity score using the selected function. Higher scores indicate better matches.
-- **Top Result**: The highest-scoring hotel for the query. Consistency across algorithms indicates stable results.
+- **Algorithm**: The vector index type used for the query (IVF, HNSW, or DiskANN).
+- **Metric**: The similarity metric used for scoring (COS, L2, or IP).
+- **Top 1 Result and Top 2 Result**: The two highest-ranked hotels returned for each algorithm and metric combination.
+- **Score**: The relevance score for each returned result.
+- **Diff**: The score gap between the top two results.
 
 [!INCLUDE[Choosing the right algorithm](includes/choosing-algorithm.md)]
 

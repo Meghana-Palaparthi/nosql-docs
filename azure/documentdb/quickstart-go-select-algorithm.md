@@ -30,7 +30,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 [!INCLUDE[Prerequisites - Vector Search Quickstart](includes/prerequisite-quickstart-vector-search-model.md)]
 
-- [Go](https://go.dev/doc/install) 1.22 or greater
+- [Go](https://go.dev/doc/install) 1.24 or greater
 
 ## Create a Go project
 
@@ -271,6 +271,9 @@ This code provides a vector algorithm comparison application with these key feat
 - **Comparison output**: Generates a formatted table showing the top two results and score gap for each combination.
 - **Production-ready patterns**: Includes batched insertion, error handling, and connection pooling.
 
+> [!NOTE]
+> The Go sample configures the DocumentDB connection with `retryWrites=false`, which is required for DocumentDB vector search operations.
+
 ## Run the code
 
 After setting the environment variables in your shell session, run the application:
@@ -314,7 +317,7 @@ The comparison table shows how different algorithms perform on the same dataset 
 | `server selection error` | Verify your environment variables are set correctly. Ensure your IP is in the DocumentDB firewall rules. |
 | `authentication failed` | Verify your Microsoft Entra token is valid. Run `az login` to refresh your credentials. |
 | `go: module not found` | Run `go mod tidy` to resolve dependencies. |
-| Build errors | Ensure Go 1.22+ is installed. Run `go version` to check. |
+| Build errors | Ensure Go 1.24+ is installed. Run `go version` to check. |
 | Empty search results | The vector index may take a few minutes to build. Wait 2-3 minutes after index creation, then rerun the script. |
 
 ## Clean up resources

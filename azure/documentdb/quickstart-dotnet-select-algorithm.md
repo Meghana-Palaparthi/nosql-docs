@@ -74,22 +74,19 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ```bash
    dotnet add package Azure.AI.OpenAI --version 2.1.0
-   dotnet add package Azure.Identity --version 1.17.1
-   dotnet add package MongoDB.Driver --version 3.0.0
-   dotnet add package Microsoft.Extensions.Configuration --version 9.0.0
-   dotnet add package Microsoft.Extensions.Configuration.Binder --version 9.0.0
-   dotnet add package Microsoft.Extensions.Configuration.EnvironmentVariables --version 9.0.0
-   dotnet add package Microsoft.Extensions.Configuration.Json --version 9.0.0
-   dotnet add package Microsoft.Extensions.DependencyInjection --version 9.0.0
-   dotnet add package Microsoft.Extensions.Logging --version 9.0.0
-   dotnet add package Microsoft.Extensions.Logging.Console --version 9.0.0
+   dotnet add package Azure.Identity --version 1.13.2
+   dotnet add package MongoDB.Driver --version 3.2.0
+   dotnet add package Microsoft.Extensions.Configuration --version 8.0.0
+   dotnet add package Microsoft.Extensions.Configuration.Binder --version 8.0.2
+   dotnet add package Microsoft.Extensions.Configuration.EnvironmentVariables --version 8.0.0
+   dotnet add package Microsoft.Extensions.Configuration.Json --version 8.0.1
    ```
 
    These packages provide:
    - `Azure.AI.OpenAI`: Azure OpenAI client library to create vector embeddings.
    - `Azure.Identity`: Azure Identity library for passwordless authentication with DefaultAzureCredential.
    - `MongoDB.Driver`: MongoDB driver for .NET to interact with DocumentDB.
-   - `Microsoft.Extensions.*`: Configuration, dependency injection, and logging infrastructure.
+   - `Microsoft.Extensions.Configuration*`: Configuration and environment variable binding infrastructure.
 
    Verify installed packages:
 
@@ -359,6 +356,9 @@ These supporting files provide:
 - JSON file reading and deserialization.
 - Batch data insertion with error handling.
 - Results formatting and display.
+
+> [!NOTE]
+> The .NET sample configures the DocumentDB connection with `retryWrites=false`, which is required for DocumentDB vector search operations.
 
 ## Run the code
 
