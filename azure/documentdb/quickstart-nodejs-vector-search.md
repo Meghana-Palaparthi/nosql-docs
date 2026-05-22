@@ -7,7 +7,8 @@ ms.author: sidandrews
 ms.reviewer: khelanmodi
 ms.devlang: typescript
 ms.topic: quickstart-sdk
-ms.date: 02/20/2026
+ms.date: 05/22/2026
+ms.collection: ce-skilling-ai-copilot
 ms.update-cycle: 180-days
 ai-usage: ai-assisted
 ms.custom:
@@ -184,7 +185,7 @@ touch src/utils.ts
 ----
 
 > [!TIP]
-> Unlike some databases, DocumentDB allows you to create and drop vector indexes at any time after container creation. You don't need to define the vector indexing policy at container creation time.
+> Unlike some databases, Azure DocumentDB allows you to create and drop vector indexes at any time after container creation. You don't need to define the vector indexing policy at container creation time.
 
 ## Create code for vector search
 
@@ -212,7 +213,7 @@ This main module provides these features:
 
 - Includes utility functions
 - Creates a configuration object for environment variables
-- Creates clients for Azure OpenAI and DocumentDB
+- Creates clients for Azure OpenAI and Azure DocumentDB
 - Connects to MongoDB, creates a database and collection, inserts data, and creates standard indexes
 - Creates a vector index using IVF, HNSW, or DiskANN
 - Creates an embedding for a sample query text using the OpenAI client. You can change the query at the top of the file
@@ -293,19 +294,18 @@ The app logging and output show:
 
 ## View and manage data in Visual Studio Code
 
-1. Select the [DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) in Visual Studio Code to connect to your Azure DocumentDB account.
+1. Select the [Azure DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) in Visual Studio Code to connect to your Azure DocumentDB account.
 1. View the data and indexes in the Hotels database.
 
-    :::image type="content" source="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" lightbox="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" alt-text="Screenshot of DocumentDB extension showing the DocumentDB collection.":::
+    :::image type="content" source="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" lightbox="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" alt-text="Screenshot of Azure DocumentDB extension showing the Azure DocumentDB collection.":::
 
 [!INCLUDE[Customize OpenAI deployment](./includes/section-quickstart-openai-configuration-vector-search.md)]
 
 ## Clean up resources
 
-Delete the resource group, DocumentDB account, and Azure OpenAI resource when you don't need them to avoid extra costs.
+Delete the resource group, Azure DocumentDB account, and Azure OpenAI resource when you don't need them to avoid extra costs.
 
 ## Related content
 
 - [Vector store in Azure DocumentDB](vector-search.md)
 - [Support for geospatial queries](geospatial-support.md)
-

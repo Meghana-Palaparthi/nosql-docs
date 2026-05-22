@@ -46,7 +46,7 @@ This **October 10, 2025** release introduces schema validation with `$jsonSchema
 
 - **\[Preview\]** Add support for index pushdown for sort queries that filter on the `_id` field.
 
-- **\[Preview\]** Add schema validation support for [`$jsonSchema`](./operators/evaluation-query/$jsonschema.md) during rule creation or modification.
+- **\[Preview\]** Add schema validation support for [`$jsonSchema`](/documentdb/query/operators/evaluation-query/$jsonschema?context=/azure/documentdb/context/context) during rule creation or modification.
 
 - **\[Preview\]** Add schema enforcement with CSFLE (client side field level encryption) integration.
 
