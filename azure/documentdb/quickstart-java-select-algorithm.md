@@ -13,6 +13,7 @@ ms.custom:
   - devx-track-extended-java
   - devx-track-extended-java-ai
   - devx-track-data-ai
+  - msecd-doc-authoring-1012
 # CustomerIntent: As a developer, I want to compare vector index algorithms in Java applications with Azure DocumentDB.
 ms.service: azure-documentdb
 ---
@@ -154,44 +155,6 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    Verify that all dependencies resolve without errors by running `mvn dependency:resolve`.
 
-4. Set environment variables in your shell before running the sample:
-
-   ### [Bash](#tab/bash)
-
-   ```bash
-   export DOCUMENTDB_CLUSTER_NAME=<your-cluster-name>
-   export AZURE_OPENAI_EMBEDDING_ENDPOINT=https://<your-openai-resource>.openai.azure.com
-   export AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
-   export AZURE_DOCUMENTDB_DATABASENAME=Hotels
-   export DATA_FILE_WITH_VECTORS=data/Hotels_Vector.json
-   export EMBEDDED_FIELD=DescriptionVector
-   export EMBEDDING_DIMENSIONS=1536
-   export LOAD_SIZE_BATCH=100
-   ```
-
-   ### [PowerShell](#tab/powershell)
-
-   ```powershell
-   $env:DOCUMENTDB_CLUSTER_NAME="<your-cluster-name>"
-   $env:AZURE_OPENAI_EMBEDDING_ENDPOINT="https://<your-openai-resource>.openai.azure.com"
-   $env:AZURE_OPENAI_EMBEDDING_MODEL="text-embedding-3-small"
-   $env:AZURE_DOCUMENTDB_DATABASENAME="Hotels"
-   $env:DATA_FILE_WITH_VECTORS="data/Hotels_Vector.json"
-   $env:EMBEDDED_FIELD="DescriptionVector"
-   $env:EMBEDDING_DIMENSIONS="1536"
-   $env:LOAD_SIZE_BATCH="100"
-   ```
-
-   ---
-
-   Replace the placeholder values with your Azure resource information:
-
-   - `DOCUMENTDB_CLUSTER_NAME`: Your Azure DocumentDB cluster name
-   - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
-   - `AZURE_OPENAI_EMBEDDING_MODEL`: Your Azure OpenAI embedding deployment name
-
-   This sample uses passwordless authentication with `DefaultAzureCredential`, which requires your identity to have proper RBAC roles assigned. For more information on authentication options, see [Authenticate Java apps to Azure services by using the Azure SDK for Java](/azure/developer/java/sdk/authentication/overview).
-
 ## Create data file with vectors
 
 1. Create a new data directory for the hotels data file:
@@ -241,6 +204,48 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    ```
 
    ---
+
+   You should see `Hotels_Vector.json` in the `data` directory.
+
+## Configure environment variables
+
+Set the required environment variables in your current shell session before you run the sample:
+
+### [Bash](#tab/bash)
+
+```bash
+export DOCUMENTDB_CLUSTER_NAME=<your-cluster-name>
+export AZURE_OPENAI_EMBEDDING_ENDPOINT=https://<your-openai-resource>.openai.azure.com
+export AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+export AZURE_DOCUMENTDB_DATABASENAME=Hotels
+export DATA_FILE_WITH_VECTORS=data/Hotels_Vector.json
+export EMBEDDED_FIELD=DescriptionVector
+export EMBEDDING_DIMENSIONS=1536
+export LOAD_SIZE_BATCH=100
+```
+
+### [PowerShell](#tab/powershell)
+
+```powershell
+$env:DOCUMENTDB_CLUSTER_NAME="<your-cluster-name>"
+$env:AZURE_OPENAI_EMBEDDING_ENDPOINT="https://<your-openai-resource>.openai.azure.com"
+$env:AZURE_OPENAI_EMBEDDING_MODEL="text-embedding-3-small"
+$env:AZURE_DOCUMENTDB_DATABASENAME="Hotels"
+$env:DATA_FILE_WITH_VECTORS="data/Hotels_Vector.json"
+$env:EMBEDDED_FIELD="DescriptionVector"
+$env:EMBEDDING_DIMENSIONS="1536"
+$env:LOAD_SIZE_BATCH="100"
+```
+
+Replace the placeholder values with your Azure resource information:
+
+- `DOCUMENTDB_CLUSTER_NAME`: Your Azure DocumentDB cluster name
+- `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
+- `AZURE_OPENAI_EMBEDDING_MODEL`: Your Azure OpenAI embedding deployment name
+
+This sample uses passwordless authentication with `DefaultAzureCredential`, which requires your identity to have proper RBAC roles assigned. For more information on authentication options, see [Authenticate Java apps to Azure services by using the Azure SDK for Java](/azure/developer/java/sdk/authentication/overview).
+
+---
 
 ## Create code files
 
@@ -307,7 +312,13 @@ This main comparison logic provides:
 
 ## Run the code
 
-1. Compile the project:
+1. Sign in with Azure CLI for passwordless authentication:
+
+   ```azurecli
+   az login
+   ```
+
+2. Compile the project:
 
    ```bash
    mvn clean compile
@@ -315,7 +326,7 @@ This main comparison logic provides:
 
    Verify that the build output ends with `BUILD SUCCESS`.
 
-2. Run the comparison entry point. `Main.java` calls `CompareAll.run()` and always executes all 9 combinations (3 algorithms × 3 metrics):
+3. Run the comparison entry point. `Main.java` calls `CompareAll.run()` and always executes all 9 combinations (3 algorithms × 3 metrics):
 
    ### [Bash](#tab/bash)
 

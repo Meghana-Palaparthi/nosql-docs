@@ -13,6 +13,7 @@ ms.custom:
   - devx-track-ts
   - devx-track-ts-ai
   - devx-track-data-ai
+  - msecd-doc-authoring-1012
 # CustomerIntent: As a developer, I want to compare vector index algorithms in TypeScript applications with Azure DocumentDB.
 ms.service: azure-documentdb
 ---
@@ -145,44 +146,7 @@ select-algorithm-typescript/
    }
    ```
 
-6. Set the required environment variables in your shell before running the sample:
-
-   ### [Bash](#tab/bash)
-
-   ```bash
-   export AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
-   export AZURE_OPENAI_EMBEDDING_ENDPOINT=https://<RESOURCE-NAME>.openai.azure.com
-   export DATA_FILE_WITH_VECTORS=data/Hotels_Vector.json
-   export EMBEDDED_FIELD=DescriptionVector
-   export EMBEDDING_DIMENSIONS=1536
-   export LOAD_SIZE_BATCH=100
-   export DOCUMENTDB_CLUSTER_NAME=<CLUSTER-NAME>
-   export AZURE_DOCUMENTDB_DATABASENAME=Hotels
-   ```
-
-   ### [PowerShell](#tab/powershell)
-
-   ```powershell
-   $env:AZURE_OPENAI_EMBEDDING_MODEL = "text-embedding-3-small"
-   $env:AZURE_OPENAI_EMBEDDING_ENDPOINT = "https://<RESOURCE-NAME>.openai.azure.com"
-   $env:DATA_FILE_WITH_VECTORS = "data/Hotels_Vector.json"
-   $env:EMBEDDED_FIELD = "DescriptionVector"
-   $env:EMBEDDING_DIMENSIONS = "1536"
-   $env:LOAD_SIZE_BATCH = "100"
-   $env:DOCUMENTDB_CLUSTER_NAME = "<CLUSTER-NAME>"
-   $env:AZURE_DOCUMENTDB_DATABASENAME = "Hotels"
-   ```
-
-   Replace the placeholder values with your own information:
-
-   - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
-   - `DOCUMENTDB_CLUSTER_NAME`: Your Azure DocumentDB cluster name
-
-   Prefer passwordless authentication, but it requires additional setup. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate JavaScript apps to Azure services using the Azure SDK for JavaScript](/azure/developer/javascript/sdk/authentication/overview).
-
-   ---
-
-7. Create the `src` directory:
+6. Create the `src` directory:
 
    ### [Bash](#tab/bash)
 
@@ -250,6 +214,43 @@ select-algorithm-typescript/
 
    You should see `Hotels_Vector.json` in the `data` directory.
 
+## Configure environment variables
+
+Set the required environment variables in your current shell session before you run the sample:
+
+### [Bash](#tab/bash)
+
+```bash
+export AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+export AZURE_OPENAI_EMBEDDING_ENDPOINT=https://<RESOURCE-NAME>.openai.azure.com
+export DATA_FILE_WITH_VECTORS=data/Hotels_Vector.json
+export EMBEDDED_FIELD=DescriptionVector
+export EMBEDDING_DIMENSIONS=1536
+export LOAD_SIZE_BATCH=100
+export DOCUMENTDB_CLUSTER_NAME=<CLUSTER-NAME>
+export AZURE_DOCUMENTDB_DATABASENAME=Hotels
+```
+
+### [PowerShell](#tab/powershell)
+
+```powershell
+$env:AZURE_OPENAI_EMBEDDING_MODEL = "text-embedding-3-small"
+$env:AZURE_OPENAI_EMBEDDING_ENDPOINT = "https://<RESOURCE-NAME>.openai.azure.com"
+$env:DATA_FILE_WITH_VECTORS = "data/Hotels_Vector.json"
+$env:EMBEDDED_FIELD = "DescriptionVector"
+$env:EMBEDDING_DIMENSIONS = "1536"
+$env:LOAD_SIZE_BATCH = "100"
+$env:DOCUMENTDB_CLUSTER_NAME = "<CLUSTER-NAME>"
+$env:AZURE_DOCUMENTDB_DATABASENAME = "Hotels"
+```
+
+Replace the placeholder values with your own information:
+
+- `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
+- `DOCUMENTDB_CLUSTER_NAME`: Your Azure DocumentDB cluster name
+
+Prefer passwordless authentication, but it requires additional setup. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate JavaScript apps to Azure services using the Azure SDK for JavaScript](/azure/developer/javascript/sdk/authentication/overview).
+
 ## Create the algorithm comparison code
 
 Create the `src/compare-all.ts` file with the following code:
@@ -280,12 +281,18 @@ The utilities provide essential functions for:
 
 ## Run the code
 
-Execute the comparison script to test all 9 algorithm × similarity combinations:
+1. Sign in with Azure CLI for passwordless authentication:
 
-```bash
-npm run build
-npm start
-```
+   ```azurecli
+   az login
+   ```
+
+2. Execute the comparison script to test all 9 algorithm × similarity combinations:
+
+   ```bash
+   npm run build
+   npm start
+   ```
 
 Expected output:
 

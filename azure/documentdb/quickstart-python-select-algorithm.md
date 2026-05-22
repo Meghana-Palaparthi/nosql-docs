@@ -13,6 +13,7 @@ ms.custom:
   - devx-track-python
   - devx-track-python-ai
   - devx-track-data-ai
+  - msecd-doc-authoring-1012
 # CustomerIntent: As a developer, I want to compare vector index algorithms in Python applications with Azure DocumentDB.
 ms.service: azure-documentdb
 ---
@@ -38,16 +39,16 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    ### [Bash](#tab/bash)
 
    ```bash
-   mkdir -p select-algorithm
-   cd select-algorithm
+   mkdir -p select-algorithm-python
+   cd select-algorithm-python
    code .
    ```
 
    ### [PowerShell](#tab/powershell)
 
    ```powershell
-   New-Item -ItemType Directory -Force -Path select-algorithm
-   Set-Location select-algorithm
+   New-Item -ItemType Directory -Force -Path select-algorithm-python
+   Set-Location select-algorithm-python
    code .
    ```
 

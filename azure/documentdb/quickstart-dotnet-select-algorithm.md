@@ -13,6 +13,7 @@ ms.custom:
   - devx-track-dotnet
   - devx-track-dotnet-ai
   - devx-track-data-ai
+  - msecd-doc-authoring-1012
 # CustomerIntent: As a developer, I want to compare vector index algorithms in .NET applications with Azure DocumentDB.
 ms.service: azure-documentdb
 ---
@@ -40,7 +41,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    ```bash
    mkdir select-algorithm-dotnet
    cd select-algorithm-dotnet
-   dotnet new console --framework net8.0
+   dotnet new console --framework net8.0 --name SelectAlgorithm --output .
    ```
 
    ### [PowerShell](#tab/powershell)
@@ -48,7 +49,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    ```powershell
    New-Item -ItemType Directory -Name select-algorithm-dotnet
    Set-Location select-algorithm-dotnet
-   dotnet new console --framework net8.0
+   dotnet new console --framework net8.0 --name SelectAlgorithm --output .
    ```
 
    ---
@@ -58,13 +59,13 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    ### [Bash](#tab/bash)
 
    ```bash
-   ls *.csproj
+   ls SelectAlgorithm.csproj
    ```
 
    ### [PowerShell](#tab/powershell)
 
    ```powershell
-   Get-ChildItem *.csproj
+   Get-ChildItem SelectAlgorithm.csproj
    ```
 
    ---
@@ -95,98 +96,6 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    ```bash
    dotnet list package
    ```
-
-3. Create environment variables for authentication and configuration overrides. The sample uses `DefaultAzureCredential` for passwordless authentication, and .NET maps environment variables to `appsettings.json` keys with the `Section__Key` format:
-
-   ### [Bash](#tab/bash)
-
-   ```bash
-   export AzureOpenAI__Endpoint="https://<your-resource>.openai.azure.com"
-   export AzureOpenAI__EmbeddingModel="text-embedding-3-small"
-   export DocumentDB__ClusterName="<your-cluster-name>"
-   export DocumentDB__DatabaseName="Hotels"
-   export DataFiles__WithVectors="data/Hotels_Vector.json"
-   export Embedding__EmbeddedField="DescriptionVector"
-   export Embedding__Dimensions="1536"
-   export AZURE_TENANT_ID="<your-tenant-id>"
-   ```
-
-   ### [PowerShell](#tab/powershell)
-
-   ```powershell
-   $env:AzureOpenAI__Endpoint="https://<your-resource>.openai.azure.com"
-   $env:AzureOpenAI__EmbeddingModel="text-embedding-3-small"
-   $env:DocumentDB__ClusterName="<your-cluster-name>"
-   $env:DocumentDB__DatabaseName="Hotels"
-   $env:DataFiles__WithVectors="data/Hotels_Vector.json"
-   $env:Embedding__EmbeddedField="DescriptionVector"
-   $env:Embedding__Dimensions="1536"
-   $env:AZURE_TENANT_ID="<your-tenant-id>"
-   ```
-
-   ---
-
-   Replace the placeholder values with your own information:
-   - `<your-resource>`: Your Azure OpenAI resource name
-   - `<your-cluster-name>`: Your Azure DocumentDB cluster name
-   - `<your-tenant-id>`: Your Microsoft Entra tenant ID
-
-   These environment variables override the matching values in `appsettings.json`. For example, `DocumentDB__ClusterName` overrides `DocumentDB:ClusterName`, `DocumentDB__DatabaseName` overrides `DocumentDB:DatabaseName`, and `AzureOpenAI__Endpoint` overrides `AzureOpenAI:Endpoint`.
-
-   Prefer passwordless authentication. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate .NET apps to Azure services by using the Azure SDK for .NET](/dotnet/azure/sdk/authentication).
-
-4. Sign in with Azure CLI for passwordless authentication:
-
-   ```bash
-   az login
-   ```
-
-5. Create an `appsettings.json` configuration file:
-
-   ### [Bash](#tab/bash)
-
-   ```bash
-   touch appsettings.json
-   ```
-
-   ### [PowerShell](#tab/powershell)
-
-   ```powershell
-   New-Item -ItemType File -Name appsettings.json
-   ```
-
-   ---
-
-   Add this content to `appsettings.json`:
-
-   ```json
-   {
-     "AzureOpenAI": {
-       "Endpoint": "https://<your-resource>.openai.azure.com",
-       "EmbeddingModel": "text-embedding-3-small"
-     },
-     "DocumentDB": {
-       "ClusterName": "<your-cluster-name>",
-       "DatabaseName": "Hotels",
-       "LoadBatchSize": 100
-     },
-     "Embedding": {
-       "EmbeddedField": "DescriptionVector",
-       "Dimensions": 1536,
-       "EmbeddingSizeBatch": 16
-     },
-     "VectorSearch": {
-       "Query": "quintessential lodging near running trails, eateries, retail",
-       "Similarity": "",
-       "TopK": 5
-     },
-     "DataFiles": {
-       "WithVectors": "data/Hotels_Vector.json"
-     }
-   }
-   ```
-
-   You can keep placeholder values in `appsettings.json` and override them at runtime with environment variables such as `AzureOpenAI__Endpoint`, `DocumentDB__ClusterName`, and `DocumentDB__DatabaseName`.
 
 ## Create data file with vectors
 
@@ -239,6 +148,89 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    ---
 
    You should see `Hotels_Vector.json` in the `data` directory.
+
+## Configure appsettings.json and environment variable overrides
+
+1. Create an `appsettings.json` configuration file:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   touch appsettings.json
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   New-Item -ItemType File -Name appsettings.json
+   ```
+
+   ---
+
+2. Add this content to `appsettings.json`:
+
+   ```json
+   {
+     "DocumentDB": {
+       "DatabaseName": "Hotels",
+       "ClusterName": "<your-cluster-name>",
+       "LoadBatchSize": 100
+     },
+     "VectorSearch": {
+       "Similarity": "",
+       "TopK": 5,
+       "Query": "luxury hotel near the beach"
+     },
+     "AzureOpenAI": {
+       "Endpoint": "https://<your-resource>.openai.azure.com/",
+       "EmbeddingModel": "text-embedding-3-small"
+     },
+     "DataFiles": {
+       "WithVectors": "data/Hotels_Vector.json"
+     },
+     "Embedding": {
+       "EmbeddedField": "DescriptionVector",
+       "Dimensions": 1536
+     }
+   }
+   ```
+
+3. Set any environment variable overrides in your current shell session. The sample uses `DefaultAzureCredential` for passwordless authentication, and .NET maps environment variables to `appsettings.json` keys with the `Section__Key` format:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   export AzureOpenAI__Endpoint="https://<your-resource>.openai.azure.com/"
+   export AzureOpenAI__EmbeddingModel="text-embedding-3-small"
+   export DocumentDB__ClusterName="<your-cluster-name>"
+   export DocumentDB__DatabaseName="Hotels"
+   export DataFiles__WithVectors="data/Hotels_Vector.json"
+   export Embedding__EmbeddedField="DescriptionVector"
+   export Embedding__Dimensions="1536"
+   export AZURE_TENANT_ID="<your-tenant-id>"
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   $env:AzureOpenAI__Endpoint="https://<your-resource>.openai.azure.com/"
+   $env:AzureOpenAI__EmbeddingModel="text-embedding-3-small"
+   $env:DocumentDB__ClusterName="<your-cluster-name>"
+   $env:DocumentDB__DatabaseName="Hotels"
+   $env:DataFiles__WithVectors="data/Hotels_Vector.json"
+   $env:Embedding__EmbeddedField="DescriptionVector"
+   $env:Embedding__Dimensions="1536"
+   $env:AZURE_TENANT_ID="<your-tenant-id>"
+   ```
+
+Replace the placeholder values with your own information:
+- `<your-resource>`: Your Azure OpenAI resource name
+- `<your-cluster-name>`: Your Azure DocumentDB cluster name
+- `<your-tenant-id>`: Your Microsoft Entra tenant ID
+
+These environment variables override the matching values in `appsettings.json`. For example, `DocumentDB__ClusterName` overrides `DocumentDB:ClusterName`, `DocumentDB__DatabaseName` overrides `DocumentDB:DatabaseName`, and `AzureOpenAI__Endpoint` overrides `AzureOpenAI:Endpoint`.
+
+Prefer passwordless authentication. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate .NET apps to Azure services by using the Azure SDK for .NET](/dotnet/azure/sdk/authentication).
 
 ## Create code files
 
@@ -367,13 +359,19 @@ These supporting files provide:
 
 ## Run the code
 
-1. Build the project:
+1. Sign in with Azure CLI for passwordless authentication:
+
+   ```azurecli
+   az login
+   ```
+
+2. Build the project:
 
    ```bash
    dotnet build
    ```
 
-2. Create the output directory:
+3. Create the output directory:
 
    ### [Bash](#tab/bash)
 
@@ -389,7 +387,7 @@ These supporting files provide:
 
    ---
 
-3. Run the flat `SelectAlgorithm.csproj` entry point to compare all 9 algorithm × similarity combinations:
+4. Run the flat `SelectAlgorithm.csproj` entry point to compare all 9 algorithm × similarity combinations:
 
    ```bash
    dotnet run

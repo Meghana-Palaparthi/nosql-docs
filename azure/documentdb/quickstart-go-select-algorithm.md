@@ -13,6 +13,7 @@ ms.custom:
   - devx-track-go
   - devx-track-go-ai
   - devx-track-data-ai
+  - msecd-doc-authoring-1012
 # CustomerIntent: As a developer, I want to compare vector index algorithms in Go applications with Azure DocumentDB.
 ms.service: azure-documentdb
 ---
@@ -176,46 +177,36 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 ## Configure environment variables
 
-Create a `.env` file for environment variables in `select-algorithm-go`:
-
-```bash
-# Azure OpenAI Embedding Configuration
-AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
-AZURE_OPENAI_EMBEDDING_ENDPOINT=https://your-openai-resource.openai.azure.com
-
-# Data File Configuration
-DATA_FILE_WITH_VECTORS=data/Hotels_Vector.json
-EMBEDDED_FIELD=DescriptionVector
-EMBEDDING_DIMENSIONS=1536
-LOAD_SIZE_BATCH=100
-
-# DocumentDB Configuration
-DOCUMENTDB_CLUSTER_NAME=your-cluster-name
-
-# Database name
-AZURE_DOCUMENTDB_DATABASENAME=Hotels
-```
-
-For the passwordless authentication in this article, replace the placeholder values in the `.env` file with your own information:
-
-- `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
-- `DOCUMENTDB_CLUSTER_NAME`: Your Azure DocumentDB cluster name
-
-Verify the `.env` file was created:
+Set the required environment variables in your current shell session before you run the sample:
 
 ### [Bash](#tab/bash)
 
 ```bash
-cat .env
+export DOCUMENTDB_CLUSTER_NAME=your-cluster-name
+export AZURE_OPENAI_EMBEDDING_ENDPOINT=https://your-resource.openai.azure.com
+export AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+export AZURE_DOCUMENTDB_DATABASENAME=Hotels
+export DATA_FILE_WITH_VECTORS=data/Hotels_Vector.json
+export EMBEDDED_FIELD=DescriptionVector
+export EMBEDDING_DIMENSIONS=1536
 ```
 
 ### [PowerShell](#tab/powershell)
 
 ```powershell
-Get-Content .env
+$env:DOCUMENTDB_CLUSTER_NAME = "your-cluster-name"
+$env:AZURE_OPENAI_EMBEDDING_ENDPOINT = "https://your-resource.openai.azure.com"
+$env:AZURE_OPENAI_EMBEDDING_MODEL = "text-embedding-3-small"
+$env:AZURE_DOCUMENTDB_DATABASENAME = "Hotels"
+$env:DATA_FILE_WITH_VECTORS = "data/Hotels_Vector.json"
+$env:EMBEDDED_FIELD = "DescriptionVector"
+$env:EMBEDDING_DIMENSIONS = "1536"
 ```
 
----
+For the passwordless authentication in this article, replace the placeholder values in your current shell session with your own information:
+
+- `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
+- `DOCUMENTDB_CLUSTER_NAME`: Your Azure DocumentDB cluster name
 
 Prefer passwordless authentication. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Go apps to Azure services by using the Azure SDK for Go](/azure/developer/go/azure-sdk-authentication).
 
@@ -282,27 +273,7 @@ This code provides a vector algorithm comparison application with these key feat
 
 ## Run the code
 
-Before running the code, source your `.env` file to load environment variables into your shell session.
-
-### [Bash](#tab/bash)
-
-```bash
-export $(grep -v '^#' .env | xargs)
-```
-
-### [PowerShell](#tab/powershell)
-
-```powershell
-Get-Content .env | ForEach-Object {
-    if ($_ -match '^\s*([^#][^=]+)=(.*)') {
-        [System.Environment]::SetEnvironmentVariable($Matches[1].Trim(), $Matches[2].Trim())
-    }
-}
-```
-
----
-
-After sourcing the environment variables, run the application:
+After setting the environment variables in your shell session, run the application:
 
 ```bash
 go run ./src/
