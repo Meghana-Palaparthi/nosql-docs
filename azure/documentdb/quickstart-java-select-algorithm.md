@@ -27,59 +27,9 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 [!INCLUDE[Prerequisites - Vector Search Quickstart](includes/prerequisite-quickstart-vector-search-model.md)]
 
-- [Java 17 or higher](/java/openjdk/download)
+- [Java 17 or later](/java/openjdk/download)
 
 - [Maven 3.6 or higher](https://maven.apache.org/download.cgi)
-
-## Create data file with vectors
-
-1. Create a new data directory for the hotels data file:
-
-   ### [Bash](#tab/bash)
-
-   ```bash
-   mkdir data
-   ```
-
-   ### [PowerShell](#tab/powershell)
-
-   ```powershell
-   New-Item -ItemType Directory -Name data
-   ```
-
-   ---
-
-2. Download the `Hotels_Vector.json` data file with vectors to your `data` directory:
-
-   ### [Bash](#tab/bash)
-
-   ```bash
-   curl -o data/Hotels_Vector.json https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json
-   ```
-
-   ### [PowerShell](#tab/powershell)
-
-   ```powershell
-   Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json" -OutFile "data/Hotels_Vector.json"
-   ```
-
-   ---
-
-   Verify that the file exists and is valid JSON:
-
-   ### [Bash](#tab/bash)
-
-   ```bash
-   ls -lh data/Hotels_Vector.json
-   ```
-
-   ### [PowerShell](#tab/powershell)
-
-   ```powershell
-   Get-Item data\Hotels_Vector.json
-   ```
-
-   ---
 
 ## Create a Java project
 
@@ -242,6 +192,56 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    This sample uses passwordless authentication with `DefaultAzureCredential`, which requires your identity to have proper RBAC roles assigned. For more information on authentication options, see [Authenticate Java apps to Azure services by using the Azure SDK for Java](/azure/developer/java/sdk/authentication/overview).
 
+## Create data file with vectors
+
+1. Create a new data directory for the hotels data file:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   mkdir data
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   New-Item -ItemType Directory -Name data
+   ```
+
+   ---
+
+2. Download the `Hotels_Vector.json` data file with vectors to your `data` directory:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   curl -o data/Hotels_Vector.json https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json" -OutFile "data/Hotels_Vector.json"
+   ```
+
+   ---
+
+   Verify that the file exists and is valid JSON:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   ls -lh data/Hotels_Vector.json
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Get-Item data\Hotels_Vector.json
+   ```
+
+   ---
+
 ## Create code files
 
 When you're done, the project structure should look like this:
@@ -347,7 +347,7 @@ The **Diff** column shows the score gap between the top-1 and top-2 results. A s
 |-------|----------|
 | `MongoTimeoutException` | Verify the `DOCUMENTDB_CLUSTER_NAME` environment variable, and ensure your IP is in the DocumentDB firewall rules. |
 | `MongoSecurityException` | Verify your Microsoft Entra token is valid. Run `az login` to refresh your credentials. |
-| Maven build failures | Run `mvn dependency:resolve` to check for missing dependencies. Ensure Java 21+ is installed. |
+| Maven build failures | Run `mvn dependency:resolve` to check for missing dependencies. Ensure Java 17 or later is installed. |
 | `No plugin found for prefix 'exec'` | Add `exec-maven-plugin` to your `pom.xml` as shown in this article. |
 
 ## Clean up resources
@@ -365,4 +365,3 @@ If you created an Azure DocumentDB cluster specifically for this quickstart, you
 - [Vector search overview](./vector-search.md)
 - [ENN vector search](./enn-vector-search.md)
 - [Product quantization](./product-quantization.md)
-

@@ -31,58 +31,6 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 - [Go](https://go.dev/doc/install) 1.22 or greater
 
-## Create data file with vectors
-
-1. Create a new data directory for the hotels data file:
-
-   ### [Bash](#tab/bash)
-
-   ```bash
-   mkdir data
-   ```
-
-   ### [PowerShell](#tab/powershell)
-
-   ```powershell
-   New-Item -ItemType Directory -Name data
-   ```
-
-   ---
-
-2. Download the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory:
-
-   ### [Bash](#tab/bash)
-
-   ```bash
-   curl -o data/Hotels_Vector.json https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json
-   ```
-
-   ### [PowerShell](#tab/powershell)
-
-   ```powershell
-   Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json" -OutFile "data/Hotels_Vector.json"
-   ```
-
-   ---
-
-   Verify the file was downloaded:
-
-   ### [Bash](#tab/bash)
-
-   ```bash
-   ls data/Hotels_Vector.json
-   ```
-
-   ### [PowerShell](#tab/powershell)
-
-   ```powershell
-   Get-ChildItem data\Hotels_Vector.json
-   ```
-
-   ---
-
-   You should see `Hotels_Vector.json` in the `data` directory.
-
 ## Create a Go project
 
 1. Create a new directory for your project and open it in Visual Studio Code:
@@ -216,6 +164,58 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    ```
 
    ---
+
+## Create data file with vectors
+
+1. Create a new data directory for the hotels data file:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   mkdir data
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   New-Item -ItemType Directory -Name data
+   ```
+
+   ---
+
+2. Download the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   curl -o data/Hotels_Vector.json https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json" -OutFile "data/Hotels_Vector.json"
+   ```
+
+   ---
+
+   Verify the file was downloaded:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   ls data/Hotels_Vector.json
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Get-ChildItem data\Hotels_Vector.json
+   ```
+
+   ---
+
+   You should see `Hotels_Vector.json` in the `data` directory.
 
 ## Create code files
 
@@ -359,4 +359,3 @@ If you created an Azure DocumentDB cluster specifically for this quickstart, you
 - [Vector search overview](./vector-search.md)
 - [ENN vector search](./enn-vector-search.md)
 - [Product quantization](./product-quantization.md)
-

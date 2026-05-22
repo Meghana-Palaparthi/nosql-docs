@@ -31,44 +31,6 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 - [Python](https://www.python.org/downloads/) 3.10 or greater
 
-## Create data file with vectors
-
-1. Create a new data directory and download the hotels data file with vectors:
-
-   ### [Bash](#tab/bash)
-
-   ```bash
-   mkdir -p data
-   curl -o data/Hotels_Vector.json https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json
-   ```
-
-   ### [PowerShell](#tab/powershell)
-
-   ```powershell
-   New-Item -ItemType Directory -Force -Path data
-   Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json" -OutFile "data/Hotels_Vector.json"
-   ```
-
-   ---
-
-   Verify the file was downloaded:
-
-   ### [Bash](#tab/bash)
-
-   ```bash
-   ls data/
-   ```
-
-   ### [PowerShell](#tab/powershell)
-
-   ```powershell
-   Get-ChildItem data/
-   ```
-
-   ---
-
-   You should see `Hotels_Vector.json` in the `data` directory.
-
 ## Create a Python project
 
 1. Create a new directory for your project and open it in Visual Studio Code:
@@ -190,6 +152,44 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    Prefer passwordless authentication, but it requires additional setup. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Python apps to Azure services by using the Azure SDK for Python](/azure/developer/python/sdk/authentication/overview).
 
+## Create data file with vectors
+
+1. Create a new data directory and download the hotels data file with vectors:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   mkdir -p data
+   curl -o data/Hotels_Vector.json https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   New-Item -ItemType Directory -Force -Path data
+   Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json" -OutFile "data/Hotels_Vector.json"
+   ```
+
+   ---
+
+   Verify the file was downloaded:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   ls data/
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Get-ChildItem data/
+   ```
+
+   ---
+
+   You should see `Hotels_Vector.json` in the `data` directory.
+
 ## Create code files
 
 Create the following project structure:
@@ -286,4 +286,3 @@ If you created an Azure DocumentDB cluster specifically for this quickstart, you
 - [Vector search overview](./vector-search.md)
 - [ENN vector search](./enn-vector-search.md)
 - [Product quantization](./product-quantization.md)
-

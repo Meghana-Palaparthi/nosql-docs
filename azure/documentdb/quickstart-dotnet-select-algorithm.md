@@ -31,58 +31,6 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) or later.
 
-## Create data file with vectors
-
-1. Create a new data directory for the hotels data file:
-
-   ### [Bash](#tab/bash)
-
-   ```bash
-   mkdir data
-   ```
-
-   ### [PowerShell](#tab/powershell)
-
-   ```powershell
-   New-Item -ItemType Directory -Name data
-   ```
-
-   ---
-
-2. Download the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory:
-
-   ### [Bash](#tab/bash)
-
-   ```bash
-   curl -o data/Hotels_Vector.json https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json
-   ```
-
-   ### [PowerShell](#tab/powershell)
-
-   ```powershell
-   Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json" -OutFile "data/Hotels_Vector.json"
-   ```
-
-   ---
-
-   Verify the file downloaded successfully:
-
-   ### [Bash](#tab/bash)
-
-   ```bash
-   ls data/Hotels_Vector.json
-   ```
-
-   ### [PowerShell](#tab/powershell)
-
-   ```powershell
-   Get-ChildItem data\Hotels_Vector.json
-   ```
-
-   ---
-
-   You should see `Hotels_Vector.json` in the `data` directory.
-
 ## Create a .NET project
 
 1. Create a new directory for your project and initialize the .NET console application:
@@ -155,7 +103,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    ```bash
    export AzureOpenAI__Endpoint="https://<your-resource>.openai.azure.com"
    export AzureOpenAI__EmbeddingModel="text-embedding-3-small"
-   export MongoDB__ClusterName="<your-cluster-name>"
+   export DocumentDB__ClusterName="<your-cluster-name>"
    export DataFiles__WithVectors="data/Hotels_Vector.json"
    export AZURE_TENANT_ID="<your-tenant-id>"
    ```
@@ -165,7 +113,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    ```powershell
    $env:AzureOpenAI__Endpoint="https://<your-resource>.openai.azure.com"
    $env:AzureOpenAI__EmbeddingModel="text-embedding-3-small"
-   $env:MongoDB__ClusterName="<your-cluster-name>"
+   $env:DocumentDB__ClusterName="<your-cluster-name>"
    $env:DataFiles__WithVectors="data/Hotels_Vector.json"
    $env:AZURE_TENANT_ID="<your-tenant-id>"
    ```
@@ -177,7 +125,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    - `<your-cluster-name>`: Your Azure DocumentDB cluster name
    - `<your-tenant-id>`: Your Microsoft Entra tenant ID
 
-   These environment variables override the matching values in `appsettings.json`. For example, `MongoDB__ClusterName` overrides `MongoDB:ClusterName` and `AzureOpenAI__Endpoint` overrides `AzureOpenAI:Endpoint`.
+   These environment variables override the matching values in `appsettings.json`. For example, `DocumentDB__ClusterName` overrides `DocumentDB:ClusterName` and `AzureOpenAI__Endpoint` overrides `AzureOpenAI:Endpoint`.
 
    Prefer passwordless authentication. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate .NET apps to Azure services by using the Azure SDK for .NET](/dotnet/azure/sdk/authentication).
 
@@ -211,7 +159,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
        "Endpoint": "https://<your-resource>.openai.azure.com",
        "EmbeddingModel": "text-embedding-3-small"
      },
-     "MongoDB": {
+     "DocumentDB": {
        "ClusterName": "<your-cluster-name>",
        "DatabaseName": "Hotels",
        "LoadBatchSize": 100
@@ -232,7 +180,59 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    }
    ```
 
-   You can keep placeholder values in `appsettings.json` and override them at runtime with environment variables such as `AzureOpenAI__Endpoint` and `MongoDB__ClusterName`.
+   You can keep placeholder values in `appsettings.json` and override them at runtime with environment variables such as `AzureOpenAI__Endpoint` and `DocumentDB__ClusterName`.
+
+## Create data file with vectors
+
+1. Create a new data directory for the hotels data file:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   mkdir data
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   New-Item -ItemType Directory -Name data
+   ```
+
+   ---
+
+2. Download the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   curl -o data/Hotels_Vector.json https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json" -OutFile "data/Hotels_Vector.json"
+   ```
+
+   ---
+
+   Verify the file downloaded successfully:
+
+   ### [Bash](#tab/bash)
+
+   ```bash
+   ls data/Hotels_Vector.json
+   ```
+
+   ### [PowerShell](#tab/powershell)
+
+   ```powershell
+   Get-ChildItem data\Hotels_Vector.json
+   ```
+
+   ---
+
+   You should see `Hotels_Vector.json` in the `data` directory.
 
 ## Create code files
 
@@ -412,4 +412,3 @@ If you created an Azure DocumentDB cluster specifically for this quickstart, you
 - [Vector search overview](./vector-search.md)
 - [ENN vector search](./enn-vector-search.md)
 - [Product quantization](./product-quantization.md)
-
