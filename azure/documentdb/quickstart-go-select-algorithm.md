@@ -4,7 +4,7 @@ description: Compare DiskANN, HNSW, and IVF vector index algorithms using Go to 
 author: diberry
 ms.author: diberry
 ms.reviewer: khelanmodi
-ms.devlang: go
+ms.devlang: golang
 ms.topic: quickstart-sdk
 ms.date: 05/07/2026
 ms.update-cycle: 180-days
@@ -202,6 +202,8 @@ $env:DATA_FILE_WITH_VECTORS = "data/Hotels_Vector.json"
 $env:EMBEDDED_FIELD = "DescriptionVector"
 $env:EMBEDDING_DIMENSIONS = "1536"
 ```
+
+---
 
 For the passwordless authentication in this article, replace the placeholder values in your current shell session with your own information:
 
