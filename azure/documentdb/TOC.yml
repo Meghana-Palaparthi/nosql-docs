@@ -278,9 +278,9 @@
     - name: Python
       href: /python/api/overview/azure/mongo-cluster
     - name: Commands
-      href: commands/toc.yml
+      href: commands/TOC.yml
     - name: Operators
-      href: operators/toc.yml
+      href: operators/TOC.yml
     - name: MongoDB feature compatibility
       href: compatibility-features.md
     - name: MongoDB query language compatibility
