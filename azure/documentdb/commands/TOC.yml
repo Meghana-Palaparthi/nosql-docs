@@ -1,6 +1,30 @@
-- name: Index
-  href: index.md
-- name: Aggregation
-  href: aggregation/toc.yml
-- name: Query and Write
-  href: query-and-write/toc.yml
+### YamlMime:TOC
+items:
+  - name: Overview
+    href: /documentdb/query/commands/index?context=/azure/documentdb/context/context
+  - name: Aggregation
+    items:
+      - name: Overview
+        href: /documentdb/query/commands/aggregation/index?context=/azure/documentdb/context/context
+      - name: Aggregate
+        href: /documentdb/query/commands/aggregation/aggregate?context=/azure/documentdb/context/context
+      - name: Count
+        href: /documentdb/query/commands/aggregation/count?context=/azure/documentdb/context/context
+      - name: Distinct
+        href: /documentdb/query/commands/aggregation/distinct?context=/azure/documentdb/context/context
+  - name: Query and Write
+    items:
+      - name: Overview
+        href: /documentdb/query/commands/query-and-write/index?context=/azure/documentdb/context/context
+      - name: delete
+        href: /documentdb/query/commands/query-and-write/delete?context=/azure/documentdb/context/context
+      - name: find
+        href: /documentdb/query/commands/query-and-write/find?context=/azure/documentdb/context/context
+      - name: findAndModify
+        href: /documentdb/query/commands/query-and-write/findandmodify?context=/azure/documentdb/context/context
+      - name: getMore
+        href: /documentdb/query/commands/query-and-write/getMore?context=/azure/documentdb/context/context
+      - name: insert
+        href: /documentdb/query/commands/query-and-write/insert?context=/azure/documentdb/context/context
+      - name: update
+        href: /documentdb/query/commands/query-and-write/update?context=/azure/documentdb/context/context

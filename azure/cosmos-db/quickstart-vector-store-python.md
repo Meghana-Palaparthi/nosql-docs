@@ -9,8 +9,9 @@ ms.devlang: python
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: quickstart-sdk
-ms.date: 03/26/2026
+ms.date: 05/22/2026
 ms.update-cycle: 180-days
+ms.collection: ce-skilling-ai-copilot
 ai-usage: ai-assisted
 ms.custom:
   - devx-track-python
@@ -506,4 +507,3 @@ For detailed information on distance functions, see [What are distance functions
 - [Document Indexer for Azure Cosmos DB (preview)](gen-ai/document-indexer.md)
 - [Vector embeddings in Azure Cosmos DB](gen-ai/vector-embeddings.md)
 - [Azure RBAC built-in roles](/azure/role-based-access-control/built-in-roles)
-

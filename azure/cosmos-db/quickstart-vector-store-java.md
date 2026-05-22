@@ -9,8 +9,9 @@ ms.devlang: java
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: quickstart-sdk
-ms.date: 03/26/2026
+ms.date: 05/22/2026
 ms.update-cycle: 180-days
+ms.collection: ce-skilling-ai-copilot
 ai-usage: ai-assisted
 ms.custom:
   - devx-track-extended-java

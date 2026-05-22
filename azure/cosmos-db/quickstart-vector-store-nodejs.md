@@ -9,8 +9,10 @@ ms.devlang: typescript
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: quickstart-sdk
-ms.date: 02/11/2026
+ms.date: 05/22/2026
 ms.update-cycle: 180-days
+ms.collection:
+  - ce-skilling-ai-copilot
 ai-usage: ai-assisted
 ms.custom:
   - devx-track-ts
@@ -47,7 +49,7 @@ Find the sample code with resource provisioning on [GitHub](https://github.com/A
   - `text-embedding-3-small` model deployed
 
 - [Visual Studio Code](https://code.visualstudio.com/download)
-  - [Cosmos DB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-cosmosdb)
+  - [Azure Cosmos DB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-cosmosdb)
 
 - [Node.js LTS](https://nodejs.org/download/)
 - [TypeScript](https://www.typescriptlang.org/download): Install TypeScript globally:
@@ -494,7 +496,7 @@ For detailed information on distance functions, see [What are distance functions
 
 ## View and manage data in Visual Studio Code
 
-1. Select the [Cosmos DB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-cosmosdb) in Visual Studio Code to connect to your Azure Cosmos DB account.
+1. Select the [Azure Cosmos DB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-cosmosdb) in Visual Studio Code to connect to your Azure Cosmos DB account.
 1. View the data and indexes in the Hotels database.
 
     :::image type="content" source="./media/quickstart-vector-store-nodejs/visual-studio-code-extension.png" alt-text="Screenshot of Visual Studio Code showing the Azure Cosmos DB extension with Hotels database items and a JSON document editor." lightbox="./media/quickstart-vector-store-nodejs/visual-studio-code-extension.png":::
