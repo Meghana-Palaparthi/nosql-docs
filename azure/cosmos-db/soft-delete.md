@@ -31,7 +31,7 @@ This feature addresses a critical operational need: accidental deletion of datab
 
 - **Simplified restore process**: Recovery via soft delete is simpler than a backup-based restore. The resource is brought back in-place with the same name, settings, and data it had before deletion. There's no need to create new accounts or containers and no need to reconfigure networking or application connections, since the resource identity remains the same. In-place restore also means all ancillary configuration (indexes, throughput, permissions) remains intact through the soft-delete/recovery cycle.
 
-- **Reduced operational overhead**: By preventing accidental deletions from turning into major incidents, soft delete saves engineering time and effort.
+- **Reduced operational overhead**: The soft delete feature saves engineering time and effort by preventing accidental deletions from turning into major incidents.
 
 - **Complements backup and DR strategies**: Soft delete covers the short-term recovery for accidental deletes, while existing backup and point-in-time restore features cover other scenarios like data corruption or disaster recovery. Together, they provide a more complete data protection story. Notably, if a resource is soft deleted, you would use soft delete recovery rather than backups. In fact, the system doesn't allow restoring a backup over an existing soft-deleted resource – it must be purged first, ensuring the soft delete mechanism is the frontline of defense.
 
@@ -41,7 +41,7 @@ This feature addresses a critical operational need: accidental deletion of datab
 
 The feature is enabled at the Azure Cosmos DB account level along with the Retention policy. Once soft delete is turned on for an account, all deletions of databases or containers in that account use soft-delete behavior. You can't target specific databases or containers to have different settings – it's an account-wide setting. If soft delete isn't enabled on an account, deletions operate normally, that is, immediate permanent deletion.
 
-When soft delete is enabled, deleting an Azure Cosmos DB account marks the entire account and all child resources as soft-deleted. Deleting a Database within a soft delete enabled account soft-deletes that database and all containers within it. Deleting an individual Container (collection/graph/table) soft-deletes just that container. This cascading behavior ensures no orphaned resources remain. Restoring a parent resource, such as an account or database, brings back all its children unless you soft-deleted the child resources before soft-deleting the parent.
+When soft delete is enabled, deleting an Azure Cosmos DB account marks the entire account and all child resources as soft-deleted. Deleting a database within a soft-delete-enabled account soft-deletes that database and all containers within it. Deleting an individual container (collection/graph/table) soft-deletes just that container. This cascading behavior ensures no orphaned resources remain. If you restore a parent resource, such as an account or database, your operation brings back all its children unless you soft-deleted the child resources before soft-deleting the parent.
 
 ### Soft-deleted state
 
@@ -55,7 +55,7 @@ Once a resource (account, database, or container) is soft-deleted, it enters a r
 
 ## Retention
 
-**Retention Period**: Soft-deleted resources remain recoverable for a configured retention period. By default, the retention period is 14 days, but administrators can adjust this setting per account from 1 to 30 days. You might choose a shorter retention, such as 1 day, for lower storage overhead or a longer period, such as 30 days, for extra safety. During this retention window, the resource can be restored at any time. Once the retention period elapses, or if the resource is explicitly purged earlier, the service permanently removes it and it can no longer be restored through soft delete.
+**Retention Period**: Soft-deleted resources remain recoverable for a configured retention period. By default, the retention period is 14 days, but administrators can adjust this setting per account from 1 to 30 days. You might choose a shorter retention, such as one day, for lower storage overhead or a longer period, such as 30 days, for extra safety. During this retention window, the resource can be restored at any time. Once the retention period elapses, or if the resource is explicitly purged earlier, the service permanently removes it and it can no longer be restored through soft delete.
 
 - Example: If the retention is set to 14 days and a container is deleted on May 1, it will be kept until May 15. On or shortly after May 15, if not recovered, Azure Cosmos DB will purge that container and its data permanently. Between May 1 and May 15, the container can be recovered with all its content intact, or if an authorized user explicitly purges it earlier, the resource is permanently deleted.
 
@@ -66,7 +66,9 @@ Once a resource (account, database, or container) is soft-deleted, it enters a r
 `MinMinutesBeforePermanentDeletionAllowed` - Defines the minimum retention period (in minutes) before a soft-deleted resource can be permanently purged. The minimum allowed is 0 minutes.
 
 - Enforces a safety window—Purge attempts before this time elapses are rejected
+
 - Recovery is always allowed—Resources can be recovered at any time during retention
+
 - Applies to all levels—Containers, databases, and accounts
 
 Example: If set to 60 minutes, a resource deleted at 2:00 PM can't be purged until 3:00 PM
@@ -101,7 +103,7 @@ It's worth noting that all delete operations go through the soft delete path whe
 
 ### Backup restore conflict
 
-If you attempt to restore a backup of a resource that is currently soft-deleted, the system won't allow it. You must either restore the soft-deleted resource directly or permanently delete it first. This restriction prevents, for example, restoring an older backup on top of a retained newer copy, which could create inconsistencies. In practice, if a resource is soft-deleted, using soft delete recovery is the preferred approach. Backups come into play if the data is corrupted or if the deletion wasn't noticed until after retention expired.
+If you attempt to restore a backup of a resource that is currently soft-deleted, the service doesn't allow it. You must either restore the soft-deleted resource directly or permanently delete it first. This restriction prevents, for example, restoring an older backup on top of a retained newer copy, which could create inconsistencies. In practice, if a resource is soft-deleted, using soft delete recovery is the preferred approach. Backups come into play if the data is corrupted or if the deletion wasn't noticed until after retention expired.
 
 ### Billing and costs
 
@@ -122,11 +124,25 @@ Soft delete can be managed through all standard Azure interfaces:
 
 - **Azure portal**: UI to enable/disable the feature at the account level and to enumerate and restore soft-deleted resources (for example, a "Deleted Items" list with the option to recover). This feature isn't available in the gated preview.
 
-  [![Screenshot of the soft-delete feature, resource enumeration, and activation/deactivation in the Azure portal.](media/soft-delete/configuration.png)](media/soft-delete/configuration-full.png#lightbox)
-
 - **Azure CLI / PowerShell**: Commands to configure retention, list soft-deleted resources, and invoke restore or purge operations are available (for scripting and automation scenarios).
 
 - **Azure Resource Manager (REST API)**: New properties on the Azure Cosmos DB account resource for soft delete settings (like retention duration) and new APIs to list and restore deleted resources are being introduced.
+
+## Register your subscription
+
+Register your subscription for access to the preview soft delete feature in Azure Cosmos DB. Here are the steps to request access. Registration isn't automatic and can take up to one week to process.
+
+1. Open the **Azure portal** (<https://portal.azure.com>) and sign in with your Azure account.
+
+1. Navigate to the **Preview Features** section of your Azure subscription.
+
+1. Filter the list of preview features using the term "soft delete preview."
+
+1. Locate the **Azure Cosmos DB soft delete preview** feature.
+
+1. Select the **Register** button.
+
+    [![Screenshot of the soft-delete feature, resource enumeration, and activation/deactivation in the Azure portal.](media/soft-delete/configuration.png)](media/soft-delete/configuration-full.png#lightbox)
 
 ## Frequently asked questions
 
