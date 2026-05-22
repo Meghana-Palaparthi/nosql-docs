@@ -322,7 +322,7 @@ This main comparison logic provides:
 
 2. Compile the project:
 
-   ```bash
+   ```console
    mvn clean compile
    ```
 

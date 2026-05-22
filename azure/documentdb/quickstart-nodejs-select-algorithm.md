@@ -32,7 +32,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 - [TypeScript](https://www.typescriptlang.org/download): Install TypeScript globally:
 
-    ```bash
+    ```console
     npm install -g typescript
     ```
 
@@ -78,7 +78,7 @@ select-algorithm-typescript/
 
 2. Initialize a TypeScript Node.js project:
 
-   ```bash
+   ```console
    npm init -y
    npm pkg set type="module"
    ```
@@ -101,7 +101,7 @@ select-algorithm-typescript/
 
 3. Install the required packages:
 
-   ```bash
+   ```console
    npm install mongodb openai @azure/identity
    npm install --save-dev typescript @types/node
    ```
@@ -292,7 +292,7 @@ The utilities provide essential functions for:
 
 2. Execute the comparison script to test all 9 algorithm × similarity combinations:
 
-   ```bash
+   ```console
    npm run build
    npm start
    ```

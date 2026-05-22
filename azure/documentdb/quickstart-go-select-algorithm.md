@@ -56,7 +56,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 2. Initialize a new Go module:
 
-   ```bash
+   ```console
    go mod init documentdb-vector-samples
    ```
 
@@ -78,7 +78,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 3. Install the required packages:
 
-   ```bash
+   ```console
    go get github.com/Azure/azure-sdk-for-go/sdk/azcore@v1.20.0
    go get github.com/Azure/azure-sdk-for-go/sdk/azidentity@v1.13.1
    go get github.com/openai/openai-go/v3@v3.12.0
@@ -280,7 +280,7 @@ This code provides a vector algorithm comparison application with these key feat
 
 After setting the environment variables in your shell session, run the application:
 
-```bash
+```console
 go run ./src/
 ```
 

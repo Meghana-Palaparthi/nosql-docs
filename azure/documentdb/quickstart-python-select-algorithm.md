@@ -81,7 +81,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 4. Install the required packages:
 
-   ```bash
+   ```console
    pip install -r requirements.txt
    ```
 

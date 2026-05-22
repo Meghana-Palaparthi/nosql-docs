@@ -72,7 +72,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 2. Install the required NuGet packages:
 
-   ```bash
+   ```console
    dotnet add package Azure.AI.OpenAI --version 2.1.0
    dotnet add package Azure.Identity --version 1.13.2
    dotnet add package MongoDB.Driver --version 3.2.0
@@ -90,7 +90,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    Verify installed packages:
 
-   ```bash
+   ```console
    dotnet list package
    ```
 
@@ -372,7 +372,7 @@ These supporting files provide:
 
 2. Build the project:
 
-   ```bash
+   ```console
    dotnet build
    ```
 
@@ -394,7 +394,7 @@ These supporting files provide:
 
 4. Run the flat `SelectAlgorithm.csproj` entry point to compare all 9 algorithm × similarity combinations:
 
-   ```bash
+   ```console
    dotnet run
    ```
 
