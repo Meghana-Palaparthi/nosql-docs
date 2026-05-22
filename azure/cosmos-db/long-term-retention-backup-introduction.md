@@ -25,7 +25,6 @@ Before you can use long-term retention features, make sure the following prerequ
 
 - The account must not have any of the following features enabled:
 
-  - Public network disabled
   - Hierarchical partition keys
   - Per-partition automatic failover (PPAF)
 
