@@ -3,6 +3,7 @@ title: Exact Nearest Neighbor Vector Search for Precise Retrieval
 description: ENN Vector Search performs an exhaustive distance calculation across all indexed vectors to guarantee retrieval of the closest neighbors based on a specified distance metric.
 author: khelanmodi
 ms.author: khelanmodi
+ms.service: azure-documentdb
 ms.topic: concept-article
 ms.date: 05/22/2026
 ms.collection:
