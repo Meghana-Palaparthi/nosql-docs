@@ -122,6 +122,8 @@ Soft delete can be managed through all standard Azure interfaces:
 
 - **Azure portal**: UI to enable/disable the feature at the account level and to enumerate and restore soft-deleted resources (for example, a "Deleted Items" list with the option to recover). This feature isn't available in the gated preview.
 
+  [![Screenshot of the soft-delete feature, resource enumeration, and activation/deactivation in the Azure portal.](media/soft-delete/configuration.png)](media/soft-delete/configuration-full.png)
+
 - **Azure CLI / PowerShell**: Commands to configure retention, list soft-deleted resources, and invoke restore or purge operations are available (for scripting and automation scenarios).
 
 - **Azure Resource Manager (REST API)**: New properties on the Azure Cosmos DB account resource for soft delete settings (like retention duration) and new APIs to list and restore deleted resources are being introduced.
