@@ -41,7 +41,7 @@ This feature addresses a critical operational need: accidental deletion of datab
 
 The feature is enabled at the Azure Cosmos DB account level along with the Retention policy. Once soft delete is turned on for an account, all deletions of databases or containers in that account use soft-delete behavior. You can't target specific databases or containers to have different settings – it's an account-wide setting. If soft delete isn't enabled on an account, deletions operate normally, that is, immediate permanent deletion.
 
-When soft delete is enabled, deleting an Azure Cosmos DB account marks the entire account and all child resources as soft-deleted. Deleting a Database within a soft delete enabled account soft-deletes that database and all containers within it. Deleting an individual Container (collection/graph/table) soft-deletes just that container. This cascading behavior ensures no orphaned resources remain. If you restore a parent resource, such as an account or database, your operation brings back all its children unless you soft-deleted the child resources before soft-deleting the parent.
+When soft delete is enabled, deleting an Azure Cosmos DB account marks the entire account and all child resources as soft-deleted. Deleting a database within a soft-delete-enabled account soft-deletes that database and all containers within it. Deleting an individual container (collection/graph/table) soft-deletes just that container. This cascading behavior ensures no orphaned resources remain. If you restore a parent resource, such as an account or database, your operation brings back all its children unless you soft-deleted the child resources before soft-deleting the parent.
 
 ### Soft-deleted state
 
@@ -138,7 +138,7 @@ Register your subscription for access to the preview soft delete feature in Azur
 
 1. Filter the list of preview features using the term "soft delete preview."
 
-1. Locate the **Azure Cosmos DB soft delete preview** feature
+1. Locate the **Azure Cosmos DB soft delete preview** feature.
 
 1. Select the **Register** button.
 
