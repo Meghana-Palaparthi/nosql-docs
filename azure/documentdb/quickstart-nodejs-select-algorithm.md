@@ -242,6 +242,8 @@ $env:EMBEDDED_FIELD = "DescriptionVector"
 $env:EMBEDDING_DIMENSIONS = "1536"
 ```
 
+---
+
 Replace the placeholder values with your own information:
 
 - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL

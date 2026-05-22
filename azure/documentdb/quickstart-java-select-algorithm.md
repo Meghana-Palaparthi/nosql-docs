@@ -235,6 +235,8 @@ $env:EMBEDDED_FIELD="DescriptionVector"
 $env:EMBEDDING_DIMENSIONS="1536"
 ```
 
+---
+
 Replace the placeholder values with your Azure resource information:
 
 - `DOCUMENTDB_CLUSTER_NAME`: Your Azure DocumentDB cluster name
@@ -242,7 +244,7 @@ Replace the placeholder values with your Azure resource information:
 
 This sample uses passwordless authentication with `DefaultAzureCredential`, which requires your identity to have proper RBAC roles assigned. For more information on authentication options, see [Authenticate Java apps to Azure services by using the Azure SDK for Java](/azure/developer/java/sdk/authentication/overview).
 
----
+
 
 ## Create code files
 

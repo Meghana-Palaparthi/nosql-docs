@@ -223,6 +223,8 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    $env:AZURE_TENANT_ID="<your-tenant-id>"
    ```
 
+   ---
+
 Replace the placeholder values with your own information:
 - `<your-resource>`: Your Azure OpenAI resource name
 - `<your-cluster-name>`: Your Azure DocumentDB cluster name
