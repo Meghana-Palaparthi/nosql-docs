@@ -1,6 +1,6 @@
 ---
-title: Azure Backup for Azure Cosmos DB
-description: Learn about Azure Backup for Azure Cosmos DB, including prerequisites, supported configurations, and how to troubleshoot common errors.
+title: Azure Backup for Cosmos DB
+description: Learn about Azure Backup for Cosmos DB, including prerequisites, supported configurations, and how to troubleshoot common errors.
 author: mansinahar
 ms.service: azure-cosmos-db
 ms.topic: concept-article
@@ -11,9 +11,9 @@ appliesto:
   - ✅ MongoDB
 ---
 
-# Azure Backup for Azure Cosmos DB
+# Azure Backup for Cosmos DB
 
-Azure Backup for Azure Cosmos DB enables you to take backups of your data and store them in an Azure Backup Vault for extended retention periods. It works alongside continuous backup (point-in-time restore) and allows you to protect your data for compliance, auditing, or disaster recovery scenarios that require retention beyond the standard continuous backup window.
+Azure Backup for Cosmos DB enables you to take backups of your data and store them in an Azure Backup Vault for extended retention periods. It works alongside continuous backup (point-in-time restore) and allows you to protect your data for compliance, auditing, or disaster recovery scenarios that require retention beyond the standard continuous backup window.
 
 ## Prerequisites
 
