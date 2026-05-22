@@ -85,7 +85,7 @@ At any point during the retention period, an authorized user can undelete or rec
 
 To recover a resource, use Azure management tools (once the feature is broadly released).
 
-For example, Azure CLI commands are available for recovery of database or container. The Azure portal also offers a user-friendly interface (for example, a "Recycle Bin" or recover options in Data Explorer) to select a soft-deleted item and recover it. All recover operations are protected by Azure role-based access control (for example, only users assigned the built-in **Cosmos DB Account Contributor** role, also listed as **DocumentDB Account Contributor** in the [Azure built-in roles reference](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles), or higher-privileged roles can initiate an undelete).
+For example, Azure CLI commands are available for recovery of database or container. The Azure portal also offers a user-friendly interface (for example, a "Recycle Bin" or recover options in Data Explorer) to select a soft-deleted item and recover it. All recover operations are protected by Azure role-based access control (for example, only users assigned the built-in **Cosmos DB Account Contributor** role, also listed as **DocumentDB Account Contributor** in the [Azure built-in roles reference](/azure/role-based-access-control/built-in-roles), or higher-privileged roles can initiate an undelete).
 
 ## Permanent deletion (purge)
 
