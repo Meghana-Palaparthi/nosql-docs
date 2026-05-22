@@ -74,5 +74,3 @@ The following table lists the common errors you might encounter, grouped by whic
 
 - [Continuous backup with point-in-time restore in Azure Cosmos DB](continuous-backup-restore-introduction.md)
 - [Enable continuous backup](provision-account-continuous-backup.md)
-- [Restore an account with continuous backup](restore-account-continuous-backup.md)
-- [Manage permissions to restore an Azure Cosmos DB account](continuous-backup-restore-permissions.md)
