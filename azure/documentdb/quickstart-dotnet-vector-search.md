@@ -271,11 +271,11 @@ In the preceding code, the `MongoDbService` performs the following tasks:
 
 ## View and manage data in Visual Studio Code
 
-1. Install the [Azure DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) and [C# extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp) in Visual Studio Code.
-1. Connect to your Azure DocumentDB account using the Azure DocumentDB extension.
+1. Install the [DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) and [C# extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp) in Visual Studio Code.
+1. Connect to your DocumentDB account using the Azure DocumentDB extension.
 1. View the data and indexes in the Hotels database.
 
-    :::image type="content" source="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" lightbox="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" alt-text="Screenshot of Azure DocumentDB extension showing the Azure DocumentDB collection.":::
+    :::image type="content" source="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" lightbox="./media/quickstart-nodejs-vector-search/visual-studio-code-documentdb.png" alt-text="Screenshot of the DocumentDB extension showing the Azure DocumentDB collection.":::
 
 [!INCLUDE[Customize OpenAI deployment](./includes/section-quickstart-openai-configuration-vector-search.md)]
 
