@@ -151,6 +151,9 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 ## Configure appsettings.json and environment variable overrides
 
+> [!NOTE]
+> .NET uses the standard `IConfiguration` system with `appsettings.json` as the primary configuration source. Environment variables can override any setting using double-underscore (`__`) as the hierarchy separator. The other language quickstarts use flat environment variables (`DOCUMENTDB_CLUSTER_NAME`), but .NET's hierarchical configuration is the idiomatic pattern for this platform.
+
 1. Create an `appsettings.json` configuration file:
 
    ### [Bash](#tab/bash)

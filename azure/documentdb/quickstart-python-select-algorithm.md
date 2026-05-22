@@ -159,29 +159,25 @@ Set the required environment variables in your current shell session before you 
 ### [Bash](#tab/bash)
 
 ```bash
+export DOCUMENTDB_CLUSTER_NAME=<your-cluster-name>
+export AZURE_OPENAI_EMBEDDING_ENDPOINT=https://<your-resource>.openai.azure.com
 export AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
-export AZURE_OPENAI_EMBEDDING_API_VERSION=2024-10-21
-export AZURE_OPENAI_EMBEDDING_ENDPOINT=https://<RESOURCE-NAME>.openai.azure.com
+export AZURE_DOCUMENTDB_DATABASENAME=Hotels
 export DATA_FILE_WITH_VECTORS=data/Hotels_Vector.json
 export EMBEDDED_FIELD=DescriptionVector
 export EMBEDDING_DIMENSIONS=1536
-export LOAD_SIZE_BATCH=100
-export DOCUMENTDB_CLUSTER_NAME=<CLUSTER-NAME>
-export AZURE_DOCUMENTDB_DATABASENAME=Hotels
 ```
 
 ### [PowerShell](#tab/powershell)
 
 ```powershell
+$env:DOCUMENTDB_CLUSTER_NAME = "<your-cluster-name>"
+$env:AZURE_OPENAI_EMBEDDING_ENDPOINT = "https://<your-resource>.openai.azure.com"
 $env:AZURE_OPENAI_EMBEDDING_MODEL = "text-embedding-3-small"
-$env:AZURE_OPENAI_EMBEDDING_API_VERSION = "2024-10-21"
-$env:AZURE_OPENAI_EMBEDDING_ENDPOINT = "https://<RESOURCE-NAME>.openai.azure.com"
+$env:AZURE_DOCUMENTDB_DATABASENAME = "Hotels"
 $env:DATA_FILE_WITH_VECTORS = "data/Hotels_Vector.json"
 $env:EMBEDDED_FIELD = "DescriptionVector"
 $env:EMBEDDING_DIMENSIONS = "1536"
-$env:LOAD_SIZE_BATCH = "100"
-$env:DOCUMENTDB_CLUSTER_NAME = "<CLUSTER-NAME>"
-$env:AZURE_DOCUMENTDB_DATABASENAME = "Hotels"
 ```
 
 ---

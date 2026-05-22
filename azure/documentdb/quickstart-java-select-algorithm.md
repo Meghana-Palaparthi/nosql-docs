@@ -215,33 +215,30 @@ Set the required environment variables in your current shell session before you 
 
 ```bash
 export DOCUMENTDB_CLUSTER_NAME=<your-cluster-name>
-export AZURE_OPENAI_EMBEDDING_ENDPOINT=https://<your-openai-resource>.openai.azure.com
+export AZURE_OPENAI_EMBEDDING_ENDPOINT=https://<your-resource>.openai.azure.com
 export AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
 export AZURE_DOCUMENTDB_DATABASENAME=Hotels
 export DATA_FILE_WITH_VECTORS=data/Hotels_Vector.json
 export EMBEDDED_FIELD=DescriptionVector
 export EMBEDDING_DIMENSIONS=1536
-export LOAD_SIZE_BATCH=100
 ```
 
 ### [PowerShell](#tab/powershell)
 
 ```powershell
 $env:DOCUMENTDB_CLUSTER_NAME="<your-cluster-name>"
-$env:AZURE_OPENAI_EMBEDDING_ENDPOINT="https://<your-openai-resource>.openai.azure.com"
+$env:AZURE_OPENAI_EMBEDDING_ENDPOINT="https://<your-resource>.openai.azure.com"
 $env:AZURE_OPENAI_EMBEDDING_MODEL="text-embedding-3-small"
 $env:AZURE_DOCUMENTDB_DATABASENAME="Hotels"
 $env:DATA_FILE_WITH_VECTORS="data/Hotels_Vector.json"
 $env:EMBEDDED_FIELD="DescriptionVector"
 $env:EMBEDDING_DIMENSIONS="1536"
-$env:LOAD_SIZE_BATCH="100"
 ```
 
 Replace the placeholder values with your Azure resource information:
 
 - `DOCUMENTDB_CLUSTER_NAME`: Your Azure DocumentDB cluster name
 - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
-- `AZURE_OPENAI_EMBEDDING_MODEL`: Your Azure OpenAI embedding deployment name
 
 This sample uses passwordless authentication with `DefaultAzureCredential`, which requires your identity to have proper RBAC roles assigned. For more information on authentication options, see [Authenticate Java apps to Azure services by using the Azure SDK for Java](/azure/developer/java/sdk/authentication/overview).
 
