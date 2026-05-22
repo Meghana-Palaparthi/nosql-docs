@@ -1,10 +1,10 @@
 ---
 title: Long-term retention backup for Azure Cosmos DB
-description: Learn about long-term retention (LTR) backup in Azure Cosmos DB, including prerequisites, supported configurations, current limitations, and how to troubleshoot common errors.
+description: Learn about long-term retention (LTR) backup in Azure Cosmos DB, including prerequisites, supported configurations, and how to troubleshoot common errors.
 author: mansinahar
 ms.service: azure-cosmos-db
 ms.topic: concept-article
-ms.date: 05/20/2026
+ms.date: 05/22/2026
 ms.author: mansinahar
 appliesto:
   - ✅ NoSQL
@@ -15,30 +15,23 @@ appliesto:
 
 Long-term retention (LTR) backup in Azure Cosmos DB enables you to take backups of your data and store them in an Azure Backup Vault for extended retention periods. LTR works alongside continuous backup (point-in-time restore) and allows you to protect your data for compliance, auditing, or disaster recovery scenarios that require retention beyond the standard continuous backup window.
 
-LTR supports both full and incremental backups, and allows you to restore your data to a new Azure Cosmos DB account when needed.
-
 ## Prerequisites
 
 Before you can use long-term retention features, make sure the following prerequisites are met:
 
 - The account must have [continuous backup (PITR)](continuous-backup-restore-introduction.md) enabled.
 
-- The account's write region must be in the same location as the Azure Resource Manager (ARM) location and the Azure Backup Vault.
+- The account's write region, ARM location, and Azure Backup Vault location should all be the same.
 
 - The account must not have any of the following features enabled:
 
-  - Customer-managed keys (CMK)
   - Public network disabled
   - Hierarchical partition keys
   - Per-partition automatic failover (PPAF)
-  - Unsharded collections (for MongoDB accounts)
-  - Serverless capacity mode
 
-- The account must have fewer than 1,000 physical partitions.
+- The account must have fewer than 2,500 physical partitions.
 
 - Supported APIs: NoSQL and MongoDB only.
-
-- Data ingestion: Use sanitized test data. Don't use sensitive, production, or PII data. Alternatively, deploy the demo database from the Azure portal.
 
 ## Restore requirements
 
@@ -49,20 +42,6 @@ For restoration, the target Azure Cosmos DB account must meet the following crit
 - Must not be a serverless account.
 - Must not have any throughput limit set.
 - Must use the same API type (NoSQL or MongoDB) as the source account.
-
-## Current limitations
-
-Long-term retention backup currently has the following limitations:
-
-- Only NoSQL and MongoDB APIs are supported. Gremlin, Table, and Cassandra APIs aren't supported.
-
-- The source account's write region must match the ARM location. Cross-region backups aren't supported.
-
-- Accounts with more than 2,500 partitions can't use long-term retention backup.
-
-- Restore is supported only to empty, single-region, provisioned throughput accounts.
-
-- Long-term retention backup isn't compatible with customer-managed keys (CMK), hierarchical partition keys, PPAF, or serverless capacity mode.
 
 ## Troubleshoot common errors
 
