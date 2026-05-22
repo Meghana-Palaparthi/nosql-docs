@@ -1,8 +1,10 @@
 ---
 title: Quickstart - AI Agent with Vector Search in TypeScript
 description: Learn how to build an AI agent using TypeScript with vector search in Azure DocumentDB. Create intelligent hotel recommendation agents that use semantic search with LangChain.
-ms.date: 03/04/2026
+ms.date: 05/22/2026
 ms.update-cycle: 180-days
+ms.collection:
+  - ce-skilling-ai-copilot
 ms.topic: quickstart-sdk
 ms.custom: devx-track-ai-agent, devx-track-azd, devx-track-typescript
 ai-usage: ai-assisted
@@ -23,7 +25,7 @@ You can use the Azure Developer CLI to create the required Azure resources by ru
 
 ### Azure resources
 
-- **[Azure OpenAI in Microsoft Foundry Models resource (classic)](/azure/foundry-classic/openai/how-to/create-resource)** with the following model deployments in Microsoft Azure AI Foundry:
+- **[Azure OpenAI in Microsoft Foundry Models resource (classic)](/azure/foundry-classic/openai/how-to/create-resource)** with the following model deployments in Microsoft Foundry:
   - `gpt-4.1` deployment (Synthesizer Agent) - Recommended: **50,000 tokens per minute (TPM)** capacity
   - `gpt-4.1-mini` deployment (Planner Agent) - Recommended: **30,000 tokens per minute (TPM)** capacity
   - `text-embedding-3-small` deployment (Embeddings) - Recommended: **10,000 tokens per minute (TPM)** capacity
@@ -329,7 +331,7 @@ The vector index is what enables fast similarity search. When the index is creat
 The index type you choose affects performance:
 
 | Algorithm | Cluster tier | Best for |
-|---|---|---|
+| --- | --- | --- |
 | **IVF** | M10+ | Small to medium datasets, lower cost |
 | **HNSW** | M30+ | High recall, fast queries |
 | **DiskANN** | M40+ | Large-scale datasets, billion+ vectors |
@@ -422,5 +424,4 @@ npm run cleanup
 - [Quickstart: AI Agent with vector search using Go](/azure/documentdb/quickstart-agent-go)
 - [Azure DocumentDB documentation](/azure/documentdb/)
 - [LangChain.js Azure DocumentDB integration](https://js.langchain.com/docs/integrations/vectorstores/azure_cosmosdb_mongodb/)
-- [Azure OpenAI in Foundry Models Service documentation](/azure/ai-services/openai/)
-
+- [Azure OpenAI documentation](/azure/ai-services/openai/)
