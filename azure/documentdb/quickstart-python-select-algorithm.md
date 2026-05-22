@@ -1,13 +1,19 @@
 ---
 title: Quickstart - Vector index with Python
 description: Compare vector index algorithms and similarity functions using the Python SDK in Azure DocumentDB to optimize search performance for your workload.
+author: diberry
+ms.author: diberry
+ms.reviewer: khelanmodi
 ms.devlang: python
 ms.topic: quickstart-sdk
 ms.date: 05/07/2026
-ms.custom: sfi-ropc-nochange
-ai-usage: ai-generated
-author: diberry
-ms.author: diberry
+ms.update-cycle: 180-days
+ai-usage: ai-assisted
+ms.custom:
+  - devx-track-python
+  - devx-track-python-ai
+  - devx-track-data-ai
+# CustomerIntent: As a developer, I want to compare vector index algorithms in Python applications with Azure DocumentDB.
 ms.service: azure-documentdb
 ---
 
@@ -107,7 +113,8 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    pip install "pymongo>=4.7" openai==1.55.3 azure-identity==1.15.0
    ```
 
-   - `pymongo`: MongoDB driver for Python (≥4.7 required for OIDC authentication)..   - `openai`: OpenAI client library to create vectors.
+   - `pymongo`: MongoDB driver for Python (≥4.7 required for OIDC authentication).
+   - `openai`: OpenAI client library to create vectors.
    - `azure-identity`: Azure Identity library for passwordless authentication.
 
    Verify the packages are installed:
@@ -259,35 +266,18 @@ The comparison table helps you choose the best configuration for your workload:
 | Issue | Solution |
 |-------|----------|
 | `ServerSelectionTimeoutError` | Verify that your environment variables are set in the current shell. Ensure your IP is in the DocumentDB firewall rules. |
-| `AuthenticationFailed` | Check that your connection string includes the correct username and password, or that your Microsoft Entra token is valid. |
+| `AuthenticationFailed` | Verify your Microsoft Entra token is valid. Run `az login` to refresh your credentials. |
 | `pymongo.errors.OperationFailure` | Ensure the database and collection exist. Check that the vector index was created successfully. |
 | `ModuleNotFoundError: No module named 'pymongo'` | Activate your virtual environment and run `pip install "pymongo>=4.7"`. |
-| Empty search results | The vector index may not be ready yet. The script includes retry logic, but large datasets may require longer wait times. |
+| Empty search results | The vector index may take a few minutes to build. Wait 2-3 minutes after index creation, then rerun the script. |
 
 ## Clean up resources
 
-When you're done, you can remove the database using mongosh or the DocumentDB for VS Code extension.
-
-### [mongosh](#tab/mongosh)
-
-Connect to your DocumentDB cluster and drop the database:
-
-```bash
-mongosh "mongodb+srv://<your-cluster-name>.global.mongocluster.cosmos.azure.com/" --tls --authenticationMechanism MONGODB-OIDC
-```
-
-```javascript
-use Hotels
-db.dropDatabase()
-```
-
-### [VS Code extension](#tab/vscode)
+Remove the database using the DocumentDB for VS Code extension:
 
 1. Install the [DocumentDB for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) extension.
 2. Connect to your Azure DocumentDB cluster.
 3. Expand the cluster, right-click the **Hotels** database, and select **Drop Database**.
-
----
 
 If you created an Azure DocumentDB cluster specifically for this quickstart, you can also delete the entire resource group in the Azure portal to remove all associated resources.
 

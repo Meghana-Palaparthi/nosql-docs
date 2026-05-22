@@ -1,13 +1,19 @@
 ---
 title: Quickstart - Vector index with Java
 description: Test and compare DiskANN, HNSW, and IVF vector indexes in Azure DocumentDB using Java to select the best algorithm for your vector search workload.
+author: diberry
+ms.author: diberry
+ms.reviewer: khelanmodi
 ms.devlang: java
 ms.topic: quickstart-sdk
 ms.date: 05/07/2026
-ms.custom: sfi-ropc-nochange
-ai-usage: ai-generated
-author: diberry
-ms.author: diberry
+ms.update-cycle: 180-days
+ai-usage: ai-assisted
+ms.custom:
+  - devx-track-extended-java
+  - devx-track-extended-java-ai
+  - devx-track-data-ai
+# CustomerIntent: As a developer, I want to compare vector index algorithms in Java applications with Azure DocumentDB.
 ms.service: azure-documentdb
 ---
 
@@ -340,34 +346,17 @@ The **Diff** column shows the score gap between the top-1 and top-2 results. A s
 | Issue | Solution |
 |-------|----------|
 | `MongoTimeoutException` | Verify the `DOCUMENTDB_CLUSTER_NAME` environment variable, and ensure your IP is in the DocumentDB firewall rules. |
-| `MongoSecurityException` | Check credentials in connection string. |
-| Maven build failures | Run `mvn dependency:resolve` to check for missing dependencies. Ensure Java 17+ is installed. |
+| `MongoSecurityException` | Verify your Microsoft Entra token is valid. Run `az login` to refresh your credentials. |
+| Maven build failures | Run `mvn dependency:resolve` to check for missing dependencies. Ensure Java 21+ is installed. |
 | `No plugin found for prefix 'exec'` | Add `exec-maven-plugin` to your `pom.xml` as shown in this article. |
 
 ## Clean up resources
 
-When you're done, you can remove the database using mongosh or the DocumentDB for VS Code extension.
-
-### [mongosh](#tab/mongosh)
-
-Connect to your DocumentDB cluster and drop the database:
-
-```bash
-mongosh "mongodb+srv://<your-cluster-name>.global.mongocluster.cosmos.azure.com/" --tls --authenticationMechanism MONGODB-OIDC
-```
-
-```javascript
-use Hotels
-db.dropDatabase()
-```
-
-### [VS Code extension](#tab/vscode)
+Remove the database using the DocumentDB for VS Code extension:
 
 1. Install the [DocumentDB for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) extension.
 2. Connect to your Azure DocumentDB cluster.
 3. Expand the cluster, right-click the **Hotels** database, and select **Drop Database**.
-
----
 
 If you created an Azure DocumentDB cluster specifically for this quickstart, you can also delete the entire resource group in the Azure portal to remove all associated resources.
 

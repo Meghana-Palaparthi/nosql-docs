@@ -1,13 +1,19 @@
 ---
 title: Quickstart - Vector index with Go
 description: Compare DiskANN, HNSW, and IVF vector index algorithms using Go to select and tune the optimal index for your workload
-ms.devlang: golang
-ms.topic: quickstart-sdk
-ms.date: 05/07/2026
-ms.custom: sfi-ropc-nochange
-ai-usage: ai-generated
 author: diberry
 ms.author: diberry
+ms.reviewer: khelanmodi
+ms.devlang: go
+ms.topic: quickstart-sdk
+ms.date: 05/07/2026
+ms.update-cycle: 180-days
+ai-usage: ai-assisted
+ms.custom:
+  - devx-track-go
+  - devx-track-go-ai
+  - devx-track-data-ai
+# CustomerIntent: As a developer, I want to compare vector index algorithms in Go applications with Azure DocumentDB.
 ms.service: azure-documentdb
 ---
 
@@ -157,7 +163,6 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    ```bash
    # Azure OpenAI Embedding Configuration
    AZURE_OPENAI_EMBEDDING_MODEL=text-embedding-3-small
-   AZURE_OPENAI_EMBEDDING_API_VERSION=2023-05-15
    AZURE_OPENAI_EMBEDDING_ENDPOINT=https://your-openai-resource.openai.azure.com/
 
    # Data File Configuration
@@ -176,7 +181,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    For the passwordless authentication in this article, replace the placeholder values in the `.env` file with your own information:
 
    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
-   - `DOCUMENTDB_CLUSTER_NAME`: Your Azure DocumentDB cluster name (not the full connection string, just the name)
+   - `DOCUMENTDB_CLUSTER_NAME`: Your Azure DocumentDB cluster name
 
    Verify the `.env` file was created:
 
@@ -333,36 +338,19 @@ The comparison table shows how different algorithms perform on the same dataset 
 
 | Issue | Solution |
 |-------|----------|
-| `server selection error` | Verify your connection string in `.env`. Ensure your IP is in the DocumentDB firewall rules. |
-| `authentication failed` | Check credentials in connection string. Ensure `DefaultAzureCredential` is configured (run `az login`). |
+| `server selection error` | Verify your environment variables are set correctly. Ensure your IP is in the DocumentDB firewall rules. |
+| `authentication failed` | Verify your Microsoft Entra token is valid. Run `az login` to refresh your credentials. |
 | `go: module not found` | Run `go mod tidy` to resolve dependencies. |
 | Build errors | Ensure Go 1.22+ is installed. Run `go version` to check. |
-| Empty search results | The vector index may not be ready yet. The code includes retry logic, but larger datasets may need more time. |
+| Empty search results | The vector index may take a few minutes to build. Wait 2-3 minutes after index creation, then rerun the script. |
 
 ## Clean up resources
 
-When you're done, you can remove the database using mongosh or the DocumentDB for VS Code extension.
-
-### [mongosh](#tab/mongosh)
-
-Connect to your DocumentDB cluster and drop the database:
-
-```bash
-mongosh "mongodb+srv://<your-cluster-name>.global.mongocluster.cosmos.azure.com/" --tls --authenticationMechanism MONGODB-OIDC
-```
-
-```javascript
-use Hotels
-db.dropDatabase()
-```
-
-### [VS Code extension](#tab/vscode)
+Remove the database using the DocumentDB for VS Code extension:
 
 1. Install the [DocumentDB for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) extension.
 2. Connect to your Azure DocumentDB cluster.
 3. Expand the cluster, right-click the **Hotels** database, and select **Drop Database**.
-
----
 
 If you created an Azure DocumentDB cluster specifically for this quickstart, you can also delete the entire resource group in the Azure portal to remove all associated resources.
 

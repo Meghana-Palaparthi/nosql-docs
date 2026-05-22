@@ -1,13 +1,19 @@
 ---
 title: Quickstart - Vector index with TypeScript
 description: Compare vector index algorithms and similarity functions using TypeScript in Azure DocumentDB to optimize search performance for your workload.
+author: diberry
+ms.author: diberry
+ms.reviewer: khelanmodi
 ms.devlang: typescript
 ms.topic: quickstart-sdk
 ms.date: 05/07/2026
-ms.custom: sfi-ropc-nochange
-ai-usage: ai-generated
-author: diberry
-ms.author: diberry
+ms.update-cycle: 180-days
+ai-usage: ai-assisted
+ms.custom:
+  - devx-track-ts
+  - devx-track-ts-ai
+  - devx-track-data-ai
+# CustomerIntent: As a developer, I want to compare vector index algorithms in TypeScript applications with Azure DocumentDB.
 ms.service: azure-documentdb
 ---
 
@@ -309,36 +315,19 @@ The comparison table demonstrates key behaviors of vector search in DocumentDB:
 | Issue | Solution |
 |-------|----------|
 | `MongoServerSelectionError` | Verify your `DOCUMENTDB_CLUSTER_NAME` environment variable and ensure your IP is in the DocumentDB firewall rules. |
-| `MongoServerError: Authentication failed` | Check your authentication setup and verify you've run `az login` for passwordless auth. |
+| `MongoServerError: Authentication failed` | Verify your Microsoft Entra token is valid. Run `az login` to refresh your credentials. |
 | TypeScript compilation errors | Run `npx tsc --version` to verify TypeScript is installed. Check `tsconfig.json` settings match the values shown in this article. |
 | `Cannot find module` errors | Run `npm install` to ensure all dependencies are installed. |
 | `Embedding dimension mismatch` | Verify the `AZURE_OPENAI_EMBEDDING_MODEL` environment variable matches the model deployed in your Azure OpenAI resource. |
-| Empty search results | The vector index may not be ready yet. The code retries up to 6 total attempts with a 2-second delay between attempts. |
+| Empty search results | The vector index may take a few minutes to build. Wait 2-3 minutes after index creation, then rerun the script. |
 
 ## Clean up resources
 
-When you're done, you can remove the database using mongosh or the DocumentDB for VS Code extension.
-
-### [mongosh](#tab/mongosh)
-
-Connect to your DocumentDB cluster and drop the database:
-
-```bash
-mongosh "mongodb+srv://<your-cluster-name>.global.mongocluster.cosmos.azure.com/" --tls --authenticationMechanism MONGODB-OIDC
-```
-
-```javascript
-use Hotels
-db.dropDatabase()
-```
-
-### [VS Code extension](#tab/vscode)
+Remove the database using the DocumentDB for VS Code extension:
 
 1. Install the [DocumentDB for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) extension.
 2. Connect to your Azure DocumentDB cluster.
 3. Expand the cluster, right-click the **Hotels** database, and select **Drop Database**.
-
----
 
 If you created an Azure DocumentDB cluster specifically for this quickstart, you can also delete the entire resource group in the Azure portal to remove all associated resources.
 

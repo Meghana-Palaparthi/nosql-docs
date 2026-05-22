@@ -1,13 +1,19 @@
 ---
 title: Quickstart - Vector index with .NET
 description: Compare DiskANN, HNSW, and IVF vector search algorithms in Azure DocumentDB using the .NET client library with passwordless authentication.
+author: diberry
+ms.author: diberry
+ms.reviewer: khelanmodi
 ms.devlang: csharp
 ms.topic: quickstart-sdk
 ms.date: 05/07/2026
-ms.custom: sfi-ropc-nochange
-ai-usage: ai-generated
-author: diberry
-ms.author: diberry
+ms.update-cycle: 180-days
+ai-usage: ai-assisted
+ms.custom:
+  - devx-track-dotnet
+  - devx-track-dotnet-ai
+  - devx-track-data-ai
+# CustomerIntent: As a developer, I want to compare vector index algorithms in .NET applications with Azure DocumentDB.
 ms.service: azure-documentdb
 ---
 
@@ -384,37 +390,20 @@ The **Diff** column shows the score gap between the top-1 and top-2 results. A s
 
 | Issue | Solution |
 |-------|----------|
-| `TimeoutException` during connection | Verify your connection string and environment variables. Ensure your IP is in the DocumentDB firewall rules. |
-| `AuthenticationException` | Check that `DefaultAzureCredential` can acquire a token. Run `az login` to refresh your credentials. |
+| `TimeoutException` during connection | Verify your environment variables are set correctly. Ensure your IP is in the DocumentDB firewall rules. |
+| `AuthenticationException` | Verify your Microsoft Entra token is valid. Run `az login` to refresh your credentials. |
 | Build errors with .NET version | Ensure you have .NET 8.0 or later installed. Run `dotnet --version` to check. |
 | `BsonSerializationException` | Ensure your model classes match the document structure in the collection. |
-| Empty search results | The vector index might not be ready yet. The sample includes retry logic, but if you still see empty results, wait a few seconds and retry. |
+| Empty search results | The vector index may take a few minutes to build. Wait 2-3 minutes after index creation, then rerun the script. |
 | `IndexOptionsConflict` (code 85) | DocumentDB doesn't allow multiple vector indexes of the same kind on the same field. Drop the existing index before creating a new one. |
 
 ## Clean up resources
 
-When you're done, you can remove the database using mongosh or the DocumentDB for VS Code extension.
-
-### [mongosh](#tab/mongosh)
-
-Connect to your DocumentDB cluster and drop the database:
-
-```bash
-mongosh "mongodb+srv://<your-cluster-name>.global.mongocluster.cosmos.azure.com/" --tls --authenticationMechanism MONGODB-OIDC
-```
-
-```javascript
-use Hotels
-db.dropDatabase()
-```
-
-### [VS Code extension](#tab/vscode)
+Remove the database using the DocumentDB for VS Code extension:
 
 1. Install the [DocumentDB for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) extension.
 2. Connect to your Azure DocumentDB cluster.
 3. Expand the cluster, right-click the **Hotels** database, and select **Drop Database**.
-
----
 
 If you created an Azure DocumentDB cluster specifically for this quickstart, you can also delete the entire resource group in the Azure portal to remove all associated resources.
 
