@@ -7,8 +7,10 @@ ms.author: sidandrews
 ms.reviewer: khelanmodi
 ms.devlang: csharp
 ms.topic: quickstart-sdk
-ms.date: 02/06/2026
+ms.date: 05/22/2026
 ms.update-cycle: 180-days
+ms.collection:
+  - ce-skilling-ai-copilot
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ai-usage: ai-assisted
@@ -32,7 +34,7 @@ The app uses a sample hotel dataset in a JSON file with calculated vectors from 
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) or later
 - [Azure Developer CLI (azd)](/azure/developer/azure-developer-cli/install-azd)
 - [Visual Studio Code](https://code.visualstudio.com/download)
-  - [Cosmos DB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-cosmosdb)
+  - [Azure Databases extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-cosmosdb)
 
 ## App dependencies
 
@@ -294,8 +296,8 @@ In the preceding code, the `CosmosDBService` performs the following tasks:
 
 ## View and manage data in Visual Studio Code
 
-1. Install the [Azure Cosmos DB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-cosmosdb) and [C# extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp) in Visual Studio Code.
-1. Connect to your Azure Cosmos DB account using the Azure Cosmos DB extension.
+1. Install the [Azure Databases extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-cosmosdb) and [C# extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp) in Visual Studio Code.
+1. Connect to your Azure Cosmos DB account using the Azure Databases extension.
 1. View the data and indexes in the Hotels database.
 
 ## Clean up resources
