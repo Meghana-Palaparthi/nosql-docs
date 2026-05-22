@@ -6,10 +6,12 @@ ms.author: diberry
 ms.reviewer: sidandrews
 ms.devlang: typescript
 ms.topic: quickstart-sdk
-ms.date: 03/13/2026
+ms.date: 05/22/2026
 ms.update-cycle: 180-days
 ms.service: azure-cosmos-db
 ms.subservice: nosql
+ms.collection:
+  - ce-skilling-ai-copilot
 ai-usage: ai-assisted
 ms.custom:
   - devx-track-ts
@@ -46,7 +48,7 @@ cd cosmos-db-vector-samples/nosql-create-index-typescript
 This sample demonstrates a three-layer architecture for creating and using vector indexes in Azure Cosmos DB:
 
 | Layer | Tool | What it does |
-|---|---|---|
+| --- | --- | --- |
 | **Azure CLI script** | `scripts/create-resources.sh` | Creates resource group, Azure OpenAI, Azure Cosmos DB account, database, and RBAC assignments |
 | **Configuration** | `src/config.ts` | Loads and validates environment variables into a typed configuration object |
 | **Control plane** | `src/control-plane.ts` using `@azure/arm-cosmosdb` | Creates container with vector index and data-plane RBAC using Azure Resource Manager SDK |
@@ -391,4 +393,3 @@ This script deletes the resource group and all resources within it.
 
 - [Vector database](vector-database.md)
 - [Vector search](vector-search.md)
-
