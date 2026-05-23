@@ -30,7 +30,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 - [Azure Developer CLI](/azure/developer/azure-developer-cli/install-azd) (optional). Use `azd up` to deploy all required Azure resources in one command.
 
-- [Node.js 20 or later](https://nodejs.org/download/)
+- [Node.js LTS](https://nodejs.org/download/)
 
 - [TypeScript](https://www.typescriptlang.org/download): Install TypeScript globally:
 

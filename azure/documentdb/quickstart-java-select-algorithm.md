@@ -30,7 +30,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 - [Azure Developer CLI](/azure/developer/azure-developer-cli/install-azd) (optional). Use `azd up` to deploy all required Azure resources in one command.
 
-- [Java 17 or later](/java/openjdk/download)
+- [Java 21](/java/openjdk/download) or later
 
 - [Maven 3.8 or higher](https://maven.apache.org/download.cgi)
 
@@ -90,8 +90,8 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
        <description>Demonstrates IVF, HNSW, and DiskANN vector search indexes with Azure DocumentDB</description>
 
        <properties>
-           <maven.compiler.source>17</maven.compiler.source>
-           <maven.compiler.target>17</maven.compiler.target>
+           <maven.compiler.source>21</maven.compiler.source>
+           <maven.compiler.target>21</maven.compiler.target>
            <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
        </properties>
 
@@ -120,8 +120,8 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
                    <artifactId>maven-compiler-plugin</artifactId>
                    <version>3.13.0</version>
                    <configuration>
-                       <source>17</source>
-                       <target>17</target>
+                       <source>21</source>
+                       <target>21</target>
                    </configuration>
                </plugin>
                <plugin>
@@ -358,7 +358,7 @@ The **Diff** column shows the score gap between the top-1 and top-2 results. A s
 |-------|----------|
 | `MongoTimeoutException` | Verify the `DOCUMENTDB_CLUSTER_NAME` environment variable, and ensure your IP is in the DocumentDB firewall rules. |
 | `MongoSecurityException` | Verify your Microsoft Entra token is valid. Run `az login` to refresh your credentials. |
-| Maven build failures | Run `mvn dependency:resolve` to check for missing dependencies. Ensure Java 17 or later is installed. |
+| Maven build failures | Run `mvn dependency:resolve` to check for missing dependencies. Ensure Java 21 or later is installed. |
 | `No plugin found for prefix 'exec'` | Add `exec-maven-plugin` to your `pom.xml` as shown in this article. |
 | Empty search results | Index may not be ready. The sample retries up to 5 times with 2-second intervals after index creation. If results are still empty, increase the wait time or verify index status with the DocumentDB for VS Code extension. |
 

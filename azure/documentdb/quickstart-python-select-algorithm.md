@@ -32,7 +32,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 - [Azure Developer CLI](/azure/developer/azure-developer-cli/install-azd) (optional). Use `azd up` to deploy all required Azure resources in one command.
 
-- [Python](https://www.python.org/downloads/) 3.10 or greater
+- [Python](https://www.python.org/downloads/) 3.9 or greater
 
 ## Create a Python project
 
