@@ -28,6 +28,8 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 [!INCLUDE[Prerequisites - Vector Search Quickstart](includes/prerequisite-quickstart-vector-search-model.md)]
 
+- [Azure Developer CLI](/azure/developer/azure-developer-cli/install-azd) (optional). Use `azd up` to deploy all required Azure resources in one command.
+
 - [Java 17 or later](/java/openjdk/download)
 
 - [Maven 3.8 or higher](https://maven.apache.org/download.cgi)
