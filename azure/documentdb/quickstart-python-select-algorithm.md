@@ -54,7 +54,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-1. In the terminal, create and activate a virtual environment:
+2. In the terminal, create and activate a virtual environment:
 
    For Windows:
 
@@ -70,7 +70,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    source venv/bin/activate
    ```
 
-1. Create a `requirements.txt` file with the following content:
+3. Create a `requirements.txt` file with the following content:
 
    ```text
    pymongo>=4.7.0
@@ -79,7 +79,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    tabulate>=0.9.0
    ```
 
-1. Install the required packages:
+4. Install the required packages:
 
    ```console
    pip install -r requirements.txt
@@ -92,7 +92,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    - `tabulate`: Formatted table output for comparison results.
 
  
-1.  Create the `src` directory:
+5.  Create the `src` directory:
 
    ### [Bash](#tab/bash)
 

@@ -54,7 +54,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-1. Create a standard Maven project structure:
+2. Create a standard Maven project structure:
 
    ### [Bash](#tab/bash)
 
@@ -70,7 +70,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-1. Create a `pom.xml` file in the root directory with the following content:
+3. Create a `pom.xml` file in the root directory with the following content:
 
    ```xml
    <?xml version="1.0" encoding="UTF-8"?>
@@ -173,7 +173,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-1. Download the `Hotels_Vector.json` data file with vectors to your `data` directory:
+2. Download the `Hotels_Vector.json` data file with vectors to your `data` directory:
 
    ### [Bash](#tab/bash)
 
@@ -320,7 +320,7 @@ This main comparison logic provides:
    az login
    ```
 
-1. Compile the project:
+2. Compile the project:
 
    ```console
    mvn clean compile
@@ -328,7 +328,7 @@ This main comparison logic provides:
 
    Verify that the build output ends with `BUILD SUCCESS`.
 
-1. Run the comparison entry point. `Main.java` calls `CompareAll.run()` and always executes all 9 combinations (3 algorithms × 3 metrics):
+3. Run the comparison entry point. `Main.java` calls `CompareAll.run()` and always executes all 9 combinations (3 algorithms × 3 metrics):
 
    ### [Bash](#tab/bash)
 
@@ -350,7 +350,7 @@ The program prints output similar to the following:
 
 The **Diff** column shows the score gap between the top-1 and top-2 results. A smaller diff indicates the algorithm found results with more similar relevance scores.
 
-### Understanding the results
+
 
 [!INCLUDE[Choosing the right algorithm](includes/choosing-algorithm.md)]
 

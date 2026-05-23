@@ -54,7 +54,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-1. Initialize a new Go module:
+2. Initialize a new Go module:
 
    ```console
    go mod init documentdb-vector-samples
@@ -76,7 +76,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-1. Install the required packages:
+3. Install the required packages:
 
    ```console
    go get github.com/Azure/azure-sdk-for-go/sdk/azcore@v1.20.0
@@ -107,7 +107,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-1. Create a `src` directory:
+4. Create a `src` directory:
 
    ### [Bash](#tab/bash)
 
@@ -141,7 +141,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-1. Download the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory:
+2. Download the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory:
 
    ### [Bash](#tab/bash)
 

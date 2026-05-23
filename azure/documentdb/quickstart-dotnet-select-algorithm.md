@@ -70,7 +70,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-1. Install the required NuGet packages:
+2. Install the required NuGet packages:
 
    ```console
    dotnet add package Azure.AI.OpenAI --version 2.1.0
@@ -112,7 +112,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-1. Download the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory:
+2. Download the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory:
 
    ### [Bash](#tab/bash)
 
@@ -167,7 +167,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
    ---
 
-1. Add this content to `appsettings.json`:
+2. Add this content to `appsettings.json`:
 
    ```json
    {
@@ -195,7 +195,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    }
    ```
 
-1. Set any environment variable overrides in your current shell session. The sample uses `DefaultAzureCredential` for passwordless authentication, and .NET maps environment variables to `appsettings.json` keys with the `Section__Key` format:
+3. Set any environment variable overrides in your current shell session. The sample uses `DefaultAzureCredential` for passwordless authentication, and .NET maps environment variables to `appsettings.json` keys with the `Section__Key` format:
 
    ### [Bash](#tab/bash)
 
@@ -278,7 +278,7 @@ select-algorithm-dotnet/
 
    ---
 
-1. Create the code files:
+2. Create the code files:
 
    ### [Bash](#tab/bash)
 
@@ -370,13 +370,13 @@ These supporting files provide:
    az login
    ```
 
-1. Build the project:
+2. Build the project:
 
    ```console
    dotnet build
    ```
 
-1. Create the output directory:
+3. Create the output directory:
 
    ### [Bash](#tab/bash)
 
@@ -392,7 +392,7 @@ These supporting files provide:
 
    ---
 
-1. Run the flat `SelectAlgorithm.csproj` entry point to compare all 9 algorithm × similarity combinations:
+4. Run the flat `SelectAlgorithm.csproj` entry point to compare all 9 algorithm × similarity combinations:
 
    ```console
    dotnet run

@@ -76,7 +76,7 @@ select-algorithm-typescript/
 
    ---
 
-1. Initialize a TypeScript Node.js project:
+2. Initialize a TypeScript Node.js project:
 
    ```console
    npm init -y
@@ -99,7 +99,7 @@ select-algorithm-typescript/
 
    ---
 
-1. Install the required packages:
+3. Install the required packages:
 
    ```console
    npm install mongodb openai @azure/identity
@@ -113,7 +113,7 @@ select-algorithm-typescript/
 
    Verify that `npm list` shows all installed packages without errors.
 
-1. Create a `tsconfig.json` file in the project root:
+4. Create a `tsconfig.json` file in the project root:
 
    ```json
    {
@@ -134,7 +134,7 @@ select-algorithm-typescript/
    }
    ```
 
-1. Update your `package.json` to include:
+5. Update your `package.json` to include:
 
    ```json
    {
@@ -146,7 +146,7 @@ select-algorithm-typescript/
    }
    ```
 
-1. Create the `src` directory:
+6. Create the `src` directory:
 
    ### [Bash](#tab/bash)
 
@@ -180,7 +180,7 @@ select-algorithm-typescript/
 
    ---
 
-1. Download the `Hotels_Vector.json` data file with vectors to your `data` directory:
+2. Download the `Hotels_Vector.json` data file with vectors to your `data` directory:
 
    ### [Bash](#tab/bash)
 
@@ -290,7 +290,7 @@ The utilities provide essential functions for:
    az login
    ```
 
-1. Execute the comparison script to test all 9 algorithm × similarity combinations:
+2. Execute the comparison script to test all 9 algorithm × similarity combinations:
 
    ```console
    npm run build
