@@ -253,16 +253,12 @@ When you're done, the project structure should look like this:
 ```text
 select-algorithm-java/
 ├── data/
-│   └── README.md
-├── output/
-│   └── compare_all.txt
+│   └── Hotels_Vector.json
 ├── src/main/java/com/azure/documentdb/selectalgorithm/
 │   ├── CompareAll.java
 │   ├── Main.java
 │   └── Utils.java
-├── .gitignore
-├── pom.xml
-└── README.md
+└── pom.xml
 ```
 
 ## Create the algorithm comparison code

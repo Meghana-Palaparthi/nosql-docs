@@ -240,22 +240,16 @@ Continue the project by creating code files for vector search comparison. When y
 
 ```
 select-algorithm-dotnet/
-├── .devcontainer/
-│   └── devcontainer.json
 ├── data/
-│   └── README.md
+│   └── Hotels_Vector.json
 ├── Models/
 │   ├── Configuration.cs
 │   └── HotelData.cs
-├── output/
-│   └── compare_all.txt
 ├── Utilities/
 │   └── AzureIdentityTokenHandler.cs
-├── .gitignore
 ├── appsettings.json
 ├── CompareAll.cs
 ├── Program.cs
-├── README.md
 ├── SelectAlgorithm.csproj
 └── Utils.cs
 ```

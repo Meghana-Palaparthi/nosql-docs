@@ -190,14 +190,10 @@ Create the following project structure:
 ```
 select-algorithm-python/
 ├── data/
-│   └── README.md
-├── output/
-│   └── compare_all.txt
+│   └── Hotels_Vector.json
 ├── src/
 │   ├── compare_all.py
 │   └── utils.py
-├── .gitignore
-├── README.md
 └── requirements.txt
 ```
 

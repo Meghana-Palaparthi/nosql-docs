@@ -48,10 +48,7 @@ select-algorithm-typescript/
 ├── src/
 │   ├── compare-all.ts
 │   └── utils.ts
-├── .gitignore
 ├── package.json
-├── package-lock.json
-├── README.md
 └── tsconfig.json
 ```
 

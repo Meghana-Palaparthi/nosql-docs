@@ -235,16 +235,12 @@ When you're done, the project structure should look like this:
 ```text
 select-algorithm-go/
 ├── data/
-│   └── README.md
-├── output/
-│   └── compare_all.txt
+│   └── Hotels_Vector.json
 ├── src/
 │   ├── compare_all.go
 │   ├── main.go
 │   └── utils.go
-├── .gitignore
-├── go.mod
-└── README.md
+└── go.mod
 ```
 
 ## Create the algorithm comparison code
