@@ -106,7 +106,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
     - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
     - `MONGO_CLUSTER_NAME`: Your Azure DocumentDB resource name
 
-    We recommend that you use passwordless authentication, but this type of authentication requires more setup. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Python apps to Azure services by using the Azure SDK for Python](/azure/developer/python/sdk/authentication/overview).
+    We recommend that you use passwordless authentication, but this type of authentication requires more setup steps. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Python apps to Azure services by using the Azure SDK for Python](/azure/developer/python/sdk/authentication/overview).
 
 ## Create code files for vector search
 
