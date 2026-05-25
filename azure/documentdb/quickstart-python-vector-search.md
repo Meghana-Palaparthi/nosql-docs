@@ -21,7 +21,7 @@ ms.custom:
 
 Use vector search in Azure DocumentDB with the Python client library to store and query vector data efficiently.
 
-This quickstart uses a sample hotel dataset in a JSON file with pre-calculated vectors from the `text-embedding-3-small` model. The dataset includes hotel names, locations, descriptions, and vector embeddings.
+This quickstart uses a sample hotel dataset in a JSON file with precalculated vectors from the `text-embedding-3-small` model. The dataset includes hotel names, locations, descriptions, and vector embeddings.
 
 Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/vector-search-python) on GitHub.
 
@@ -106,7 +106,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
     - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
     - `MONGO_CLUSTER_NAME`: Your Azure DocumentDB resource name
 
-    We recommend that you use passwordless authentication, but this type of authentication requires additional setup. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Python apps to Azure services by using the Azure SDK for Python](/azure/developer/python/sdk/authentication/overview).
+    We recommend that you use passwordless authentication, but this type of authentication requires more setup. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Python apps to Azure services by using the Azure SDK for Python](/azure/developer/python/sdk/authentication/overview).
 
 ## Create code files for vector search
 

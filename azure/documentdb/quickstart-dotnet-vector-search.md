@@ -24,7 +24,7 @@ Use vector search in Azure DocumentDB with the .NET MongoDB driver to store and 
 
 This quickstart provides a guided tour of key vector search techniques by using a [.NET sample app](https://github.com/Azure-Samples/documentdb-samples/tree/main/ai/vector-search-dotnet) on GitHub.
 
-The app uses a sample hotel dataset in a JSON file with pre-calculated vectors from the `text-embedding-3-small` model. You can also generate the vectors yourself. The hotel data includes hotel names, locations, descriptions, and vector embeddings.
+The app uses a sample hotel dataset in a JSON file with precalculated vectors from the `text-embedding-3-small` model. You can also generate the vectors yourself. The hotel data includes hotel names, locations, descriptions, and vector embeddings.
 
 ## Prerequisites
 
@@ -115,7 +115,7 @@ The sample app populates vectorized sample data in a MongoDB collection. You can
 
 1. Type `5` and press Enter.
 
-    After the app populates the database and runs the search, you see the top five hotels that match the selected vector search query, and you see their similarity scores.
+    After the app populates the database and runs the search, you see the top five hotels that match the selected vector search query. You also see their similarity scores.
   
     The app logging and output show:
     - Collection creation and data insertion status.
@@ -279,7 +279,7 @@ In the preceding code, the `MongoDbService` performs the following tasks:
 
 - Creates a vector search index only if it doesn't already exist.
 
-- Lists all non-system databases, their collections, and each collection's indexes.
+- Lists all nonsystem databases, their collections, and each collection's indexes.
 
 - Inserts sample data if the collection is empty, and adds supporting indexes.
 
