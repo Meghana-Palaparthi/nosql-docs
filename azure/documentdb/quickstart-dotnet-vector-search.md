@@ -1,6 +1,6 @@
 ---
 
-title: Quickstart - Vector Search with .NET
+title: Quickstart - Use Vector Search with .NET
 description: Learn how to use vector search in Azure DocumentDB with .NET. Store and query vector data efficiently in your applications. 
 author: seesharprun
 ms.author: sidandrews
@@ -18,7 +18,7 @@ ms.custom:
 # CustomerIntent: As a developer, I want to learn how to use vector search in .NET applications with Azure DocumentDB.
 ---
 
-# Quickstart: Vector search with .NET in Azure DocumentDB
+# Quickstart: Use vector search with .NET in Azure DocumentDB
 
 Use vector search in Azure DocumentDB with the .NET MongoDB driver to store and query vector data efficiently.
 
@@ -285,7 +285,7 @@ In the preceding code, the `MongoDbService` performs the following tasks:
 
 ## View and manage data in Visual Studio Code
 
-1. Install the [DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) and [C# extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp) in Visual Studio Code.
+1. Install the [Azure DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) and [C# extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp) in Visual Studio Code.
 
 1. Connect to your Azure DocumentDB account by using the Azure DocumentDB extension.
 

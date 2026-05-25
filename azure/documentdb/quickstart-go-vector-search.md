@@ -1,5 +1,5 @@
 ---
-title: Quickstart - Vector Search with Go
+title: Quickstart - Use Vector Search with Go
 description: Learn how to use vector search in Azure DocumentDB with Go. Store and query vector data efficiently in your applications. 
 author: seesharprun
 ms.author: sidandrews
@@ -13,7 +13,7 @@ ai-usage: ai-assisted
 ms.custom: devx-track-go, devx-track-go-ai, devx-track-data-ai
 # CustomerIntent: As a developer, I want to learn how to use vector search in Go applications with Azure DocumentDB.
 ---
-# Quickstart: Vector search with Go in Azure DocumentDB
+# Quickstart: Use vector search with Go in Azure DocumentDB
 
 Use vector search in Azure DocumentDB with the Go client library to store and query vector data efficiently.
 
@@ -70,7 +70,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
     - `github.com/Azure/azure-sdk-for-go/sdk/azcore`: The Azure SDK core utilities for HTTP pipelines and auth
     - `github.com/Azure/azure-sdk-for-go/sdk/azidentity`: The Azure Identity library for passwordless token-based authentication
     - `github.com/openai/openai-go/v3`: The OpenAI Go client library to create vectors
-    - `github.com/joho/godotenv`: The environment variable loading from .env files
+    - `github.com/joho/godotenv`: The environment variable loading from `.env` files
 
 1. Create a `.env` file in your project root for environment variables:
 
@@ -176,7 +176,7 @@ vector-search-quickstart
 ----
 
 > [!TIP]
-> Unlike some databases, DocumentDB allows you to create and drop vector indexes at any time after you create a container. You don't need to define the vector indexing policy at the time that you create a container.
+> Unlike some databases, Azure DocumentDB allows you to create and drop vector indexes at any time after you create a container. You don't need to define the vector indexing policy at the time that you create a container.
 
 ## Create the code for vector search
 
@@ -404,7 +404,7 @@ HNSW demonstration completed successfully!
 
 ## View and manage data in Visual Studio Code
 
-1. Select the [DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) in Visual Studio Code to connect to your Azure DocumentDB account.
+1. Select the [Azure DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) in Visual Studio Code to connect to your Azure DocumentDB account.
 
 1. View the data and indexes in the **Hotels** database.
 
