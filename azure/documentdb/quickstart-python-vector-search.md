@@ -110,7 +110,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 ## Create code files for vector search
 
-Continue the project by creating code files for vector search. When you're done, the project structure looks like this:
+Continue the project by creating code files for vector search. When you're done, the project structure looks like this example:
 
 ```plaintext
 ├── data/
