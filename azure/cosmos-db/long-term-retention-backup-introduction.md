@@ -17,30 +17,7 @@ Azure Backup for Cosmos DB enables you to take backups of your data and store th
 
 ## Prerequisites
 
-Before you can use Azure Backup for Cosmos DB, make sure the following prerequisites are met:
-
-- The account must have [continuous backup (PITR)](continuous-backup-restore-introduction.md) enabled.
-
-- The account's write region and ARM location must be the same.
-
-- The account must not have any of the following features enabled:
-
-  - Hierarchical partition keys (multi-hash)
-  - Per-partition automatic failover (PPAF)
-
-- The account must have fewer than 2,500 physical partitions.
-
-- Supported APIs: NoSQL and MongoDB only.
-
-## Restore requirements
-
-For restoration, the target Azure Cosmos DB account must meet the following criteria:
-
-- Must be an empty, single-region account.
-- Must be in the same region as the Azure Backup Vault.
-- Must not be a serverless account.
-- Must not have any throughput limit set.
-- Must use the same API type (NoSQL or MongoDB) as the source account.
+Learn about the [supported regions, scenarios, and the limitations](https://learn.microsoft.com/en-us/azure/backup/backup-azure-cosmos-db-support-matrix) for Azure Cosmos DB backup (preview).
 
 ## Troubleshoot common errors
 
