@@ -151,7 +151,7 @@ This code:
 Before you run the application, sign in to Azure so the app can access Azure resources securely.
 
 > [!NOTE]
-> Ensure you're signed-in identity has the required data plane roles on both the Azure DocumentDB account and the Azure OpenAI resource.
+> Ensure your signed-in identity has the required data plane roles on both the Azure DocumentDB account and the Azure OpenAI resource.
 
 ```bash
 az login

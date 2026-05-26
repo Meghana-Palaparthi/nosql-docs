@@ -17,7 +17,7 @@ ms.custom:
 # CustomerIntent: As a developer, I want to learn how to use vector search in Python applications with Azure DocumentDB.
 ---
 
-# Quickstart: Use Vector search with Python in Azure DocumentDB
+# Quickstart: Use vector search with Python in Azure DocumentDB
 
 Use vector search in Azure DocumentDB with the Python client library to store and query vector data efficiently.
 

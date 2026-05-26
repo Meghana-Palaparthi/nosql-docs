@@ -315,7 +315,7 @@ The app logging and output show:
 
 ## Clean up resources
 
-When you no longer need them, delete the resource group, Azure DocumentDB account, and Azure OpenAI resource to avoid unnecessary costs.
+When you no longer need them, delete the resource group, Azure DocumentDB cluster, and Azure OpenAI resource to avoid unnecessary costs.
 
 ## Related content
 
