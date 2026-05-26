@@ -25,7 +25,7 @@ Before you can use Azure Backup for Cosmos DB, make sure the following prerequis
 
 - The account must not have any of the following features enabled:
 
-  - Hierarchical partition keys
+  - Hierarchical partition keys (multi-hash)
   - Per-partition automatic failover (PPAF)
 
 - The account must have fewer than 2,500 physical partitions.
