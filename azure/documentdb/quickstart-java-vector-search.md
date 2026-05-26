@@ -99,7 +99,7 @@ The app uses a sample hotel dataset in a JSON file with pre-calculated vectors f
     set -a && source .env && set +a
     ```
 
-1. The project structure looks like this:
+1. The project structure looks like this example:
 
     ```plaintext
     data
