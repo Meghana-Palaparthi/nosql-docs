@@ -48,6 +48,6 @@ The following table lists the common errors you might encounter, grouped by whic
 
 ## Next steps
 
-- [Back up Azure Cosmos DB using Azure Backup](https://learn.microsoft.com/en-us/azure/backup/backup-azure-cosmos-db)
+- [Back up Azure Cosmos DB using Azure Backup](/azure/backup/backup-azure-cosmos-db)
 - [Continuous backup with point-in-time restore in Azure Cosmos DB](continuous-backup-restore-introduction.md)
 - [Enable continuous backup](provision-account-continuous-backup.md)
