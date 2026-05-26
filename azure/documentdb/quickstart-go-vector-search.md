@@ -114,7 +114,7 @@ touch src/diskann.go
 touch src/utils.go
 ```
 
-When you're done, the project structure looks like this:
+When you're done, the project structure looks like this example:
 
 ```plaintext
 data
@@ -137,7 +137,7 @@ touch src/ivf.go
 touch src/utils.go
 ```
 
-When you're done, the project structure looks like this:
+When you're done, the project structure looks like this example:
 
 ```plaintext
 data
@@ -160,7 +160,7 @@ touch src/hnsw.go
 touch src/utils.go
 ```
 
-When you're done, the project structure looks like this:
+When you're done, the project structure looks like this example:
 
 ```plaintext
 data
