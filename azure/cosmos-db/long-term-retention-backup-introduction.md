@@ -17,7 +17,7 @@ Azure Backup for Cosmos DB enables you to take backups of your data and store th
 
 ## Prerequisites
 
-Learn about the [supported regions, scenarios, and the limitations](https://learn.microsoft.com/en-us/azure/backup/backup-azure-cosmos-db-support-matrix) for Azure Cosmos DB backup (preview).
+For more information about the supported regions, scenarios, and limitations, see [Azure Cosmos DB backup support](/azure/backup/backup-azure-cosmos-db-support-matrix).
 
 ## Troubleshoot common errors
 
