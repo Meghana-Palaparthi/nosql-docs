@@ -21,7 +21,7 @@ Learn about the [supported regions, scenarios, and the limitations](https://lear
 
 ## Troubleshoot common errors
 
-When you work with Azure Backup for Cosmos DB, the service validates your requests against several prerequisites. If a validation check fails, the service returns an HTTP 409 (Conflict) response with a substatus code that identifies the specific issue.
+When you work with Azure Backup for Cosmos DB, the service validates your requests against several prerequisites. If a validation check fails, the service returns an HTTP 409 response with a substatus code that identifies the specific issue.
 
 The following table lists the common errors you might encounter, grouped by which operations they apply to.
 
