@@ -333,7 +333,7 @@ The quality of AI responses depends heavily on clear instructions. These prompts
 
 ## Clean up resources
 
-Use the cleanup command to delete the test database when you're done. Run the following command:
+Use the cleanup command to delete the test database when you're finished. Run the following command:
 
 ```bash
 go run cmd/cleanup/main.go
