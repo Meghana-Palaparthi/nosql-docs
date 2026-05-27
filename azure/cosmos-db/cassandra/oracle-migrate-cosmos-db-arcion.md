@@ -25,7 +25,7 @@ API for Cassandra in Azure Cosmos DB has become a great choice for enterprise wo
 There are various ways to migrate database workloads from one platform to another. [Arcion](https://www.databricks.com/blog/databricks-arcion-real-time-enterprise-data-replication-lakehouse) is a tool that offers a secure and reliable way to perform zero downtime migration from other databases to Azure Cosmos DB. This article describes the steps required to migrate data from Oracle database to Azure Cosmos DB for Apache Cassandra using Arcion.
 
 > [!NOTE]
-> This offering from Arcion is currently in beta. For more information, please contact them at [Arcion Support](mailto:support@arcion.io)
+> This offering from Arcion is currently in beta.
 
 ## Benefits using Arcion for migration
 
