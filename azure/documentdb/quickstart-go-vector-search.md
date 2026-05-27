@@ -28,7 +28,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
    > [!TIP]
    > To customize Azure OpenAI model parameters before deployment, see the section [Customize Azure OpenAI deployment](#customize-azure-openai-deployment-optional) later in this article.
 
-- [Go](https://golang.org/dl/) version 1.24 or later
+- [Go](https://golang.org/dl/) version 1.24 or later.
 
 ## Create a data file with vectors
 
