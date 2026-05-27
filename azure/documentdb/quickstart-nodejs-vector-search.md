@@ -152,7 +152,7 @@ Use these scripts to compile TypeScript files and run the Hierarchical Navigable
 
 ### [DiskANN](#tab/tab-diskann)
 
-Create a `src` directory for your TypeScript files. Add two files, `diskann.ts` and `utils.ts`, for the DiskANN index implementation.
+Create an `src` directory for your TypeScript files. Add two files, `diskann.ts` and `utils.ts`, for the DiskANN index implementation.
 
 ```bash
 mkdir src    
@@ -162,7 +162,7 @@ touch src/utils.ts
 
 #### [IVF](#tab/tab-ivf)
 
-Create a `src` directory for your TypeScript files. Add two files, `ivf.ts` and `utils.ts`, for the IVF index implementation.
+Create an `src` directory for your TypeScript files. Add two files, `ivf.ts` and `utils.ts`, for the IVF index implementation.
 
 ```bash
 mkdir src
@@ -172,7 +172,7 @@ touch src/utils.ts
 
 #### [HNSW](#tab/tab-hnsw)
 
-Create a `src` directory for your TypeScript files. Add two files, `hnsw.ts` and `utils.ts`, for the HNSW index implementation.
+Create an `src` directory for your TypeScript files. Add two files, `hnsw.ts` and `utils.ts`, for the HNSW index implementation.
 
 ```bash
 mkdir src
