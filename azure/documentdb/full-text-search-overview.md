@@ -1,5 +1,5 @@
 ---
-title: "Full-Text Search - BM25 Keyword Search"
+title: Full-Text Search Overview
 titleSuffix: Azure DocumentDB
 description: Use full-text search in Azure DocumentDB to deliver relevance-ranked keyword, fuzzy, phrase, and hybrid search natively, without standing up a separate search service.
 author: khelanmodi
