@@ -103,9 +103,9 @@ Create a `.env` file in your project root to configure environment variables. Yo
 
 Edit the `.env` file and replace these placeholder values:
 
-- `AZURE_OPENAI_PLANNER_DEPLOYMENT`: Your gpt-4.1-mini deployment name
-- `AZURE_OPENAI_SYNTH_DEPLOYMENT`: Your gpt-4.1 deployment name
-- `AZURE_OPENAI_EMBEDDING_DEPLOYMENT`: Your text-embedding-3-small deployment name
+- `AZURE_OPENAI_PLANNER_DEPLOYMENT`: Your gpt-4.1-mini deployment name.
+- `AZURE_OPENAI_SYNTH_DEPLOYMENT`: Your gpt-4.1 deployment name.
+- `AZURE_OPENAI_EMBEDDING_DEPLOYMENT`: Your text-embedding-3-small deployment name.
 
 This quickstart uses a two-agent architecture (planner + synthesizer), with three model deployments (two chat models + embeddings). The environment variables are configured for each model deployment.
 
