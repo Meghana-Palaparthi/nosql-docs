@@ -6,8 +6,9 @@ ms.author: sidandrews
 ms.reviewer: khelanmodi
 ms.devlang: java
 ms.topic: quickstart-sdk
-ms.date: 02/20/2026
+ms.date: 05/22/2026
 ms.update-cycle: 180-days
+ms.collection: ce-skilling-ai-copilot
 ai-usage: ai-assisted
 ms.custom:
   - devx-track-java
@@ -226,4 +227,4 @@ Delete the resource group, Azure DocumentDB cluster, and Azure OpenAI resource w
 
 - [Vector store in Azure DocumentDB](vector-search.md)
 - [Support for geospatial queries](geospatial-support.md)
-
+- [Indexing in Azure DocumentDB](indexing.md)

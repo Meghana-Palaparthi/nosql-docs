@@ -137,7 +137,7 @@ To perform a vector search, use the `$search` aggregation pipeline stage, and qu
   "$search": {
     "cosmosSearch": {
       "path": "<path_to_property>",
-      "query": "<query_vector>",  
+      "vector": "<query_vector>",  
       "k": <num_results_to_return>,  
       "filter": {"$and": [
         { "<attribute_1>": { "$eq": <value> } },
