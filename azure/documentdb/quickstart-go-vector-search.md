@@ -66,11 +66,11 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
     go get github.com/joho/godotenv
     ```
 
-    - `go.mongodb.org/mongo-driver`: The MongoDB Go driver
-    - `github.com/Azure/azure-sdk-for-go/sdk/azcore`: The Azure SDK core utilities for HTTP pipelines and auth
-    - `github.com/Azure/azure-sdk-for-go/sdk/azidentity`: The Azure Identity library for passwordless token-based authentication
-    - `github.com/openai/openai-go/v3`: The OpenAI Go client library to create vectors
-    - `github.com/joho/godotenv`: The environment variable loading from `.env` files
+    - `go.mongodb.org/mongo-driver`: The MongoDB Go driver.
+    - `github.com/Azure/azure-sdk-for-go/sdk/azcore`: The Azure SDK core utilities for HTTP pipelines and auth.
+    - `github.com/Azure/azure-sdk-for-go/sdk/azidentity`: The Azure Identity library for passwordless token-based authentication.
+    - `github.com/openai/openai-go/v3`: The OpenAI Go client library to create vectors.
+    - `github.com/joho/godotenv`: The environment variable loading from `.env` files.
 
 1. Create a `.env` file in your project root for environment variables:
 
@@ -95,8 +95,8 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
     ```
 
     Replace the placeholder values in the `.env` file with your own information:
-    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
-    - `MONGO_CLUSTER_NAME`: Your Azure DocumentDB resource name
+    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL.
+    - `MONGO_CLUSTER_NAME`: Your Azure DocumentDB resource name.
 
     We recommend that you use passwordless authentication, but this type of authentication requires additional setup. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Go apps to Azure services by using the Azure Identity library](/azure/developer/go/sdk/authentication/authentication-overview).
 
