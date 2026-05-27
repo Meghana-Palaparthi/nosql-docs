@@ -87,8 +87,8 @@
         "query/**/*.yml": "language-reference"
       },
       "ms.devlang": {
-        "query/**/*.md": "mongdb",
-        "query/**/*.yml": "mongdb"
+        "query/**/*.md": "mongodb",
+        "query/**/*.yml": "mongodb"
       },
       "ms.collection": {
         "**/*.md": "documentdb-reference",
@@ -101,8 +101,8 @@
         "query/**/*.yml": "ai-assisted"
       },
       "ms.date": {
-        "**/*.{md,yml}": "04/24/2026",
-        "query/**/*.{md,yml}": "04/24/2026"
+        "**/*.{md,yml}": "05/27/2026",
+        "query/**/*.{md,yml}": "05/27/2026"
       },
       "appliesto": {
         "**/*.md": [
