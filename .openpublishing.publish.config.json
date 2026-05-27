@@ -48,7 +48,7 @@
       "monikers": [],
       "open_to_public_contributors": false,
       "type_mapping": {
-        "Conceptual": "Content"
+        "ManagedReference": "Content"
       },
       "build_entry_point": "docs"
     },
