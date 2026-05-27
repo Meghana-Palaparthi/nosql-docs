@@ -17,7 +17,7 @@ ms.custom:
 # CustomerIntent: As a developer, I want to learn how to use vector search in Python applications with Azure DocumentDB.
 ---
 
-# Quickstart: Use Vector search with Python in Azure DocumentDB
+# Quickstart: Use vector search with Python in Azure DocumentDB
 
 Use vector search in Azure DocumentDB with the Python client library to store and query vector data efficiently.
 
@@ -32,7 +32,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 > [!TIP]
 > To customize Azure OpenAI model parameters before deployment, see the section [Customize Azure OpenAI deployment](#customize-azure-openai-deployment-optional) later in this article.
 
-- [Python](https://www.python.org/downloads/) 3.9 or greater
+- [Python](https://www.python.org/downloads/) 3.9 or later
 
 ## Create a data file with vectors
 
@@ -75,10 +75,10 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
     pip install pymongo azure-identity openai python-dotenv
     ```
 
-    - `pymongo`: The MongoDB driver for Python
-    - `azure-identity`: The Azure Identity library for passwordless authentication
-    - `openai`: The OpenAI client library to create vectors
-    - `python-dotenv`: The environment variable management from .env files
+    - `pymongo`: The MongoDB driver for Python.
+    - `azure-identity`: The Azure Identity library for passwordless authentication.
+    - `openai`: The OpenAI client library to create vectors.
+    - `python-dotenv`: The environment variable management from .env files.
 
 1. Create a `.env` file for environment variables in `vector-search-quickstart`:
 
@@ -103,14 +103,14 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
     ```
 
     For the passwordless authentication used in this article, replace the placeholder values in the `.env` file with your own information:
-    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
-    - `MONGO_CLUSTER_NAME`: Your Azure DocumentDB resource name
+    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL.
+    - `MONGO_CLUSTER_NAME`: Your Azure DocumentDB resource name.
 
     We recommend that you use passwordless authentication, but this type of authentication requires more setup steps. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Python apps to Azure services by using the Azure SDK for Python](/azure/developer/python/sdk/authentication/overview).
 
 ## Create code files for vector search
 
-Continue the project by creating code files for vector search. When you're done, the project structure looks like this:
+Continue the project by creating code files for vector search. When you finish, the project structure looks like this example:
 
 ```plaintext
 ├── data/
@@ -128,7 +128,7 @@ Continue the project by creating code files for vector search. When you're done,
 
 ### [DiskANN](#tab/tab-diskann)
 
-Create a `src` directory for your Python files. Add two files, `diskann.py` and `utils.py`, for the DiskANN index implementation.
+Create an `src` directory for your Python files. Add two files, `diskann.py` and `utils.py`, for the DiskANN index implementation.
 
 ```bash
 mkdir src    
@@ -138,7 +138,7 @@ touch src/utils.py
 
 #### [IVF](#tab/tab-ivf)
 
-Create a `src` directory for your Python files. Add two files, `ivf.py` and `utils.py`, for the Inverted File (IVF) index implementation.
+Create an `src` directory for your Python files. Add two files, `ivf.py` and `utils.py`, for the Inverted File (IVF) index implementation.
 
 ```bash
 mkdir src
@@ -148,7 +148,7 @@ touch src/utils.py
 
 #### [HNSW](#tab/tab-hnsw)
 
-Create a `src` directory for your Python files. Add two files, `hnsw.py` and `utils.py`, for the Hierarchical Navigable Small World (HNSW) index implementation.
+Create an `src` directory for your Python files. Add two files, `hnsw.py` and `utils.py`, for the Hierarchical Navigable Small World (HNSW) index implementation.
 
 ```bash
 mkdir src
