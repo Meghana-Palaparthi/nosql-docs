@@ -73,10 +73,10 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
     npm install mongodb @azure/identity openai @types/node
     ```
 
-    - `mongodb`: The MongoDB Node.js driver
-    - `@azure/identity`: The Azure Identity library for passwordless authentication
-    - `openai`: The OpenAI client library to create vectors
-    - `@types/node`: The type definitions for Node.js
+    - `mongodb`: The MongoDB Node.js driver.
+    - `@azure/identity`: The Azure Identity library for passwordless authentication.
+    - `openai`: The OpenAI client library to create vectors.
+    - `@types/node`: The type definitions for Node.js.
 
 1. Create a `.env` file in your project root for environment variables:
 
@@ -102,8 +102,8 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
     ```
 
     Replace the placeholder values in the `.env` file with your own information:
-    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
-    - `MONGO_CLUSTER_NAME`: Your resource name
+    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL.
+    - `MONGO_CLUSTER_NAME`: Your resource name.
 
 1. Add a `tsconfig.json` file to configure TypeScript:
 
