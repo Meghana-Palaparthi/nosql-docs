@@ -22,10 +22,10 @@ API for Cassandra in Azure Cosmos DB has become a great choice for enterprise wo
 
 * **No overhead of managing and monitoring:** As a fully managed cloud service, Azure Cosmos DB removes the overhead of managing and monitoring a myriad of settings.
 
-There are various ways to migrate database workloads from one platform to another. [Arcion](https://www.arcion.io) is a tool that offers a secure and reliable way to perform zero downtime migration from other databases to Azure Cosmos DB. This article describes the steps required to migrate data from Oracle database to Azure Cosmos DB for Apache Cassandra using Arcion.
+There are various ways to migrate database workloads from one platform to another. [Arcion](https://www.databricks.com/blog/databricks-arcion-real-time-enterprise-data-replication-lakehouse) is a tool that offers a secure and reliable way to perform zero downtime migration from other databases to Azure Cosmos DB. This article describes the steps required to migrate data from Oracle database to Azure Cosmos DB for Apache Cassandra using Arcion.
 
 > [!NOTE]
-> This offering from Arcion is currently in beta. For more information, please contact them at [Arcion Support](mailto:support@arcion.io)
+> This offering from Arcion is currently in beta.
 
 ## Benefits using Arcion for migration
 
@@ -53,7 +53,7 @@ This section describes the steps required to setup Arcion and migrates data from
    keytool -keystore $JAVA_HOME/lib/security/cacerts -importcert -alias bc2025ca -file bc2025.cer
    ```
 
-1. ou can get the Arcion installation and the binary files either by requesting a demo on the [Arcion website](https://www.arcion.io). Alternatively, you can also send an [email](mailto:support@arcion.io) to the team.
+1. You can get the Arcion installation and the binary files by from [Databricks/Arcion](https://www.databricks.com/blog/databricks-arcion-real-time-enterprise-data-replication-lakehouse).
 
    :::image type="content" source="./media/oracle-migrate-cosmos-db-arcion/arcion-replicant-download.png" alt-text="arcion replicant tool download":::
 
