@@ -61,11 +61,11 @@ The app uses a sample hotel dataset in a JSON file with pre-calculated vectors f
 
     The app uses the following Maven dependencies specified in the `pom.xml`:
   
-    - [`mongodb-driver-sync`](https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync): The official MongoDB Java driver for database connectivity and operations
-    - [`azure-identity`](https://mvnrepository.com/artifact/com.azure/azure-identity): The Azure Identity library for passwordless authentication with Microsoft Entra ID
-    - [`azure-ai-openai`](https://mvnrepository.com/artifact/com.azure/azure-ai-openai): The Azure OpenAI client library to communicate with AI models and create vector embeddings
-    - [`jackson-databind`](https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind): The JSON serialization and deserialization library
-    - [`slf4j-nop`](https://mvnrepository.com/artifact/org.slf4j/slf4j-nop): The no-operation SLF4J binding to suppress logging output from the MongoDB driver
+    - [`mongodb-driver-sync`](https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync): The official MongoDB Java driver for database connectivity and operations.
+    - [`azure-identity`](https://mvnrepository.com/artifact/com.azure/azure-identity): The Azure Identity library for passwordless authentication with Microsoft Entra ID.
+    - [`azure-ai-openai`](https://mvnrepository.com/artifact/com.azure/azure-ai-openai): The Azure OpenAI client library to communicate with AI models and create vector embeddings.
+    - [`jackson-databind`](https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind): The JSON serialization and deserialization library.
+    - [`slf4j-nop`](https://mvnrepository.com/artifact/org.slf4j/slf4j-nop): The no-operation SLF4J binding to suppress logging output from the MongoDB driver.
   
 1. Create a `.env` file in your project root for environment variables:
 
@@ -90,8 +90,8 @@ The app uses a sample hotel dataset in a JSON file with pre-calculated vectors f
     ```
 
     Replace the placeholder values in the `.env` file with your own information:
-    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
-    - `MONGO_CLUSTER_NAME`: Your Azure DocumentDB resource name
+    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL.
+    - `MONGO_CLUSTER_NAME`: Your Azure DocumentDB resource name.
 
 1. Load the environment variables:
 
