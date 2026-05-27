@@ -32,9 +32,9 @@ The app uses a sample hotel dataset in a JSON file with pre-calculated vectors f
    > [!TIP]
    > To customize Azure OpenAI model parameters before deployment, see the section [Customize Azure OpenAI deployment](#customize-azure-openai-deployment-optional) later in this article.
 
-- [Java 21](/java/openjdk/download) or later
+- [Java 21](/java/openjdk/download) or later.
 
-- [Maven 3.6](https://maven.apache.org/download.cgi) or later
+- [Maven 3.6](https://maven.apache.org/download.cgi) or later.
 
 ## Create a data file with vectors
 
