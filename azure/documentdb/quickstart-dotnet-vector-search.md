@@ -113,7 +113,7 @@ The sample app populates vectorized sample data in a MongoDB collection. You can
     0. Exit
     ```
 
-1. Type `5` and press Enter.
+1. Type `5` and select Enter.
 
     After the app populates the database and runs the search, you see the top five hotels that match the selected vector search query. You also see their similarity scores.
   
@@ -162,7 +162,7 @@ The sample app populates vectorized sample data in a MongoDB collection. You can
     0. Exit
     ```
 
-1. Type `3` and press Enter.
+1. Type `3` and select Enter.
 
     After the app populates the database and runs the search, you see the top five hotels that match the selected vector search query, and you see their similarity scores.
   
@@ -211,7 +211,7 @@ The sample app populates vectorized sample data in a MongoDB collection. You can
     0. Exit
     ```
 
-1. Type `4` and press Enter.
+1. Type `4` and select Enter.
 
     After the app populates the database and runs the search, you see the top five hotels that match the selected vector search query, and you see their similarity scores.
   
