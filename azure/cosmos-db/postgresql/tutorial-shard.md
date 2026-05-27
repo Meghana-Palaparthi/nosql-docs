@@ -104,10 +104,10 @@ are unimportant for this tutorial. What matters is that we can query to see
 which values map to which shard IDs:
 
 ```sql
--- Where would a row containing hi@test.com be stored?
+-- Where would a row containing hi@example.com be stored?
 -- (The value doesn't have to actually be present in users, the mapping
 -- is a mathematical operation consulting pg_dist_shard.)
-select get_shard_id_for_distribution_column('users', 'hi@test.com');
+select get_shard_id_for_distribution_column('users', 'hi@example.com');
 ```
 ```
  get_shard_id_for_distribution_column
@@ -164,7 +164,7 @@ To demonstrate, let's create sample data for our `users` table:
 -- load sample data
 insert into users
 select
-	md5(random()::text) || '@test.com',
+	md5(random()::text) || '@example.com',
 	date_trunc('day', now() - random()*'100 years'::interval)
 from generate_series(1, 1000);
 ```

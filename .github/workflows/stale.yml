@@ -18,7 +18,7 @@ jobs:
           exempt-pr-labels: keep-open
           operations-per-run: 1300
           ascending: false
-          stale-pr-message: >
+          stale-pr-message: |-
             ### Inactive pull request
 
             This pull request has been inactive for at least **7 days**.

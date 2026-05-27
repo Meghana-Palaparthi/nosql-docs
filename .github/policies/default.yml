@@ -26,6 +26,10 @@ configuration:
                     user: documentdb-docs-sync-agent[bot]
         then:
           - addReply:
-              reply: >-
-                The `documentdb-generated` folder contains auto-generated content and does not accept pull requests. Any changes should be made in the source repository [documentdb/docs](https://github.com/documentdb/docs). This pull request will be closed automatically.
+              reply: |-
+                The `documentdb-generated` folder contains auto-generated content and does not accept pull requests.
+                
+                Any changes should be made in the source repository [`documentdb/docs`](https://github.com/documentdb/docs).
+                
+                This pull request will be closed automatically.
           - closePullRequest

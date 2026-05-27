@@ -48,7 +48,7 @@
       "monikers": [],
       "open_to_public_contributors": false,
       "type_mapping": {
-        "Conceptual": "Content"
+        "ManagedReference": "Content"
       },
       "build_entry_point": "docs"
     },
@@ -102,7 +102,7 @@
     {
       "path_to_root": "samples-cosmosdb-dotnet-v3",
       "url": "https://github.com/Azure/azure-cosmos-dotnet-v3",
-      "branch": "master",
+      "branch": "main",
       "branch_mapping": {}
     },
     {
