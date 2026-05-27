@@ -267,5 +267,5 @@ additionalContent:
             - text: Azure updates
               url: https://azure.microsoft.com/updates/
             - text: Free Azure account
-              url: https://azure.microsoft.com/pricing/purchase-options/azure-account
+              url: https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn
   footer: "Explore [Azure Cosmos DB](/azure/cosmos-db/), [Azure DocumentDB](/azure/documentdb/), and [Cosmos DB in Microsoft Fabric](/fabric/database/cosmos-db) to build scalable NoSQL solutions."

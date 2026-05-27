@@ -30,6 +30,18 @@
         href: quickstart-agent-nodejs.md
       - name: Create AI agent with vector search in Go
         href: quickstart-agent-go.md
+    - name: AI vector index algorithms
+      items:
+      - name: Select algorithm with Python
+        href: quickstart-python-select-algorithm.md
+      - name: Select algorithm with TypeScript
+        href: quickstart-nodejs-select-algorithm.md
+      - name: Select algorithm with .NET
+        href: quickstart-dotnet-select-algorithm.md
+      - name: Select algorithm with Go
+        href: quickstart-go-select-algorithm.md
+      - name: Select algorithm with Java
+        href: quickstart-java-select-algorithm.md
     - name: Develop a Python console application
       href: quickstart-python.md
     - name: Develop a TypeScript console application
@@ -83,7 +95,21 @@
     - name: Integrate with AI Tools
       items:
         - name: AI Frameworks
-          href: ai-frameworks.md
+          items:
+            - name: Overview
+              href: ai-frameworks.md
+            - name: CosmosAIGraph (OmniRAG)
+              href: https://aka.ms/cosmosaigraph
+            - name: Haystack
+              href: build-rag-pipelines.md
+            - name: LangChain on Azure
+              href: build-rag-applications.md
+            - name: LangGraph
+              href: persist-agent-state.md
+            - name: LlamaIndex
+              href: query-knowledge-base.md
+            - name: Semantic Kernel
+              href: /semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/azure-cosmosdb-mongodb-connector
     - name: Connect using Spark connector from Azure Databricks
       href: how-to-connect-from-databricks.md
 - name: Architect secure solutions
@@ -264,9 +290,9 @@
     - name: Python
       href: /python/api/overview/azure/mongo-cluster
     - name: Commands
-      href: commands/toc.yml
+      href: commands/TOC.yml
     - name: Operators
-      href: operators/toc.yml
+      href: operators/TOC.yml
     - name: MongoDB feature compatibility
       href: compatibility-features.md
     - name: MongoDB query language compatibility

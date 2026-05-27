@@ -2,6 +2,7 @@
 title: DocumentDB Overview
 description: Learn how DocumentDB in Azure provides an open-source and MongoDB-compatible platform with advanced indexing, vector search, and geospatial capabilities built on PostgreSQL.
 ms.date: 11/07/2025
+ms.update-cycle: 180-days
 ai-usage: ai-generated
 ---
 

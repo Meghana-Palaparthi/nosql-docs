@@ -18,7 +18,7 @@ There are more choices, now than ever, on the type of database to use with your 
 
 ## Prerequisites
 
-- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free).
+- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - Azure Cosmos DB for NoSQL account. [Create a API for NoSQL account](how-to-create-account.md).
   - Make sure you note the endpoint URI and primary key for the account.
 - Azure Storage account. [Create an Azure Storage account](/azure/storage/common/storage-account-create).

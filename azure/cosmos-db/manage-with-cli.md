@@ -1,6 +1,6 @@
 ---
 title: Manage Resources Using Azure CLI
-description: Manage Azure Cosmos DB for NoSQL resources using Azure CLI. 
+description: Manage and automate the creation and deployment of Azure Cosmos DB resources using Azure CLI and infrastructure as code.
 author: markjbrown
 ms.service: azure-cosmos-db
 ms.subservice: nosql
@@ -14,7 +14,7 @@ appliesto:
 
 # Manage Azure Cosmos DB for NoSQL resources using Azure CLI
 
-The following guide describes common commands to automate management of your Azure Cosmos DB accounts, databases, and containers using Azure CLI. Reference pages for all Azure Cosmos DB CLI commands are available in the [Azure CLI Reference](/cli/azure/cosmosdb).
+The following guide describes common commands to automate the creation, deployment, and management of your Azure Cosmos DB accounts, databases, and containers using Azure CLI as an infrastructure as code approach. Reference pages for all Azure Cosmos DB CLI commands are available in the [Azure CLI Reference](/cli/azure/cosmosdb).
 
 [!INCLUDE [azure-cli-prepare-your-environment.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment.md)]
 

@@ -7,6 +7,7 @@ ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: how-to
 ms.date: 12/05/2025
+ms.update-cycle: 180-days
 ms.custom: build-2023
 ai-usage: ai-assisted
 appliesto:

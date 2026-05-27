@@ -5,8 +5,11 @@ author: iriaosara
 ms.author: iriaosara
 ms.service: azure-cosmos-db
 ms.subservice: nosql
+ms.collection:
+  - ce-skilling-ai-copilot
 ms.topic: how-to
 ms.date: 11/03/2025
+ms.update-cycle: 180-days
 ms.custom:
   - references_regions
 ai-usage: ai-generated

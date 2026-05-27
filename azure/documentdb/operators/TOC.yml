@@ -1,58 +1,506 @@
-- name: Index
-  href: index.md
-- name: Accumulators
-  href: accumulators/TOC.yml
-- name: Aggregation
-  href: aggregation/toc.yml
-- name: Arithmetic expression
-  href: arithmetic-expression/TOC.yml
-- name: Array expression
-  href: array-expression/toc.yml
-- name: Array query
-  href: array-query/toc.yml
-- name: Array update
-  href: array-update/toc.yml
-- name: Bitwise operators
-  href: bitwise/toc.yml
-- name: Bitwise query
-  href: bitwise-query/toc.yml
-- name: Bitwise update
-  href: bitwise-update/toc.yml
-- name: Boolean expression
-  href: boolean-expression/toc.yml
-- name: Comparison query
-  href: comparison-query/toc.yml
-- name: Conditional expression
-  href: conditional-expression/toc.yml
-- name: Date expression
-  href: date-expression/TOC.yml
-- name: Data size
-  href: data-size/TOC.yml
-- name: Element query
-  href: element-query/TOC.yml
-- name: Evaluation query
-  href: evaluation-query/toc.yml
-- name: Field update
-  href: field-update/toc.yml
-- name: Geospatial
-  href: geospatial/toc.yml
-- name: Literal expression
-  href: literal-expression/toc.yml
-- name: Logical query
-  href: logical-query/toc.yml
-- name: Miscellaneous
-  href: miscellaneous/TOC.yml
-- name: Miscellaneous query
-  href: miscellaneous-query/TOC.yml
-- name: Object expression
-  href: object-expression/TOC.yml 
-- name: Projection
-  href: projection/toc.yml
-- name: Timestamp-expression
-  href: timestamp-expression/TOC.yml
-- name: Set expression
-  href: set-expression/toc.yml
-- name: Variable expression
-  href: variable-expression/toc.yml
-- name: Window operators
-  href: window-operators/toc.yml
+### YamlMime:TOC
+items:
+  - name: Overview
+    href: /documentdb/query/operators/index?context=/azure/documentdb/context/context
+  - name: Accumulators
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/accumulators/index?context=/azure/documentdb/context/context
+      - name: $avg
+        href: /documentdb/query/operators/accumulators/$avg?context=/azure/documentdb/context/context
+      - name: $bottom
+        href: /documentdb/query/operators/accumulators/$bottom?context=/azure/documentdb/context/context
+      - name: $bottomN
+        href: /documentdb/query/operators/accumulators/$bottomn?context=/azure/documentdb/context/context
+      - name: $count
+        href: /documentdb/query/operators/accumulators/$count?context=/azure/documentdb/context/context
+      - name: $first
+        href: /documentdb/query/operators/accumulators/$first?context=/azure/documentdb/context/context
+      - name: $firstN
+        href: /documentdb/query/operators/accumulators/$firstn?context=/azure/documentdb/context/context
+      - name: $last
+        href: /documentdb/query/operators/accumulators/$last?context=/azure/documentdb/context/context
+      - name: $lastN
+        href: /documentdb/query/operators/accumulators/$lastn?context=/azure/documentdb/context/context
+      - name: $max
+        href: /documentdb/query/operators/accumulators/$max?context=/azure/documentdb/context/context
+      - name: $maxN
+        href: /documentdb/query/operators/accumulators/$maxn?context=/azure/documentdb/context/context
+      - name: $median
+        href: /documentdb/query/operators/accumulators/$median?context=/azure/documentdb/context/context
+      - name: $min
+        href: /documentdb/query/operators/accumulators/$min?context=/azure/documentdb/context/context
+      - name: $minN
+        href: /documentdb/query/operators/accumulators/$minn?context=/azure/documentdb/context/context
+      - name: $percentile
+        href: /documentdb/query/operators/accumulators/$percentile?context=/azure/documentdb/context/context
+      - name: $stddevpop
+        href: /documentdb/query/operators/accumulators/$stddevpop?context=/azure/documentdb/context/context
+      - name: $stddevsamp
+        href: /documentdb/query/operators/accumulators/$stddevsamp?context=/azure/documentdb/context/context
+      - name: $sum
+        href: /documentdb/query/operators/accumulators/$sum?context=/azure/documentdb/context/context
+      - name: $top
+        href: /documentdb/query/operators/accumulators/$top?context=/azure/documentdb/context/context
+      - name: $topN
+        href: /documentdb/query/operators/accumulators/$topn?context=/azure/documentdb/context/context
+  - name: Aggregation
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/aggregation/index?context=/azure/documentdb/context/context
+      - name: $addFields
+        href: /documentdb/query/operators/aggregation/$addfields?context=/azure/documentdb/context/context
+      - name: $bucket
+        href: /documentdb/query/operators/aggregation/$bucket?context=/azure/documentdb/context/context
+      - name: $changeStream
+        href: /documentdb/query/operators/aggregation/$changestream?context=/azure/documentdb/context/context
+      - name: $collStats
+        href: /documentdb/query/operators/aggregation/$collstats?context=/azure/documentdb/context/context
+      - name: $convert
+        href: /documentdb/query/operators/aggregation/$convert?context=/azure/documentdb/context/context
+      - name: $densify
+        href: /documentdb/query/operators/aggregation/$densify?context=/azure/documentdb/context/context
+      - name: $documents
+        href: /documentdb/query/operators/aggregation/$documents?context=/azure/documentdb/context/context
+      - name: $facet
+        href: /documentdb/query/operators/aggregation/$facet?context=/azure/documentdb/context/context
+      - name: $fill
+        href: /documentdb/query/operators/aggregation/$fill?context=/azure/documentdb/context/context
+      - name: $geoNear
+        href: /documentdb/query/operators/aggregation/$geonear?context=/azure/documentdb/context/context
+      - name: $group
+        href: /documentdb/query/operators/aggregation/$group?context=/azure/documentdb/context/context
+      - name: $indexStats
+        href: /documentdb/query/operators/aggregation/$indexstats?context=/azure/documentdb/context/context
+      - name: $isNumber
+        href: /documentdb/query/operators/aggregation/$isnumber?context=/azure/documentdb/context/context
+      - name: $lookup
+        href: /documentdb/query/operators/aggregation/$lookup?context=/azure/documentdb/context/context
+      - name: $match
+        href: /documentdb/query/operators/aggregation/$match?context=/azure/documentdb/context/context
+      - name: $merge
+        href: /documentdb/query/operators/aggregation/$merge?context=/azure/documentdb/context/context
+      - name: $out
+        href: /documentdb/query/operators/aggregation/$out?context=/azure/documentdb/context/context
+      - name: $redact
+        href: /documentdb/query/operators/aggregation/$redact?context=/azure/documentdb/context/context
+      - name: $replaceWith
+        href: /documentdb/query/operators/aggregation/$replacewith?context=/azure/documentdb/context/context
+      - name: $sample
+        href: /documentdb/query/operators/aggregation/$sample?context=/azure/documentdb/context/context
+      - name: $set
+        href: /documentdb/query/operators/aggregation/$set?context=/azure/documentdb/context/context
+      - name: $skip
+        href: /documentdb/query/operators/aggregation/$skip?context=/azure/documentdb/context/context
+      - name: $sort
+        href: /documentdb/query/operators/aggregation/$sort?context=/azure/documentdb/context/context
+      - name: $sortByCount
+        href: /documentdb/query/operators/aggregation/$sortbycount?context=/azure/documentdb/context/context
+      - name: $toBool
+        href: /documentdb/query/operators/aggregation/$tobool?context=/azure/documentdb/context/context
+      - name: $toDate
+        href: /documentdb/query/operators/aggregation/$todate?context=/azure/documentdb/context/context
+      - name: $toDecimal
+        href: /documentdb/query/operators/aggregation/$todecimal?context=/azure/documentdb/context/context
+      - name: $toDouble
+        href: /documentdb/query/operators/aggregation/$todouble?context=/azure/documentdb/context/context
+      - name: $toInt
+        href: /documentdb/query/operators/aggregation/$toint?context=/azure/documentdb/context/context
+      - name: $toLong
+        href: /documentdb/query/operators/aggregation/$tolong?context=/azure/documentdb/context/context
+      - name: $toObjectId
+        href: /documentdb/query/operators/aggregation/$toobjectid?context=/azure/documentdb/context/context
+      - name: $toString
+        href: /documentdb/query/operators/aggregation/$tostring?context=/azure/documentdb/context/context
+      - name: $unset
+        href: /documentdb/query/operators/aggregation/$unset?context=/azure/documentdb/context/context
+      - name: $unwind
+        href: /documentdb/query/operators/aggregation/$unwind?context=/azure/documentdb/context/context
+  - name: Arithmetic Expression
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/arithmetic-expression/index?context=/azure/documentdb/context/context
+      - name: $abs
+        href: /documentdb/query/operators/arithmetic-expression/$abs?context=/azure/documentdb/context/context
+      - name: $add
+        href: /documentdb/query/operators/arithmetic-expression/$add?context=/azure/documentdb/context/context
+      - name: $ceil
+        href: /documentdb/query/operators/arithmetic-expression/$ceil?context=/azure/documentdb/context/context
+      - name: $divide
+        href: /documentdb/query/operators/arithmetic-expression/$divide?context=/azure/documentdb/context/context
+      - name: $exp
+        href: /documentdb/query/operators/arithmetic-expression/$exp?context=/azure/documentdb/context/context
+      - name: $floor
+        href: /documentdb/query/operators/arithmetic-expression/$floor?context=/azure/documentdb/context/context
+      - name: $ln
+        href: /documentdb/query/operators/arithmetic-expression/$ln?context=/azure/documentdb/context/context
+      - name: $log
+        href: /documentdb/query/operators/arithmetic-expression/$log?context=/azure/documentdb/context/context
+      - name: $log10
+        href: /documentdb/query/operators/arithmetic-expression/$log10?context=/azure/documentdb/context/context
+      - name: $multiply
+        href: /documentdb/query/operators/arithmetic-expression/$multiply?context=/azure/documentdb/context/context
+      - name: $pow
+        href: /documentdb/query/operators/arithmetic-expression/$pow?context=/azure/documentdb/context/context
+      - name: $round
+        href: /documentdb/query/operators/arithmetic-expression/$round?context=/azure/documentdb/context/context
+      - name: $sqrt
+        href: /documentdb/query/operators/arithmetic-expression/$sqrt?context=/azure/documentdb/context/context
+      - name: $subtract
+        href: /documentdb/query/operators/arithmetic-expression/$subtract?context=/azure/documentdb/context/context
+      - name: $trunc
+        href: /documentdb/query/operators/arithmetic-expression/$trunc?context=/azure/documentdb/context/context
+      - name: Index
+        href: /documentdb/query/operators/arithmetic-expression/index?context=/azure/documentdb/context/context
+  - name: Array Expression
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/array-expression/index?context=/azure/documentdb/context/context
+      - name: $arrayElemAt
+        href: /documentdb/query/operators/array-expression/$arrayelemat?context=/azure/documentdb/context/context
+      - name: $arrayToObject
+        href: /documentdb/query/operators/array-expression/$arraytoobject?context=/azure/documentdb/context/context
+      - name: $concatArrays
+        href: /documentdb/query/operators/array-expression/$concatarrays?context=/azure/documentdb/context/context
+      - name: $filter
+        href: /documentdb/query/operators/array-expression/$filter?context=/azure/documentdb/context/context
+      - name: $indexOfArray
+        href: /documentdb/query/operators/array-expression/$indexofarray?context=/azure/documentdb/context/context
+      - name: $isArray
+        href: /documentdb/query/operators/array-expression/$isarray?context=/azure/documentdb/context/context
+      - name: $map
+        href: /documentdb/query/operators/array-expression/$map?context=/azure/documentdb/context/context
+      - name: $range
+        href: /documentdb/query/operators/array-expression/$range?context=/azure/documentdb/context/context
+      - name: $reduce
+        href: /documentdb/query/operators/array-expression/$reduce?context=/azure/documentdb/context/context
+      - name: $reverseArray
+        href: /documentdb/query/operators/array-expression/$reversearray?context=/azure/documentdb/context/context
+      - name: $slice
+        href: /documentdb/query/operators/array-expression/$slice?context=/azure/documentdb/context/context
+      - name: $sortArray
+        href: /documentdb/query/operators/array-expression/$sortarray?context=/azure/documentdb/context/context
+      - name: $zip
+        href: /documentdb/query/operators/array-expression/$zip?context=/azure/documentdb/context/context
+  - name: Array Query
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/array-query/index?context=/azure/documentdb/context/context
+      - name: $all
+        href: /documentdb/query/operators/array-query/$all?context=/azure/documentdb/context/context
+      - name: $elemMatch
+        href: /documentdb/query/operators/array-query/$elemmatch?context=/azure/documentdb/context/context
+      - name: $size
+        href: /documentdb/query/operators/array-query/$size?context=/azure/documentdb/context/context
+  - name: Array Update
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/array-update/index?context=/azure/documentdb/context/context
+      - name: $
+        href: /documentdb/query/operators/array-update/$?context=/azure/documentdb/context/context
+      - name: $addToSet
+        href: /documentdb/query/operators/array-update/$addtoset?context=/azure/documentdb/context/context
+      - name: $each
+        href: /documentdb/query/operators/array-update/$each?context=/azure/documentdb/context/context
+      - name: $pop
+        href: /documentdb/query/operators/array-update/$pop?context=/azure/documentdb/context/context
+      - name: $position
+        href: /documentdb/query/operators/array-update/$positional?context=/azure/documentdb/context/context
+      - name: $[]
+        href: /documentdb/query/operators/array-update/$positional-all?context=/azure/documentdb/context/context
+      - name: $[identifier]
+        href: /documentdb/query/operators/array-update/$positional-filtered?context=/azure/documentdb/context/context
+      - name: $pull
+        href: /documentdb/query/operators/array-update/$pull?context=/azure/documentdb/context/context
+      - name: $pullAll
+        href: /documentdb/query/operators/array-update/$pullall?context=/azure/documentdb/context/context
+      - name: $push
+        href: /documentdb/query/operators/array-update/$push?context=/azure/documentdb/context/context
+  - name: Bitwise
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/bitwise/index?context=/azure/documentdb/context/context
+      - name: $bitAnd
+        href: /documentdb/query/operators/bitwise/$bitand?context=/azure/documentdb/context/context
+      - name: $bitNot
+        href: /documentdb/query/operators/bitwise/$bitnot?context=/azure/documentdb/context/context
+      - name: $bitOr
+        href: /documentdb/query/operators/bitwise/$bitor?context=/azure/documentdb/context/context
+      - name: $bitXor
+        href: /documentdb/query/operators/bitwise/$bitxor?context=/azure/documentdb/context/context
+  - name: Bitwise Query
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/bitwise-query/index?context=/azure/documentdb/context/context
+      - name: $bitsAllClear
+        href: /documentdb/query/operators/bitwise-query/$bitsAllClear?context=/azure/documentdb/context/context
+      - name: $bitsAllSet
+        href: /documentdb/query/operators/bitwise-query/$bitsAllSet?context=/azure/documentdb/context/context
+      - name: $bitsAnyClear
+        href: /documentdb/query/operators/bitwise-query/$bitsAnyClear?context=/azure/documentdb/context/context
+      - name: $bitsAnySet
+        href: /documentdb/query/operators/bitwise-query/$bitsAnySet?context=/azure/documentdb/context/context
+  - name: Bitwise Update
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/bitwise-update/index?context=/azure/documentdb/context/context
+      - name: $bit
+        href: /documentdb/query/operators/bitwise-update/$bit?context=/azure/documentdb/context/context
+  - name: Comparison Query
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/comparison-query/index?context=/azure/documentdb/context/context
+      - name: $cmp
+        href: /documentdb/query/operators/comparison-query/$cmp?context=/azure/documentdb/context/context
+      - name: $eq
+        href: /documentdb/query/operators/comparison-query/$eq?context=/azure/documentdb/context/context
+      - name: $gt
+        href: /documentdb/query/operators/comparison-query/$gt?context=/azure/documentdb/context/context
+      - name: $gte
+        href: /documentdb/query/operators/comparison-query/$gte?context=/azure/documentdb/context/context
+      - name: $in
+        href: /documentdb/query/operators/comparison-query/$in?context=/azure/documentdb/context/context
+      - name: $lt
+        href: /documentdb/query/operators/comparison-query/$lt?context=/azure/documentdb/context/context
+      - name: $lte
+        href: /documentdb/query/operators/comparison-query/$lte?context=/azure/documentdb/context/context
+      - name: $ne
+        href: /documentdb/query/operators/comparison-query/$ne?context=/azure/documentdb/context/context
+      - name: $nin
+        href: /documentdb/query/operators/comparison-query/$nin?context=/azure/documentdb/context/context
+  - name: Conditional Expression
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/conditional-expression/index?context=/azure/documentdb/context/context
+      - name: $cond
+        href: /documentdb/query/operators/conditional-expression/$cond?context=/azure/documentdb/context/context
+      - name: $ifNull
+        href: /documentdb/query/operators/conditional-expression/$ifnull?context=/azure/documentdb/context/context
+      - name: $switch
+        href: /documentdb/query/operators/conditional-expression/$switch?context=/azure/documentdb/context/context
+  - name: Data Size
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/data-size/index?context=/azure/documentdb/context/context
+      - name: $binarySize
+        href: /documentdb/query/operators/data-size/$binarysize?context=/azure/documentdb/context/context
+      - name: $bsonSize
+        href: /documentdb/query/operators/data-size/$bsonsize?context=/azure/documentdb/context/context
+  - name: Date Expression
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/date-expression/index?context=/azure/documentdb/context/context
+      - name: $dateAdd
+        href: /documentdb/query/operators/date-expression/$dateadd?context=/azure/documentdb/context/context
+      - name: $dateDiff
+        href: /documentdb/query/operators/date-expression/$datediff?context=/azure/documentdb/context/context
+      - name: $dateFromParts
+        href: /documentdb/query/operators/date-expression/$datefromparts?context=/azure/documentdb/context/context
+      - name: $dateFromString
+        href: /documentdb/query/operators/date-expression/$datefromstring?context=/azure/documentdb/context/context
+      - name: $dateSubtract
+        href: /documentdb/query/operators/date-expression/$datesubtract?context=/azure/documentdb/context/context
+      - name: $dateToParts
+        href: /documentdb/query/operators/date-expression/$datetoparts?context=/azure/documentdb/context/context
+      - name: $dateToString
+        href: /documentdb/query/operators/date-expression/$datetostring?context=/azure/documentdb/context/context
+      - name: $dateTrunc
+        href: /documentdb/query/operators/date-expression/$datetrunc?context=/azure/documentdb/context/context
+      - name: $dayOfMonth
+        href: /documentdb/query/operators/date-expression/$dayofmonth?context=/azure/documentdb/context/context
+      - name: $dayOfWeek
+        href: /documentdb/query/operators/date-expression/$dayofweek?context=/azure/documentdb/context/context
+      - name: $dayOfYear
+        href: /documentdb/query/operators/date-expression/$dayofyear?context=/azure/documentdb/context/context
+      - name: $hour
+        href: /documentdb/query/operators/date-expression/$hour?context=/azure/documentdb/context/context
+      - name: $isoDayOfWeek
+        href: /documentdb/query/operators/date-expression/$isodayofweek?context=/azure/documentdb/context/context
+      - name: $isoWeek
+        href: /documentdb/query/operators/date-expression/$isoweek?context=/azure/documentdb/context/context
+      - name: $isoWeekYear
+        href: /documentdb/query/operators/date-expression/$isoweekyear?context=/azure/documentdb/context/context
+      - name: $millisecond
+        href: /documentdb/query/operators/date-expression/$millisecond?context=/azure/documentdb/context/context
+      - name: $minute
+        href: /documentdb/query/operators/date-expression/$minute?context=/azure/documentdb/context/context
+      - name: $month
+        href: /documentdb/query/operators/date-expression/$month?context=/azure/documentdb/context/context
+      - name: $second
+        href: /documentdb/query/operators/date-expression/$second?context=/azure/documentdb/context/context
+      - name: $week
+        href: /documentdb/query/operators/date-expression/$week?context=/azure/documentdb/context/context
+      - name: $year
+        href: /documentdb/query/operators/date-expression/$year?context=/azure/documentdb/context/context
+  - name: Element Query
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/element-query/index?context=/azure/documentdb/context/context
+      - name: $exists
+        href: /documentdb/query/operators/element-query/$exists?context=/azure/documentdb/context/context
+      - name: $type
+        href: /documentdb/query/operators/element-query/$type?context=/azure/documentdb/context/context
+  - name: Evaluation Query
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/evaluation-query/index?context=/azure/documentdb/context/context
+      - name: $expr
+        href: /documentdb/query/operators/evaluation-query/$expr?context=/azure/documentdb/context/context
+      - name: $jsonSchema
+        href: /documentdb/query/operators/evaluation-query/$jsonschema?context=/azure/documentdb/context/context
+      - name: $mod
+        href: /documentdb/query/operators/evaluation-query/$mod?context=/azure/documentdb/context/context
+      - name: $regex
+        href: /documentdb/query/operators/evaluation-query/$regex?context=/azure/documentdb/context/context
+      - name: $text
+        href: /documentdb/query/operators/evaluation-query/$text?context=/azure/documentdb/context/context
+  - name: Field Update
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/field-update/index?context=/azure/documentdb/context/context
+      - name: $currentDate
+        href: /documentdb/query/operators/field-update/$currentdate?context=/azure/documentdb/context/context
+      - name: $inc
+        href: /documentdb/query/operators/field-update/$inc?context=/azure/documentdb/context/context
+      - name: $mul
+        href: /documentdb/query/operators/field-update/$mul?context=/azure/documentdb/context/context
+      - name: $rename
+        href: /documentdb/query/operators/field-update/$rename?context=/azure/documentdb/context/context
+      - name: $setOnInsert
+        href: /documentdb/query/operators/field-update/$setoninsert?context=/azure/documentdb/context/context
+  - name: Geospatial
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/geospatial/index?context=/azure/documentdb/context/context
+      - name: $box
+        href: /documentdb/query/operators/geospatial/$box?context=/azure/documentdb/context/context
+      - name: $center
+        href: /documentdb/query/operators/geospatial/$center?context=/azure/documentdb/context/context
+      - name: $centerSphere
+        href: /documentdb/query/operators/geospatial/$centersphere?context=/azure/documentdb/context/context
+      - name: $geoIntersects
+        href: /documentdb/query/operators/geospatial/$geointersects?context=/azure/documentdb/context/context
+      - name: $geometry
+        href: /documentdb/query/operators/geospatial/$geometry?context=/azure/documentdb/context/context
+      - name: $geoWithin
+        href: /documentdb/query/operators/geospatial/$geowithin?context=/azure/documentdb/context/context
+      - name: $maxDistance
+        href: /documentdb/query/operators/geospatial/$maxdistance?context=/azure/documentdb/context/context
+      - name: $minDistance
+        href: /documentdb/query/operators/geospatial/$mindistance?context=/azure/documentdb/context/context
+      - name: $near
+        href: /documentdb/query/operators/geospatial/$near?context=/azure/documentdb/context/context
+      - name: $nearSphere
+        href: /documentdb/query/operators/geospatial/$nearsphere?context=/azure/documentdb/context/context
+      - name: $polygon
+        href: /documentdb/query/operators/geospatial/$polygon?context=/azure/documentdb/context/context
+  - name: Literal Expression
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/literal-expression/index?context=/azure/documentdb/context/context
+      - name: $literal
+        href: /documentdb/query/operators/literal-expression/$literal?context=/azure/documentdb/context/context
+  - name: Logical Query
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/logical-query/index?context=/azure/documentdb/context/context
+      - name: $and
+        href: /documentdb/query/operators/logical-query/$and?context=/azure/documentdb/context/context
+      - name: $nor
+        href: /documentdb/query/operators/logical-query/$nor?context=/azure/documentdb/context/context
+      - name: $not
+        href: /documentdb/query/operators/logical-query/$not?context=/azure/documentdb/context/context
+      - name: $or
+        href: /documentdb/query/operators/logical-query/$or?context=/azure/documentdb/context/context
+  - name: Miscellaneous
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/miscellaneous/index?context=/azure/documentdb/context/context
+      - name: $getField
+        href: /documentdb/query/operators/miscellaneous/$getfield?context=/azure/documentdb/context/context
+      - name: $sampleRate
+        href: /documentdb/query/operators/miscellaneous/$samplerate?context=/azure/documentdb/context/context
+  - name: Miscellaneous Query
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/miscellaneous-query/index?context=/azure/documentdb/context/context
+      - name: $comment
+        href: /documentdb/query/operators/miscellaneous-query/$comment?context=/azure/documentdb/context/context
+      - name: $natural
+        href: /documentdb/query/operators/miscellaneous-query/$natural?context=/azure/documentdb/context/context
+      - name: $rand
+        href: /documentdb/query/operators/miscellaneous-query/$rand?context=/azure/documentdb/context/context
+  - name: Object Expression
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/object-expression/index?context=/azure/documentdb/context/context
+      - name: $mergeObjects
+        href: /documentdb/query/operators/object-expression/$mergeobjects?context=/azure/documentdb/context/context
+      - name: $objectToArray
+        href: /documentdb/query/operators/object-expression/$objectToArray?context=/azure/documentdb/context/context
+      - name: $setField
+        href: /documentdb/query/operators/object-expression/$setField?context=/azure/documentdb/context/context
+  - name: Projection
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/projection/index?context=/azure/documentdb/context/context
+      - name: $meta
+        href: /documentdb/query/operators/projection/$meta?context=/azure/documentdb/context/context
+  - name: Set Expression
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/set-expression/index?context=/azure/documentdb/context/context
+      - name: $allElementsTrue
+        href: /documentdb/query/operators/set-expression/$allelementstrue?context=/azure/documentdb/context/context
+      - name: $anyElementTrue
+        href: /documentdb/query/operators/set-expression/$anyelementtrue?context=/azure/documentdb/context/context
+      - name: $setDifference
+        href: /documentdb/query/operators/set-expression/$setdifference?context=/azure/documentdb/context/context
+      - name: $setEquals
+        href: /documentdb/query/operators/set-expression/$setequals?context=/azure/documentdb/context/context
+      - name: $setIntersection
+        href: /documentdb/query/operators/set-expression/$setintersection?context=/azure/documentdb/context/context
+      - name: $setIsSubset
+        href: /documentdb/query/operators/set-expression/$setissubset?context=/azure/documentdb/context/context
+      - name: $setUnion
+        href: /documentdb/query/operators/set-expression/$setunion?context=/azure/documentdb/context/context
+  - name: Timestamp Expression
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/timestamp-expression/index?context=/azure/documentdb/context/context
+      - name: $tsIncrement
+        href: /documentdb/query/operators/timestamp-expression/$tsincrement?context=/azure/documentdb/context/context
+      - name: $tsSecond
+        href: /documentdb/query/operators/timestamp-expression/$tssecond?context=/azure/documentdb/context/context
+  - name: Variable Expression
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/variable-expression/index?context=/azure/documentdb/context/context
+      - name: $let
+        href: /documentdb/query/operators/variable-expression/$let?context=/azure/documentdb/context/context
+  - name: Window Operators
+    items:
+      - name: Overview
+        href: /documentdb/query/operators/window-operators/index?context=/azure/documentdb/context/context
+      - name: $covariancePop
+        href: /documentdb/query/operators/window-operators/$covariancepop?context=/azure/documentdb/context/context
+      - name: $covarianceSamp
+        href: /documentdb/query/operators/window-operators/$covariancesamp?context=/azure/documentdb/context/context
+      - name: $denseRank
+        href: /documentdb/query/operators/window-operators/$denserank?context=/azure/documentdb/context/context
+      - name: $derivative
+        href: /documentdb/query/operators/window-operators/$derivative?context=/azure/documentdb/context/context
+      - name: $documentNumber
+        href: /documentdb/query/operators/window-operators/$documentnumber?context=/azure/documentdb/context/context
+      - name: $expMovingAvg
+        href: /documentdb/query/operators/window-operators/$expmovingavg?context=/azure/documentdb/context/context
+      - name: $integral
+        href: /documentdb/query/operators/window-operators/$integral?context=/azure/documentdb/context/context
+      - name: $linearFill
+        href: /documentdb/query/operators/window-operators/$linearfill?context=/azure/documentdb/context/context
+      - name: $locf
+        href: /documentdb/query/operators/window-operators/$locf?context=/azure/documentdb/context/context
+      - name: $rank
+        href: /documentdb/query/operators/window-operators/$rank?context=/azure/documentdb/context/context
+      - name: $shift usage on DocumentDB
+        href: /documentdb/query/operators/window-operators/$shift?context=/azure/documentdb/context/context

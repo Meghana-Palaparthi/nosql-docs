@@ -5,6 +5,7 @@ author: khelanmodi
 ms.author: khelanmodi
 ms.topic: tutorial
 ms.date: 11/05/2025
+ms.update-cycle: 180-days
 ms.collection:
   - ce-skilling-ai-copilot
 #customer intent: As a developer, I want to build an AI-powered advertisement generator using vector search so that I can create dynamic, personalized advertising content that matches inventory items to advertisement subjects.

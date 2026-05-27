@@ -19,7 +19,7 @@ An Azure Cosmos DB for Table account contains all of your Azure Cosmos DB resour
 
 ## Prerequisites
 
-* An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free).
+* An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 
 ## Create an account
 

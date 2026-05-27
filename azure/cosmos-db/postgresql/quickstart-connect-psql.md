@@ -21,7 +21,7 @@ This quickstart shows you how to use the [psql](https://www.postgresql.org/docs/
 
 ## Prerequisites
 
-- An Azure account with an active subscription. If you don't have one, [create an account for free](https://azure.microsoft.com/free).
+- An Azure account with an active subscription. If you don't have one, [create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - An Azure Cosmos DB for PostgreSQL cluster. To create a cluster, see [Create a cluster in the Azure portal](quickstart-create-portal.md).
 
 ## Connect

@@ -5,6 +5,7 @@ author: seesharprun
 ms.author: sidandrews
 ms.topic: product-comparison
 ms.date: 11/12/2025
+ms.update-cycle: 180-days
 ai-usage: ai-generated
 ROBOTS: NOINDEX, NOFOLLOW
 ---

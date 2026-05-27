@@ -59,8 +59,8 @@
       "breadcrumb_path": "~/breadcrumb/documentdb/toc.yml",
       "zone_pivot_group_filename": "zone-pivots/zone-pivot-groups.json",
       "feedback_system": "Standard",
-      "feedback_product_url": "https://learn.microsoft.com/answers/tags/187/azure-cosmos-db",
-      "feedback_help_link_url": "https://learn.microsoft.com/answers/tags/187/azure-cosmos-db",
+      "feedback_product_url": "https://feedback.azure.com/d365community/forum/3002b3be-0d25-ec11-b6e6-000d3a4f0858",
+      "feedback_help_link_url": "/answers/tags/1589/azure-documentdb/",
       "feedback_help_link_type": "get-help-at-qna"
     },
     "fileMetadata": {

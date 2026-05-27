@@ -2,7 +2,10 @@
 title: Vector Database
 description: Learn how to index and search vector data in Cosmos DB (in Azure and Fabric). Store vectors with documents, choose indexing methods (flat, quantizedFlat, DiskANN), and optimize vector search performance.
 ms.topic: concept-article
-ms.date: 11/10/2025
+ms.update-cycle: 180-days
+ms.date: 05/22/2026
+ms.collection:
+  - ce-skilling-ai-copilot
 ---
 
 # Index vector data in Cosmos DB (in Azure and Fabric)

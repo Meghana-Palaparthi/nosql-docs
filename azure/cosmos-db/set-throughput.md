@@ -64,6 +64,8 @@ The following examples demonstrate where database-level throughput may be useful
 
 * Sharing a database's provisioned throughput across a set of containers can simplify migration from a NoSQL database, such as MongoDB or Cassandra, hosted on a cluster of VMs or from on-premises physical servers to Azure Cosmos DB. As your workload stabilizes after migration, consider moving to container-level throughput for more predictable performance.
 
+* In a multitenant service that uses [Deployment Stamps](/azure/architecture/patterns/deployment-stamp), shared database throughput can be a cost-effective starting point for low-traffic stamps when container-level performance isolation isn't required. For high-traffic stamps, or when you need predictable throughput isolation between tenants or workloads, use dedicated container throughput so each container scales independently.
+
 All containers created inside a database with provisioned throughput must be created with a [partition key](partitioning.md). At any given point in time, the throughput configured on a database is shared by all the containers within that database. When you have containers that share provisioned throughput configured on a database, you can't selectively apply the throughput to a specific container or a logical partition. 
 
 If the workload on one or more logical partitions collectively exceeds the allocated throughput of the underlying physical partition, your operations are rate-limited. When rate-limiting occurs, you can either increase the throughput for the entire database or retry the operations. For more information on partitioning, see [Partitioning](partitioning.md).

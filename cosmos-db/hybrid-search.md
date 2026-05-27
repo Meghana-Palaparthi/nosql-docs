@@ -2,6 +2,7 @@
 title: Hybrid Search
 description: Learn how to combine vector search with full text search using Reciprocal Rank Fusion (RRF) in Cosmos DB (in Azure and Fabric). Improve search accuracy and relevance.
 ms.topic: concept-article
+ms.update-cycle: 180-days
 ms.date: 11/10/2025
 ---
 

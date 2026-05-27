@@ -5,6 +5,7 @@ author: seesharprun
 ms.service: azure-cosmos-db
 ms.topic: solution-overview
 ms.date: 05/28/2019
+ms.update-cycle: 180-days
 ms.author: sidandrews
 ms.custom: sfi-image-nochange
 appliesto:

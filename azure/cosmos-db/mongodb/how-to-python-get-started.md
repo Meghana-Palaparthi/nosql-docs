@@ -25,7 +25,7 @@ This article shows you how to communicate with the Azure Cosmos DB's API for Mon
 
 ## Prerequisites
 
-* An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free).
+* An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * [Python 3.8+](https://www.python.org/downloads/)
 * [Azure Command-Line Interface (CLI)](/cli/azure/) or [Azure PowerShell](/powershell/azure/)
 * [Azure Cosmos DB for MongoDB resource](/azure/cosmos-db/nosql/quickstart-portal)

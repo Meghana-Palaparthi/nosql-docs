@@ -22,7 +22,7 @@ This article explains how to connect to Azure Cosmos DB for NoSQL using the Pyth
 
 ## Prerequisites
 
-- An Azure account with an active subscription. Learn how to [create an account for free](https://azure.microsoft.com/free).
+- An Azure account with an active subscription. Learn how to [create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - Azure Cosmos DB for NoSQL account. Learn how to [create an API for NoSQL account](how-to-create-account.md).
 - [Python 3.7 or later](https://www.python.org/downloads/).
 - [Azure Command-Line Interface (CLI)](/cli/azure/) or [Azure PowerShell](/powershell/azure/).

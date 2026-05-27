@@ -80,9 +80,23 @@ Defining multiple text paths is easily done by adding another element to the `fu
 }
 ```
 
+You can also use array wildcard notation to index array paths. For example:
 
-> [!IMPORTANT]
-> Wild card characters (`*`, `[]`) aren't currently supported in the full-text policy or full-text index.
+```json
+{
+    "defaultLanguage": "en-US",
+    "fullTextPaths": [
+        {
+            "path": "/text/[]",
+            "language": "en-US"
+        },
+        {
+            "path": "/text/[]/text2",
+            "language": "en-US"
+        }
+    ]
+}
+```
 
 #### Multi-language support (preview)
 

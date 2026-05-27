@@ -6,6 +6,7 @@ ms.author: mjbrown
 ms.service: azure-cosmos-db
 ms.topic: concept-article
 ms.date: 12/04/2025
+ms.update-cycle: 180-days
 appliesto:
   - ✅ NoSQL
 ---
