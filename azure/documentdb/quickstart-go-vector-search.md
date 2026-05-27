@@ -1,5 +1,5 @@
 ---
-title: Quickstart - Vector Search with Go
+title: Quickstart - Use Vector Search with Go
 description: Learn how to use vector search in Azure DocumentDB with Go. Store and query vector data efficiently in your applications. 
 author: seesharprun
 ms.author: sidandrews
@@ -11,11 +11,11 @@ ms.update-cycle: 180-days
 ms.collection: ce-skilling-ai-copilot
 ai-usage: ai-assisted
 ms.custom: devx-track-go, devx-track-go-ai, devx-track-data-ai
-# CustomerIntent: As a developer, I want to learn how to use vector search in Go applications with Azure DocumentDB
+# CustomerIntent: As a developer, I want to learn how to use vector search in Go applications with Azure DocumentDB.
 ---
-# Quickstart: Vector search with Go in Azure DocumentDB
+# Quickstart: Use vector search with Go in Azure DocumentDB
 
-Use vector search in Azure DocumentDB with the Go client library. Store and query vector data efficiently.
+Use vector search in Azure DocumentDB with the Go client library to store and query vector data efficiently.
 
 This quickstart uses a sample hotel dataset in a JSON file with pre-calculated vectors from the `text-embedding-3-small` model. The dataset includes hotel names, locations, descriptions, and vector embeddings.
 
@@ -25,11 +25,12 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 
 [!INCLUDE[Prerequisites - Vector Search Quickstart](includes/prerequisite-quickstart-vector-search-model.md)]
 
-> [!TIP]
-> To customize Azure OpenAI model parameters before deployment, see [Customize Azure OpenAI deployment](#customize-azure-openai-deployment-optional) below.
-- [Go](https://golang.org/dl/) version 1.24 or later
+   > [!TIP]
+   > To customize Azure OpenAI model parameters before deployment, see the section [Customize Azure OpenAI deployment](#customize-azure-openai-deployment-optional) later in this article.
 
-## Create data file with vectors
+- [Go](https://golang.org/dl/) version 1.24 or later.
+
+## Create a data file with vectors
 
 1. Create a new data directory for the hotels data file:
 
@@ -38,7 +39,6 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
     ```
 
 1. Copy the `Hotels_Vector.json` [raw data file with vectors](https://raw.githubusercontent.com/Azure-Samples/documentdb-samples/refs/heads/main/ai/data/Hotels_Vector.json) to your `data` directory.
-
 
 ## Create a Go project
 
@@ -50,7 +50,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
     code .
     ```
 
-1. Initialize a Go module:
+1. Start a Go module:
 
     ```bash
     go mod init vector-search-quickstart
@@ -66,11 +66,11 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
     go get github.com/joho/godotenv
     ```
 
-    - `go.mongodb.org/mongo-driver`: MongoDB Go driver
-    - `github.com/Azure/azure-sdk-for-go/sdk/azcore`: Azure SDK core utilities for HTTP pipelines and auth
-    - `github.com/Azure/azure-sdk-for-go/sdk/azidentity`: Azure Identity library for passwordless token-based authentication
-    - `github.com/openai/openai-go/v3`: OpenAI Go client library to create vectors
-    - `github.com/joho/godotenv`: Environment variable loading from .env files
+    - `go.mongodb.org/mongo-driver`: The MongoDB Go driver.
+    - `github.com/Azure/azure-sdk-for-go/sdk/azcore`: The Azure SDK core utilities for HTTP pipelines and auth.
+    - `github.com/Azure/azure-sdk-for-go/sdk/azidentity`: The Azure Identity library for passwordless token-based authentication.
+    - `github.com/openai/openai-go/v3`: The OpenAI Go client library to create vectors.
+    - `github.com/joho/godotenv`: The environment variable loading from `.env` files.
 
 1. Create a `.env` file in your project root for environment variables:
 
@@ -95,18 +95,18 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
     ```
 
     Replace the placeholder values in the `.env` file with your own information:
-    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL
-    - `MONGO_CLUSTER_NAME`: Your Azure DocumentDB resource name
+    - `AZURE_OPENAI_EMBEDDING_ENDPOINT`: Your Azure OpenAI resource endpoint URL.
+    - `MONGO_CLUSTER_NAME`: Your Azure DocumentDB resource name.
 
-    You should always prefer passwordless authentication, but it requires additional setup. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Go apps to Azure services by using the Azure Identity library](/azure/developer/go/sdk/authentication/authentication-overview).
+    We recommend that you use passwordless authentication, but this type of authentication requires additional setup. For more information on setting up managed identity and the full range of your authentication options, see [Authenticate Go apps to Azure services by using the Azure Identity library](/azure/developer/go/sdk/authentication/authentication-overview).
 
 ## Create Go source files for vector search
 
-Continue the project by creating code files for vector search. 
+Continue the project by creating code files for vector search.
 
 ### [DiskANN](#tab/tab-diskann)
 
-Create a `src` directory for your Go files. Add two files: `diskann.go` and `utils.go` for the DiskANN index implementation:
+Create an `src` directory for your Go files. Add two files, `diskann.go` and `utils.go`, for the DiskANN index implementation.
 
 ```bash
 mkdir src    
@@ -114,7 +114,7 @@ touch src/diskann.go
 touch src/utils.go
 ```
 
-When you are done, the project structure should look like this:
+When you finish, the project structure looks like this example:
 
 ```plaintext
 data
@@ -129,7 +129,7 @@ vector-search-quickstart
 
 #### [IVF](#tab/tab-ivf)
 
-Create a `src` directory for your Go files. Add two files: `ivf.go` and `utils.go` for the IVF index implementation:
+Create an `src` directory for your Go files. Add two files, `ivf.go` and `utils.go`, for the Inverted File (IVF) index implementation.
 
 ```bash
 mkdir src
@@ -137,7 +137,7 @@ touch src/ivf.go
 touch src/utils.go
 ```
 
-When you are done, the project structure should look like this:
+When you finish, the project structure looks like this example:
 
 ```plaintext
 data
@@ -152,7 +152,7 @@ vector-search-quickstart
 
 #### [HNSW](#tab/tab-hnsw)
 
-Create a `src` directory for your Go files. Add two files: `hnsw.go` and `utils.go` for the HNSW index implementation:
+Create an `src` directory for your Go files. Add two files, `hnsw.go` and `utils.go`, for the Hierarchical Navigable Small World (HNSW) index implementation.
 
 ```bash
 mkdir src
@@ -160,7 +160,7 @@ touch src/hnsw.go
 touch src/utils.go
 ```
 
-When you are done, the project structure should look like this:
+When you finish, the project structure looks like this example:
 
 ```plaintext
 data
@@ -176,9 +176,9 @@ vector-search-quickstart
 ----
 
 > [!TIP]
-> Unlike some databases, DocumentDB allows you to create and drop vector indexes at any time after container creation. You don't need to define the vector indexing policy at container creation time.
+> Unlike some databases, Azure DocumentDB allows you to create and drop vector indexes at any time after you create a container. You don't need to define the vector indexing policy at the time that you create a container.
 
-## Create code for vector search
+## Create the code for vector search
 
 ### [DiskANN](#tab/tab-diskann)
 
@@ -200,15 +200,21 @@ Add the following code to the `src/hnsw.go` file:
 
 ----
 
-This main module provides these features:
+This main module:
 
-- Includes utility functions
-- Creates a configuration struct for environment variables
-- Creates clients for Azure OpenAI and Azure DocumentDB
-- Connects to MongoDB, creates a database and collection, inserts data, and creates standard indexes
-- Creates a vector index using IVF, HNSW, or DiskANN
-- Creates an embedding for a sample query text using the OpenAI client. You can change the query in the main function
-- Runs a vector search using the embedding and prints the results
+- Includes utility functions.
+
+- Creates a configuration structure for environment variables.
+
+- Creates clients for Azure OpenAI and Azure DocumentDB.
+
+- Connects to MongoDB, creates a database and collection, inserts data, and creates standard indexes.
+
+- Creates a vector index that uses IVF, HNSW, or DiskANN.
+
+- Creates an embedding for a sample query text by using the OpenAI client. You can change the query in the main function.
+
+- Runs a vector search that uses the embedding, and prints the results.
 
 ## Create utility functions
 
@@ -218,26 +224,35 @@ Add the following code to `src/utils.go`:
 
 This utility module provides these features:
 
-- `Config`: Configuration structure for environment variables
-- `SearchResult`: Structure for search result documents with scores
-- `HotelData`: Structure representing hotel documents
-- `GetClients`: Creates and returns clients for Azure OpenAI and Azure DocumentDB
-- `GetClientsPasswordless`: Creates and returns clients using passwordless authentication (OIDC). Enable RBAC on both resources and sign in to Azure CLI
-- `ReadFileReturnJSON`: Reads a JSON file and returns its contents as a slice of maps
-- `WriteFileJSON`: Writes data to a JSON file
-- `InsertData`: Inserts data in batches into a MongoDB collection and creates standard indexes on specified fields
-- `PrintSearchResults`: Prints the results of a vector search, including the score and hotel name
-- `GenerateEmbedding`: Creates embeddings using Azure OpenAI
+- `Config`: Specifies the configuration structure for environment variables.
 
-## Authenticate with Azure CLI
+- `SearchResult`: Specifies the structure for search result documents with scores.
 
-Sign in to Azure CLI before you run the application so it can access Azure resources securely.
+- `HotelData`: Specifies the structure that represents hotel documents.
+
+- `GetClients`: Creates and returns clients for Azure OpenAI and Azure DocumentDB.
+
+- `GetClientsPasswordless`: Creates and returns clients using passwordless authentication (OpenID Connect). Enable role-based access control on both resources, and sign in to the Azure CLI.
+
+- `ReadFileReturnJSON`: Reads a JSON file and returns its contents as a slice of maps.
+
+- `WriteFileJSON`: Writes data to a JSON file.
+
+- `InsertData`: Inserts data in batches into a MongoDB collection, and creates standard indexes on specified fields.
+
+- `PrintSearchResults`: Prints the results of a vector search, including the score and hotel name.
+
+- `GenerateEmbedding`: Creates embeddings by using Azure OpenAI.
+
+## Authenticate with the Azure CLI
+
+Before you run the application, sign in to the Azure CLI so the app can access Azure resources securely.
 
 ```bash
 az login
 ```
 
-The code uses your local developer authentication to access Azure DocumentDB and Azure OpenAI. When you set `AZURE_TOKEN_CREDENTIALS=AzureCliCredential`, this setting tells the function to use Azure CLI credentials for authentication _deterministically_. The authentication relies on [DefaultAzureCredential](https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/azidentity#DefaultAzureCredential) from **azidentity** to find your Azure credentials in the environment. Learn more about how to [Authenticate Go apps to Azure services by using the Azure Identity library](/azure/developer/go/sdk/authentication/authentication-overview).
+The code uses your local developer authentication to access Azure DocumentDB and Azure OpenAI. When you set `AZURE_TOKEN_CREDENTIALS=AzureCliCredential`, this setting tells the function to use the Azure CLI credentials for authentication _deterministically_. The authentication relies on [DefaultAzureCredential](https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/azidentity#DefaultAzureCredential) from `azidentity` to find your Azure credentials in the environment. Learn more about how to [Authenticate Go apps to Azure services by using the Azure Identity library](/azure/developer/go/sdk/authentication/authentication-overview).
 
 ## Build and run the application
 
@@ -268,9 +283,9 @@ go run src/hnsw.go src/utils.go
 
 The app logging and output show:
 
-- Collection creation and data insertion status
-- Vector index creation 
-- Search results with hotel names and similarity scores
+- Collection creation and data insertion status.
+- Vector index creation.
+- Search results with hotel names and similarity scores.
 
 ### [DiskANN](#tab/tab-diskann)
 
@@ -389,8 +404,9 @@ HNSW demonstration completed successfully!
 
 ## View and manage data in Visual Studio Code
 
-1. Select the [DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) in Visual Studio Code to connect to your Azure DocumentDB account.
-1. View the data and indexes in the Hotels database.
+1. Select the [Azure DocumentDB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-documentdb) in Visual Studio Code to connect to your Azure DocumentDB account.
+
+1. View the data and indexes in the **Hotels** database.
 
     :::image type="content" source="./media/quickstart-go-vector-search/visual-studio-code-documentdb.png" lightbox="./media/quickstart-go-vector-search/visual-studio-code-documentdb.png" alt-text="Screenshot of DocumentDB extension showing the Azure DocumentDB collection.":::
 
@@ -398,7 +414,7 @@ HNSW demonstration completed successfully!
 
 ## Clean up resources
 
-Delete the resource group, DocumentDB account, and Azure OpenAI resource when you don't need them to avoid extra costs.
+When you no longer need them, delete the resource group, Azure DocumentDB cluster, and Azure OpenAI resource to avoid unnecessary costs.
 
 ## Related content
 
