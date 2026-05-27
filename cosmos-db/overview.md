@@ -1,7 +1,7 @@
 ---
 title: Cosmos DB Overview
 description: Learn about Cosmos DB, a distributed NoSQL database for low-latency apps. It offers elastic scaling, global replication, and AI capabilities in Azure and Fabric.
-ms.date: 11/07/2025
+ms.date: 05/27/2026
 ai-usage: ai-generated
 ---
 
