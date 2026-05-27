@@ -29,8 +29,8 @@ The app uses a sample hotel dataset in a JSON file with pre-calculated vectors f
 
 [!INCLUDE[Prerequisites - Vector Search Quickstart](includes/prerequisite-quickstart-vector-search-model.md)]
 
-  > [!TIP]
-  > To customize Azure OpenAI model parameters before deployment, see the section [Customize Azure OpenAI deployment](#customize-azure-openai-deployment-optional) later in this article.
+    > [!TIP]
+    > To customize Azure OpenAI model parameters before deployment, see the section [Customize Azure OpenAI deployment](#customize-azure-openai-deployment-optional) later in this article.
 
 - [Java 21](/java/openjdk/download) or later
 
