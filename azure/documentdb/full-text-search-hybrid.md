@@ -1,6 +1,6 @@
 ---
 title: "Hybrid Search - Combining BM25 and Vector Retrieval"
-titleSufix: Azure DocumentDB 
+titleSuffix: Azure DocumentDB 
 description: Combine keyword and vector search in Azure DocumentDB to deliver higher recall and precision than either approach alone, on a single collection.
 author: khelanmodi
 ms.author: khelanmodi
