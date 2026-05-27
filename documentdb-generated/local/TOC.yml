@@ -1,4 +1,6 @@
 ## YamlMime:TOC
 items:
+  - name: DocumentDB (in Azure) documentation
+    href: /documentdb/
   - name: DocumentDB Local
-    href: local/index.md
+    href: index.md
