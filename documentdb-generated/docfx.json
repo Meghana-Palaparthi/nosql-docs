@@ -23,8 +23,11 @@
     "resource": [
       {
         "files": [
+          "**/*.gif",
+          "**/*.jpeg",
+          "**/*.jpg",
           "**/*.png",
-          "**/*.jpg"
+          "**/*.svg"
         ],
         "exclude": [
           "**/obj/**",
@@ -38,11 +41,84 @@
     "overwrite": [],
     "externalReference": [],
     "globalMetadata": {
-      "feedback_system": "Standard",
+      "uhfHeaderId": "MSDocsHeader-NoSQL",
+      "brand": "Azure",
+      "permissioned-type": "public",
+      "recommendations": true,
+      "recommendation_types": [
+        "Training",
+        "Certification"
+      ],
       "breadcrumb_path": "~/breadcrumb/documentdb-generated/toc.yml",
-      "permissioned-type": "public"
+      "feedback_system": "Standard",
+      "feedback_product_url": "https://feedback.azure.com/d365community/forum/3002b3be-0d25-ec11-b6e6-000d3a4f0858",
+      "feedback_help_link_url": "/answers/tags/1589/azure-documentdb/",
+      "feedback_help_link_type": "get-help-at-qna"
     },
-    "fileMetadata": {},
+    "fileMetadata": {
+      "titleSuffix": {
+        "**/*.md": "DocumentDB (in Azure)",
+        "**/*.yml": "DocumentDB (in Azure)",
+        "query/**/*.md": "MongoDB Query Language (MQL) for DocumentDB (in Azure)",
+        "query/**/*.yml": "MongoDB Query Language (MQL) for DocumentDB (in Azure)"
+      },
+      "author": {
+        "**/*.md": "seesharprun",
+        "**/*.yml": "seesharprun"
+      },
+      "ms.author": {
+        "**/*.md": "sidandrews",
+        "**/*.yml": "sidandrews"
+      },
+      "ms.reviewer": {
+        "*.md": "gahllevy",
+        "*.yml": "gahllevy",
+        "query/**/*.md": "avgupt",
+        "query/**/*.yml": "avgupt"
+      },
+      "ms.service": {
+        "**/*.md": "documentdb",
+        "**/*.yml": "documentdb"
+      },
+      "ms.topic": {
+        "**/*.md": "reference",
+        "**/*.yml": "reference",
+        "query/**/*.md": "language-reference",
+        "query/**/*.yml": "language-reference"
+      },
+      "ms.devlang": {
+        "query/**/*.md": "mongodb",
+        "query/**/*.yml": "mongodb"
+      },
+      "ms.collection": {
+        "**/*.md": "documentdb-reference",
+        "**/*.yml": "documentdb-reference",
+        "query/**/*.md": "documentdb-query-reference",
+        "query/**/*.yml": "documentdb-query-reference"
+      },
+      "ai-usage": {
+        "query/**/*.md": "ai-assisted",
+        "query/**/*.yml": "ai-assisted"
+      },
+      "ms.date": {
+        "**/*.{md,yml}": "05/27/2026",
+        "query/**/*.{md,yml}": "05/27/2026"
+      },
+      "appliesto": {
+        "**/*.md": [
+          "✅ Azure DocumentDB"
+        ],
+        "**/*.yml": [
+          "✅ Azure DocumentDB"
+        ],
+        "query/**/*.md": [
+          "✅ Azure DocumentDB"
+        ],
+        "query/**/*.yml": [
+          "✅ Azure DocumentDB"
+        ]
+      }
+    },
     "template": []
   }
 }

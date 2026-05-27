@@ -1,3 +1,8 @@
-- name: '<please enter product name here>'
-  tocHref: /
-  topicHref: /
+items:
+  - name: DocumentDB
+    tocHref: /documentdb/
+    topicHref: /documentdb/index
+    items:
+      - name: MongoDB Query Language (MQL)
+        tocHref: /documentdb/query/
+        topicHref: /documentdb/query/index
