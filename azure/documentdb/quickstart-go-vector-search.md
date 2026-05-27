@@ -106,7 +106,7 @@ Continue the project by creating code files for vector search.
 
 ### [DiskANN](#tab/tab-diskann)
 
-Create a `src` directory for your Go files. Add two files, `diskann.go` and `utils.go`, for the DiskANN index implementation.
+Create an `src` directory for your Go files. Add two files, `diskann.go` and `utils.go`, for the DiskANN index implementation.
 
 ```bash
 mkdir src    
@@ -114,7 +114,7 @@ touch src/diskann.go
 touch src/utils.go
 ```
 
-When you're done, the project structure looks like this example:
+When you finish, the project structure looks like this example:
 
 ```plaintext
 data
@@ -129,7 +129,7 @@ vector-search-quickstart
 
 #### [IVF](#tab/tab-ivf)
 
-Create a `src` directory for your Go files. Add two files, `ivf.go` and `utils.go`, for the Inverted File (IVF) index implementation.
+Create an `src` directory for your Go files. Add two files, `ivf.go` and `utils.go`, for the Inverted File (IVF) index implementation.
 
 ```bash
 mkdir src
@@ -137,7 +137,7 @@ touch src/ivf.go
 touch src/utils.go
 ```
 
-When you're done, the project structure looks like this example:
+When you finish, the project structure looks like this example:
 
 ```plaintext
 data
@@ -152,7 +152,7 @@ vector-search-quickstart
 
 #### [HNSW](#tab/tab-hnsw)
 
-Create a `src` directory for your Go files. Add two files, `hnsw.go` and `utils.go`, for the Hierarchical Navigable Small World (HNSW) index implementation.
+Create an `src` directory for your Go files. Add two files, `hnsw.go` and `utils.go`, for the Hierarchical Navigable Small World (HNSW) index implementation.
 
 ```bash
 mkdir src
@@ -160,7 +160,7 @@ touch src/hnsw.go
 touch src/utils.go
 ```
 
-When you're done, the project structure looks like this example:
+When you finish, the project structure looks like this example:
 
 ```plaintext
 data
