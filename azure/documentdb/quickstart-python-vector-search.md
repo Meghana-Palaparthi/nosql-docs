@@ -32,7 +32,7 @@ Find the [sample code](https://github.com/Azure-Samples/documentdb-samples/tree/
 > [!TIP]
 > To customize Azure OpenAI model parameters before deployment, see the section [Customize Azure OpenAI deployment](#customize-azure-openai-deployment-optional) later in this article.
 
-- [Python](https://www.python.org/downloads/) 3.9 or greater
+- [Python](https://www.python.org/downloads/) 3.9 or later
 
 ## Create a data file with vectors
 
@@ -128,7 +128,7 @@ Continue the project by creating code files for vector search. When you're done,
 
 ### [DiskANN](#tab/tab-diskann)
 
-Create a `src` directory for your Python files. Add two files, `diskann.py` and `utils.py`, for the DiskANN index implementation.
+Create an `src` directory for your Python files. Add two files, `diskann.py` and `utils.py`, for the DiskANN index implementation.
 
 ```bash
 mkdir src    
@@ -138,7 +138,7 @@ touch src/utils.py
 
 #### [IVF](#tab/tab-ivf)
 
-Create a `src` directory for your Python files. Add two files, `ivf.py` and `utils.py`, for the Inverted File (IVF) index implementation.
+Create an `src` directory for your Python files. Add two files, `ivf.py` and `utils.py`, for the Inverted File (IVF) index implementation.
 
 ```bash
 mkdir src
@@ -148,7 +148,7 @@ touch src/utils.py
 
 #### [HNSW](#tab/tab-hnsw)
 
-Create a `src` directory for your Python files. Add two files, `hnsw.py` and `utils.py`, for the Hierarchical Navigable Small World (HNSW) index implementation.
+Create an `src` directory for your Python files. Add two files, `hnsw.py` and `utils.py`, for the Hierarchical Navigable Small World (HNSW) index implementation.
 
 ```bash
 mkdir src
