@@ -17,7 +17,7 @@ appliesto:
 
 # Access Azure Key Vault from Azure Cosmos DB using a managed identity
 
-Azure Cosmos DB may need to read secret/key data from Azure Key Vault. For example, your Azure Cosmos DB may require a customer-managed key stored in Azure Key Vault. To do this, Azure Cosmos DB should be configured with a managed identity, and then an Azure Key Vault access policy should grant the managed identity access.
+Azure Cosmos DB may need to read secret/key data from Azure Key Vault. For example, your Azure Cosmos DB may require a customer-managed key stored in Azure Key Vault. To do this, Azure Cosmos DB should be configured with a managed identity, and then an Azure Key Vault access policy should grant the managed identity access. 
 
 ## Prerequisites
 
@@ -28,7 +28,7 @@ Azure Cosmos DB may need to read secret/key data from Azure Key Vault. For examp
 
 ## Prerequisite check
 
-1. In a terminal or command window, store the names of your Azure Key Vault resource, Azure Cosmos DB account, and resource group as shell variables named ``keyVaultName``, ``cosmosName``, and ``resourceGroupName``.
+1. In a terminal or command window, store the names of your Azure Key Vault resource, Azure Cosmos DB account, and resource group as shell variables named ``keyVaultName``, ``cosmosName``, and ``resourceGroupName``. 
 
     ```azurecli-interactive
     # Variable for Key Vault name
@@ -42,7 +42,7 @@ Azure Cosmos DB may need to read secret/key data from Azure Key Vault. For examp
     ```
 
     > [!NOTE]
-    > These variables will be reused in later steps. This example assumes your Azure Cosmos DB account name is ``msdocs-cosmos-app``, your key vault name is ``msdocs-keyvault`` and your resource group name is ``msdocs-cosmos-keyvault-identity``.
+    > These variables will be reused in later steps. This example assumes your Azure Cosmos DB account name is ``msdocs-cosmos-app``, your key vault name is ``msdocs-keyvault`` and your resource group name is ``msdocs-cosmos-keyvault-identity``. 
 
 
 ## Create a system-assigned managed identity in Azure Cosmos DB
@@ -60,7 +60,7 @@ First, create a system-assigned managed identity for the existing Azure Cosmos D
         --name $cosmosName 
     ```
 
-1. Retrieve the metadata of the system-assigned managed identity using [``az cosmosdb identity show``](/cli/azure/cosmosdb/identity#az-cosmosdb-identity-show), filter to just return the ``principalId`` property using the **query** parameter, and store the result in a shell variable named ``principal``.
+1. Retrieve the metadata of the system-assigned managed identity using [``az cosmosdb identity show``](/cli/azure/cosmosdb/identity#az-cosmosdb-identity-show), filter to just return the ``principalId`` property using the **query** parameter, and store the result in a shell variable named ``principal``. 
 
     ```azurecli-interactive
     principal=$(
@@ -79,7 +79,7 @@ First, create a system-assigned managed identity for the existing Azure Cosmos D
 
 ## Create an Azure Key Vault access policy
 
-In this step, create an access policy in Azure Key Vault using the previously managed identity.
+In this step, create an access policy in Azure Key Vault using the previously managed identity. 
 
 1. Use the [``az keyvault set-policy``](/cli/azure/keyvault#az-keyvault-set-policy) command to create an access policy in Azure Key Vault that gives the Azure Cosmos DB managed identity permission to access Key Vault. Specifically, the policy will use the **key-permissions** parameters to grant permissions to ``get``, ``list``, and ``import`` keys.
 
@@ -93,4 +93,4 @@ In this step, create an access policy in Azure Key Vault using the previously ma
 ## Next steps
 
 * To use customer-managed keys in Azure Key Vault with your Azure Cosmos DB account, see [configure customer-managed keys](how-to-setup-cmk.md#using-managed-identity)
-* To use Azure Key Vault to manage secrets, see [secure credentials](store-credentials-key-vault.md).
+* To use Azure Key Vault to manage secrets, see [secure credentials](store-credentials-key-vault.md). 
