@@ -52,7 +52,7 @@ Each range is read in parallel. A range's progress is maintained separately from
 
 ### [.NET](#tab/dotnet)
 
-The change feed processor in .NET is available for [latest version mode](change-feed-modes.md#latest-version-change-feed-mode) and [all versions and deletes mode](change-feed-modes.md#all-versions-and-deletes-change-feed-mode-preview). All versions and deletes mode is in preview and is supported for the change feed processor beginning in version `3.40.0-preview.0`. The point of entry for both modes is always the monitored container.
+The change feed processor in .NET is available for [latest version mode](change-feed-modes.md#latest-version-change-feed-mode) and [all versions and deletes mode](change-feed-modes.md?tabs=all-versions-and-deletes#work-with-the-change-feed). All versions and deletes mode is in preview and is supported for the change feed processor beginning in version `3.40.0-preview.0`. The point of entry for both modes is always the monitored container.
 
 To read using latest version mode, in a `Container` instance, you call `GetChangeFeedProcessorBuilder`:
 

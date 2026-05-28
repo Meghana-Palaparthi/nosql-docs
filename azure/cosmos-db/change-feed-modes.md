@@ -120,8 +120,8 @@ During the preview, the following methods to read the change feed are available 
 
 | **Method to read change feed** | **.NET** | **Java** | **Python** | **Node.js** | **Spark** |
 | --- | --- | --- | --- | --- | --- |
-| [Change feed pull model](change-feed-pull-model.md) | [>= 3.32.0-preview](https://www.nuget.org/packages/Microsoft.Azure.Cosmos/3.32.0-preview) | [>= 4.63.3](https://mvnrepository.com/artifact/com.azure/azure-cosmos/4.37.0) | [>= 4.9.1b1](https://pypi.org/project/azure-cosmos/4.9.1b1/) |  [>= 4.1.0](https://www.npmjs.com/package/@azure/cosmos?activeTab=versions) | [>= 4.40.0 for all Spark Runtimes](https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/cosmos/azure-cosmos-spark_3-3_2-12/README.md) |
-| [Change feed processor](change-feed-processor.md) | [>= 3.40.0-preview.0](https://www.nuget.org/packages/Microsoft.Azure.Cosmos/3.40.0-preview.0) | [>= 4.63.3](https://mvnrepository.com/artifact/com.azure/azure-cosmos/4.42.0) | No | No | No |
+| [Change feed pull model](change-feed-pull-model.md) | [>= 3.60.0](https://www.nuget.org/packages/Microsoft.Azure.Cosmos/3.60.0) | [>= 4.63.3](https://mvnrepository.com/artifact/com.azure/azure-cosmos/4.37.0) | [>= 4.9.1b1](https://pypi.org/project/azure-cosmos/4.9.1b1/) |  [>= 4.1.0](https://www.npmjs.com/package/@azure/cosmos?activeTab=versions) | [>= 4.40.0 for all Spark Runtimes](https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/cosmos/azure-cosmos-spark_3-3_2-12/README.md) |
+| [Change feed processor](change-feed-processor.md) | [>= 3.60.0](https://www.nuget.org/packages/Microsoft.Azure.Cosmos/3.60.0) | [>= 4.63.3](https://mvnrepository.com/artifact/com.azure/azure-cosmos/4.42.0) | No | No | No |
 | Azure Functions trigger | No | No | No | No | No |
 
 > [!NOTE]
