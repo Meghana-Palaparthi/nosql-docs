@@ -7,7 +7,7 @@ ms.author: sandnair
 ms.service: azure-cosmos-db
 ms.subservice: mongodb
 ms.topic: how-to
-ms.date: 10/17/2025
+ms.date: 05/18/2026
 appliesto:
   - MongoDB
 ---
@@ -120,7 +120,7 @@ The **Select Migration Mode** section is used to provide the migration mode that
 
     :::image source="media/how-to-migrate-documentdb/mode-selection.png" alt-text="Screenshot of the mode selection options for a migration job.":::
 
-    > [!NOTE]
+    > [!IMPORTANT]
     > Continuous Backup is a prerequisite for online migrations. For more information, see [continuous backup](../continuous-backup-restore-introduction.md).
 
 1. Select **Next**.
@@ -141,16 +141,19 @@ As a security best practice, Microsoft Entra ID is the preferred authentication 
 
 ### Configure using Microsoft Entra ID authentication
 
-1. Make sure the managed identity has been assigned read-write privileges on the target DocumentDB cluster.
+1. Make sure the managed identity configured on the source account has been [assigned read-write privileges on the target DocumentDB cluster](../../documentdb/how-to-connect-role-based-access-control.md#enable-microsoft-entra-id-authentication).
+
 1. Set the **Azure DocumentDB (with MongoDB Compatibility) account name** field value.  
 
-## Update target firewall
+## Configure Network Security
 
-The **Update Target Firewall** section is used to make sure that the target Azure DocumentDB cluster's firewall doesn't block the migration job requests.
+The **Configure Network Security** section ensures that the target Azure DocumentDB cluster's network configuration allows the migration job to connect. Select one of the following options based on your target cluster's network configuration.
+
+### Public network access is enabled on target — Use firewall rules
+
+Azure DocumentDB clusters are created locked down by default. To enable communication from the Azure Cosmos DB for MongoDB account, add the IP address shown in this step to the Azure DocumentDB firewall.
 
 1. Observe the **IP Address** in this step.
-
-    :::image source="media/how-to-migrate-documentdb/target-firewall.png" alt-text="Screenshot of the target firewall check section and the source account's IP address.":::
 
 1. Navigate to your target Azure DocumentDB cluster using another browser window or tab.
 
@@ -158,12 +161,25 @@ The **Update Target Firewall** section is used to make sure that the target Azur
 
 1. Add a rule to allow access to the migration job's IP address. For more information, see [manage cluster-level firewall rules](../../documentdb/how-to-configure-firewall.md#grant-access-from-azure-services).
 
+    > [!NOTE]
+    > If network security is enabled on your Azure Key Vault, ensure the same [IP is added to the Azure Key Vault Firewall](/azure/key-vault/general/network-security#key-vault-firewall-enabled-ipv4-addresses-and-ranges---static-ips) as well.
+
 1. Navigate back to the browser window or tab with the migration job configuration steps.
 
 1. Select **Next**.
 
-> [!NOTE]
-> If network security is enabled on your Azure Key Vault, ensure the same [IP is added to the Azure Key Vault Firewall](/azure/key-vault/general/network-security#key-vault-firewall-enabled-ipv4-addresses-and-ranges---static-ips) as well.
+### Public network access is disabled on target — Use Entra ID and network bypass
+
+Network bypass mode provides a secure alternative to adding firewall rules when public network access is disabled on your target Azure DocumentDB cluster. Instead of opening firewall rules, bypass mode allows trusted Azure Cosmos DB services to access the cluster while blocking native authentication and all other public access. This creates a secure channel specifically for migration. For more information, see [network bypass mode](#network-bypass-mode).
+
+> [!IMPORTANT]
+> Make sure the managed identity [configured on the source account](#configure-managed-identity-for-your-source-account) has been assigned read-write privileges on the target DocumentDB cluster.
+
+1. Follow the steps in the [enable network bypass mode](#enable-network-bypass-mode) section to configure your target cluster.
+
+1. Navigate back to the browser window or tab with the migration job configuration steps.
+
+1. Select **Next**.
 
 
 ## Configure and start job
@@ -209,3 +225,154 @@ Once a job is submitted, you can monitor the status of the newly created job alo
 
     > [!NOTE]
     > The **cutover** option is only applicable to online migrations. Once cutover is completed, the sync between the source account and target cluster is terminated. After performing a cutover, you should update the credentials in your client application to target the new Azure DocumentDB cluster.
+
+## Network bypass mode
+
+Network bypass mode provides a secure alternative to adding firewall rules when public network access is disabled on your target Azure DocumentDB cluster. Instead of opening firewall rules, bypass mode allows trusted Azure Cosmos DB services to access the cluster through the `AzureCosmosDB` service tag while blocking native authentication and all other public access. This creates a secure channel specifically for migration.
+
+> [!IMPORTANT]
+> Network bypass mode requires API version `2026-02-01-preview` or later. The ARM property is `properties.networkBypassMode`.
+
+| Value | Description |
+|---|---|
+| `None` (default) | No bypass. Standard network rules apply. |
+| `AzureCosmosDB` | Azure Cosmos DB service-tag traffic is allowed through the NSG. |
+
+### Prerequisites for network bypass mode
+
+All three of the following conditions must be met on the target cluster before you can enable network bypass mode:
+
+| # | Requirement | Detail |
+|---|---|---|
+| 1 | No firewall rules exist | Delete all existing firewall rules. |
+| 2 | Public network access is disabled | `properties.publicNetworkAccess` must be `Disabled`. |
+| 3 | Microsoft Entra ID is the only authentication mode | `properties.authConfig.allowedModes` must be `["MicrosoftEntraID"]` (native authentication disabled). |
+
+### Enable network bypass mode
+
+Complete the following steps in order. Wait for the cluster to reach **Succeeded** provisioning state between each step.
+
+#### Delete all firewall rules
+
+List existing firewall rules:
+
+```bash
+az rest --method get \
+  --url "https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/mongoClusters/{clusterName}/firewallRules?api-version=2026-02-01-preview"
+```
+
+For each rule returned, delete it:
+
+```bash
+az rest --method delete \
+  --url "https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/mongoClusters/{clusterName}/firewallRules/{ruleName}?api-version=2026-02-01-preview"
+```
+
+> [!NOTE]
+> If the cluster has no firewall rules, skip this step. Each firewall rule deletion completes in under a minute.
+
+#### Disable public network access
+
+```bash
+az rest --method patch \
+  --url "https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/mongoClusters/{clusterName}?api-version=2026-02-01-preview" \
+  --body '{"properties": {"publicNetworkAccess": "Disabled"}}'
+```
+
+This operation typically completes in 2-5 minutes.
+
+#### Switch to Microsoft Entra ID-only authentication
+
+```bash
+az rest --method patch \
+  --url "https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/mongoClusters/{clusterName}?api-version=2026-02-01-preview" \
+  --body '{"properties": {"authConfig": {"allowedModes": ["MicrosoftEntraID"]}}}'
+```
+
+> [!NOTE]
+> If the cluster already uses Microsoft Entra ID-only authentication, skip this step.
+
+This operation typically completes in 5-10 minutes.
+
+#### Set network bypass mode
+
+```bash
+az rest --method patch \
+  --url "https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/mongoClusters/{clusterName}?api-version=2026-02-01-preview" \
+  --body '{"properties": {"networkBypassMode": "AzureCosmosDB"}}'
+```
+
+> [!IMPORTANT]
+> This is an asynchronous operation. Poll the operation URL from the response headers until the cluster returns to **Succeeded** state. This operation typically completes in 5-10 minutes. You can confirm the configuration using the [verify the configuration](#verify-the-configuration) step.
+
+#### Verify the configuration
+
+```bash
+az rest --method get \
+  --url "https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/mongoClusters/{clusterName}?api-version=2026-02-01-preview"
+```
+
+Confirm the response includes:
+
+```json
+{
+  "properties": {
+    "networkBypassMode": "AzureCosmosDB",
+    "publicNetworkAccess": "Disabled"
+  }
+}
+```
+
+After verification, return to the migration wizard and select **Next** to continue.
+
+### Side effects while bypass mode is active
+
+While `networkBypassMode` is set to `AzureCosmosDB`:
+
+- **Firewall rules**: Creating, updating, or deleting firewall rules returns an error. Listing rules returns an empty list.
+- **Public network access**: Re-enabling public network access is blocked until bypass mode is disabled.
+
+### Troubleshoot network bypass mode
+
+| Error message | Cause | Resolution |
+|---|---|---|
+| *"networkBypassMode is only supported when publicNetworkAccess has been disabled…"* | Public network access is still enabled. | Set `publicNetworkAccess` to `Disabled` first. |
+| *"networkBypassMode cannot be enabled while firewall rules exist…"* | One or more firewall rules are present. | Delete all firewall rules first. |
+| *"networkBypassMode cannot be enabled unless Microsoft Entra ID authentication mode is enabled and Native authentication mode is disabled…"* | Authentication configuration doesn't meet requirements. | Set `authConfig.allowedModes` to `["MicrosoftEntraID"]`. |
+| *"Cannot enable public network access while network bypass mode is active…"* | Attempting to enable public access while bypass is on. | Set `networkBypassMode` to `None` first. |
+| *"Firewall rules cannot be added while networkBypassMode is 'AzureCosmosDB'…"* | Attempting to add a firewall rule while bypass is on. | Set `networkBypassMode` to `None` and then enable public access. |
+
+## Post migration actions
+
+After the migration completes successfully, complete the following steps to revert any temporary configuration changes.
+
+### Disable network bypass mode
+
+If you enabled [network bypass mode](#network-bypass-mode) during the migration, disable it to restore standard network rules.
+
+```bash
+az rest --method patch \
+  --url "https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/mongoClusters/{clusterName}?api-version=2026-02-01-preview" \
+  --body '{"properties": {"networkBypassMode": "None"}}'
+```
+
+This operation typically completes in 5-10 minutes. Disabling bypass mode has no prerequisites and can be done at any time. The `AzureCosmosDB` service tag is removed from the NSG and normal network rules resume.
+
+### Re-enable public network access (optional)
+
+```bash
+az rest --method patch \
+  --url "https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/mongoClusters/{clusterName}?api-version=2026-02-01-preview" \
+  --body '{"properties": {"publicNetworkAccess": "Enabled"}}'
+```
+
+### Re-enable native authentication (optional)
+
+> [!NOTE]
+> Native admin credentials must be provided when re-enabling native authentication. Replace `{adminUser}` and `{adminPassword}` with the cluster's admin username and a new password.
+
+```bash
+az rest --method patch \
+  --url "https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/mongoClusters/{clusterName}?api-version=2026-02-01-preview" \
+  --body '{"properties": {"authConfig": {"allowedModes": ["NativeAuth"]}, "administrator": {"userName": "{adminUser}", "password": "{adminPassword}"}}}'
+```
