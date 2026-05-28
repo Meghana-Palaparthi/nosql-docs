@@ -47,7 +47,7 @@
     },
     {
       "source_path_from_root": "/azure/cosmos-db/cosmosdb-shell.md",
-      "redirect_url": "/azure/cosmos-db/shell/index",
+      "redirect_url": "/azure/cosmos-db/shell",
       "redirect_document_id": true
     },
     {
