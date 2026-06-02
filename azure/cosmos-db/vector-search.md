@@ -225,7 +225,7 @@ You can also optionally configure a `quantizerType` within each vectorIndexes en
   - **product** (default)
 Uses standard product quantization. Provides balanced performance and accuracy for most workloads.
   - **spherical** (public preview)
-This quantization method can improve quatnizatino time leading slightly faster indexing times and performance. This can also provide higher and more stable recall over time with very high dimensional embeddings. Currently available in public preview. 
+This quantization method can reduce quantization time, leading to slightly faster indexing times and improved performance. This method can also provide higher and more stable recall over time with very high dimensional embeddings. Currently available in public preview.
 
 An example of how to define the `quantizerType` is shown below:
 ```json

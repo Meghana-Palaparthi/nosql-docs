@@ -47,7 +47,7 @@
     },
     {
       "source_path_from_root": "/azure/cosmos-db/cosmosdb-shell.md",
-      "redirect_url": "/azure/cosmos-db/shell/overview",
+      "redirect_url": "/azure/cosmos-db/shell",
       "redirect_document_id": true
     },
     {
@@ -84,6 +84,36 @@
       "source_path_from_root": "/azure/cosmos-db/cosmosdb-shell-troubleshooting.md",
       "redirect_url": "/azure/cosmos-db/shell/troubleshooting",
       "redirect_document_id": true
+    },
+    {
+      "source_path_from_root": "/azure/cosmos-db/cassandra/how-to-connect-role-based-access-control.md",
+      "redirect_url": "/azure/cosmos-db/cassandra/security",
+      "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/azure/cosmos-db/cassandra/reference-data-plane-security.md",
+      "redirect_url": "/azure/cosmos-db/cassandra/security",
+      "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/azure/cosmos-db/gremlin/how-to-connect-role-based-access-control.md",
+      "redirect_url": "/azure/cosmos-db/gremlin/security",
+      "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/azure/cosmos-db/gremlin/reference-data-plane-security.md",
+      "redirect_url": "/azure/cosmos-db/gremlin/security",
+      "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/azure/cosmos-db/mongodb/how-to-connect-role-based-access-control.md",
+      "redirect_url": "/azure/cosmos-db/mongodb/security",
+      "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/azure/cosmos-db/mongodb/reference-data-plane-security.md",
+      "redirect_url": "/azure/cosmos-db/mongodb/security",
+      "redirect_document_id": false
     }
   ]
 }
