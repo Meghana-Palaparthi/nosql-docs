@@ -189,7 +189,7 @@ PPAF is part of the **Business Critical** service tier for Azure Cosmos DB. For 
 | Consistency | Strong, Session, Consistent Prefix, or Eventual |
 | Cloud | Azure public cloud regions |
 | Connection mode | Direct |
-| SDK | .NET v3 ≥ 3.59.0 - Java v4 ≥ 4.79.0 - Python ≥ 4.16.0 - Node.js ≥ 4.7.0 |
+| SDK | .NET v3 ≥ 3.60.0 - Java v4 ≥ 4.79.0 - Python ≥ 4.16.0 - Node.js ≥ 4.7.0 |
 
 ## Related content
 
