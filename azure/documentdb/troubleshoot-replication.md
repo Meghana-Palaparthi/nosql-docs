@@ -2,9 +2,10 @@
 title: Troubleshoot common issues in Azure DocumentDB replication
 description: This guide discusses the ways to troubleshoot common issues encountered in Azure DocumentDB replication.
 ms.topic: troubleshooting
-ms.date: 09/09/2025
-author: abinav2307
-ms.author: abramees
+ms.date: 05/14/2026
+author: prashanthmadi
+ms.author: prmadi
+ai-usage: ai-assisted
 ---
 
 # Troubleshooting guide: Cross-region and same region replication in Azure DocumentDB
@@ -66,6 +67,32 @@ To delete a replica cluster:
 1. On the **Overview** page, select **Delete** in the toolbar.
 1. Carefully read the warning message and confirm the deletion.
     :::image type="content" source="media/troubleshoot-replication/replica-cluster-delete.png" alt-text="Screenshot of the replica cluster properties with Overview page open and Delete button highlighted in Azure portal.":::
+
+### Which failover mode should I use?
+Azure DocumentDB supports three [cross-region failover modes](./failover-modes.md):
+
+- **Forced promotion** — You promote the replica at any time. Possible data loss because of replication lag.
+- **Graceful promotion** — You initiate a planned switch. Replication drains before the switch, so the operation completes with zero data loss.
+- **Service-managed failover** — Azure automatically promotes the replica when it detects a regional outage on the primary. Possible data loss because of replication lag.
+
+Use service-managed failover for automatic recovery from regional outages, graceful promotion for planned region switches, and forced promotion when you need direct control over an unplanned failover.
+
+### Service-managed failover didn't trigger after a regional outage. What should I check?
+First, confirm that service-managed failover is enabled on the primary cluster. Open the primary cluster's **Global distribution** page in the Azure portal and verify that service-managed failover is turned on. If it isn't, Azure DocumentDB doesn't promote the replica automatically; you can [trigger a forced promotion](./how-to-cluster-replica.md#trigger-a-forced-promotion).
+
+If service-managed failover is enabled, Azure DocumentDB only triggers a failover when it determines that the primary region is unavailable and the cluster can't be recovered locally. Brief, transient errors don't trigger a service-managed failover. Check the Azure status page and your cluster's diagnostic logs to confirm whether the service detected a regional outage.
+
+### My graceful promotion is taking longer than expected. Why?
+[Graceful promotion](./failover-modes.md#graceful-promotion) waits for the replication queue to fully drain before switching write roles. The duration depends on the current replication lag, which grows under heavy write load. To reduce the time a graceful promotion takes:
+
+- Schedule the failover during a window of low write activity on the primary cluster.
+- Check current replication lag on the **Metrics** page of the replica cluster before initiating the failover.
+- If the lag is consistently high, scale up the replica cluster so it can keep up with primary writes more quickly.
+
+If the primary cluster becomes unreachable while a graceful promotion is in progress, the operation can't complete because the queue can't be drained. In that situation, cancel the graceful promotion and use [forced promotion](./how-to-cluster-replica.md#trigger-a-forced-promotion) instead.
+
+### Can I use service-managed failover and graceful promotion together?
+Yes. The two settings are independent. Service-managed failover controls whether Azure DocumentDB automatically promotes the replica during a regional outage. Graceful promotion is an on-demand operation you trigger for planned region switches. Enable service-managed failover as a safety net for outages and use graceful promotion whenever you can schedule the switch yourself.
 
 ## Next steps
 - If you followed all the troubleshooting steps and still can't resolve your issue, you can open a [support request](https://azure.microsoft.com/support/create-ticket/) for further assistance.

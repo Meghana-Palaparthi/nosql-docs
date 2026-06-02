@@ -1,10 +1,11 @@
 ---
 title: Availability and disaster recovery (DR) under the hood
 description: Learn about Azure DocumentDB availability and disaster recovery internals.
-author: abinav2307
-ms.author: abramees
+author: prashanthmadi
+ms.author: prmadi
 ms.topic: concept-article
-ms.date: 01/02/2026
+ms.date: 05/14/2026
+ai-usage: ai-assisted
 #Customer Intent: As a database adminstrator, I want to configure availability and cross-region replication, so that I can have appropirtiate in-region and cross-region disaster recovery plans in the event of outages on different levels.
 ---
 
@@ -59,19 +60,47 @@ Applications can use a *dynamic global read-write connection string*, which alwa
 :::image type="content" source="media/availability-and-dr-under-the-hood/mongodb-vcore-cluster-with-replica.gif" alt-text="Diagram of a cross-region replica promotion for disaster recovery purpose in Azure DocumentDB.":::
 *Figure 3. Regional disaster recovery (DR) with an Azure DocumentDB cluster with cross-region replication enabled. Cluster in region B is promoted to become the new read-write cluster. Cluster in region A becomes a replica cluster.*
 
+## Failover modes for cross-region DR
+
+The replica cluster in region B can take over the read-write role in three ways. The mechanism is the same in each case—reverse the replication direction and switch the global read-write connection string—but the trigger and the data-loss characteristics differ.
+
+### Forced promotion
+
+Forced promotion is a user-initiated failover. The service immediately switches the replica to read-write mode and the former primary to read-only. Because replication is asynchronous, any writes that were committed on the former primary but not yet replicated are lost on the new primary. The cluster is fully available for writes as soon as the role switch completes.
+
+### Graceful promotion
+
+Graceful promotion is also user-initiated, but unlike forced promotion, it preserves all writes. The service performs these steps:
+
+1. Stops accepting new writes on the primary cluster in region A.
+1. Drains the replication queue so the replica in region B is byte-for-byte caught up with the former primary.
+1. Promotes the replica in region B to read-write.
+1. Demotes the former primary in region A to read-only and reverses replication direction.
+
+Because the queue must drain before the switch, the application sees a short write-availability pause. The pause duration is bounded by the current replication lag, which is typically small under normal load but can grow during write spikes.
+
+### Service-managed failover
+
+Service-managed failover is initiated by Azure DocumentDB itself. The service continuously monitors the health of the primary region and the reachability of the primary cluster. When it determines that the primary region is unavailable and the cluster can't be recovered locally, it triggers a promotion of the replica in region B. Because the primary isn't reachable, the replication queue can't be drained first, so the failover behaves like an automated forced promotion: it might lose writes that hadn't yet been replicated when the outage began.
+
+Service-managed failover is an opt-in setting on the primary cluster. When it's disabled (the default), a regional outage requires a user-initiated promotion of the replica.
+
 ## Summary of in-region availability and cross-region DR capabilities
 
-The following table summarizes primary considerations for enabling and managing in-region high availability and cross-region disaster recovery strategy.
+The following table summarizes primary considerations for enabling and managing in-region high availability and the available cross-region failover modes.
 
-|Scenario |Azure DocumentDB feature|No data loss|Protection from region-wide outages|Automatic failover|No connection string change|
-|-----------------------|----------------------------------|--------------------|--------------------|--------------------|---------------------|
-|Physical shard failure | In-region high availability (HA) | :heavy_check_mark: | :x:                | :heavy_check_mark: | :heavy_check_mark:  |
-|Regional outage        | Cross-region replica cluster     | :x:                | :heavy_check_mark: | :x:                | :heavy_check_mark:† |
+| Scenario | Azure DocumentDB feature | Zero data loss | Protection from region-wide outages | Automatic failover | No connection string change |
+| --- | --- | --- | --- | --- | --- |
+| Physical shard failure | In-region high availability (HA) | :heavy_check_mark: | :x: | :heavy_check_mark: | :heavy_check_mark: |
+| Regional outage, user-initiated | Cross-region replica + forced promotion | :x: | :heavy_check_mark: | :x: | :heavy_check_mark:&dagger; |
+| Planned region switch, user-initiated | Cross-region replica + graceful promotion | :heavy_check_mark: | :heavy_check_mark: | :x: | :heavy_check_mark:&dagger; |
+| Regional outage, service-initiated | Cross-region replica + service-managed failover | :x: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:&dagger; |
 
-† When using the global read-write connection string.
+&dagger; When using the global read-write connection string.
 
 ## Related content
 
+- [Compare cross-region failover modes](./failover-modes.md)
 - [Learn about in-region high availability in Azure DocumentDB](./high-availability.md)
 - [Learn about cross-region replication and cross-region disaster recovery](./cross-region-replication.md)
 - [Learn about reliability in Azure DocumentDB](/azure/reliability/reliability-documentdb?context=/azure/documentdb/context/context)
