@@ -890,6 +890,8 @@
               href: periodic-backup-storage-redundancy.md?context=/azure/cosmos-db/context/context
             - name: Request data restore
               href: periodic-backup-request-data-restore.md?context=/azure/cosmos-db/context/context
+        - name: Azure Backup for Cosmos DB
+          href: long-term-retention-backup-introduction.md?context=/azure/cosmos-db/context/context
     - name: Monitor
       items:
         - name: Monitor Azure Cosmos DB
