@@ -178,7 +178,7 @@ These limits may change before general availability.
 
 ## Supported APIs and SDKs
 
-Only the **NoSQL (Core SQL) API** is currently supported.
+Currently, only the **NoSQL (Core SQL) API** is supported.
 
 | SDK | Status |
 |---|---|
