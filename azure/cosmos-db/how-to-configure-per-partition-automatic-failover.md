@@ -29,7 +29,7 @@ Before enabling PPAF, ensure your environment meets the following **prerequisite
 - **Consistency model:** **Strong**, **Session**, **Consistent prefix**, or **Eventual** consistency are currently supported. **Bounded staleness** will be supported in a future release.
 - **API type:** The account must use the **Core (SQL) API** (NoSQL API).
 - **Azure region:** The account must be in a **global Azure region**
-- **SDK version:** Your application must use a supported Azure Cosmos DB SDK that implements PPAF logic. The preview currently supports:
+- **SDK version:** Your application must use a supported Azure Cosmos DB SDK that implements PPAF logic. The following SDK versions are supported:
   - **.NET SDK v3** : v3.60.0 or later
   - **Java SDK**: v4.79.0 or later
   - **Python SDK**: v4.16.0 or later
@@ -111,9 +111,9 @@ Configuring your application's Azure Cosmos DB SDK is **critical** so that it kn
 
 ## Test the PPAF setup (simulate a fault)
 
-With the account and client configured, validate that everything works as expected before a real outage occurs. Azure Cosmos DB provides a way to simulate partition failures in the preview for PPAF-enabled accounts:
+With the account and client configured, validate that everything works as expected before a real outage occurs. Azure Cosmos DB provides a way to simulate partition failures for PPAF-enabled accounts:
 
-- **Chaos simulation (preview):** A preview of the fault-management feature for PPAF is available via REST API. For ease of use, a PowerShell script is provided to manage the fault.
+- **Chaos simulation:** The fault-management feature for PPAF is available via REST API. For ease of use, a PowerShell script is provided to manage the fault.
   - Download the script [`EnableDisableChaosFault.ps1` at azurecosmosdb/ppaf-samples](https://github.com/AzureCosmosDB/ppaf-samples/blob/main/ppaf-fault-script/EnableDisableChaosFault.ps1).
   - Start PowerShell and sign in to your subscription by running `az login`.
   - Navigate to the folder that contains the PowerShell script and invoke it with the required parameters to inject the fault:
