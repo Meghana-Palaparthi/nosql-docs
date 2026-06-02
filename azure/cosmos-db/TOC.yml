@@ -74,7 +74,7 @@
   items:
     - name: Why use for AI apps?
       href: gen-ai/why-cosmos-ai.md
-    - name: Semantic Reranker
+    - name: Semantic Reranker (preview)
       href: gen-ai/semantic-reranker.md
     - name: Use vector search
       items:

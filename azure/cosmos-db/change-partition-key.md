@@ -40,7 +40,7 @@ If creating a new container using the Azure portal while changing the partition 
 You can copy data from the source container to the destination container in online or offline manner utilizing the [container copy](container-copy.md#how-does-container-copy-work) jobs.
 
 >[!Note]
->For online mode, you need to complete the chnage partition key job by clicking on the complete button.
+>For online mode, you need to complete the change partition key job by selecting the **Complete** button.
 
 Once the copy is complete, you can start using the new container with desired partition key and optionally delete the old container.
 

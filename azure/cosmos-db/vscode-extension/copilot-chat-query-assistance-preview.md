@@ -7,6 +7,9 @@ ms.service: azure-cosmos-db
 ms.topic: how-to
 ms.date: 05/12/2026
 ms.custom: preview
+ms.collection:
+  - ce-skilling-ai-copilot
+ms.update-cycle: 180-days
 ---
 
 # Use Copilot Chat query assistance in the Azure Cosmos DB Visual Studio Code extension (preview)
