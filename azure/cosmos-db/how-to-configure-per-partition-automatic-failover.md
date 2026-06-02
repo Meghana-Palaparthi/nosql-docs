@@ -29,7 +29,7 @@ Before enabling PPAF, ensure your environment meets the following **prerequisite
 - **Consistency model:** **Strong**, **Session**, **Consistent prefix**, or **Eventual** consistency are currently supported. **Bounded staleness** will be supported in a future release.
 - **API type:** The account must use the **Core (SQL) API** (NoSQL API).
 - **Azure region:** The account must be in a **global Azure region**
-- **SDK version:** Your application must use a supported Azure Cosmos DB SDK that implements PPAF logic. The preview currently supports:
+- **SDK version:** Your application must use a supported Azure Cosmos DB SDK that implements PPAF logic. The following SDK versions are supported:
   - **.NET SDK v3** : v3.60.0 or later
   - **Java SDK**: v4.79.0 or later
   - **Python SDK**: v4.16.0 or later
@@ -111,14 +111,14 @@ Configuring your application's Azure Cosmos DB SDK is **critical** so that it kn
 
 ## Test the PPAF setup (simulate a fault)
 
-With the account and client configured, validate that everything works as expected before a real outage occurs. Azure Cosmos DB provides a way to simulate partition failures in the preview for PPAF-enabled accounts:
+After you configure the account and client, validate that everything works as expected before a real outage occurs. Azure Cosmos DB provides a partition failure simulation capability for PPAF-enabled accounts:
 
-- **Chaos simulation (preview):** A preview of the fault-management feature for PPAF is available via REST API. For ease of use, a PowerShell script is provided to manage the fault.
+- **Partition failure simulation:** The partition failure simulation capability for PPAF is available through REST API. For ease of use, a PowerShell script is provided to manage the simulation.
   - Download the script [`EnableDisableChaosFault.ps1` at azurecosmosdb/ppaf-samples](https://github.com/AzureCosmosDB/ppaf-samples/blob/main/ppaf-fault-script/EnableDisableChaosFault.ps1).
   - Start PowerShell and sign in to your subscription by running `az login`.
   - Navigate to the folder that contains the PowerShell script and invoke it with the required parameters to inject the fault:
-    - It might take up to 15 minutes for the fault to take effect.
-    - The fault is applied to 10% of the partitions in the specified collection, with a maximum of 10 partitions and a minimum of 1 partition.
+    - It might take up to 15 minutes for the simulation to take effect.
+    - The simulation is applied to 10% of the partitions in the specified collection, with a maximum of 10 partitions and a minimum of 1 partition.
 
     ```powershell
     .\EnableDisableChaosFault.ps1 -FaultType "PerPartitionAutomaticFailover" -ResourceGroup "{ResourceGroupName}" -AccountName "{DatabaseAccountName}" -DatabaseName "{DatabaseName}" -ContainerName "{CollectionName}"  -SubscriptionId "{SubscriptionId}" -Region "{PreferredWriteRegion}" -Enable
@@ -127,9 +127,9 @@ With the account and client configured, validate that everything works as expect
 - **Application testing:** Test critical transactions of your application during the failover.
 - **Metrics:**
   - Verify the traffic in the Azure portal **Metrics** blade for your account. Look at metrics like **Total Requests** broken down by region. You should see write operations occurring in a secondary region during the simulation, confirming the failover worked.
-  - A new metric named **PartitionWriteGlobalStatus** reports the count of write partitions for a region at any given time. Use this metric to track how many partitions failed over due to the fault.
+  - A new metric named **PartitionWriteGlobalStatus** reports the count of write partitions for a region at any given time. Use this metric to track how many partitions failed over during the simulation.
 
-- **Disable the fault:** Invoke the same script with the `-Disable` switch to remove the fault. It might take up to 15 minutes for the fault to be disabled.
+- **Stop the simulation:** Invoke the same script with the `-Disable` switch to stop the partition failure simulation. It might take up to 15 minutes for the simulation to stop.
 
     ```powershell
     .\EnableDisableChaosFault.ps1 -FaultType "PerPartitionAutomaticFailover" -ResourceGroup "{ResourceGroupName}" -AccountName "{DatabaseAccountName}" -DatabaseName "{DatabaseName}" -ContainerName "{CollectionName}"  -SubscriptionId "{SubscriptionId}" -Region "{PreferredWriteRegion}" -Disable
