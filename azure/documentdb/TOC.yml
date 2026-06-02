@@ -72,28 +72,39 @@
           href: tutorial-nodejs-web-app.md
         - name: Real-time AI-driven custom content generation
           href: tutorial-ai-advertisement-generation.md
-    - name: Integrated vector database
+    - name: Search and Retrieval
       items:
-        - name: Vector database
-          href: vector-search.md
-        - name: Data Retrieval
+        - name: Full-text search
           items:
-            - name: Full-text search
-              href: full-text-search.md
-            - name: Hybrid Search
-              href: hybrid-search.md
+            - name: Overview
+              href: full-text-search-overview.md
+            - name: BM25 keyword search
+              href: full-text-search-keyword.md
+            - name: Fuzzy search
+              href: full-text-search-fuzzy.md
+            - name: Phrase search and proximity matching
+              href: full-text-search-phrase-proximity.md
+            - name: Hybrid search (BM25 + vector)
+              href: full-text-search-hybrid.md
+        - name: Vector search
+          items:
+            - name: Vector database
+              href: vector-search.md
             - name: Exact Nearest Neighbor (ENN) Vector Search
               href: enn-vector-search.md
-            - name: RAG with Langchain & OpenAI
-              href: rag.md
-        - name: Vector Index Compression
-          items:
-            - name: Product Quantization
-              href: product-quantization.md
-            - name: Half-Precision Vector Indexing
-              href: half-precision.md
+            - name: Vector Index Compression
+              items:
+                - name: Product Quantization
+                  href: product-quantization.md
+                - name: Half-Precision Vector Indexing
+                  href: half-precision.md
+        - name: RAG with Langchain & OpenAI
+          href: rag.md
     - name: Integrate with AI Tools
       items:
+        - name: MCP Toolkit
+          displayName: Model Context Protocol, MCP, AI agents, Copilot
+          href: mcp-toolkit.md
         - name: AI Frameworks
           items:
             - name: Overview
@@ -147,6 +158,8 @@
       href: high-availability.md
     - name: Cross-region replication
       href: cross-region-replication.md
+    - name: Cross-region failover modes
+      href: failover-modes.md
     - name: High availability and disaster recovery - Behind the scenes
       href: availability-disaster-recovery-under-hood.md
     - name: Best practices for high availability and disaster recovery
@@ -199,7 +212,7 @@
       href: geospatial-support.md
     - name: Indexing
       href: indexing.md
-    - name: Change Stream
+    - name: Change streams
       href: change-streams.md
     - name: Data API
       href: data-api.md

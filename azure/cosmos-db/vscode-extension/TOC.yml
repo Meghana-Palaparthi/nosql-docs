@@ -1,0 +1,24 @@
+- name: Visual Studio Code extension
+  href: overview.md
+- name: Core capabilities
+  items:
+    - name: Browse accounts and databases
+      href: browse-accounts-databases.md
+    - name: Execute SQL queries with syntax highlighting
+      href: sql-query-editor.md
+    - name: CRUD operations on documents and collections
+      href: manage-documents-collections.md
+    - name: Connect to local emulator
+      href: connect-local-emulator.md
+    - name: Import and export data
+      href: import-export-data.md
+    - name: Azure portal integration
+      href: azure-portal-integration.md
+    - name: Natural language to query (preview)
+      href: natural-language-to-query-preview.md
+    - name: Copilot Chat query assistance (preview)
+      href: copilot-chat-query-assistance-preview.md
+    - name: IntelliSense and auto-completion (preview)
+      href: intellisense-auto-completion-preview.md
+    - name: Migration Assistant (preview)
+      href: cosmos-db-migration-assistant.md

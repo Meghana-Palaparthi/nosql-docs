@@ -5,7 +5,7 @@ author: richagaur
 ms.author: richagaur
 ms.service: azure-cosmos-db
 ms.topic: how-to
-ms.date: 06/23/2025
+ms.date: 05/18/2026
 ms.custom: references_regions, build-2023, ignite-2023, ignite-2024
 zone_pivot_groups: azure-cosmos-db-apis-nosql-mongodb-cassandra
 appliesto:
@@ -37,7 +37,7 @@ Copy jobs can be [created and managed by using Azure CLI commands](how-to-contai
 #### Prerequisites
 
 1. Enable [continuous backup](continuous-backup-restore-introduction.md) on source Azure Cosmos DB account. 
-1. Enable [All version and delete change feed mode (preview)](change-feed-modes.md?tabs=all-versions-and-deletes#get-started) preview feature on the source account.
+1. Enable [All versions and deletes change feed mode](change-feed-modes.md?tabs=all-versions-and-deletes#get-started) on the source account.
 
 #### Enable Online copy
 
@@ -83,7 +83,7 @@ $capabilities = (($cosmosdb | ConvertFrom-Json).capabilities)
 
 1. The platform allocates server-side compute instances for the destination Azure Cosmos DB account to run the container copy jobs.
 1. A single job is executed across all instances at any time.
-1. The online copy jobs utilize [all version and delete change feed mode](change-feed-modes.md?tabs=latest-version#all-versions-and-deletes-change-feed-mode-preview) to copy the data and replicate incremental changes from the source container to the destination container. 
+1. The online copy jobs utilize [all versions and deletes change feed mode](change-feed-modes.md?tabs=latest-version#all-versions-and-deletes-change-feed-mode) to copy the data and replicate incremental changes from the source container to the destination container. 
 1. Once the job is completed, the platform deallocates these instances after 15 minutes of inactivity.
 
 ### [Offline copy](#tab/offline-copy)

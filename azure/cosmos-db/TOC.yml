@@ -74,16 +74,20 @@
   items:
     - name: Why use for AI apps?
       href: gen-ai/why-cosmos-ai.md
-    - name: Semantic Reranker (Preview)
+    - name: Semantic Reranker (preview)
       href: gen-ai/semantic-reranker.md
     - name: Use vector search
       items:
         - name: Vector indexing and search
           href: vector-search.md
+        - name: Integrated Embeddings
+          href: integrated-embeddings.md
         - name: Sharded DiskANN for focused search
           href: gen-ai/sharded-diskann.md
         - name: Tips for vector search performance
           href: gen-ai/vector-search-performance-tips.md
+        - name: Multi-vector search with MaxSim
+          href: gen-ai/multi-vector-search.md
     - name: Full text indexing and search
       items:
         - name: Full text search overview
@@ -94,10 +98,16 @@
           href: gen-ai/full-text-search-faq.yml?context=/azure/cosmos-db/context/context
     - name: Implement hybrid search
       href: gen-ai/hybrid-search.md?context=/azure/cosmos-db/context/context
+    - name: Implement agentic retrieval
+      href: gen-ai/agentic-retrieval.md?context=/azure/cosmos-db/context/context
     - name: Integrate with AI tools
       href: gen-ai/integrations.md?context=/azure/cosmos-db/context/context
-    - name: Manage agent memories
-      href: gen-ai/agentic-memories.md
+    - name: Agent Memories
+      items:
+        - name: Manage agent memories
+          href: gen-ai/agentic-memories.md
+        - name: Agent Memory Toolkit
+          href: gen-ai/agent-memory-toolkit.md
     - name: Build a RAG chatbot
       href: gen-ai/rag-chatbot.md?context=/azure/cosmos-db/context/context
     - name: Index documents for search
@@ -487,12 +497,16 @@
           href: how-to-migrate-from-change-feed-library.md
         - name: Async Java sample with change feed
           href: how-to-java-change-feed.md
-    - name: Global secondary indexes (preview)
+    - name: Global secondary indexes
       items:
         - name: Overview
           href: global-secondary-indexes.md
-        - name: Configure global secondary indexes (preview)
+        - name: Configure global secondary indexes
           href: how-to-configure-global-secondary-indexes.md
+    - name: Distributed transactions (preview)
+      items:
+        - name: Configure distributed transactions (preview)
+          href: how-to-configure-and-use-distributed-transactions.md
     - name: Index and query geospatial data
       displayName: geospatial, geojson, spatial, index, query, geography, geometry
       href: how-to-geospatial-index-query.md
@@ -645,7 +659,7 @@
       items:
         - name: Emulator
           href: emulator.md?context=/azure/cosmos-db/context/context
-        - name: Linux emulator (preview)
+        - name: Linux emulator
           href: emulator-linux.md?context=/azure/cosmos-db/context/context
         - name: Release notes
           href: emulator-release-notes.md
@@ -774,6 +788,12 @@
               href: how-to-manage-conflicts.md
         - name: Convert session token format
           href: how-to-convert-session-token.md
+    - name: Per-partition automatic failover
+      items:
+        - name: Overview
+          href: per-partition-automatic-failover.md
+        - name: Configure per-partition automatic failover
+          href: how-to-configure-per-partition-automatic-failover.md
 - name: Manage your account
   items:
     - name: Overview of resource model
@@ -816,8 +836,8 @@
           href: /azure/operational-excellence/relocation-cosmos-db?context=/azure/cosmos-db/context/context
         - name: Prevent changes or deletion
           href: resource-locks.md?context=/azure/cosmos-db/context/context
-        - name: Enable Per Partition Automatic Failover
-          href: how-to-configure-per-partition-automatic-failover.md
+        - name: Soft delete (preview)
+          href: soft-delete.md
     - name: Back up and restore
       items:
         - name: Back up and restore introduction
@@ -932,11 +952,11 @@
       href: network-bandwidth.md?context=/azure/cosmos-db/context/context
 - name: Tools & Extensions
   items:
-    - name: Azure Cosmos DB Shell
+    - name: Azure Cosmos DB Shell (preview)
       displayName: CLI, Command-line, Shell, Tools, Extensions, MCP
       items:
-        - name: Overview
-          href: shell/overview.md?context=/azure/cosmos-db/context/context
+        - name: Overview (preview)
+          href: shell/index.md?context=/azure/cosmos-db/context/context
         - name: Installation guide
           href: shell/install.md?context=/azure/cosmos-db/context/context
         - name: Get started
@@ -951,6 +971,8 @@
           href: shell/security.md?context=/azure/cosmos-db/context/context
         - name: Troubleshooting guide
           href: shell/troubleshooting.md?context=/azure/cosmos-db/context/context
+    - name: Visual Studio Code extension
+      href: vscode-extension/TOC.yml
 - name: Analytics with Microsoft Fabric
   items:
     - name: Overview
