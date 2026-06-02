@@ -1,12 +1,13 @@
 ---
 title: Cross-Region Replication Best Practices - Disaster Recovery
 description: Learn how to configure Azure DocumentDB cross-region replication for disaster recovery and read scalability. Includes best practices for replica cluster promotion and connection strings.
-author: abinav2307
-ms.author: abramees
+author: prashanthmadi
+ms.author: prmadi
 ms.topic: best-practice
-ms.date: 11/05/2025
+ms.date: 05/14/2026
 ms.custom:
   - sfi-image-nochange
+ai-usage: ai-assisted
 #Customer Intent: As a database adminstrator, I want to configure cross-region replication, so that I can have disaster recovery plans in the event of a regional outage.
 ---
 
@@ -34,6 +35,16 @@ Replica clusters are also available for reads. It helps offload intensive read o
 
 When you create a replica by enabling cross-region or same region replication, it doesn't inherit networking settings such as firewall rules of the primary cluster. These settings must be set up independently for the replica. The replica inherits the admin account from the primary cluster. User accounts need to be managed on the primary cluster. You can connect to the primary cluster and its replica cluster using the same user accounts.
 
+## Failover modes
+
+Azure DocumentDB supports three ways to switch the write role from the primary cluster to its cross-region replica:
+
+- **Forced promotion** — You promote the replica at any time. Possible data loss because of replication lag.
+- **Graceful promotion** — You initiate a planned switch. The service waits for replication to drain so the operation completes with zero data loss.
+- **Service-managed failover** — Azure automatically promotes the replica when it detects a regional outage on the primary.
+
+For a comparison of the three modes and guidance on which to choose, see [Cross-region failover modes](./failover-modes.md).
+
 ## Replica cluster promotion
 
 If a region outage occurs, you can perform disaster recovery operation by promoting your cluster replica in another region to become available for writes. During replica promotion operation, these steps are happening:
@@ -43,7 +54,7 @@ If a region outage occurs, you can perform disaster recovery operation by promot
 1. The cluster in region A is set to read-only and keeps its connection string.
 
 > [!IMPORTANT]
-> Because replication is asynchronous, some data from cluster in region A might not be replicated to region B when cluster replica in region B is promoted. If so, promotion would result in the unreplicated data not present on both clusters.
+> Forced promotion is an unplanned failover. Because replication is asynchronous, some data from cluster in region A might not be replicated to region B when cluster replica in region B is promoted. If so, promotion would result in the unreplicated data not present on both clusters. To switch regions with zero data loss, use [graceful promotion](./failover-modes.md#graceful-promotion) instead.
 
 ## Authentication methods on replica clusters
 
@@ -53,7 +64,8 @@ If the primary cluster has native DocumentDB authentication method disabled *at 
 
 ## Related content
 
+- [Compare cross-region failover modes](./failover-modes.md)
 - [Learn how to enable replication and promote replica cluster](./how-to-cluster-replica.md)
 - [See replication limits and limitations](./limitations.md#cross-region-and-same-region-replication)
-- To resolve an issue with cross-region replication, see [this troubleshooting guide](./troubleshoot-replication.md).
+- [Troubleshoot cross-region replication](./troubleshoot-replication.md)
 - [Learn about reliability in Azure DocumentDB](/azure/reliability/reliability-documentdb?context=/azure/documentdb/context/context)

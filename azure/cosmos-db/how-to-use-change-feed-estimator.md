@@ -5,7 +5,7 @@ author: seesharprun
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: how-to
-ms.date: 07/25/2024
+ms.date: 05/18/2026
 ms.author: sidandrews
 ms.devlang: csharp
 ms.custom: devx-track-csharp
@@ -102,7 +102,7 @@ An example of a delegate that receives changes and handles them with a lag is:
 
 ## Supported change feed modes
 
-The change feed estimator can be used for both [latest version mode](./change-feed-modes.md#latest-version-change-feed-mode) and [all versions and deletes mode](./change-feed-modes.md#all-versions-and-deletes-change-feed-mode-preview). In both modes, the estimate provided isn't guaranteed to be an exact count of outstanding changes to process.
+The change feed estimator can be used for both [latest version mode](./change-feed-modes.md#latest-version-change-feed-mode) and [all versions and deletes mode](./change-feed-modes.md#all-versions-and-deletes-change-feed-mode). In both modes, the estimate provided isn't guaranteed to be an exact count of outstanding changes to process.
 
 ## Additional resources
 

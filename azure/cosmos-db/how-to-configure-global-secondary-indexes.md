@@ -1,24 +1,21 @@
 ---
-title: How to configure global secondary indexes (preview)
+title: How to configure global secondary indexes
 description: Learn how to configure global secondary indexes and use them to avoid expensive cross-partition queries.
 author: jcocchi
 ms.author: jucocchi
 ms.service: azure-cosmos-db
 ms.subservice: nosql
 ms.topic: how-to
-ms.date: 4/29/2025
+ms.date: 5/17/2026
 ms.custom:
   - build-2025
 appliesto:
   - ✅ NoSQL
 ---
 
-# How to configure Azure Cosmos DB for NoSQL global secondary indexes (preview)
+# How to configure Azure Cosmos DB for NoSQL global secondary indexes
 
-> [!IMPORTANT]
-> Azure Cosmos DB for NoSQL global secondary indexes are currently in preview. This preview is provided without a service-level agreement. At this time, we don't recommend that you use global secondary indexes for production workloads. Certain features of this preview might not be supported or might have constrained capabilities. For more information, see the [supplemental terms of use for Microsoft Azure previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/).
-
-Global secondary indexes provide a powerful way to optimize query performance and simplify application logic by storing your data with a different partition key and/ or data model. This article describes how to create global secondary indexes and how to use them to avoid cross-partition queries.
+Global secondary indexes provide a powerful way to optimize query performance and simplify application logic by storing your data with a different partition key and/or data model. This article describes how to create global secondary indexes and how to use them to avoid cross-partition queries.
 
 ## Prerequisites
 
@@ -30,6 +27,9 @@ Global secondary indexes provide a powerful way to optimize query performance an
 
 Enable the global secondary index feature for your Azure Cosmos DB account. [Continuous backups](continuous-backup-restore-introduction.md) must be turned on for the account before enabling global secondary indexes.
 
+> [!IMPORTANT]
+> Source containers with one or more global secondary indexes incur an extra RU charge on replace and delete operations that ranges from 50-100% on top of the [base write charge by item size](understand-request-unit-consumption.md#document-size). Create operations aren't affected. For details, see [Syncing global secondary indexes](global-secondary-indexes.md#syncing-global-secondary-indexes).
+
 ### [Azure portal](#tab/azure-portal)
 
 1. Sign in to the [Azure portal](https://portal.azure.com/).
@@ -38,7 +38,7 @@ Enable the global secondary index feature for your Azure Cosmos DB account. [Con
 
 1. In the resource menu, select **Settings**.
 
-1. Navigate to the **Features** page. Then select **Global Secondary Index for NoSQL API (preview)** and **Enable**.
+1. Navigate to the **Features** page. Then select **Global Secondary Index for NoSQL API** and **Enable**.
 
     :::image type="content" source="./media/how-to-configure-global-secondary-indexes/enable-global-secondary-indexes.png" alt-text="Screenshot of how to enable the Global Secondary Index feature in the Azure portal." :::
 
@@ -87,7 +87,7 @@ Use the Azure CLI to enable the global secondary index feature either by using a
     $accountId="/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.DocumentDB/databaseAccounts/$accountName"
     ```
 
-1. Enable the preview global secondary index feature for the account by using the REST API and [az rest](/cli/azure/reference-index#az-rest) with an HTTP `PATCH` verb.
+1. Enable the global secondary index feature for the account by using the REST API and [az rest](/cli/azure/reference-index#az-rest) with an HTTP `PATCH` verb.
 
     ```azurecli
     az rest \
