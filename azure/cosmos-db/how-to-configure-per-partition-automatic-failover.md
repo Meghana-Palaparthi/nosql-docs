@@ -53,7 +53,8 @@ You can enable PPAF by using the Azure portal, Azure CLI, or Azure PowerShell.
 
    :::image type="content" source="media/how-to-configure-per-partition-automatic-failover/enable-per-partition-automatic-failover-portal.png" alt-text="Screenshot of the per-partition automatic failover feature in the Azure portal with the Enable toggle highlighted.":::
 
-<!-- Not to be released yet
+<!-- BEGIN: do not release until PPAF CLI/PowerShell support ships -->
+<!--
 #### [Azure CLI](#tab/azure-cli)
 
 1. Retrieve the existing capabilities on your account so that you don't accidentally remove any when you update it. The `az cosmosdb update` command replaces the full capability list, so you must include every existing capability along with `EnablePerPartitionAutomaticFailover`.
@@ -94,6 +95,7 @@ You can enable PPAF by using the Azure portal, Azure CLI, or Azure PowerShell.
 
 ---
 -->
+<!-- END: do not release until PPAF CLI/PowerShell support ships -->
 
 
 ## PPAF pricing

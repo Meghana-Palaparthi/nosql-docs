@@ -49,7 +49,7 @@ To request enrollment, submit your onboarding request at [https://aka.ms/cosmosd
 
 ## Install the required .NET SDK
 
-Add the latest preview version (v 3.62.0-preview.0) of the Azure Cosmos DB .NET SDK to your project. 
+Add the latest preview version (v3.62.0-preview.0) of the Azure Cosmos DB .NET SDK to your project.
 
 ```dotnetcli
 dotnet add package Microsoft.Azure.Cosmos --version 3.62.0-preview.0
@@ -178,9 +178,7 @@ These limits may change before general availability.
 
 ## Supported APIs and SDKs
 
-| API | Supported in preview |
-|---|---|
-| NoSQL (Core SQL) | Yes |
+Only the **NoSQL (Core SQL) API** is currently supported.
 
 | SDK | Status |
 |---|---|
