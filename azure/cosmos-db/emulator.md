@@ -30,7 +30,7 @@ The emulator provides an environment on your developer workspace that isn't capa
 > [!IMPORTANT]
 > The Linux emulator currently doesn't support developer machines running on Apple silicon series or Microsoft ARM chips. A temporary workaround is to install a Windows virtual machine and run the emulator on that platform.
 >
-> Alternatively, you can used the new [Linux-based Azure Cosmos DB emulator (preview)](emulator-linux.md).
+> Alternatively, you can use the new [Linux-based Azure Cosmos DB emulator](emulator-linux.md).
 
 - The emulator's **Data Explorer** pane is only supported in the API for NoSQL and API for MongoDB.
 - The emulator only supports **provisioned throughput**. The emulator doesn't support **serverless** throughput.
@@ -47,10 +47,10 @@ The emulator's features may lag behind the pace of new features for the cloud se
 
 Every request made against the emulator must be authenticated using a key over TLS/SSL. The emulator ships with a single account configured to use a well-known authentication key. By default, these credentials are the only credentials permitted for use with the emulator:
 
-| | Value |
-| --- | --- |
-| **Endpoint** | `localhost:8081` |
-| **Key** | `C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==` |
+|                       | Value                                                                                                                                          |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Endpoint**          | `localhost:8081`                                                                                                                               |
+| **Key**               | `C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==`                                                     |
 | **Connection string** | `AccountEndpoint=https://localhost:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==;` |
 
 > [!TIP]
@@ -62,7 +62,7 @@ In some cases, you may wish to manually import the TLS/SS certificate from the e
 
 ## Related content
 
-- [Linux-based Azure Cosmos DB emulator (preview)](emulator-linux.md)
+- [Linux-based Azure Cosmos DB emulator](emulator-linux.md)
 - Download the [Azure Cosmos DB emulator](https://aka.ms/cosmosdb-emulator).
 
 ## Next step

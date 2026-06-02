@@ -1,13 +1,14 @@
 ---
 title: Enable and work with cross-region and same region replication
 description: Enable and disable replication and promote replica cluster for disaster recovery (DR) in Azure DocumentDB.
-author: abinav2307
-ms.author: abramees
+author: prashanthmadi
+ms.author: prmadi
 ms.custom:
   - build-2024
   - ignite-2024
 ms.topic: how-to
-ms.date: 09/09/2025
+ms.date: 05/14/2026
+ai-usage: ai-assisted
 #Customer Intent: As a database adminstrator, I want to configure cross-region replication, so that I can have disaster recovery plans in the event of a regional outage.
 ---
 
@@ -52,16 +53,43 @@ To enable replication on a new cluster *at any time after cluster creation*, fol
 
 To make the replica cluster accessible for read operations, adjust its networking settings by configuring firewall rules for public access or by adding private endpoints for secure, private access.
 
-## Promote a replica
+## Trigger a forced promotion
+
+This section describes the *forced* promotion of a replica cluster. Forced promotion gives you the most control over timing, but it's an unplanned failover that might result in data loss because replication is asynchronous. For a zero-data-loss alternative, use [graceful promotion](#trigger-a-graceful-promotion). To let Azure automatically promote the replica during a regional outage, [enable service-managed failover](#enable-service-managed-failover).
 
 To [promote a cluster replica](./cross-region-replication.md#replica-cluster-promotion) to a read-write cluster, follow these steps:
 
 1. Select the cluster replica you would like to promote in the portal.
 1. On the cluster sidebar, under **Settings**, select **Global distribution**.
-1. On the **Global distribution** page, select **Promote**.
-1. On the **Promote \<cluster name>** screen, double check the cluster replica's name, read the warning text, and select **Promote**.
+1. On the **Global distribution** page, select **Forced Promote**.
+1. Read the warning text and select **Confirm**.
 
 After the cluster replica is promoted, it becomes a readable and writable cluster. If [high availability (HA)](./high-availability.md) is enabled on the primary (read-write) cluster, it needs to be re-enabled on the replica cluster after promotion.
+
+## Trigger a graceful promotion
+
+A *graceful promotion* is a planned switchover that completes with zero data loss. Azure DocumentDB pauses writes on the primary cluster, drains the replication queue so the replica is fully caught up, and then promotes the replica. Use a graceful promotion for scheduled maintenance or planned region migrations. For background, see [Graceful promotion](./failover-modes.md#graceful-promotion).
+
+> [!IMPORTANT]
+> Graceful promotion requires the primary cluster to be reachable so it can drain pending replication. If the primary region is already unavailable, use [forced promotion](#trigger-a-forced-promotion) or [service-managed failover](#enable-service-managed-failover) instead.
+
+To trigger a graceful promotion:
+
+1. Select the cluster replica you would like to promote in the portal.
+1. On the cluster sidebar, under **Settings**, select **Global distribution**.
+1. On the **Global distribution** page, select **Graceful Promote**.
+1. Read the warning text and select **Confirm**.
+
+During the failover, write requests return a transient error until the switch completes. The [global read-write connection string](./cross-region-replication.md#continuous-writes-read-operations-on-cluster-replicas-and-connection-strings) automatically updates to point to the new primary cluster. Applications that use the self connection string of the former primary must be updated to point to the new primary for write operations.
+
+## Enable service-managed failover
+
+*Service-managed failover* lets Azure DocumentDB automatically promote the replica cluster when it detects a regional outage on the primary. After it's enabled, no operator action is required during a regional outage. For background, see [Service-managed failover](./failover-modes.md#service-managed-failover).
+
+> [!NOTE]
+> Service-managed failover is an unplanned failover and might result in data loss because of replication lag. To switch regions with zero data loss for planned maintenance, use [graceful promotion](#trigger-a-graceful-promotion) instead. The two options can be used together.
+
+Service-managed failover is configured per cluster from the primary cluster's **Global distribution** page in the Azure portal. After it's enabled, Azure DocumentDB monitors the primary region and automatically promotes the replica cluster if it determines that the primary region is unavailable. You can disable service-managed failover at any time from the same page; while it's disabled, a regional outage requires you to [trigger a forced promotion](#trigger-a-forced-promotion).
 
 ## Check cluster replication role and replication region
 
@@ -101,7 +129,8 @@ Self connection strings are preserved after [the cluster replica promotion](./cr
 
 ## Related content
 
-- [Learn more about cross-region and same region replication in Azure DocumentDB](./cross-region-replication.md)
+- [Compare cross-region failover modes](./failover-modes.md)
+- [Learn more about cross-region and same region replication](./cross-region-replication.md)
 - [See replication limits and limitations](./limitations.md#cross-region-and-same-region-replication)
-- To resolve an issue with replication, see [this troubleshooting guide](./troubleshoot-replication.md).
+- [Troubleshoot cross-region replication](./troubleshoot-replication.md)
 - [Learn about reliability in Azure DocumentDB](/azure/reliability/reliability-documentdb?context=/azure/documentdb/context/context)

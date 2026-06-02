@@ -191,6 +191,12 @@ Azure DocumentDB provides built-in replication and high availability (HA) featur
 
 - Replication isn't available on clusters with [burstable compute](./compute-storage.md#what-is-burstable-compute) or [Free tier](./free-tier.md) clusters.
 
+### Cross-region failover
+
+- [Graceful promotion](./failover-modes.md#graceful-promotion) requires the primary cluster to be reachable so the replication queue can drain. If the primary region is already unavailable, use forced promotion or service-managed failover instead.
+- [Service-managed failover](./failover-modes.md#service-managed-failover) is opt-in. It must be enabled on the primary cluster before a regional outage occurs; it can't be enabled retroactively during an outage.
+- Service-managed failover and graceful promotion require an active cross-region replica. Same-region replicas aren't eligible for cross-region failover modes.
+
 ## Authentication and access control (role-based access control)
 
 Azure DocumentDB enforces authentication and access control limits to maintain security and manage resource allocation across user accounts and roles.

@@ -35,13 +35,13 @@ Use the Docker container image for the Linux-based Azure Cosmos DB emulator to c
 1. Pull the emulator container image.
 
     ```bash
-    docker pull mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-preview
+    docker pull mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-latest
     ```
 
 1. Start the emulator container.
 
     ```bash
-    docker run --detach --publish 8081:8081 --publish 1234:1234 --name cosmos-db mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-preview
+    docker run --detach --publish 8081:8081 --publish 1234:1234 --name cosmos-db mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-latest
     ```
 
 1. Verify the container is running.
