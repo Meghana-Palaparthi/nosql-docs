@@ -30,7 +30,7 @@ Before enabling PPAF, ensure your environment meets the following **prerequisite
 - **API type:** The account must use the **Core (SQL) API** (NoSQL API).
 - **Azure region:** The account must be in a **global Azure region**
 - **SDK version:** Your application must use a supported Azure Cosmos DB SDK that implements PPAF logic. The preview currently supports:
-  - **.NET SDK v3** : v3.59.0 or later
+  - **.NET SDK v3** : v3.60.0 or later
   - **Java SDK**: v4.79.0 or later
   - **Python SDK**: v4.16.0 or later
   - **Node.js SDK**: v4.7.0 or later
@@ -53,6 +53,8 @@ You can enable PPAF by using the Azure portal, Azure CLI, or Azure PowerShell.
 
    :::image type="content" source="media/how-to-configure-per-partition-automatic-failover/enable-per-partition-automatic-failover-portal.png" alt-text="Screenshot of the per-partition automatic failover feature in the Azure portal with the Enable toggle highlighted.":::
 
+<!-- BEGIN: do not release until PPAF CLI/PowerShell support ships -->
+<!--
 #### [Azure CLI](#tab/azure-cli)
 
 1. Retrieve the existing capabilities on your account so that you don't accidentally remove any when you update it. The `az cosmosdb update` command replaces the full capability list, so you must include every existing capability along with `EnablePerPartitionAutomaticFailover`.
@@ -92,6 +94,9 @@ You can enable PPAF by using the Azure portal, Azure CLI, or Azure PowerShell.
     ```
 
 ---
+-->
+<!-- END: do not release until PPAF CLI/PowerShell support ships -->
+
 
 ## PPAF pricing
 
